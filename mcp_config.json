@@ -1,8 +1,0 @@
-{
-  "mcp": {
-    "version": "2026",
-    "provider": "FastMCP + GitHub",
-    "scopes": ["repo", "workflow"],
-    "tools": ["push_files", "update_landing"]
-  }
-}
