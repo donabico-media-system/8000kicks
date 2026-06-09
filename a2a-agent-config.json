@@ -1,0 +1,8 @@
+{
+  "a2a": {
+    "version": "2026",
+    "coordinator": "Google",
+    "agents": ["Gemini", "Grok"],
+    "orchestration": "LangGraph + MCP"
+  }
+}
