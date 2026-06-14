@@ -4,6 +4,7 @@ on:
   repository_dispatch:
     types: [LAUNCH_DRONE_LANDING_PAGE_UPDATE]
 
+# CẤU HÌNH QUYỀN HẠN NATIVE: Cho phép GITHUB_TOKEN mặc định có quyền ghi đè nội dung kho này
 permissions:
   contents: write
 
@@ -12,13 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Drone Substrate"
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.FINE_GRAINED_TOKEN }}
+        uses: actions/checkout@v4 
+        # Đã loại bỏ dòng token trống. Tiến trình sẽ tự động dùng mã cấu hình mặc định siêu an toàn.
 
       - name: "Catch Dynamic Payload & Write File"
         env:
-          # Đưa toàn bộ nội dung HTML từ Kho 4 vào biến môi trường để chống lỗi tràn ký tự Bash
           RAW_HTML_CONTENT: ${{ github.event.client_payload.html_content }}
         run: |
           echo "🛰️ Nhận dữ liệu biên dịch từ Kho 4..."
@@ -29,6 +28,7 @@ jobs:
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
+          
           git add index.html
           git diff-index --quiet HEAD || git commit -m "sys(drone-mesh): central module synchronization [skip ci]"
           git push origin main
