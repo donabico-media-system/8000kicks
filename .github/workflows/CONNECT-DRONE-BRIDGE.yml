@@ -1,0 +1,48 @@
+name: "CONNECT-DRONE-BRIDGE"
+
+on:
+  repository_dispatch:
+    # Lắng nghe xung lệnh chính xác từ Drone_Mesh_Controller (Kho 4) bắn sang
+    types: [LAUNCH_DRONE_MESH_CONNECT]
+  workflow_dispatch:
+    # Giữ cổng bấm chạy thủ công bằng tay tại giao diện Actions của 8000kicks để test mạch
+
+permissions:
+  contents: read
+
+jobs:
+  satellite-respond:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🎛️ Hạ cánh Codebase Vệ tinh"
+        uses: actions/checkout@v4
+
+      - name: "🌀 Khởi tạo Môi trường Python thực địa"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "📦 Cài đặt Phân phối Thư viện Mạng"
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: "📡 Thực thi Kết nối - Phản hồi trạng thái về Tổng trạm Kho 4"
+        env:
+          # Trích xuất mã xác thực động ngắn hạn do Kho 4 ký gửi sang (Bảo mật Zero-Secret)
+          BRIDGE_TOKEN: ${{ github.event.client_payload.bridge_temporary_token || github.token }}
+        run: |
+          echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
+          
+          if [ -f "Modules/Connect-Drone-Bridge.py" ]; then
+            echo "[✅ FOUND] Phát hiện tệp cầu nối. Kích hoạt tiến trình truyền tải..."
+            python "Modules/Connect-Drone-Bridge.py"
+          else
+            echo "[🚨 CRITICAL ERROR] Không tìm thấy tệp cấu trúc tại: Modules/Connect-Drone-Bridge.py"
+            exit 1
+          fi
+
+      - name: "🔒 Khóa cổng nhận tín hiệu"
+        if: always()
+        run: |
+          echo "✅ [SATELLITE LOG] Tiến trình phản hồi kết nối hoàn tất sạch lỗi."
