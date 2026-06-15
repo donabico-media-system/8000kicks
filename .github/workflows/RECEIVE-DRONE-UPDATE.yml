@@ -32,25 +32,31 @@ jobs:
             fi
           done
 
-      - name: "Lock and Push Update State"
+      - name: "Lock and Push Update State (Force-Mesh Mode)"
         run: |
-          # Cấu hình danh tính thực thi
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
           
-          # Thiết lập quyền ghi bằng GITHUB_TOKEN
+          # Thiết lập remote URL dùng token hệ thống
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Ép buộc đồng bộ với nhánh remote để loại bỏ xung đột
+          # 1. Fetch mới nhất từ server
           git fetch origin main
+          
+          # 2. Reset local về trạng thái mới nhất từ server (loại bỏ mọi rác cục bộ)
           git reset --hard origin/main
           
-          # Thực hiện commit nội dung mới
-          git add index.html
-          git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || echo "Không có thay đổi mới"
+          # 3. Ghi đè file từ payload (đảm bảo index.html là bản mới nhất)
+          cat << 'EOF' > index.html
+          ${{ github.event.client_payload.html_content }}
+          EOF
           
-          # Đẩy code lên nhánh main
-          git push origin main
+          # 4. Gom dữ liệu và Commit
+          git add index.html
+          git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || echo "Không có thay đổi để commit"
+          
+          # 5. Ép buộc đẩy lên (Force Push) để ghi đè mọi tranh chấp lịch sử
+          git push origin main --force
 
       - name: "Signal Back to Control Center"
         if: success()
