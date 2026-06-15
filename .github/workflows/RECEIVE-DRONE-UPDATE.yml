@@ -10,9 +10,16 @@ permissions:
 jobs:
   sync-and-rebuild:
     runs-on: ubuntu-latest
+    concurrency:
+      group: drone-mesh-8000kicks
+      cancel-in-progress: false   # Giữ run cũ, queue run mới (hoặc true nếu muốn chỉ latest)
+
     steps:
       - name: "Checkout Drone Substrate"
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Catch Dynamic Payload & Write File"
         env:
@@ -24,39 +31,39 @@ jobs:
 
       - name: "Infinite Module Connection & Execution"
         run: |
-          echo "📡 Đang quét các Module tại 8000kicks/Modules/..."
+          echo "Đang quét các Module tại 8000kicks/Modules/..."
           for module in Modules/*.py; do
             if [ -f "$module" ]; then
-              echo "🚀 Kích nổ Module: $module"
-              python3 "$module" || echo "⚠️ Module $module gặp sự cố, hệ thống vẫn tiếp tục..."
+              echo "Kích nổ Module: $module"
+              python3 "$module" || echo "Module $module gặp sự cố, hệ thống vẫn tiếp tục..."
             fi
           done
 
-      - name: "Lock and Push Update State (Force-Mesh Mode)"
+      - name: "Lock and Push Update State (Force-Mesh Mode) - V3000 FIXED"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
-          
-          # Thiết lập remote URL dùng token hệ thống
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          
-          # 1. Fetch mới nhất từ server
-          git fetch origin main
-          
-          # 2. Reset local về trạng thái mới nhất từ server (loại bỏ mọi rác cục bộ)
-          git reset --hard origin/main
-          
-          # 3. Ghi đè file từ payload (đảm bảo index.html là bản mới nhất)
+
+          # Đảm bảo đang ở main branch sạch
+          git checkout -B main origin/main || git checkout -B main
+
+          # Ghi đè index.html từ payload (sau khi đã sync base)
           cat << 'EOF' > index.html
           ${{ github.event.client_payload.html_content }}
           EOF
-          
-          # 4. Gom dữ liệu và Commit
+
           git add index.html
-          git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || echo "Không có thay đổi để commit"
-          
-          # 5. Ép buộc đẩy lên (Force Push) để ghi đè mọi tranh chấp lịch sử
-          git push origin main --force
+
+          # Kiểm tra có thay đổi thật không
+          if git diff --cached --quiet; then
+            echo "Không có thay đổi. Bỏ qua commit & push."
+            exit 0
+          fi
+
+          git commit -m "sys(drone-mesh): central module synchronization [skip ci]"
+
+          # Force an toàn: lease trước, fallback force
+          git push origin main --force-with-lease || git push origin main --force
 
       - name: "Signal Back to Control Center"
         if: success()
