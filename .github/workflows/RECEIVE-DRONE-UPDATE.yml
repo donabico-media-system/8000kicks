@@ -12,16 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: drone-mesh-8000kicks
-      cancel-in-progress: true   # Cancel bản cũ, chỉ chạy bản mới nhất
+      cancel-in-progress: true
 
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Checkout Drone Substrate"
+        uses: actions/checkout@v4 
 
-      - name: "Write index.html from Drone Payload"
+      - name: "Catch Dynamic Payload & Write File"
         env:
           RAW_HTML_CONTENT: ${{ github.event.client_payload.html_content }}
         run: |
@@ -29,56 +26,49 @@ jobs:
           ${{ github.event.client_payload.html_content }}
           EOF
 
-      - name: "Run All Modules .py trong Modules/ (Tự động Toàn Bộ)"
+      - name: "Infinite Module Connection & Execution"
         run: |
-          echo "📡 Quét và kích hoạt toàn bộ Modules/*.py ..."
+          echo "📡 Đang quét các Module tại 8000kicks/Modules/..."
           for module in Modules/*.py; do
             if [ -f "$module" ]; then
               echo "🚀 Kích nổ Module: $module"
-              python3 "$module" || echo "⚠️ $module lỗi → tiếp tục các module khác"
+              python3 "$module" || echo "⚠️ Module $module gặp sự cố, hệ thống vẫn tiếp tục..."
             fi
           done
 
-      - name: "Lock and Push Update State (ULTRA ROBUST 24/7)"
+      - name: "Lock and Push Update State (Robust Auto Mode)"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
+          
+          # Cấu hình remote (giữ nguyên style file bạn gửi)
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
+          # Retry mạnh để chống lỗi rejected
           for i in {1..8}; do
-            echo "=== Retry lần $i/8 ==="
+            echo "=== Lần thử push $i/8 ==="
 
-            # Đồng bộ lại remote mới nhất
-            git fetch origin main --prune
+            git fetch origin main
             git checkout -B main origin/main || git checkout -B main
 
-            # Ghi đè index.html từ payload (luôn mới nhất)
+            # Ghi đè index.html từ payload (giữ nguyên style file bạn gửi)
             cat << 'EOF' > index.html
             ${{ github.event.client_payload.html_content }}
             EOF
 
             git add index.html
+            git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || echo "Không có thay đổi để commit"
 
-            if git diff --cached --quiet; then
-              echo "✅ Không có thay đổi mới. Bỏ qua."
-              exit 0
-            fi
-
-            git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || true
-
-            # Push với force an toàn
-            if git push origin main --force-with-lease; then
+            if git push origin main --force-with-lease || git push origin main --force; then
               echo "✅ PUSH THÀNH CÔNG lần $i"
               exit 0
-            elif git push origin main --force; then
-              echo "✅ PUSH FORCE THÀNH CÔNG lần $i"
-              exit 0
             else
-              echo "⚠️ Thất bại lần $i → sleep 3s rồi retry"
+              echo "⚠️ Thất bại lần $i → retry sau 3s"
               sleep 3
             fi
           done
 
-          echo "❌ Đã thử 8 lần vẫn fail. Kết thúc."
+          echo "❌ Đã thử 8 lần vẫn fail"
           exit 1
 
       - name: "Signal Back to Control Center"
@@ -90,4 +80,4 @@ jobs:
             -H "Authorization: bearer $TEMPORARY_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER/dispatches \
-            -d '{"event_type": "REPORT_8000KICKS_SYNC_SUCCESS", "client_payload": {"status": "full_mesh_deployed", "modules_run": "all_py_executed"}}'
+            -d '{"event_type": "REPORT_8000KICKS_SYNC_SUCCESS", "client_payload": {"status": "full_mesh_deployed"}}'
