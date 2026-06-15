@@ -1,0 +1,51 @@
+name: "HEARTBEAT-DRONE-BRIDGE"
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Tự động phát sóng nhịp đập hệ thống mỗi 15 phút
+  workflow_dispatch:      # Cho phép Chỉ huy kích nổ/kiểm tra thủ công từ Dashboard
+
+permissions:
+  contents: read
+
+jobs:
+  transmit-pulse:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "🎛️ Checkout Drone Codebase"
+        uses: actions/checkout@v4
+
+      - name: "🌀 Thiết lập môi trường Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: "📦 Cài đặt các thư viện phụ thuộc"
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: "🔑 Khởi tạo Token Độc quyền từ V3000-BRIDGE"
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: "📡 Phát sóng Tín hiệu Heartbeat về Tổng trạm KHO-4"
+        env:
+          BRIDGE_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          echo "📡 Đang nạp Token mã hóa và kết nối cổng truyền tín hiệu..."
+          if [ -f "drone_heartbeat.py" ]; then
+            python3 drone_heartbeat.py
+          else
+            echo "❌ Lỗi cấu trúc: Không tìm thấy tệp tin định danh 'drone_heartbeat.py' tại thư mục gốc."
+            exit 1
+          fi
+
+      - name: "🔒 Đóng cổng kết nối"
+        if: always()
+        run: |
+          echo "✅ [SYSTEM] Tiến trình kiểm thử hoàn tất. Cổng đồng bộ đã đóng an toàn."
