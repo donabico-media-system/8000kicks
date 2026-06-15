@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: drone-mesh-8000kicks
-      cancel-in-progress: true
+      cancel-in-progress: true   # Cancel bản cũ, chỉ chạy bản mới nhất
 
     steps:
       - name: "Checkout"
@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Write index.html from Payload"
+      - name: "Write index.html from Drone Payload"
         env:
           RAW_HTML_CONTENT: ${{ github.event.client_payload.html_content }}
         run: |
@@ -29,29 +29,29 @@ jobs:
           ${{ github.event.client_payload.html_content }}
           EOF
 
-      - name: "Run All Siphon Modules (Google + Bing + AI Cache)"
+      - name: "Run All Modules .py trong Modules/ (Tự động Toàn Bộ)"
         run: |
-          echo "📡 Đang chạy Modules Siphon..."
+          echo "📡 Quét và kích hoạt toàn bộ Modules/*.py ..."
           for module in Modules/*.py; do
             if [ -f "$module" ]; then
-              echo "🚀 Thực thi: $module"
-              python3 "$module" || echo "⚠️ $module lỗi → bỏ qua"
+              echo "🚀 Kích nổ Module: $module"
+              python3 "$module" || echo "⚠️ $module lỗi → tiếp tục các module khác"
             fi
           done
 
-      - name: "Lock and Push Update State (Robust Auto 24/7)"
+      - name: "Lock and Push Update State (ULTRA ROBUST 24/7)"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
 
-          # Retry loop mạnh để chống race condition
-          for i in {1..6}; do
-            echo "=== Lần thử $i/6 ==="
+          for i in {1..8}; do
+            echo "=== Retry lần $i/8 ==="
 
-            git fetch origin main
+            # Đồng bộ lại remote mới nhất
+            git fetch origin main --prune
             git checkout -B main origin/main || git checkout -B main
 
-            # Ghi đè index.html từ payload
+            # Ghi đè index.html từ payload (luôn mới nhất)
             cat << 'EOF' > index.html
             ${{ github.event.client_payload.html_content }}
             EOF
@@ -59,22 +59,26 @@ jobs:
             git add index.html
 
             if git diff --cached --quiet; then
-              echo "Không có thay đổi. Bỏ qua."
+              echo "✅ Không có thay đổi mới. Bỏ qua."
               exit 0
             fi
 
             git commit -m "sys(drone-mesh): central module synchronization [skip ci]" || true
 
-            if git push origin main --force-with-lease || git push origin main --force; then
-              echo "✅ PUSH THÀNH CÔNG ở lần $i"
+            # Push với force an toàn
+            if git push origin main --force-with-lease; then
+              echo "✅ PUSH THÀNH CÔNG lần $i"
+              exit 0
+            elif git push origin main --force; then
+              echo "✅ PUSH FORCE THÀNH CÔNG lần $i"
               exit 0
             else
-              echo "⚠️ Thất bại lần $i → retry sau 3s"
+              echo "⚠️ Thất bại lần $i → sleep 3s rồi retry"
               sleep 3
             fi
           done
 
-          echo "❌ Thử 6 lần vẫn fail"
+          echo "❌ Đã thử 8 lần vẫn fail. Kết thúc."
           exit 1
 
       - name: "Signal Back to Control Center"
@@ -86,4 +90,4 @@ jobs:
             -H "Authorization: bearer $TEMPORARY_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER/dispatches \
-            -d '{"event_type": "REPORT_8000KICKS_SYNC_SUCCESS", "client_payload": {"status": "success"}}'
+            -d '{"event_type": "REPORT_8000KICKS_SYNC_SUCCESS", "client_payload": {"status": "full_mesh_deployed", "modules_run": "all_py_executed"}}'
