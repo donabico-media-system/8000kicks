@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: drone-mesh-8000kicks
-      cancel-in-progress: false   # Giữ run cũ, queue run mới (hoặc true nếu muốn chỉ latest)
+      cancel-in-progress: false
 
     steps:
       - name: "Checkout Drone Substrate"
@@ -39,30 +39,26 @@ jobs:
             fi
           done
 
-      - name: "Lock and Push Update State (Force-Mesh Mode) - V3000 FIXED"
+      - name: "Lock and Push Update State (Force-Mesh Mode) — V3000 DỨT ĐIỂM"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
 
-          # Đảm bảo đang ở main branch sạch
           git checkout -B main origin/main || git checkout -B main
 
-          # Ghi đè index.html từ payload (sau khi đã sync base)
           cat << 'EOF' > index.html
           ${{ github.event.client_payload.html_content }}
           EOF
 
           git add index.html
 
-          # Kiểm tra có thay đổi thật không
           if git diff --cached --quiet; then
-            echo "Không có thay đổi. Bỏ qua commit & push."
+            echo "Không có thay đổi mới. Bỏ qua push."
             exit 0
           fi
 
           git commit -m "sys(drone-mesh): central module synchronization [skip ci]"
 
-          # Force an toàn: lease trước, fallback force
           git push origin main --force-with-lease || git push origin main --force
 
       - name: "Signal Back to Control Center"
