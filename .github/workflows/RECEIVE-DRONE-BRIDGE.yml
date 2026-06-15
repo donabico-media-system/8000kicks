@@ -1,0 +1,80 @@
+name: "RECEIVE-DRONE-BRIDGE"
+
+on:
+  repository_dispatch:
+    types: [LAUNCH_DRONE_BRIDGE]
+
+permissions:
+  contents: write
+
+jobs:
+  drone-bridge-sync:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: drone-bridge-8000kicks
+      cancel-in-progress: true
+
+    steps:
+      - name: "Checkout Drone Substrate"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Infinite Module Connection & Execution"
+        run: |
+          echo "📡 Đang quét và kích hoạt toàn bộ Modules/*.py ..."
+          for module in Modules/*.py; do
+            if [ -f "$module" ]; then
+              echo "🚀 Kích nổ Module: $module"
+              python3 "$module" || echo "⚠️ Module $module gặp sự cố, hệ thống vẫn tiếp tục..."
+            fi
+          done
+
+      - name: "Connect-Drone-Bridge — Heartbeat & Thông Tuyến 24/7"
+        run: |
+          echo "🔗 Khởi động Connect-Drone-Bridge V3000-Ω-Bridge-001"
+          python3 Modules/Connect-Drone-Bridge.py || echo "⚠️ Bridge gặp vấn đề, tiếp tục..."
+
+      - name: "Lock and Push Update State (Robust Mode)"
+        run: |
+          git config --global user.name "AETH-V5000-MASTER-CORE"
+          git config --global user.email "sre-admin@donabico.global"
+
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+          for i in {1..6}; do
+            echo "=== Lần thử push $i/6 ==="
+
+            git fetch origin main
+            git checkout -B main origin/main || git checkout -B main
+
+            cat << 'EOF' > index.html
+            ${{ github.event.client_payload.html_content }}
+            EOF
+
+            git add index.html
+            git commit -m "sys(drone-bridge): heartbeat + module sync [skip ci]" || echo "Không có thay đổi để commit"
+
+            if git push origin main --force-with-lease || git push origin main --force; then
+              echo "✅ PUSH THÀNH CÔNG lần $i"
+              exit 0
+            else
+              echo "⚠️ Thất bại lần $i → retry sau 3s"
+              sleep 3
+            fi
+          done
+
+          echo "❌ Đã thử 6 lần vẫn fail"
+          exit 1
+
+      - name: "Signal Bridge Status to Control Center"
+        if: success()
+        env:
+          TEMPORARY_TOKEN: ${{ github.event.client_payload.one_time_token }}
+        run: |
+          curl -X POST \
+            -H "Authorization: bearer $TEMPORARY_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER/dispatches \
+            -d '{"event_type": "REPORT_DRONE_BRIDGE_STATUS", "client_payload": {"status": "bridge_active", "repo": "8000kicks", "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}}'
