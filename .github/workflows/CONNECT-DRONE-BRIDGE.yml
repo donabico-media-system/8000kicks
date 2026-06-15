@@ -5,7 +5,7 @@ on:
     # Lắng nghe xung lệnh chính xác từ Drone_Mesh_Controller (Kho 4) bắn sang
     types: [LAUNCH_DRONE_MESH_CONNECT]
   workflow_dispatch:
-    # Giữ cổng bấm chạy thủ công bằng tay tại giao diện Actions của 8000kicks để test mạch
+    # Giữ cổng bấm chạy thủ công bằng tay để kiểm thử mạch lệnh khi cần
 
 permissions:
   contents: read
@@ -34,15 +34,21 @@ jobs:
         run: |
           echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
           
-          if [ -f "Bridge/Connect-Drone-Bridge.py" ]; then
-            echo "[✅ FOUND] Phát hiện tệp cầu nối. Kích hoạt tiến trình truyền tải..."
-            python "Modules/Connect-Drone-Bridge.py"
+          # Định vị tọa độ chính xác theo cấu trúc di cư mới của Chỉ huy
+          TARGET_FILE="Bridge/Connect-Drone-Bridge.py"
+          
+          if [ -f "$TARGET_FILE" ]; then
+            echo "[✅ TRẠM PHÁT HIỆN] Tìm thấy tệp cầu nối tại tọa độ thực địa mới: $TARGET_FILE"
+            echo "🚀 Kích hoạt tiến trình truyền tải ngược dòng..."
+            python3 "$TARGET_FILE"
           else
-            echo "[🚨 CRITICAL ERROR] Không tìm thấy tệp cấu trúc tại: Bridge/Connect-Drone-Bridge.py"
+            echo "[🚨 CRITICAL ERROR] Thống kê sai lệch! Không tìm thấy file tại vị trí mới: $TARGET_FILE"
+            echo "📋 Sơ đồ cấu trúc cây thư mục hiện tại để đối chiếu nhanh:"
+            find . -maxdepth 3 -not -path '*/.*'
             exit 1
           fi
 
       - name: "🔒 Khóa cổng nhận tín hiệu"
         if: always()
         run: |
-          echo "✅ [SATELLITE LOG] Tiến trình phản hồi kết nối hoàn tất sạch lỗi."
+          echo "✅ [SATELLITE LOG] Tiến trình phản hồi kết nối hoàn tất."
