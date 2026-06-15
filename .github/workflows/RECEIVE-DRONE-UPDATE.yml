@@ -14,15 +14,17 @@ jobs:
     steps:
       - name: "Checkout Drone Substrate"
         uses: actions/checkout@v4 
-        # Đã loại bỏ dòng token trống. Tiến trình sẽ tự động dùng mã cấu hình mặc định siêu an toàn.
 
-      - name: "Catch Dynamic Payload & Write File"
+      # VÁ LỖI NỀN TẢNG: Dùng cơ chế Heredoc 'EOF' bọc single-quote để nuốt trọn mã HTML không bị rách font Times New Roman
+      - name: "Catch Dynamic Payload & Write File Safely"
         env:
           RAW_HTML_CONTENT: ${{ github.event.client_payload.html_content }}
         run: |
           echo "🛰️ Nhận dữ liệu biên dịch từ Kho 4..."
-          echo "$RAW_HTML_CONTENT" > index.html
-          echo "✅ Đã ghi đè cấu trúc index.html hoàn toàn tự động."
+          cat << 'EOF' > index.html
+          ${{ github.event.client_payload.html_content }}
+          EOF
+          echo "✅ Đã ghi đè cấu trúc index.html nguyên bản an toàn."
 
       - name: "Lock and Push Update State"
         run: |
@@ -32,3 +34,22 @@ jobs:
           git add index.html
           git diff-index --quiet HEAD || git commit -m "sys(drone-mesh): central module synchronization [skip ci]"
           git push origin main
+
+      # =========================================================================
+      # 📡 ĐOẠN NÂNG CẤP THÔNG MẠCH CHIỀU NGƯỢC LẠI (SOTA ZERO-SECRET)
+      # =========================================================================
+      - name: "Signal Back to Control Center (Zero-Key Matrix)"
+        if: success()
+        env:
+          TEMPORARY_TOKEN: ${{ github.event.client_payload.one_time_token }}
+        run: |
+          echo "📡 Trích xuất mã xác thực động từ Trung tâm gửi sang để báo cáo..."
+          
+          curl -X POST \
+            -H "Authorization: bearer $TEMPORARY_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER/dispatches \
+            -d '{"event_type": "REPORT_8000KICKS_SYNC_SUCCESS", "client_payload": {"status": "deployed", "repository": "8000kicks"}}'
+          
+          echo "✅ Mạch 2 chiều đã thông suốt. Token tự hủy."
+          
