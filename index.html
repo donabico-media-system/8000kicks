@@ -23,6 +23,7 @@
 
         /* Symmetrical 2x2 Image Grid */
         .image-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; margin:35px 0; }
+        .image-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; margin:35px 0; }
         .image-box { border:1px solid #30363d; border-radius:8px; overflow:hidden; background:#161b22; transition:transform 0.2s, box-shadow 0.2s; }
         .image-box:hover { transform:scale(1.02); box-shadow:0 4px 12px rgba(88,166,255,0.15); }
         .image-box img { width:100%; height:280px; object-fit:cover; display:block; cursor:pointer; }
@@ -223,52 +224,4 @@
                 <p><strong>Notice of Merchant Jurisdictional Boundary</strong></p>
                 <p>All transactional procedures, financial exchanges, order status tracking, sizing modifications, return authorizations, and monetary refunds are processed and managed exclusively by the merchant entity (8000Kicks) through their dedicated fulfillment frameworks.</p>
                 <h3>1. Processing Protocol</h3>
-                <p>DONABICO GLOBAL MEDIA SYSTEM has zero access to order registries, processing queues, payment processing channels, or physical inventory nodes. Consequently, our support staff cannot look up tracking details, modify shipping vectors, or issue refund credits under any circumstances.</p>
-                <h3>2. Consumer Action Steps</h3>
-                <p>Should you experience an issue regarding package transit, sizing fit, item exchange, or product satisfaction, you must navigate directly to the official storefront where your financial transaction took place and submit a inquiry ticket to the dedicated 8000Kicks customer support division according to their current standard operating policies.</p>`;
-            } else if (type === 'contact') {
-                html = `<h2>Contact Support Channels</h2>
-                <p>For administrative inquiries, technical error reporting, or data-integrity questions regarding this specific landing page layout, you may transmit a detailed message to our technical routing desk: <strong>donabico.media.system@gmail.com</strong></p>
-                <p><strong>CRITICAL NOTICE:</strong> This address is dedicated strictly to infrastructural asset management. Any inbound communication requesting order updates, custom sizing corrections, transit trackers, or transactional refund claims will be automatically purged by our system filters, as those inquiries must be directed to the official 8000Kicks customer care infrastructure.</p>`;
-            }
-
-            body.innerHTML = html;
-            modal.style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = "none";
-        }
-
-        /* Lightbox Event Mechanics */
-        function openLightbox(imgElement) {
-            const lightbox = document.getElementById('lightboxModal');
-            const lightboxImg = document.getElementById('lightboxImage');
-            const lightboxCap = document.getElementById('lightboxCaption');
-            
-            lightboxImg.src = imgElement.src;
-            lightboxImg.alt = imgElement.alt;
-            lightboxCap.textContent = imgElement.alt;
-            
-            lightbox.style.display = "block";
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightboxModal').style.display = "none";
-        }
-
-        /* Conflict-Free Window Background Click Dismissals */
-        window.onclick = function(event) {
-            const complianceModal = document.getElementById('modal');
-            const lightboxModal = document.getElementById('lightboxModal');
-            
-            if (event.target === complianceModal) {
-                complianceModal.style.display = "none";
-            }
-            if (event.target === lightboxModal) {
-                lightboxModal.style.display = "none";
-            }
-        }
-    </script>
-</body>
-</html>
+                <p>DONABICO GLOBAL MEDIA SYSTEM has zero access to order registries, processing queues, payment processing channels, o
