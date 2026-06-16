@@ -1,69 +1,64 @@
 #!/usr/bin/env python3
-"""AI-Cache-Siphon.py (GitHub Optimized v3 - Flawless Mode)"""
+# -*- coding: utf-8 -*-
+"""AI-Cache-Siphon.py (Async Architecture)"""
 
 import argparse
-import concurrent.futures
-import random
-import time
-import urllib.request
-import urllib.error
-from datetime import datetime, timezone
-from typing import Dict
+import asyncio
+import httpx
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pydantic import BaseModel, Field
 
-AI_CRAWLERS = [
+AI_BOTS = [
+    {"name": "Anthropic_Claude_Bot", "ua": "Mozilla/5.0 (compatible; AnthropicsCrawler/1.0)"},
+    {"name": "Google_Gemini_Extended", "ua": "Mozilla/5.0 (compatible; Google-Extended; +http://www.google.com/bot.html)"},
     {"name": "OpenAI_ChatGPT_Core", "ua": "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)"},
-    {"name": "Google_Gemini_Extended", "ua": "Mozilla/5.0 (compatible; Google-Extended)"},
-    {"name": "Anthropic_Claude_Bot", "ua": "Mozilla/5.0 (compatible; Anthropic-AI)"},
-    {"name": "Perplexity_AI_Search", "ua": "Mozilla/5.0 (compatible; PerplexityBot/1.0)"},
-    {"name": "Microsoft_Copilot", "ua": "Mozilla/5.0 (compatible; bingbot/2.0)"},
-    {"name": "xAI_Grok", "ua": "Mozilla/5.0 (compatible; xAI-Grok/1.0)"},
-    {"name": "DeepSeek_AI", "ua": "Mozilla/5.0 (compatible; DeepSeekBot/1.0)"},
+    {"name": "Microsoft_Copilot", "ua": "Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)"},
+    {"name": "Perplexity_AI_Search", "ua": "Mozilla/5.0 (compatible; PerplexityBot/1.0; +http://www.perplexity.ai/bot)"},
+    {"name": "xAI_Grok", "ua": "Mozilla/5.0 (compatible; GrokBot/1.1)"},
+    {"name": "DeepSeek_AI", "ua": "Mozilla/5.0 (compatible; DeepSeekBot; +https://www.deepseek.com/)"}
 ]
 
-def get_headers(bot: Dict) -> Dict:
-    return {
-        "User-Agent": bot["ua"],
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "X-EATHESEN": "V3000-GitHub",
-    }
+class AICacheResult(BaseModel):
+    bot: str
+    status: Optional[int] = None
+    latency_ms: float = 0.0
+    error: Optional[str] = None
 
-def siphon_with_retry(target_url: str, bot: Dict, max_retries: int = 3) -> Dict:
-    result = {"bot": bot["name"], "status": None, "latency_ms": None, "error": None}
-    for attempt in range(1, max_retries + 1):
-        start = time.time()
+class AICachePayload(BaseModel):
+    target_url: str
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC'))
+    responses: List[AICacheResult] = []
+
+class AICacheEngine:
+    async def siphon_ai_bot(self, client: httpx.AsyncClient, url: str, bot: Dict) -> AICacheResult:
+        headers = {"User-Agent": bot["ua"]}
+        start = asyncio.get_event_loop().time()
+        status_code, err_msg = None, None
         try:
-            req = urllib.request.Request(target_url, headers=get_headers(bot))
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                result["status"] = resp.status
-                result["latency_ms"] = round((time.time() - start) * 1000, 1)
-                return result
-        except urllib.error.HTTPError as e:
-            result["status"] = e.code
-            result["latency_ms"] = round((time.time() - start) * 1000, 1)
-            result["error"] = str(e)
-            if e.code in (404, 403): break # Dừng spam nếu web báo lỗi cấu trúc
-            time.sleep(random.uniform(2, 4) * attempt)
+            response = await client.get(url, headers=headers, timeout=15.0)
+            status_code = response.status_code
         except Exception as e:
-            result["error"] = str(e)[:80]
-            if attempt < max_retries: time.sleep(random.uniform(2, 4) * attempt)
-    return result
+            err_msg = str(e)[:50]
+        end = asyncio.get_event_loop().time()
+        return AICacheResult(bot=bot["name"], status=status_code, latency_ms=round((end-start)*1000, 1), error=err_msg)
+
+    async def run(self, url: str) -> Dict[str, Any]:
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            tasks = [self.siphon_ai_bot(client, url, bot) for bot in AI_BOTS]
+            results = await asyncio.gather(*tasks)
+            return AICachePayload(target_url=url, responses=list(results)).model_dump()
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", type=str, required=True)
     args = parser.parse_args()
-
+    
     print(f"[V3000-Ω] AI-Cache-Siphon | Target: {args.url}")
-    results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        futures = {executor.submit(siphon_with_retry, args.url, bot): bot for bot in AI_CRAWLERS}
-        for future in concurrent.futures.as_completed(futures):
-            res = future.result()
-            results.append(res)
-            icon = "✅" if res["status"] == 200 else ("⚠️" if res["status"] else "❌")
-            print(f"  {icon} [{res['bot']}] status={res['status']} | {res['latency_ms']}ms")
-            time.sleep(random.uniform(1, 3))
+    payload = asyncio.run(AICacheEngine().run(args.url))
+    for res in payload["responses"]:
+        icon = "✅" if res["status"] == 200 else "❌"
+        print(f"  {icon} [{res['bot']}] status={res['status']} | {res['latency_ms']}ms")
 
 if __name__ == "__main__":
     main()
