@@ -2,9 +2,9 @@ name: ACTIVE-MODULES
 
 on:
   schedule:
-    # Chạy mỗi 60 phút (vào phút thứ 0 của mỗi giờ)
+    # Chạy mỗi 60 phút (vào phút 0 của mỗi giờ)
     - cron: '0 * * * *'
-  workflow_dispatch:   # Cho phép chạy thủ công từ GitHub UI
+  workflow_dispatch:
 
 jobs:
   activate-all-modules:
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          # Đã bỏ cache: 'pip' vì không có requirements.txt / pyproject.toml
 
       - name: Run Active-Modules.py
         run: |
@@ -35,6 +35,6 @@ jobs:
         with:
           name: active-modules-log-${{ github.run_number }}
           path: |
-            *.log
+            **/*.log
             **/*.json
           retention-days: 7
