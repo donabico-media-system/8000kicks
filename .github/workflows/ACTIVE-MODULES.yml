@@ -2,7 +2,6 @@ name: ACTIVE-MODULES
 
 on:
   schedule:
-    # Chạy mỗi 60 phút (vào phút 0 của mỗi giờ)
     - cron: '0 * * * *'
   workflow_dispatch:
 
@@ -19,15 +18,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          # Đã bỏ cache: 'pip' vì không có requirements.txt / pyproject.toml
 
       - name: Run Active-Modules.py
+        env:
+          PYTHONUNBUFFERED: '1'
+          # 🎯 ĐÂY LÀ TỌA ĐỘ TRUNG TÂM: CHỈ CẦN THAY ĐỔI Ở ĐÂY CHO CÁC KHO TƯƠNG LAI
+          TARGET_AFFILIATE_URL: 'https://donabico-global-media.github.io/8000kicks'
         run: |
           echo "=== EATHESEN V3000-Ω ACTIVE-MODULES ==="
           echo "Triggered at: $(date -u)"
+          echo "Targeting URL: $TARGET_AFFILIATE_URL"
           python Modules/Active-Modules.py
-        env:
-          PYTHONUNBUFFERED: '1'
 
       - name: Upload logs (optional)
         if: always()
