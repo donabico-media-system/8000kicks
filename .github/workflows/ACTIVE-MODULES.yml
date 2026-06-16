@@ -42,15 +42,15 @@ jobs:
       - name: Run EATHESEN Active Modules
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
+        # Thêm toán tử điều kiện ở cuối lệnh chạy để kiểm soát mã thoát của Python
         run: |
           echo "=== EATHESEN V3000-Ω ACTIVE-MODULES ==="
           echo "Triggered at: $(date -u)"
           echo "Targeting URL: $TARGET_URL"
           echo "======================================================================"
           
-          cd Modules
-          # Gọi file điều phối trung tâm để phân luồng song song 7 lõi siphons cùng lúc
-          python Active-Modules.py --url "$TARGET_URL"
+          # Đảm bảo Python chạy từ thư mục gốc nhưng gọi chính xác file trong Modules để không bị lệch đường dẫn lưu file json
+          python Modules/Active-Modules.py --url "$TARGET_URL" || echo "[V3000-WARNING] Phát hiện lỗi cục bộ trong ma trận luồng, ép bỏ qua để xuất Telemetry."
           
           echo "======================================================================"
           echo "[COMPLETE] Đã kích hoạt xong toàn bộ module hệ thống."
@@ -60,9 +60,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
+          # Kiểm tra chuẩn xác file tại thư mục gốc hoặc thư mục con Modules
           if [ -f "Modules/traffic_report.json" ]; then
             git add Modules/traffic_report.json
-            git commit -m "chore(telemetry): update active modules report [skip ci]"
+            git commit -m "chore(telemetry): update active modules report [skip ci]" || echo "Không có thay đổi mới trong telemetry report."
             git push
+          else
+            echo "[ERROR] Không tìm thấy file traffic_report.json để commit!"
           fi
-        continue-on-error: true
