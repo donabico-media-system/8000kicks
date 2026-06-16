@@ -10,5 +10,11 @@
         "url": "https://donabico-global-media.github.io/8000kicks",
         "status": 200,
         "message": "SUCCESS"
+    },
+    {
+        "timestamp": "2026-06-16T12:31:52.964747+00:00",
+        "url": "https://donabico-global-media.github.io/",
+        "status": 404,
+        "message": "HTTP_ERROR"
     }
 ]
