@@ -1,0 +1,40 @@
+name: ACTIVE-MODULES
+
+on:
+  schedule:
+    # Chạy mỗi 60 phút (vào phút thứ 0 của mỗi giờ)
+    - cron: '0 * * * *'
+  workflow_dispatch:   # Cho phép chạy thủ công từ GitHub UI
+
+jobs:
+  activate-all-modules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Run Active-Modules.py
+        run: |
+          echo "=== EATHESEN V3000-Ω ACTIVE-MODULES ==="
+          echo "Triggered at: $(date -u)"
+          python Modules/Active-Modules.py
+        env:
+          PYTHONUNBUFFERED: '1'
+
+      - name: Upload logs (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: active-modules-log-${{ github.run_number }}
+          path: |
+            *.log
+            **/*.json
+          retention-days: 7
