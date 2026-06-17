@@ -1,0 +1,28 @@
+name: PAGES-ROUTING-ENGINE
+
+on:
+  push:
+    branches: [ main ] # Tự động chạy mỗi khi bạn cập nhật code ở nhánh chính
+  workflow_dispatch:   # Nút bấm chạy thủ công nếu cần
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🟢 Bước 1: Checkout mã nguồn chính"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: "🟢 Bước 2: Nhân bản và đổi tên tệp (Giữ nguyên index.html)"
+        run: |
+          # Sao chép nguyên vẹn cấu trúc sang tên mới để phục vụ link .html
+          cp index.html 8000kicks.html
+          echo "[OK] Đã tạo tệp cấu trúc tĩnh 8000kicks.html song song thành công."
+
+      - name: "🟢 Bước 3: Đẩy dữ liệu sang nhánh phân phối gh-pages"
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # Ép xuất bản lên nhánh riêng biệt này
+          folder: .        # Đẩy toàn bộ thư mục gốc
+          clean: true
