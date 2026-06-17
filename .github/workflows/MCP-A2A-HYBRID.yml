@@ -8,30 +8,29 @@ jobs:
   sota-orchestration:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Execute SOTA Agent Swarm
+      - name: Run SOTA Agent Sync
         env:
           CLOUDFLARE_AI_GATEWAY_URL: ${{ secrets.CLOUDFLARE_AI_GATEWAY_URL }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           pip install httpx
           python3 -c "
-import asyncio
 import importlib.util
-import sys
+import asyncio
 
-# Load MCP
-mcp_spec = importlib.util.spec_from_file_location('MCP', 'Protocol/MCP_Core_Init.py')
-mcp = importlib.util.module_from_spec(mcp_spec)
-mcp_spec.loader.exec_module(mcp)
+# Load MCP Core
+spec_mcp = importlib.util.spec_from_file_location('MCP', 'Protocol/MCP_Core_Init.py')
+mcp = importlib.util.module_from_spec(spec_mcp)
+spec_mcp.loader.exec_module(mcp)
 
-# Load A2A (File có dấu gạch ngang)
-a2a_spec = importlib.util.spec_from_file_location('A2A', 'Protocol/A2A-Google-Hybrid-Init.py')
-a2a = importlib.util.module_from_spec(a2a_spec)
-a2a_spec.loader.exec_module(a2a)
+# Load A2A Hybrid
+spec_a2a = importlib.util.spec_from_file_location('A2A', 'Protocol/A2A-Google-Hybrid-Init.py')
+a2a = importlib.util.module_from_spec(spec_a2a)
+spec_a2a.loader.exec_module(a2a)
 
-print(f'Status: {mcp.mcp_bridge.get_capabilities()}')
+print(f'MCP Status: {mcp.mcp_bridge.get_capabilities()}')
 asyncio.run(a2a.a2a_agent.execute_swarm_decision('Sync State'))
 "
