@@ -1,0 +1,44 @@
+name: MCP-HYBRID-SYNC
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sota-orchestration:
+    name: SOTA Agent Swarm Sync
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Initialize SOTA Runtime
+        run: |
+          pip install --upgrade pip httpx
+          echo "Environment: Node Ready."
+
+      - name: Execute Autonomous Agent Swarm
+        env:
+          CLOUDFLARE_AI_GATEWAY_URL: ${{ secrets.CLOUDFLARE_AI_GATEWAY_URL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          python3 -c "
+import importlib.util
+import asyncio
+import sys
+
+# 1. Load MCP Core (Protocol/MCP_Core_Init.py)
+mcp_spec = importlib.util.spec_from_file_location('MCP_Module', 'Protocol/MCP_Core_Init.py')
+mcp = importlib.util.module_from_spec(mcp_spec)
+mcp_spec.loader.exec_module(mcp)
+
+# 2. Load A2A Hybrid (Protocol/A2A-Google-Hybrid-Init.py)
+a2a_spec = importlib.util.spec_from_file_location('A2A_Module', 'Protocol/A2A-Google-Hybrid-Init.py')
+a2a = importlib.util.module_from_spec(a2a_spec)
+a2a_spec.loader.exec_module(a2a)
+
+# 3. Swarm Execution
+print(f'>>> MCP Handshake: {mcp.mcp_bridge.get_capabilities()}')
+asyncio.run(a2a.a2a_agent.execute_swarm_decision('Full System Synchronization'))
+print('>>> SOTA Swarm Sync: COMPLETE.')
+"
