@@ -1,66 +1,37 @@
-name: MCP-A2A-HYBRID 
+name: MCP-A2A-HYBRID
 on:
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   sota-orchestration:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup SOTA Runtime
-        run: |
-          pip install --upgrade pip httpx pydantic importlib-metadata
-          echo "System: Environment hardened."
-
-      - name: Execute Autonomous Agent Swarm
+      - name: Execute SOTA Agent Swarm
         env:
           CLOUDFLARE_AI_GATEWAY_URL: ${{ secrets.CLOUDFLARE_AI_GATEWAY_URL }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          # Dùng Python để điều phối đồng bộ cả MCP và A2A
+          pip install httpx
           python3 -c "
 import asyncio
 import importlib.util
 import sys
-import logging
 
-logging.basicConfig(level=logging.INFO)
+# Load MCP
+mcp_spec = importlib.util.spec_from_file_location('MCP', 'Protocol/MCP_Core_Init.py')
+mcp = importlib.util.module_from_spec(mcp_spec)
+mcp_spec.loader.exec_module(mcp)
 
-async def run_swarm():
-    # 1. Load MCP Core
-    mcp_spec = importlib.util.spec_from_file_location('MCP_Core', 'Protocol/MCP_Core_Init.py')
-    mcp = importlib.util.module_from_spec(mcp_spec)
-    mcp_spec.loader.exec_module(mcp)
-    logging.info(f'MCP Status: {mcp.mcp_bridge.get_context()}')
+# Load A2A (File có dấu gạch ngang)
+a2a_spec = importlib.util.spec_from_file_location('A2A', 'Protocol/A2A-Google-Hybrid-Init.py')
+a2a = importlib.util.module_from_spec(a2a_spec)
+a2a_spec.loader.exec_module(a2a)
 
-    # 2. Load A2A Hybrid Core (Dynamic Load - SOTA Standard)
-    a2a_spec = importlib.util.spec_from_file_location('A2A_Hybrid', 'Protocol/A2A-Google-Hybrid-Init.py')
-    a2a = importlib.util.module_from_spec(a2a_spec)
-    a2a_spec.loader.exec_module(a2a)
-
-    # 3. Thực thi song song (Async Swarm)
-    logging.info('Executing Hybrid Swarm Sync...')
-    result = await a2a.a2a_agent.execute_swarm_decision('Full System Sync')
-    logging.info(f'Sync Result: {result}')
-
-asyncio.run(run_swarm())
+print(f'Status: {mcp.mcp_bridge.get_capabilities()}')
+asyncio.run(a2a.a2a_agent.execute_swarm_decision('Sync State'))
 "
-
-      - name: Telemetry Update
-        if: always()
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          echo "$(date -u) - Swarm Sync Finished" >> protocol_log.txt
-          git add protocol_log.txt
-          git commit -m 'chore(telemetry): swarm sync telemetry [skip ci]' || echo 'No changes'
-          git push
-          
