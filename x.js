@@ -1,18 +1,20 @@
-async function activateSymbiosis() {
+async function loadTrafficData() {
     try {
-        const response = await fetch('/traffic_report.json');
+        const response = await fetch('/Modules/traffic_report.json');
         const data = await response.json();
+        
+        // Lấy bản ghi mới nhất
         const latest = data[data.length - 1];
-
-        // Nếu trạng thái hệ thống không phải 200, tự động chuyển hướng khách hàng
+        
+        console.log(`Nhịp tim hệ thống: ${latest.status}`);
+        
+        // Logic cộng sinh: Nếu lỗi 404 hoặc 500, kích hoạt chế độ dự phòng
         if (latest.status !== 200) {
-            console.log("Hệ thống gián đoạn, đang chuyển hướng...");
-            window.location.href = "https://your-backup-domain.com"; // Link dự phòng của bạn
-        } else {
-            console.log("Hệ thống hoạt động bình thường.");
+            console.warn("Phát hiện lỗi hạ tầng! Chuyển sang chế độ bảo mật...");
+            // Thêm logic chuyển hướng hoặc thông báo tại đây
         }
     } catch (e) {
-        console.log("Đang kiểm tra kết nối...");
+        console.error("Không thể kết nối với trạm quan trắc Modules/traffic_report.json");
     }
 }
-activateSymbiosis();
+loadTrafficData();
