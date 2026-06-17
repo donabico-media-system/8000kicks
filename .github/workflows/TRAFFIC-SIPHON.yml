@@ -12,13 +12,10 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      
-      # Kiểm tra vị trí file nếu vẫn bị lỗi "No such file"
-      - name: Verify file existence
-        run: ls -l Traffic-Siphon.py
         
       - name: Run Traffic-Siphon
-        run: python3 Traffic-Siphon.py --url "https://donabico-global-media.github.io/8000kicks/"
+        # Đã cập nhật đường dẫn vào thư mục Modules/
+        run: python3 Modules/Traffic-Siphon.py --url "https://donabico-global-media.github.io/8000kicks/"
           
       - name: Commit Report
         run: |
