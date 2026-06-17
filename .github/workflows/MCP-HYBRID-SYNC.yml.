@@ -1,4 +1,4 @@
-name: MCP-A2A-HYBRID
+name: MCP-HYBRID-SYNC
 on:
   schedule:
     - cron: '0 */6 * * *'
