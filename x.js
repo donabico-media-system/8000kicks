@@ -1,24 +1,19 @@
-// x.js - Bộ điều phối SOTA
-async function initOrchestrator() {
-    console.log("Hệ thống SOTA đang khởi tạo...");
-
-    // 1. Nạp các tệp logic .js
-    const jsModules = ['test.js', 'analytics.js', 'ui-effect.js'];
-    jsModules.forEach(mod => {
-        const s = document.createElement('script');
-        s.src = `/Modules/${mod}`;
-        document.body.appendChild(s);
-    });
-
-    // 2. Nạp dữ liệu từ tệp JSON (ví dụ traffic_report.json)
+async function activateSymbiosis() {
     try {
-        const response = await fetch('/Modules/traffic_report.json');
+        const response = await fetch('/traffic_report.json');
         const data = await response.json();
-        console.log("Dữ liệu từ Traffic Siphon đã nạp:", data);
-        // Tại đây bạn có thể dùng data để hiển thị lên Landing Page
+        const latest = data[data.length - 1]; // Lấy lần kiểm tra mới nhất
+
+        const statusElement = document.getElementById('status-indicator');
+        if (latest.status === 200) {
+            statusElement.innerText = "Hệ thống đang hoạt động ổn định";
+            statusElement.style.color = "green";
+        } else {
+            statusElement.innerText = "Hệ thống đang bảo trì";
+            statusElement.style.color = "red";
+        }
     } catch (e) {
-        console.log("Đang chờ dữ liệu từ hệ thống...");
+        console.log("Cộng sinh tạm gián đoạn...");
     }
 }
-
-initOrchestrator();
+activateSymbiosis();
