@@ -1,0 +1,31 @@
+name: MCP-A2A-HYBRID
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sota_execution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup SOTA Dependencies
+        run: pip install httpx pydantic
+
+      - name: Run Hybrid Sync
+        env:
+          CLOUDFLARE_AI_GATEWAY_URL: ${{ secrets.CLOUDFLARE_AI_GATEWAY_URL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          # Kiểm tra tính toàn vẹn hệ thống trước khi chạy
+          python -c "from Protocol.MCP_Core_Init import mcp_bridge; print(mcp_bridge.get_context())"
+          
+          # Thực thi Agent sync
+          python -c "import asyncio; from Protocol.A2A_Google_Hybrid_Init import a2a_agent; asyncio.run(a2a_agent.execute_swarm_decision('Sync State'))"
+          
+          echo "[SOTA-SUCCESS] Grid Synchronized."
+          
