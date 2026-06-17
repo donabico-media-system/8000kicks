@@ -11,7 +11,7 @@ jobs:
       - name: INJECT SCRIPT
         run: |
           if ! grep -q "x.js" index.html; then
-            sed -i 's|</body>|<script src="x.js" defer></script></body>|' index.html
+            sed -i "s|</body>|<script src='x.js' defer></script></body>|" index.html
             git config user.name "Automation Bot"
             git config user.email "bot@github.com"
             git add index.html
