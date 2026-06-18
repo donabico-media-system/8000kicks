@@ -2,13 +2,18 @@ name: "ACTIVE-MODULES-SOTA"
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # Đánh thức hệ thống chạy ngầm tự động mỗi 30 phút
-  workflow_dispatch:      # Hỗ trợ bấm kích hoạt chạy trực tiếp từ Chrome
+    - cron: "0 */6 * * *" # Duy trì chu kỳ chạy tự động 6 tiếng một lần như file gốc của bạn
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'URL mục tiêu để quét dữ liệu'
+        required: true
+        default: 'https://donabico-global-media.github.io/8000kicks/'
 
-# Khóa luồng đồng bộ: Ngăn chặn tuyệt đối tình trạng job cũ chưa chạy xong đã bị job mới đè hủy
+# GIẢI PHÁP CỐT LÕI: Khóa luồng đồng bộ để chặn hoàn toàn lỗi tự hủy "Cancelled" của GitHub Pages
 concurrency:
-  group: eathesen-siphon-sota-group
-  cancel-in-progress: false
+  group: github-pages-deploy-lock
+  cancel-in-progress: false # Ép luồng triển khai xếp hàng tuần tự, không được hủy ngang job đang chạy
 
 permissions:
   contents: write
@@ -16,63 +21,59 @@ permissions:
 jobs:
   execute-siphon-matrix:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           persist-credentials: true
-          fetch-depth: 0 # Lấy toàn bộ lịch sử commit để rebase an toàn không xung đột
+          fetch-depth: 0 # Lấy toàn bộ lịch sử lịch trình commit phục vụ rebase an toàn
 
       - name: Set up Python Environment
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.10'
 
       - name: Install Ecosystem Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install httpx pydantic loguru
-          mkdir -p Modules
+          pip install httpx pydantic
 
-      - name: Run EATHESEN Dynamic Siphon Matrix
+      - name: Run EATHESEN Active Modules
         env:
-          TARGET_URL: "https://donabico-global-media.github.io/8000kicks/"
+          TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== EATHESEN V3000-Ω SOTA AUTO-INJECTION ==="
+          echo "=== EATHESEN V3000-Ω ACTIVE-MODULES ==="
           cd Modules
           
-          # LUỒNG TỰ ĐỘNG VÔ HẠN: Quét động mở rộng và thực thi mọi file .py trong thư mục Modules
-          for script in *.py; do
-            if [ "$script" != "Active-Modules.py" ]; then
-              echo "[EXECUTING MODULE] $script..."
-              python "$script" --url "$TARGET_URL" || echo "[V3000-RECOVERY] Module $script gián đoạn, tự động bỏ qua..."
+          # Thực thi file điều phối lõi an toàn
+          if [ -f "Active-Modules.py" ]; then
+            python Active-Modules.py --url "$TARGET_URL" || echo "[WARNING] Ma trận chính có cảnh báo nhẹ."
+          fi
+          
+          # Ép chạy trực tiếp các lõi siphoning nếu tệp tin tồn tại
+          for script in Affiliate-Network-Siphon.py SEO-Shield-Siphon.py Social-Preview-Siphon.py Traffic-Siphon.py; do
+            if [ -f "$script" ]; then
+              echo "[FORCED ACTIVE] Khởi chạy: $script"
+              python "$script" --url "$TARGET_URL" || echo "Module $script gặp gián đoạn nhỏ."
             fi
           done
-          
-          # Chạy file điều phối chính cốt lõi
-          echo "[EXECUTING CORE] Active-Modules.py..."
-          if [ -f "Active-Modules.py" ]; then
-            python Active-Modules.py --url "$TARGET_URL" || echo "[V3000-WARNING] Core hoàn thành với cảnh báo."
-          else
-            echo "[V3000-ERROR] Không tìm thấy file Active-Modules.py!"
-          fi
 
       - name: Commit & Push Telemetry Reports
         run: |
-          git config --global user.name "AETH-V5000-AUTOBOT"
-          git config --global user.email "sre-admin@donabico.global"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Gom tất cả các file JSON báo cáo mới sinh ra trong thư mục Modules
-          git add Modules/*.json
+          # Đảm bảo nhận diện đúng file log bất kể script Python chạy ở thư mục nào
+          git add Modules/traffic_report.json || git add traffic_report.json || true
           
-          # Kiểm tra vùng đệm Stage xem có dữ liệu traffic mới thực sự hay không
-          if ! git diff --cached --quiet; then
-            echo "[V3000-INFO] Phát hiện telemetry mới. Đang đồng bộ..."
-            git commit -m "chore(telemetry): auto-update telemetry logs [skip ci]"
+          if ! git diff-index --quiet HEAD --; then
+            echo "[V3000-INFO] Phát hiện dữ liệu thay đổi. Tiến hành đồng bộ an toàn..."
+            git commit -m "chore(telemetry): update active modules report [skip ci]"
             
-            # Giải pháp loại bỏ lỗi 409 Non-fast-forward: Tự động kéo code về và sắp xếp lại commit
+            # CHIẾN LƯỢC AN TOÀN: Rebase đồng bộ trước khi đẩy để loại bỏ hoàn toàn lỗi xung đột Git
             git pull origin main --rebase
             git push origin main
           else
-            echo "[V3000-INFO] Không có dữ liệu traffic mới đổi. Bỏ qua chu kỳ."
+            echo "[V3000-INFO] Không phát hiện dữ liệu mới. Bỏ qua chu kỳ commit."
           fi
