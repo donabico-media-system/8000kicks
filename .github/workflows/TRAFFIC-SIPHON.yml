@@ -18,8 +18,8 @@ jobs:
       - name: Inject Red Border CSS
         # Bước này tự động chèn viền đỏ vào index.html nếu chưa có
         run: |
-          if ! grep -q "border: 05px solid red" index.html; then
-            sed -i 's|<head>|<head><style>body { border: 05px solid red !important; box-sizing: border-box; }</style>|' index.html
+          if ! grep -q "border: 02px solid red" index.html; then
+            sed -i 's|<head>|<head><style>body { border: 02px solid red !important; box-sizing: border-box; }</style>|' index.html
           fi
 
       - name: Push Updates
