@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><style>body { border: 2px solid green !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style>
+<head>
+<style>
+:root {
+    --siphon-red: #FF3B30;
+    --sota-green: #00FF66;
+}
+/* Loại bỏ thanh banner gradient trên cùng theo yêu cầu */
+#dnbc-adtech-banner {
+    display: none !important;
+}
+/* Ghi đè CSS body để tạo hiệu ứng nhấp nháy viền kép bám sát mép viền ngoài */
+body { 
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 20px !important;
+    min-height: 100vh;
+    /* Mạch ngoài: TRAFFIC-SIPHON (Đỏ nhấp nháy 250ms) | Mạch trong: ACTIVE MODULES SOTA (Xanh nhấp nháy 300ms) */
+    animation: pulseSiphon 0.25s infinite alternate ease-in-out, pulseSota 0.3s infinite alternate ease-in-out !important;
+}
+@keyframes pulseSiphon {
+    0% { border: 4px solid var(--siphon-red) !important; box-shadow: inset 0 0 4px var(--siphon-red); }
+    100% { border: 4px solid var(--siphon-red) !important; box-shadow: inset 0 0 16px var(--siphon-red); }
+}
+@keyframes pulseSota {
+    0% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; }
+    100% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; box-shadow: inset 0 0 12px var(--sota-green); }
+}
+</style>
+<style>body { border: 2px solid green !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style>
 <meta property="og:title" content="8000Kicks - Giày Gai Dầu Chống Nước Đầu Tiên Trên Thế Giới">
 <meta property="og:image" content="https://donabico-global-media.github.io/8000kicks/assets/hemp-shoes-banner.jpg"><style>body { border: 04px solid red !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style><style>body { border: 04px solid red !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style><style>body { border: 04px solid red !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style><style>body { border: 04px solid red !important; box-sizing: border-box;  border: 2px solid green !important; box-sizing: border-box; border: 2px solid green !important; box-sizing: border-box;}</style>
 <meta charset="UTF-8">
@@ -64,7 +92,6 @@ li { margin-bottom:10px; }
 <h1>8000Kicks - The World's First Waterproof Hemp Shoes</h1>
 <p>Discover the future of high-performance fashion with 8000Kicks, the pioneer in engineering the world's finest <strong>waterproof hemp shoes</strong>. Crafted entirely from industrial hemp fibers, this revolutionary <strong>sustainable footwear</strong> line delivers an unmatched fusion of eco-friendly ethics, rugged durability, and lightweight comfort. Whether you are navigating wet city streets, catching a long-haul flight, or exploring unpredictable outdoor trails, 8000Kicks offers the perfect zero-compromise solution for eco-conscious travelers and modern adventurers alike.</p>
 <h2>Why 8000Kicks Dominates the Sustainable Footwear Industry</h2>
-<p>Traditional sneakers rely heavily on plastic synthetics and chemical treatments that degrade our ecosystems. 8000Kicks changes the paradigm by utilizing hemp—one of Nature’s strongest and most sustainable raw materials. Industrial hemp grows rapidly, requires 5x less water than cotton, absorbs carbon dioxide at an exponential rate, and needs absolutely no toxic pesticides. By weaving this ancient super-fiber into a modern, minimalist design, 8000Kicks has set a new benchmark for <strong>sustainable footwear</strong> that outlasts traditional canvas or leather options while leaving a remarkably low carbon footprint.</p>
 <h2>Premium Campaign Visuals</h2>
 <div class="image-grid">
 <div class="image-box"><img src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014" alt="8000Kicks Trekker - All Weather Protection" onclick="openLightbox(this)"></div>
@@ -195,7 +222,7 @@ html = `<h2>Affiliate Disclosure</h2>
 <p><strong>Compliance Notice: FTC &amp; Global Advertising Regulations</strong></p>
 <p>In accordance with the United States Federal Trade Commission (FTC) guides concerning the use of endorsements and testimonials, the United Kingdom Advertising Standards Authority (ASA), and comparable consumer protection codes globally, this page operates as a commercial monetization portal.</p>
 <h3>1. Compensation Mechanics</h3>
-<p>We maintain a structured affiliate partnership with the target merchant (8000Kicks) through verified global tracking networks. When you click on any outbound call-to-action anchor on this page and proceed to execute a qualifying transaction on the destination storefront, we receive a performance-based referral commission.</p>
+<p> we receive a performance-based referral commission.</p>
 <h3>2. Consumer Pricing Integrity</h3>
 <p>This commercial alignment incurs absolutely zero additional cost to you as a consumer. Outbound tracking code structures are mapped purely to attribute marketing source coordinates. In many instances, tracking pathways grant visitors access to exclusive product discounts, seasonal promotional codes, and prioritized shipping windows that are unavailable through traditional organic lookup avenues.</p>
 <h3>3. Editorial Independence</h3>
@@ -247,3 +274,5 @@ lightboxModal.style.display = "none";
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script>
 <script src='x.js' defer></script></body>
 </html>
+
+<p>Traditional sneakers rely heavily on plastic synthetics and chemical treatments that degrade our ecosystems. 8000Kicks changes the paradigm by utilizing hemp—one of Nature’s strongest and most sustainable raw materials. Industrial hemp grows rapidly, requires 5x less water than cotton, absorbs carbon dioxide at an exponential rate, and needs absolutely no toxic pesticides. By weaving this ancient super-fiber into a modern, minimalist design, 8000Kicks has set a new benchmark for <strong>sustainable footwear</strong> that outlasts traditional canvas or leather options while leaving a remarkably low carbon footprint.</p>
