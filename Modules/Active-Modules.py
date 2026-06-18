@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-EATHESEN V3000-Ω | ULTRA MULTI-THREADING INJECTOR WITH 2PX VISUAL SHIELD (8000KICKS)
-Chức năng: Tự động phát hiện HÀNG NGÀN module, chạy SONG SONG siêu tốc và TIÊM KHUNG VIỀN ĐỎ 2PX
+EATHESEN V3000-Ω | ULTRA MULTI-THREADING INJECTOR WITH GREEN VISUAL SHIELD (8000KICKS)
+Chức năng: Tự động phát hiện HÀNG NGÀN module, chạy SONG SONG siêu tốc và TIÊM KHUNG VIỀN XANH LÁ 2PX
+Bản vá: Sửa lỗi lặp thanh trạng thái (Dọn sạch banner cũ trước khi tiêm banner mới)
 """
 import os
 import re
@@ -49,14 +50,14 @@ def inject_production_html():
     if not os.path.exists(index_path): index_path = "index.html"
     if not os.path.exists(index_path): return
 
-    print(f"[V3000-INJECTOR] Tiến hành đại phẫu toàn diện và bảo lưu Khung viền đỏ 2px...")
+    print(f"[V3000-INJECTOR] Tiến hành đại phẫu toàn diện và tiêm Khung viền Xanh lá...")
     with open(index_path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # 1. BẢO LƯU KHUNG VIỀN ĐỎ 2PX: Chèn CSS khung viền tinh chỉnh độ dày siêu mảnh vào <head>
-    red_border_css = "<style>body { border: 2px solid red !important; box-sizing: border-box; }</style>"
-    if "<head>" in html and "border: 2px solid red" not in html:
-        html = html.replace("<head>", f"<head>{red_border_css}")
+    # 1. TIÊM KHUNG VIỀN XANH LÁ (GREEN) 2PX: Chèn CSS viền xanh lá vào <head> nếu chưa có
+    green_border_css = "<style>body { border: 2px solid green !important; box-sizing: border-box; }</style>"
+    if "<head>" in html and "border: 2px solid green" not in html:
+        html = html.replace("<head>", f"<head>{green_border_css}")
 
     # 2. SEO-SHIELD: Bơm từ khóa giày gai dầu chống nước vào Head
     seo_tags = """
@@ -72,16 +73,16 @@ def inject_production_html():
     if "<head>" in html and "og:title" not in html:
         html = html.replace("<head>", f"<head>{og_tags}")
 
-    # 4. TRAFFIC-SIPHON: Tiêm thanh trạng thái Donabico Global Media System
+    # 4. GIẢI PHÁP DIỆT TẬN GỐC LỖI LẶP BANNER: 
+    # Quét sạch tất cả các tag banner cũ (kể cả dạng xuống dòng hay dạng viết liền một dòng do nén code)
+    html = re.sub(r'<div id="dnbc-adtech-banner".*?</div>', '', html, flags=re.DOTALL)
+
+    # Khởi tạo banner mới với mốc thời gian UTC hiện tại
     current_time = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
-    status_banner = f"""
-    <div id="dnbc-adtech-banner" style="background: linear-gradient(90deg, #11998e, #38ef7d); color: #000; text-align: center; font-family: sans-serif; font-size: 11px; padding: 6px; font-weight: bold; border-bottom: 2px solid #fff;">
-        🛡️ DONABICO GLOBAL MEDIA SYSTEM | MASSIVE MATRIX NODE ACTIVE AT {current_time}
-    </div>"""
+    status_banner = f'<div id="dnbc-adtech-banner" style="background: linear-gradient(90deg, #11998e, #38ef7d); color: #000; text-align: center; font-family: sans-serif; font-size: 11px; padding: 6px; font-weight: bold; border-bottom: 2px solid #fff;">🛡️ DONABICO GLOBAL MEDIA SYSTEM | MASSIVE MATRIX NODE ACTIVE AT {current_time}</div>'
     
-    html = re.sub(r'<div id="dnbc-adtech-banner">.*?</div>', '', html, flags=re.DOTALL)
     if "<body>" in html:
-        html = html.replace("<body>", f"<body>\n    {status_banner}")
+        html = html.replace("<body>", f"<body>{status_banner}")
 
     # 5. AFFILIATE-NETWORK: Tuyến link phân phối tiếp thị liên kết trực tiếp
     target_aff_url = "https://donabico-global-media.github.io/shop/8000kicks.html"
@@ -92,7 +93,7 @@ def inject_production_html():
 
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(compressed_html)
-    print("[SUCCESS] Đã tiêm khung viền 2px và tối ưu hóa dữ liệu thành công vào 8000Kicks!")
+    print("[SUCCESS] Bản vá hoàn tất! Đã dọn sạch thanh banner cũ và tối ưu hóa 8000Kicks!")
 
 if __name__ == "__main__":
     target = "https://donabico-global-media.github.io/8000kicks/"
