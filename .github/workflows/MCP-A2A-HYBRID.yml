@@ -21,7 +21,8 @@ jobs:
       - name: "Checkout Control Center Substrate"
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.FINE_GRAINED_TOKEN }}
+          # Sử dụng GITHUB_TOKEN mặc định không cần thiết lập thủ công
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: "Set up Production Python Runtime"
@@ -32,96 +33,33 @@ jobs:
       - name: "Execute Layer-1: Model Context Protocol (MCP) Core Initialization"
         run: |
           cat << 'EOF' > mcp_core_init.py
-          # ================================================
-          # EATHESEN V3000-Ω MCP CORE INITIALIZER
-          # Model Context Protocol - Primary Tool Layer
-          # ================================================
-          import os
-          import sys
-          import json
+          import os, json
           from pathlib import Path
-
-          MCP_CONFIG = {
-              "protocol": "Model Context Protocol",
-              "version": "V3000-Ω-ULTIMA",
-              "anchor": "¢24 (δ=0 | ε<10^{-128})",
-              "scopes": ["repo", "workflow", "read:org", "read:user"],
-              "entrypoint": "mcp_server",
-              "github_repo": "donabico-global-media/KHO-2-V3000-OMEGA-SOTA",
-              "node": "Singapore AP-Southeast (31ms to Bien Hoa)"
-          }
-
-          def initialize_mcp():
-              print("🚀 EATHESEN V3000-Ω MCP INITIALIZATION TO PROTOCOL SUBFOLDER")
-              # Định tuyến chính xác vào thư mục con của Protocol theo cấu trúc thực địa
-              mcp_dir = Path("Protocol/Model Context Protocol")
-              mcp_dir.mkdir(parents=True, exist_ok=True)
-              
-              config_path = mcp_dir / "mcp_config.json"
-              with open(config_path, "w") as f:
-                  json.dump(MCP_CONFIG, f, indent=2)
-              print(f"✅ MCP Core JSON Initialized at: {config_path}")
-
-          if __name__ == "__main__":
-              initialize_mcp()
+          MCP_CONFIG = {"protocol": "Model Context Protocol", "version": "V3000-Ω-ULTIMA"}
+          mcp_dir = Path("Protocol/Model Context Protocol")
+          mcp_dir.mkdir(parents=True, exist_ok=True)
+          with open(mcp_dir / "mcp_config.json", "w") as f:
+              json.dump(MCP_CONFIG, f, indent=2)
           EOF
           python mcp_core_init.py
 
       - name: "Execute Layer-2: Agent-to-Agent (A2A) Google Hybrid Initialization"
         run: |
           cat << 'EOF' > a2a_google_hybrid_init.py
-          # ================================================
-          # EATHESEN V3000-Ω A2A GOOGLE HYBRID INITIALIZER
-          # Agent-to-Agent Protocol - Coordination Layer
-          # ================================================
-          import os
-          import sys
-          import json
+          import os, json
           from pathlib import Path
-
-          A2A_CONFIG = {
-              "protocol": "Agent-to-Agent Protocol (Google Hybrid)",
-              "version": "V3000-Ω-ULTIMA",
-              "anchor": "¢24 (δ=0 | ε<10^{-128})",
-              "functions": ["discover_agents", "delegate_task", "coordinate_with_mcp", "negotiation"],
-              "coordination": "Grok ↔ Gemini + Multi-Vendor",
-              "github_repo": "donabico-global-media/KHO-2-V3000-OMEGA-SOTA",
-              "node": "Singapore AP-Southeast (31ms to Bien Hoa)",
-              "hybrid_with": "Model Context Protocol (MCP)"
-          }
-
-          def initialize_a2a():
-              print("🚀 EATHESEN V3000-Ω A2A GOOGLE HYBRID INITIALIZATION TO PROTOCOL SUBFOLDER")
-              # Định tuyến chính xác vào thư mục con của Protocol theo cấu trúc thực địa
-              a2a_dir = Path("Protocol/A2A Google Hybrid")
-              a2a_dir.mkdir(parents=True, exist_ok=True)
-              
-              config_path = a2a_dir / "a2a_config.json"
-              with open(config_path, "w") as f:
-                  json.dump(A2A_CONFIG, f, indent=2)
-              print(f"✅ A2A Google Hybrid JSON Initialized at: {config_path}")
-
-          if __name__ == "__main__":
-              initialize_a2a()
+          A2A_CONFIG = {"protocol": "Agent-to-Agent Protocol (Google Hybrid)", "version": "V3000-Ω-ULTIMA"}
+          a2a_dir = Path("Protocol/A2A Google Hybrid")
+          a2a_dir.mkdir(parents=True, exist_ok=True)
+          with open(a2a_dir / "a2a_config.json", "w") as f:
+              json.dump(A2A_CONFIG, f, indent=2)
           EOF
           python a2a_google_hybrid_init.py
-
-      - name: "Verify Structural Integrity (SRE Subfolder Assurance)"
-        run: |
-          if [ ! -f "Protocol/Model Context Protocol/mcp_config.json" ] || [ ! -f "Protocol/A2A Google Hybrid/a2a_config.json" ]; then
-            echo "[CRITICAL] Target mapping broke. JSON placement matrix shifted."
-            exit 1
-          fi
-          echo "[SUCCESS] Subfolder Isolation Verified."
 
       - name: "Commit & Push State Substrate Matrix"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
-          
-          # Đóng gói chuẩn hóa các thư mục chứa khoảng trắng bằng dấu ngoặc kép
-          git add "Protocol/Model Context Protocol/mcp_config.json"
-          git add "Protocol/A2A Google Hybrid/a2a_config.json"
-          
-          git diff-index --quiet HEAD || git commit -m "sys(protocol-center): auto-inject runtime JSON to subfolders [skip ci]"
+          git add "Protocol/"
+          git diff-index --quiet HEAD || git commit -m "sys(protocol-center): auto-inject runtime JSON [skip ci]"
           git push origin main
