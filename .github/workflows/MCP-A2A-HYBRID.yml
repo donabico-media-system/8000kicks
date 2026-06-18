@@ -2,7 +2,7 @@ name: "MCP-A2A-HYBRID"
 
 on:
   repository_dispatch:
-    types: [ACTIVATE_MCP_A2A_HYBRID, WORKFLOW_SYNC]
+    types: [ACTIVATE_MCP_A2A_HYBRID, WORKFLOW_SYNC, TRIGGER_AUTO_INJECT]
   workflow_dispatch:
     inputs:
       execution_mode:
@@ -15,13 +15,13 @@ permissions:
   actions: write
 
 jobs:
+  # Job 1: Khởi tạo MCP & A2A (Core Initialization)
   initialize-hybrid-core:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Control Center Substrate"
         uses: actions/checkout@v4
         with:
-          # Sử dụng GITHUB_TOKEN mặc định không cần thiết lập thủ công
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
@@ -30,36 +30,36 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: "Execute Layer-1: Model Context Protocol (MCP) Core Initialization"
+      - name: "Execute Layer-1 & 2: Initialization"
         run: |
-          cat << 'EOF' > mcp_core_init.py
-          import os, json
-          from pathlib import Path
-          MCP_CONFIG = {"protocol": "Model Context Protocol", "version": "V3000-Ω-ULTIMA"}
-          mcp_dir = Path("Protocol/Model Context Protocol")
-          mcp_dir.mkdir(parents=True, exist_ok=True)
-          with open(mcp_dir / "mcp_config.json", "w") as f:
-              json.dump(MCP_CONFIG, f, indent=2)
-          EOF
-          python mcp_core_init.py
+          # MCP Core Init
+          mkdir -p "Protocol/Model Context Protocol"
+          echo '{"protocol": "Model Context Protocol", "version": "V3000-Ω-ULTIMA"}' > "Protocol/Model Context Protocol/mcp_config.json"
+          
+          # A2A Hybrid Init
+          mkdir -p "Protocol/A2A Google Hybrid"
+          echo '{"protocol": "Agent-to-Agent Protocol (Google Hybrid)", "version": "V3000-Ω-ULTIMA"}' > "Protocol/A2A Google Hybrid/a2a_config.json"
 
-      - name: "Execute Layer-2: Agent-to-Agent (A2A) Google Hybrid Initialization"
+  # Job 2: Logic của AUTO-INJECT-SCRIPT được hợp nhất tại đây
+  auto-inject-runtime:
+    needs: initialize-hybrid-core
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: "Inject Automated Scripts"
         run: |
-          cat << 'EOF' > a2a_google_hybrid_init.py
-          import os, json
-          from pathlib import Path
-          A2A_CONFIG = {"protocol": "Agent-to-Agent Protocol (Google Hybrid)", "version": "V3000-Ω-ULTIMA"}
-          a2a_dir = Path("Protocol/A2A Google Hybrid")
-          a2a_dir.mkdir(parents=True, exist_ok=True)
-          with open(a2a_dir / "a2a_config.json", "w") as f:
-              json.dump(A2A_CONFIG, f, indent=2)
-          EOF
-          python a2a_google_hybrid_init.py
-
-      - name: "Commit & Push State Substrate Matrix"
+          # Logic tiêm script tự động của bạn đặt tại đây
+          echo "Injecting runtime configurations..."
+          # Ví dụ: thực hiện các thao tác script injection tại đây
+          
+      - name: "Commit & Push Final State"
         run: |
           git config --global user.name "AETH-V5000-MASTER-CORE"
           git config --global user.email "sre-admin@donabico.global"
-          git add "Protocol/"
-          git diff-index --quiet HEAD || git commit -m "sys(protocol-center): auto-inject runtime JSON [skip ci]"
+          git add Protocol/
+          git diff-index --quiet HEAD || git commit -m "sys(protocol-center): unified sync and auto-injection [skip ci]"
           git push origin main
