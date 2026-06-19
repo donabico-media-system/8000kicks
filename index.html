@@ -172,7 +172,7 @@ li { margin-bottom:10px; }
 <a onclick="showModal('contact')">Contact Support</a>
 </div>
 <div class="system-stamp">
-<p>© 2026 Donabico Global Media System • All Rights Reserved | MCP &amp; A2A GOOGLE HYBRID + REAL Q-LEARNING + SOTA SWARM INTELLIGENCE (STRICT STANDARDS) + TACTICAL SECURITY LAYERS</p>
+<p>© 2026 Donabico Global Media System • All Rights Reserved</p>
 </div>
 </footer>
 </div>
@@ -470,10 +470,10 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
 
     // ==================== REAL Q-LEARNING (Thực thụ với ε-greedy + Proper Update) ====================
     const RealQLearning = {
-        qTable: {}, // Dynamic states: "scroll_low_time_low_clicks_low" etc.
+        qTable: {},
         learningRate: 0.35,
         discountFactor: 0.85,
-        epsilon: 0.25, // Exploration rate (realistic)
+        epsilon: 0.25,
         epsilonDecay: 0.995,
         minEpsilon: 0.05,
 
@@ -499,12 +499,10 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
         },
 
         chooseAction(state) {
-            // ε-greedy exploration (real Q-Learning behavior)
             if (Math.random() < this.epsilon) {
                 const actions = ["dynamic_image_variant", "auto_ab_testing", "export_json_creative", "increase_engagement"];
                 return actions[Math.floor(Math.random() * actions.length)];
             }
-            // Exploitation
             let bestAction = "increase_engagement";
             let bestValue = -Infinity;
             const stateActions = this.qTable[state] || {};
@@ -649,7 +647,7 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
                 conversionSwarm: { perception: 0, action: "monitor", velocity: 0 },
                 intelligenceSwarm: { perception: 0, action: "monitor", velocity: 0 }
             };
-            this.stigmergyEnvironment = { // Stigmergy - indirect communication
+            this.stigmergyEnvironment = {
                 globalEnergy: 0,
                 lastConsensus: "monitor"
             };
@@ -658,18 +656,16 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
         localPerception(signals) {
             this.swarmNodes.seoSwarm.perception = signals.scroll > 50 ? 0.9 : 0.4;
             this.swarmNodes.adsSwarm.perception = signals.clicks > 1 ? 0.85 : 0.3;
-            this.swarmNodes.securitySwarm.perception = 0.95; // High vigilance
+            this.swarmNodes.securitySwarm.perception = 0.95;
             this.swarmNodes.conversionSwarm.perception = signals.timeOnPage > 30 ? 0.8 : 0.5;
             this.swarmNodes.intelligenceSwarm.perception = signals.variant === "B" ? 0.75 : 0.5;
 
-            // Update stigmergy (environment trace)
             this.stigmergyEnvironment.globalEnergy = Object.values(this.swarmNodes).reduce((sum, node) => sum + node.perception, 0) / 5;
         }
 
         applyLocalRules() {
             Object.keys(this.swarmNodes).forEach(nodeKey => {
                 const node = this.swarmNodes[nodeKey];
-                // PSO-inspired velocity update (strict swarm standard)
                 const cognitiveComponent = 0.5 * (node.perception - 0.5);
                 const socialComponent = 0.3 * (this.stigmergyEnvironment.globalEnergy - 0.5);
                 node.velocity = 0.7 * node.velocity + cognitiveComponent + socialComponent;
@@ -684,7 +680,6 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
         }
 
         decentralizedConsensus() {
-            // Strict swarm consensus (weighted majority + stigmergy influence)
             const actionScores = {};
             Object.keys(this.swarmNodes).forEach(nodeKey => {
                 const node = this.swarmNodes[nodeKey];
@@ -692,7 +687,6 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
                 actionScores[node.action] = (actionScores[node.action] || 0) + weight;
             });
 
-            // Add stigmergy bonus
             if (this.stigmergyEnvironment.lastConsensus) {
                 actionScores[this.stigmergyEnvironment.lastConsensus] = (actionScores[this.stigmergyEnvironment.lastConsensus] || 0) + 0.3;
             }
@@ -730,13 +724,10 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
             const s = this.state.signals;
             const currentState = RealQLearning.getState(s);
 
-            // Swarm Intelligence influences
             const swarmConsensus = this.swarm.coordinate(s);
 
-            // Real Q-Learning action selection (ε-greedy)
             let action = RealQLearning.chooseAction(currentState);
 
-            // Swarm + Q-Learning fusion
             if (swarmConsensus === "optimize" && s.scroll > 50) {
                 action = "dynamic_image_variant";
             } else if (swarmConsensus === "protect") {
@@ -750,21 +741,18 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
             this.state.lastDecision = action;
             this.executeAction(action);
 
-            // Calculate reward
             let reward = 0;
             if (s.scroll > 50) reward += 1.2;
             if (s.clicks > 1) reward += 1.6;
             if (s.timeOnPage > 30) reward += 0.9;
             if (swarmConsensus === "optimize") reward += 0.5;
 
-            // Real Q-Learning update
             const nextState = RealQLearning.getState(s);
             RealQLearning.updateQValue(currentState, action, reward, nextState);
             RealQLearning.decayEpsilon();
 
             this.updateIntelligence();
 
-            // Tăng tần suất cung cấp thuật toán cho Bot AI
             this.algorithmProvisionCounter++;
             if (this.algorithmProvisionCounter % 3 === 0) {
                 this.mcpA2A.provideAlgorithmToBots("EATHESEN_RealQ_Swarm_Policy", {
@@ -814,7 +802,6 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
                 if (!this.mcpA2A.connected) this.mcpA2A.connectToEcosystem();
             }, 2200);
 
-            // Dedicated higher frequency algorithm provision to Bot AI
             setInterval(() => {
                 this.mcpA2A.provideAlgorithmToBots("EATHESEN_RealQ_Swarm_Policy", {
                     qTable: RealQLearning.qTable,
@@ -837,7 +824,7 @@ if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
     const HighTechZoneULTIMA = {
         ngrokKeys: { TOKEN_NGROK: "http://localhost:4040/api/tunnels", REST_API_NGROK: "http://localhost:4041/api/tunnels", AUTHTOKEN_NGROK: "http://localhost:4042/api/tunnels" },
 
-        dynamicCreativeGeneratorModule() { /* Giữ nguyên logic từ phiên bản trước - đã tối ưu */ },
+        dynamicCreativeGeneratorModule() { /* Giữ nguyên logic từ phiên bản trước */ },
         dynamicImageVariantModule() { console.log("[DYNAMIC IMAGE VARIANT] Active with Real Q-Learning + Strict Swarm priority"); },
         autoABTestingModule() { console.log("[AUTO A/B TESTING] Active with Real Q-Learning + Strict Swarm optimization"); },
         exportJSONCreative() {
