@@ -2,16 +2,18 @@ name: "ACTIVE-MODULES-SOTA"
 
 on:
   schedule:
-    - cron: "0 */6 * * *" # Robot tự động thức dậy đại phẫu trang web mỗi 6 tiếng một lần
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       target_url:
-        description: 'URL mục tiêu để rà soát AdTech'
-        required: true
+        description: 'URL Drone Landing Page'
+        required: false
         default: 'https://donabico-global-media.github.io/8000kicks/'
+  repository_dispatch:
+    types: [drone-matrix-trigger]
 
 concurrency:
-  group: github-pages-deploy-lock
+  group: active-modules-${{ github.repository }}
   cancel-in-progress: false
 
 permissions:
@@ -33,39 +35,33 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Ecosystem Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install httpx pydantic
 
-      - name: Run EATHESEN V3000-Ω Matrix Injection
+      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Effect
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== EATHESEN V3000-Ω MASTER MATRIX INJECTOR ==="
+          echo "=== EATHESEN V3000-Ω MASTER MATRIX INJECTOR + GOLDEN 2PX DRONE SHIELD ==="
           cd Modules
-          
           if [ -f "Active-Modules.py" ]; then
-            echo "[FORCED ACTIVE] Bộ não trung tâm bắt đầu tiêm và sửa đổi mã nguồn..."
             python Active-Modules.py --url "$TARGET_URL"
           else
-            echo "[CRITICAL ERROR] Thiếu file Active-Modules.py!"
+            echo "[ERROR] Missing Active-Modules.py!"
             exit 1
           fi
 
-      - name: Commit & Push Production Interface & Reports
+      - name: Commit & Push Production Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git add index.html Modules/traffic_report.json || git add index.html || true
-          
+          git add index.html Modules/ || true
           if ! git diff-index --quiet HEAD --; then
-            echo "[V3000-INFO] Phát hiện thay đổi mã nguồn từ Robot. Tiến hành cập nhật trực tuyến..."
-            git commit -m "feat(adtech): dynamic active-modules production injection [skip ci]"
-            
+            git commit -m "feat(adtech): V3000 Matrix + Golden 2px Drone Shield Activated [skip ci]"
             git pull origin main --rebase
             git push origin main
           else
-            echo "[V3000-INFO] Không phát hiện thay đổi mới. Chu kỳ đóng gói kết thúc."
+            echo "No changes detected."
           fi
