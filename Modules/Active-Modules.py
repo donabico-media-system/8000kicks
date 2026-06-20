@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 EATHESEN V3000-Ω | AUTONOMOUS MATRIX INJECTOR v2 (Multi-Brand Scale Ready)
-Hỗ trợ hàng ngàn Kho Thương Hiệu Affiliate
 """
 import os
 import re
@@ -12,7 +11,6 @@ from datetime import datetime, timezone
 from collections import defaultdict
 
 def get_protocols_from_file(module_file):
-    """Đọc danh sách PROTOCOLS từ file module"""
     try:
         with open(module_file, "r", encoding="utf-8") as f:
             content = f.read()
@@ -32,7 +30,6 @@ def execute_single_module(module_file, target_url):
         cmd = f"'{sys.executable}' '{module_file}' --url '{target_url}' > /dev/null 2>&1"
         exit_code = os.system(cmd)
         protocols = get_protocols_from_file(module_file)
-        
         if exit_code == 0:
             return f"✅ {module_file}", protocols
         else:
@@ -59,19 +56,12 @@ def run_massive_siphon_matrix(target_url, target_kho=""):
                 print(status)
                 for p in protocols:
                     print(f"   ✅ {p}")
-                    # Gom nhóm
-                    if "Google" in p:
-                        protocol_groups["Google"].append(p)
-                    elif any(x in p for x in ["Bing", "Microsoft"]):
-                        protocol_groups["Bing/Microsoft"].append(p)
-                    elif any(x in p for x in ["Facebook", "Meta", "Instagram"]):
-                        protocol_groups["Meta/Social"].append(p)
-                    elif "TikTok" in p:
-                        protocol_groups["TikTok"].append(p)
-                    elif any(x in p for x in ["Affiliate", "Amazon", "CJ", "Impact"]):
-                        protocol_groups["Affiliate"].append(p)
-                    else:
-                        protocol_groups["Other"].append(p)
+                    if "Google" in p: protocol_groups["Google"].append(p)
+                    elif any(x in p for x in ["Bing", "Microsoft"]): protocol_groups["Bing/Microsoft"].append(p)
+                    elif any(x in p for x in ["Facebook", "Meta", "Instagram"]): protocol_groups["Meta/Social"].append(p)
+                    elif "TikTok" in p: protocol_groups["TikTok"].append(p)
+                    elif any(x in p for x in ["Affiliate", "Amazon", "CJ", "Impact"]): protocol_groups["Affiliate"].append(p)
+                    else: protocol_groups["Other"].append(p)
                 results.append((status, protocols))
 
     print("-" * 70)
@@ -83,8 +73,7 @@ def run_massive_siphon_matrix(target_url, target_kho=""):
 
 def inject_production_html(results, protocol_groups, target_kho=""):
     index_path = os.path.join("..", "index.html")
-    if not os.path.exists(index_path):
-        index_path = "index.html"
+    if not os.path.exists(index_path): index_path = "index.html"
     if not os.path.exists(index_path):
         print("[ERROR] Không tìm thấy index.html!")
         return
@@ -92,7 +81,7 @@ def inject_production_html(results, protocol_groups, target_kho=""):
     with open(index_path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # DỌN SẠCH HOÀN TOÀN TẤT CẢ BANNER CŨ (triệt để)
+    # DỌN SẠCH TRIỆT ĐỂ TẤT CẢ BANNER CŨ
     html = re.sub(r'<div id="dnbc-adtech-banner".*?</div>', '', html, flags=re.DOTALL | re.IGNORECASE)
     html = re.sub(r'<div id="eath esen-matrix-summary".*?</div>', '', html, flags=re.DOTALL | re.IGNORECASE)
 
@@ -110,7 +99,7 @@ def inject_production_html(results, protocol_groups, target_kho=""):
     if "<head>" in html:
         html = html.replace("<head>", f"<head>\n{golden_style}")
 
-    # Banner mới (chỉ 1 cái)
+    # Banner mới (CHỈ 1 CÁI)
     current_time = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
     total_protocols = sum(len(v) for v in protocol_groups.values())
     summary = f"""
@@ -128,19 +117,16 @@ def inject_production_html(results, protocol_groups, target_kho=""):
 
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(html)
-    print("[SUCCESS] Golden 2px + Protocol Summary injected into index.html (old banners cleaned)!")
+    print("[SUCCESS] Golden 2px + Protocol Summary injected (old banners cleaned)!")
 
 if __name__ == "__main__":
     target_url = "https://donabico-global-media.github.io/8000kicks/"
     target_kho = ""
-    
     try:
         opts, args = getopt.getopt(sys.argv[1:], "u:k:", ["url=", "kho="])
         for opt, arg in opts:
-            if opt in ("-u", "--url"):
-                target_url = arg
-            elif opt in ("-k", "--kho"):
-                target_kho = arg
+            if opt in ("-u", "--url"): target_url = arg
+            elif opt in ("-k", "--kho"): target_kho = arg
     except getopt.GetoptError:
         pass
 
