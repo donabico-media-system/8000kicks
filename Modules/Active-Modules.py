@@ -30,6 +30,7 @@ def execute_single_module(module_file, target_url):
         cmd = f"'{sys.executable}' '{module_file}' --url '{target_url}' > /dev/null 2>&1"
         exit_code = os.system(cmd)
         protocols = get_protocols_from_file(module_file)
+        
         if exit_code == 0:
             return f"✅ {module_file}", protocols
         else:
@@ -73,7 +74,8 @@ def run_massive_siphon_matrix(target_url, target_kho=""):
 
 def inject_production_html(results, protocol_groups, target_kho=""):
     index_path = os.path.join("..", "index.html")
-    if not os.path.exists(index_path): index_path = "index.html"
+    if not os.path.exists(index_path):
+        index_path = "index.html"
     if not os.path.exists(index_path):
         print("[ERROR] Không tìm thấy index.html!")
         return
@@ -81,11 +83,11 @@ def inject_production_html(results, protocol_groups, target_kho=""):
     with open(index_path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # DỌN SẠCH TRIỆT ĐỂ TẤT CẢ BANNER CŨ
+    # DỌN SẠCH TOÀN BỘ BANNER CŨ
     html = re.sub(r'<div id="dnbc-adtech-banner".*?</div>', '', html, flags=re.DOTALL | re.IGNORECASE)
     html = re.sub(r'<div id="eath esen-matrix-summary".*?</div>', '', html, flags=re.DOTALL | re.IGNORECASE)
 
-    # Golden 2px Drone Shield
+    # Golden 2px Drone Shield (nếu bạn muốn giữ)
     golden_style = """
     <style>
     .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
@@ -99,25 +101,9 @@ def inject_production_html(results, protocol_groups, target_kho=""):
     if "<head>" in html:
         html = html.replace("<head>", f"<head>\n{golden_style}")
 
-    # Banner mới (CHỈ 1 CÁI)
-    current_time = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
-    total_protocols = sum(len(v) for v in protocol_groups.values())
-    summary = f"""
-    <div id="eath esen-matrix-summary" style="background:#111; color:#0f0; padding:15px; margin:20px 0; border:1px solid #0f0; font-family:monospace;">
-        <strong>🛡️ EATHESEN V3000-Ω MATRIX ACTIVATED</strong><br>
-        Brand/Kho: {target_kho or 'Default'}<br>
-        Time: {current_time}<br>
-        Total Protocols Activated: {total_protocols}<br>
-        Groups: {', '.join(protocol_groups.keys())}<br>
-        <span style="color:#FFD700">Golden Drone Shield: ACTIVE</span>
-    </div>
-    """
-    if "<body>" in html:
-        html = html.replace("<body>", f"<body>\n{summary}")
-
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(html)
-    print("[SUCCESS] Golden 2px + Protocol Summary injected (old banners cleaned)!")
+    print("[SUCCESS] Golden 2px Drone Shield injected (NO public banner)!")
 
 if __name__ == "__main__":
     target_url = "https://donabico-global-media.github.io/8000kicks/"
