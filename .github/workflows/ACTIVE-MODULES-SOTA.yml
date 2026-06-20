@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       target_kho:
-        description: 'Tên Kho Thương Hiệu (ví dụ: 8000kicks, nike, adidas...)'
+        description: 'Tên Kho Thương Hiệu'
         required: true
         default: '8000kicks'
       target_url:
-        description: 'URL Landing Page của Kho đó'
+        description: 'URL Landing Page'
         required: false
         default: 'https://donabico-global-media.github.io/8000kicks/'
 
@@ -47,7 +47,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install httpx pydantic
 
-      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px for ${{ github.event.inputs.target_kho }}
+      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Shield
         env:
           TARGET_URL: ${{ github.event.inputs.target_url }}
           TARGET_KHO: ${{ github.event.inputs.target_kho }}
