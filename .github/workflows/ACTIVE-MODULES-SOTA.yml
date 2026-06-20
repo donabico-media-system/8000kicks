@@ -2,11 +2,11 @@ name: "ACTIVE-MODULES-SOTA"
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */6 * * *"          # Tự động chạy mỗi 6 tiếng
   workflow_dispatch:
     inputs:
       target_url:
-        description: 'URL Drone Landing Page'
+        description: 'URL Drone Landing Page cần kích hoạt Matrix'
         required: false
         default: 'https://donabico-global-media.github.io/8000kicks/'
   repository_dispatch:
@@ -40,16 +40,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install httpx pydantic
 
-      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Effect
+      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Shield (Latest)
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== EATHESEN V3000-Ω MASTER MATRIX INJECTOR + GOLDEN 2PX DRONE SHIELD ==="
+          echo "=== EATHESEN V3000-Ω MASTER MATRIX INJECTOR v2 + GOLDEN 2PX DRONE SHIELD ==="
           cd Modules
           if [ -f "Active-Modules.py" ]; then
             python Active-Modules.py --url "$TARGET_URL"
           else
-            echo "[ERROR] Missing Active-Modules.py!"
+            echo "[CRITICAL ERROR] Missing Modules/Active-Modules.py!"
             exit 1
           fi
 
@@ -57,11 +57,13 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
           git add index.html Modules/ || true
+          
           if ! git diff-index --quiet HEAD --; then
             git commit -m "feat(adtech): V3000 Matrix + Golden 2px Drone Shield Activated [skip ci]"
             git pull origin main --rebase
             git push origin main
           else
-            echo "No changes detected."
+            echo "[V3000-INFO] No changes detected. Matrix cycle completed."
           fi
