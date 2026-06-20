@@ -1,17 +1,25 @@
-name: "ACTIVE-MODULES-SOTA"
+name: "ACTIVE-MODULES-SOTA (Multi-Brand Scale Ready)"
 
 on:
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
+      target_kho:
+        description: 'Tên Kho Thương Hiệu (ví dụ: 8000kicks, nike, adidas...)'
+        required: true
+        default: '8000kicks'
       target_url:
-        description: 'URL Drone Landing Page'
+        description: 'URL Landing Page của Kho đó'
         required: false
         default: 'https://donabico-global-media.github.io/8000kicks/'
+      run_mode:
+        description: 'single hoặc matrix (cho batch nhiều brand)'
+        required: false
+        default: 'single'
 
 concurrency:
-  group: active-modules-${{ github.repository }}
+  group: active-modules-${{ github.event.inputs.target_kho || github.repository }}
   cancel-in-progress: false
 
 permissions:
@@ -25,9 +33,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Reset to latest remote main
+      - name: Reset to latest remote main (Safe Scale)
         run: |
           git fetch origin main
           git reset --hard origin/main
@@ -42,15 +51,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install httpx pydantic
 
-      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Shield
+      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px for ${{ github.event.inputs.target_kho }}
         env:
-          TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
+          TARGET_URL: ${{ github.event.inputs.target_url }}
+          TARGET_KHO: ${{ github.event.inputs.target_kho }}
         run: |
-          echo "=== EATHESEN V3000-Ω MASTER MATRIX INJECTOR + GOLDEN 2PX DRONE SHIELD ==="
+          echo "=== EATHESEN V3000-Ω MATRIX FOR BRAND: $TARGET_KHO ==="
           cd Modules
-          python Active-Modules.py --url "$TARGET_URL"
+          python Active-Modules.py --url "$TARGET_URL" --kho "$TARGET_KHO"
 
-      - name: Commit & Push (Safe - No Token)
+      - name: Commit & Push (Safe for Scale)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -58,9 +68,9 @@ jobs:
           git add index.html Modules/traffic_report.json || true
           
           if git diff --cached --quiet; then
-            echo "[V3000-INFO] No changes to commit."
+            echo "[V3000-INFO] No changes to commit for $TARGET_KHO."
           else
-            git commit -m "feat(adtech): V3000 Matrix + Golden 2px Drone Shield Activated [skip ci]"
+            git commit -m "feat(adtech): V3000 Matrix + Golden 2px for ${{ github.event.inputs.target_kho }} [skip ci]"
             git push origin main
-            echo "[V3000-SUCCESS] Pushed successfully."
+            echo "[V3000-SUCCESS] Pushed successfully for $TARGET_KHO."
           fi
