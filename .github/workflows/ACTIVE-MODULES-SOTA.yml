@@ -22,11 +22,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (with token)
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          token: ${{ secrets.FINE_GRAINED_TOKEN }}   # ← QUAN TRỌNG
           fetch-depth: 0
+
+      - name: Reset to latest remote main (fix non-fast-forward)
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
 
       - name: Set up Python Environment
         uses: actions/setup-python@v5
@@ -46,7 +51,7 @@ jobs:
           cd Modules
           python Active-Modules.py --url "$TARGET_URL"
 
-      - name: Commit & Push Production Changes (Robust - Fixed)
+      - name: Commit & Push (Safe with force-with-lease)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -57,6 +62,6 @@ jobs:
             echo "[V3000-INFO] No changes to commit."
           else
             git commit -m "feat(adtech): V3000 Matrix + Golden 2px Drone Shield Activated [skip ci]"
-            git push origin HEAD:main
-            echo "[V3000-SUCCESS] Pushed successfully."
+            git push --force-with-lease origin main
+            echo "[V3000-SUCCESS] Pushed successfully with force-with-lease."
           fi
