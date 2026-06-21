@@ -1,16 +1,12 @@
-# .github/workflows/SUPER-CORE-AFFILIATE.yml
 name: SUPER-CORE-AFFILIATE
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
-  workflow_dispatch:
-  push:
-    paths:
-      - 'Super Core Affiliate/**'
+    - cron: '0 */6 * * *'   # Tự động mỗi 6 giờ
+  workflow_dispatch:        # Trigger thủ công từ Chrome
 
 jobs:
-  build-affiliate-landing:
+  generate-drone-landing:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,11 +21,11 @@ jobs:
       - name: Install dependencies
         run: pip install langgraph jinja2
 
-      - name: Run Super Core Affiliate System
+      - name: Generate index.html (Drone Landing Page)
         working-directory: ./Super Core Affiliate
         run: python Super-Core-Affiliate.py
 
-      - name: Deploy generated index.html to GitHub Pages
+      - name: Deploy to GitHub Pages (always live 24/7)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
