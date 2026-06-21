@@ -2,7 +2,7 @@ name: "ACTIVE-MODULES-SOTA"
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */4 * * *"
   workflow_dispatch:
     inputs:
       target_kho:
@@ -45,16 +45,22 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install httpx pydantic
+          pip install httpx pydantic pyngrok
 
-      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Shield
+      - name: Run EATHESEN V3000-Ω Matrix + Golden 2px Drone Shield + SEO + NGROK
         env:
           TARGET_URL: ${{ github.event.inputs.target_url }}
           TARGET_KHO: ${{ github.event.inputs.target_kho }}
+          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
         run: |
           echo "=== EATHESEN V3000-Ω MATRIX FOR BRAND: $TARGET_KHO ==="
           cd Modules
           python Active-Modules.py --url "$TARGET_URL" --kho "$TARGET_KHO"
+          python SEO-Shield-Siphon.py
+          python Google-Siphon.py
+          # NGROK Tunnel
+          pyngrok config add-authtoken $NGROK_AUTHTOKEN
+          python Traffic-Siphon.py
 
       - name: Commit & Push (Safe)
         run: |
@@ -66,7 +72,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "[V3000-INFO] No changes to commit for $TARGET_KHO."
           else
-            git commit -m "feat(adtech): V3000 Matrix + Golden 2px for ${{ github.event.inputs.target_kho }} [skip ci]"
+            git commit -m "feat(adtech): V3000 Matrix + Golden 2px + SEO + NGROK for ${{ github.event.inputs.target_kho }} [skip ci]"
             git push origin main
             echo "[V3000-SUCCESS] Pushed successfully for $TARGET_KHO."
           fi
