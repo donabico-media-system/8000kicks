@@ -1,51 +1,54 @@
 #!/usr/bin/env python3
-"""Traffic-Siphon.py | EATHESEN V3000-Ω Monitor"""
-
 import argparse
 import json
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
 import os
+from datetime import datetime, timezone
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", type=str, required=True)
+    parser.add_argument("--url", type=str, required=False)
     args = parser.parse_args()
-
-    report_file = "traffic_report.json"
     
-    # Đọc report cũ nếu có để nối tiếp dữ liệu
+    # URL mặc định của hệ thống
+    target_url = args.url if args.url else "https://donabico-global-media.github.io/8000kicks/"
+    
+    # GIẢI PHÁP: Ghi trực tiếp tại thư mục hiện hành vì Workflow đã thực hiện 'cd Modules'
+    report_path = "traffic_report.json"
+    
     history = []
-    if os.path.exists(report_file):
-        with open(report_file, "r") as f:
-            try: history = json.load(f)
-            except: history = []
+    if os.path.exists(report_path):
+        with open(report_path, "r") as f:
+            try: 
+                history = json.load(f)
+            except Exception: 
+                history = []
 
-    # Thu thập dữ liệu mới
-    entry = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "url": args.url,
-        "status": "CHECKING"
-    }
-
+    # Thực hiện quét kiểm tra trạng thái HTTP
     try:
-        with urllib.request.urlopen(args.url, timeout=10) as response:
-            entry["status"] = response.status
-            entry["message"] = "SUCCESS"
+        with urllib.request.urlopen(target_url, timeout=10) as response:
+            status = response.status
+            message = "SUCCESS"
     except urllib.error.HTTPError as e:
-        entry["status"] = e.code
-        entry["message"] = "HTTP_ERROR"
+        status = e.code
+        message = "HTTP_ERROR"
     except Exception as e:
-        entry["status"] = 0
-        entry["message"] = str(e)[:30]
+        status = 0
+        message = str(e)[:30]
 
-    # Ghi lại vào file JSON
-    history.append(entry)
-    with open(report_file, "w") as f:
+    # Đóng gói dữ liệu Telemetry chuẩn cấu trúc
+    history.append({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "url": target_url,
+        "status": status,
+        "message": message
+    })
+    
+    with open(report_path, "w") as f:
         json.dump(history, f, indent=4)
-
-    print(f"[V3000-Ω] Traffic-Siphon | Status: {entry['status']} | Log saved to {report_file}")
+        
+    print(f"[V3000-Ω] Traffic-Siphon thực thi thành công. Trạng thái phản hồi: {status}")
 
 if __name__ == "__main__":
     main()
