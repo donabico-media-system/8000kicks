@@ -3,11 +3,11 @@ name: SUPER-CORE-AFFILIATE
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # Run every 6 hours (auto-evolution)
-  workflow_dispatch:        # Manual trigger
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
   push:
     paths:
-      - '8000kicks/Super Core Affiliate/**'
+      - 'Super Core Affiliate/**'
 
 jobs:
   build-affiliate-landing:
@@ -16,22 +16,20 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Install dependencies
-        run: |
-          pip install langgraph jinja2
-      
+        run: pip install langgraph jinja2
+
       - name: Run Super Core Affiliate System
-        working-directory: 8000kicks/Super Core Affiliate
+        working-directory: ./Super Core Affiliate
         run: python Super-Core-Affiliate.py
-      
-      - name: Deploy to GitHub Pages (if index.html in root/docs)
-        if: always()
+
+      - name: Deploy generated index.html to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
