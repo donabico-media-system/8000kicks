@@ -1,27 +1,58 @@
 /**
- * Performance-Max.js - V4.0-ULTIMA-MAX (ENGLISH ONLY VERSION)
+ * Performance-Max.js - V4.0-ULTIMA-MAX (ENGLISH ONLY)
  * EATHESEN V3000-Ω SOTA | English Lock Enforced
  */
 
 class UltimatePerformanceMaxAgent {
     constructor(configuration = {}) {
         this.signature = "V3000-Ω-ULTIMA-DECENTRALIZED-NETWORK-MAX";
-        this.version = "4.0-ULTIMA-MAX";
         this.webhookUrl = configuration.webhookUrl || null;
+        this.version = "4.0-ULTIMA-MAX";
 
-        this.states = ['NAV_LOW_ENGAGED', 'NAV_HIGH_ENGAGED', 'INTENT_CRITICAL_HOT', 'ADS_INTENT_PROMO', 'ADS_INTENT_URGENCY', 'ADS_INTENT_QUALITY'];
-        this.actions = ['VARIANT_PROMO_AGGRESSIVE', 'VARIANT_URGENCY_SCARCITY', 'VARIANT_HYPER_SOCIAL_PROOF', 'VARIANT_DYNAMIC_OFFER', 'VARIANT_SEO_AEO_PUSH', 'VARIANT_TRUST_MAX'];
+        // === EXPANDED STATE & ACTION SPACE ===
+        this.states = [
+            'NAV_LOW_ENGAGED', 'NAV_HIGH_ENGAGED', 'INTENT_CRITICAL_HOT',
+            'ADS_INTENT_PROMO', 'ADS_INTENT_URGENCY', 'ADS_INTENT_QUALITY',
+            'ANOMALY_THREAT', 'SWARM_CONSENSUS', 'CONVERSION_READY'
+        ];
+        this.actions = [
+            'VARIANT_PROMO_AGGRESSIVE', 'VARIANT_URGENCY_SCARCITY', 'VARIANT_HYPER_SOCIAL_PROOF',
+            'VARIANT_DYNAMIC_OFFER', 'VARIANT_SEO_AEO_PUSH', 'VARIANT_TRUST_MAX'
+        ];
 
         this.alpha = 0.28;
         this.gamma = 0.92;
         this.epsilon = 0.25;
         this.epsilonDecay = 0.985;
         this.minEpsilon = 0.03;
+        this.temperature = 1.2;
 
         this.storageKey = 'V3000_ULTIMA_MAX_NEURAL_MATRIX';
         this.qTable = this.synchronizeNeuralMatrix();
+        this.experienceReplay = [];
+        this.maxReplaySize = 128;
+
         this.adsContext = this.parseExternalAdsIntent();
         this.currentState = this.determineInitialState();
+
+        this.activeActionIdx = 0;
+        this.epochStartTime = performance.now();
+
+        this.telemetry = {
+            maxScrollDepth: 0,
+            scrollVelocityMax: 0,
+            ctaInteractionCount: 0,
+            conversionStateReached: false,
+            lastScrollPosition: 0,
+            lastScrollTime: performance.now(),
+            mouseDwellTime: 0,
+            clickHeatmap: {},
+            dwellTimeDistribution: []
+        };
+
+        this.signalHistory = [];
+        this.swarmEnergy = 0.65;
+        this.selfHealingCount = 0;
 
         this.igniteEngine();
     }
@@ -62,10 +93,15 @@ class UltimatePerformanceMaxAgent {
             this.states.forEach(s => pristineMatrix[s] = new Array(this.actions.length).fill(0.0000));
             return pristineMatrix;
         } catch (e) {
+            this.selfHealingCount++;
             const fallback = {};
             this.states.forEach(s => fallback[s] = new Array(this.actions.length).fill(0.015));
             return fallback;
         }
+    }
+
+    persistNeuralMatrix() {
+        try { localStorage.setItem(this.storageKey, JSON.stringify(this.qTable)); } catch (e) {}
     }
 
     stochasticActionSelection(state) {
@@ -88,7 +124,7 @@ class UltimatePerformanceMaxAgent {
     // === FIXED INJECT FUNCTION - ENGLISH ONLY ===
     injectDominantUiTransformation(actionIdx) {
         const actionName = this.actions[actionIdx];
-        console.log(`%c[Performance-Max-ACTUATOR] Injecting: ${actionName}`, "color: #ccff00; font-weight: bold;");
+        console.log(`%c[Performance-Max-ACTUATOR MAX] Injecting Matrix Action: ${actionName}`, "color: #ccff00; font-weight: bold;");
 
         const headlineNode = document.querySelector('h1');
 
