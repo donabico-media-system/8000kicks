@@ -1,5 +1,5 @@
 # ╔════════════════════════════════════════════════════════════════════════════╗
-# ║ ACTIVE-MODULES-SOTA.yml (V11 - FIXED YAML SYNTAX)                          ║
+# ║ ACTIVE-MODULES-SOTA.yml (V12 - FIXED YAML SYNTAX)                          ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 name: "ACTIVE-MODULES-SOTA"
@@ -63,21 +63,12 @@ jobs:
             fi
           done
 
-          # Add Green Border Effect
-          cat >> index.html << 'EOF'
-<!-- V3000 UI ENHANCEMENT - GREEN BORDER -->
-<style>
-body { 
-    border: 4px solid #00ff66 !important; 
-    box-sizing: border-box; 
-    animation: pulseGreen 1.5s infinite alternate ease-in-out !important;
-}
-@keyframes pulseGreen { 
-    0% { border-color: #00cc55; } 
-    100% { border-color: #00ff66; } 
-}
-</style>
-EOF
+          # Add Green Border Effect using echo (avoid heredoc error)
+          echo '<!-- V3000 UI ENHANCEMENT - GREEN BORDER -->' >> index.html
+          echo '<style>' >> index.html
+          echo 'body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: pulseGreen 1.5s infinite alternate ease-in-out !important; }' >> index.html
+          echo '@keyframes pulseGreen { 0% { border-color: #00cc55; } 100% { border-color: #00ff66; } }' >> index.html
+          echo '</style>' >> index.html
 
       - name: Commit & Push Changes
         run: |
