@@ -37,11 +37,11 @@ jobs:
           pip install httpx pydantic
           npm install dotenv || echo "skipped"
 
-      - name: Run All Real Modules + HARD ENGLISH LOCK
+      - name: Run All Real Modules + ULTRA ENGLISH LOCK
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== V3000 REAL + HARD ENGLISH LOCK ==="
+          echo "=== V3000 REAL PRODUCTION MODE ==="
 
           mkdir -p Modules .github/scripts
 
@@ -65,18 +65,25 @@ jobs:
             fi
           done
 
-          # === HARD ENGLISH LOCK (MutationObserver + Text Cleaner) ===
-          echo '<!-- V3000 HARD ENGLISH LOCK -->' >> index.html
+          # === ULTRA HARD ENGLISH LOCK ===
+          echo '<!-- V3000 ULTRA ENGLISH LOCK -->' >> index.html
           echo '<script>
             const ENGLISH_TITLE = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
 
-            function forceEnglishTitle() {
+            function forceEnglish() {
               if (document.title !== ENGLISH_TITLE) {
                 document.title = ENGLISH_TITLE;
               }
-            }
 
-            function cleanVietnameseText() {
+              document.querySelectorAll("h1, h2, h3").forEach(el => {
+                if (el.textContent.includes("Giày") || el.textContent.includes("Việt") || /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(el.textContent)) {
+                  el.textContent = el.textContent
+                    .replace(/Giày Gai Dầu Bền Vững Carbon Negative/gi, "Waterproof Hemp Shoes - Carbon Negative")
+                    .replace(/Giày chống nước/gi, "Waterproof Shoes")
+                    .replace(/Bền vững/gi, "Sustainable");
+                }
+              });
+
               const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
               let node;
               while (node = walker.nextNode()) {
@@ -84,34 +91,22 @@ jobs:
                   node.nodeValue = node.nodeValue
                     .replace(/Giày Gai Dầu Bền Vững Carbon Negative/gi, "Waterproof Hemp Shoes - Carbon Negative")
                     .replace(/Giày chống nước/gi, "Waterproof Shoes")
-                    .replace(/Bền vững/gi, "Sustainable")
-                    .replace(/Carbon Negative/gi, "Carbon Negative");
+                    .replace(/Bền vững/gi, "Sustainable");
                 }
               }
             }
 
-            // Chạy ngay
-            forceEnglishTitle();
-            cleanVietnameseText();
+            forceEnglish();
+            setInterval(forceEnglish, 500);
 
-            // MutationObserver chặn mọi thay đổi
-            const observer = new MutationObserver(() => {
-              forceEnglishTitle();
-              cleanVietnameseText();
-            });
+            const observer = new MutationObserver(forceEnglish);
             observer.observe(document.documentElement, { 
               childList: true, 
               subtree: true, 
               characterData: true 
             });
 
-            // Dự phòng chạy mỗi giây
-            setInterval(() => {
-              forceEnglishTitle();
-              cleanVietnameseText();
-            }, 1000);
-
-            console.log("%c[V3000] HARD English Lock Activated", "color:#00ff66");
+            console.log("%c[V3000] ULTRA English Lock Activated", "color:#00ff66");
           </script>' >> index.html
 
           # Green Border + Responsive
@@ -146,7 +141,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 HARD ENGLISH LOCK + REAL PRODUCTION [skip ci]"
+            git commit -m "V3000 ULTRA ENGLISH LOCK + REAL PRODUCTION [skip ci]"
             git push origin main
             echo "Pushed successfully"
           fi
