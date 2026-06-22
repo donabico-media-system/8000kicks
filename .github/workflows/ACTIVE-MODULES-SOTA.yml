@@ -1,15 +1,11 @@
 name: "ACTIVE-MODULES-SOTA"
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
+# XÓA BỎ HOÀN TOÀN CHẾ ĐỘ CHẠY NGẦM ĐỊNH KỲ (CRON JOB)
+# Hệ thống chỉ chạy DUY NHẤT khi bạn chủ động vào bấm nút bằng tay
 on:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch:
 
-# Hạ cấp quyền về mức tối giản tuyệt đối, không yêu cầu id-token hay bảo mật mở rộng
+# Quyền hạn cấu hình ở mức thấp nhất (Chỉ đọc/ghi file thuần túy trong kho)
 permissions:
   contents: write
 
@@ -40,10 +36,10 @@ jobs:
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== V3000 NO-TOKEN CLEAN SCAN ==="
+          echo "=== V3000 NO-TOKEN ETHICAL PRODUCTION RUN ==="
           mkdir -p Modules
 
-          # Tạo kịch bản dọn dẹp thông tin lừa dối ngay tại chỗ
+          # Tạo kịch bản loại bỏ triệt để mọi thông tin lừa dối/thúc ép người tiêu dùng
           cat << 'EOF' > clean_jail.py
           import os
           import re
@@ -59,7 +55,7 @@ jobs:
 
               soup = BeautifulSoup(content, "html.parser")
 
-              # Khử bỏ triệt để các dạng text đếm ngược / tồn kho ảo
+              # 1. QUÉT VÀ DIỆT TRIỆT ĐỂ TEXT SỐ LƯỢNG ẢO / ĐẾM NGƯỢC GIẢ
               fake_patterns = [
                   r"Only \d+ pairs left.*", 
                   r"Chỉ còn \d+ đôi trong kho.*",
@@ -74,7 +70,7 @@ jobs:
                       if re.search(pattern, text_value, re.IGNORECASE):
                           element.replace_with("")
 
-              # Trả nút bấm về định dạng Times New Roman sạch
+              # 2. CHUẨN HÓA TOÀN BỘ NÚT AFFILIATE VỀ TIMES NEW ROMAN
               for a in soup.find_all("a"):
                   href = a.get("href", "")
                   if "8000kicks" in href or "sjv.io" in href:
@@ -82,6 +78,7 @@ jobs:
                       a["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: 'Times New Roman', Times, serif;"
                       a["data-dnbc-lock"] = "true"
 
+              # 3. DỌN SẠCH CHỮ TIẾNG VIỆT DỊCH LỖI
               content_str = str(soup)
               content_str = content_str.replace("KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS", "EXPLORE ECO")
               content_str = content_str.replace("Giày Gai Dầu Bền Vững Carbon Negative", "Waterproof Hemp Shoes - Carbon Negative")
@@ -91,21 +88,23 @@ jobs:
                   f.write(content_str)
           EOF
 
-          # Quét vô hạn tất cả file Python trong thư mục Modules
+          # QUÉT VÔ HẠN tất cả file .py nằm trong thư mục Modules/
           find Modules/ -type f -name "*.py" | while read -r script; do
             if [[ "$script" == *"Performance-Max"* || "$script" == *"clean_jail"* ]]; then
               continue
             fi
-            echo "Running module: $script"
+            echo "Running module safely: $script"
             python "$script" --url "$TARGET_URL" || echo "Module skipped"
+            
+            # Ép bộ lọc trung thực dọn dẹp ngay sau khi file python chạy xong
             python clean_jail.py
           done
           
           rm clean_jail.py
 
-      - name: Inject Clean Script & Layout
+      - name: Inject Strict Clean Layout
         run: |
-          echo '' >> index.html
+          echo '<!-- NO-URGENCY ETHICAL SHIELD -->' >> index.html
           echo '<script>
             function purgeFakeUrgency() {
               const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -131,14 +130,14 @@ jobs:
             }
           </style>' >> index.html
 
-      - name: Push Standard Build
+      - name: Standard Git Push (No Ext Token Required)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           if git diff --cached --quiet; then
-            echo "No changes"
+            echo "No changes detected"
           else
-            git commit -m "V3000 REAL + STANDARD PUSH (NO TOKEN REQUIRED) [skip ci]"
+            git commit -m "V3000 PURE MODULES + NO TOKEN PRODUCTION [skip ci]"
             git push origin main
           fi
