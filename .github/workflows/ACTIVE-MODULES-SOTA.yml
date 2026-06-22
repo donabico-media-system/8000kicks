@@ -1,6 +1,8 @@
 name: "ACTIVE-MODULES-SOTA"
-# Thuộc tính dưới đây sẽ ẩn hoàn toàn đường dẫn file trên giao diện Actions và thay bằng tên đợt chạy sạch sẽ
-run-name: "V3000 REAL PRODUCTION MODE (Run #${{ github.run_number }})"
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 on:
   schedule:
@@ -9,6 +11,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   real-production:
@@ -61,7 +65,7 @@ jobs:
             fi
           done
 
-          # Python Post-Processor bảo vệ nút chuyển hướng Affiliate
+          # Python Post-Processor bảo vệ nút và xóa text .yml thừa ở đầu file index.html
           python -c '
 import os
 import re
@@ -129,6 +133,6 @@ if os.path.exists(file_path):
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 REAL + UI RUN CLEANED [skip ci]"
+            git commit -m "V3000 REAL + REVERT TO ORIGINAL NAME [skip ci]"
             git push origin main
           fi
