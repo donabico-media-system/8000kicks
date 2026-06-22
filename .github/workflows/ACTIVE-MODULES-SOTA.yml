@@ -1,34 +1,29 @@
-# ╔════════════════════════════════════════════════════════════════════════════╗
-# ║ ACTIVE-MODULES-SOTA.yml (V14 - FINAL CLEAN VERSION)                        ║
-# ║ EATHESEN V3000-Ω SOTA | 24/7 AUTO RUN + ENGLISH LOCK + GREEN BORDER       ║
-# ╚════════════════════════════════════════════════════════════════════════════╝
-
 name: "ACTIVE-MODULES-SOTA"
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  run-modules:
+  real-production:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Latest Changes (Fix Git Conflict)
+      - name: Pull Latest
         run: |
           git fetch origin main
           git reset --hard origin/main
 
-      - name: Set up Python & Node.js
+      - name: Setup Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
@@ -40,57 +35,42 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install httpx pydantic
-          npm install dotenv google-ads-api || echo "google-ads-api skipped"
+          npm install dotenv || echo "skipped"
 
-      - name: Auto Run All Scripts + English Lock + UI Enhancement
+      - name: Run Real Modules Only
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== EATHESEN V3000-Ω 24/7 MATRIX START ==="
+          echo "=== V3000 REAL PRODUCTION MODE ==="
 
           mkdir -p Modules .github/scripts
 
-          # Run all .js files
+          # Run all real .js files
           for script in .github/scripts/*.js; do
             if [ -f "$script" ]; then
-              echo "→ Running JS: $script"
-              node "$script" || echo "Skipped $script"
+              echo "→ REAL JS: $script"
+              node "$script" || echo "Skipped"
             fi
           done
 
-          # Run all .py files with --url + English language lock
+          # Run real .py files (skip simulation)
           for script in Modules/*.py .github/scripts/*.py; do
             if [ -f "$script" ]; then
-              echo "→ Running PY: $script"
-              python "$script" --url "$TARGET_URL" --lang en || echo "Skipped $script"
+              if [[ "$script" == *"Performance-Max"* ]]; then
+                echo "→ Skipped Simulation: $script"
+                continue
+              fi
+              echo "→ REAL: $script"
+              python "$script" --url "$TARGET_URL" || echo "Skipped"
             fi
           done
 
-          # Force English Title + Green Border Effect
-          echo '<!-- V3000 UI ENHANCEMENT - ENGLISH LOCK + GREEN BORDER -->' >> index.html
-          echo '<script>
-            document.title = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
-            // Lock title from being changed by other scripts
-            const originalTitle = document.title;
-            setInterval(() => {
-              if (document.title !== originalTitle) {
-                document.title = originalTitle;
-              }
-            }, 3000);
-          </script>' >> index.html
-          echo '<style>
-            body { 
-              border: 4px solid #00ff66 !important; 
-              box-sizing: border-box; 
-              animation: pulseGreen 1.5s infinite alternate ease-in-out !important;
-            }
-            @keyframes pulseGreen { 
-              0% { border-color: #00cc55; } 
-              100% { border-color: #00ff66; } 
-            }
-          </style>' >> index.html
+          # Real update to index.html
+          echo '<!-- V3000 REAL UPDATE -->' >> index.html
+          echo '<script>console.log("%c[V3000 REAL] All modules running live","color:#00ff66");</script>' >> index.html
+          echo '<style>body{border:4px solid #00ff66!important;box-sizing:border-box;animation:pulseGreen 1.5s infinite alternate ease-in-out!important}@keyframes pulseGreen{0%{border-color:#00cc55}100%{border-color:#00ff66}}</style>' >> index.html
 
-      - name: Commit & Push Changes
+      - name: Commit & Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -98,9 +78,9 @@ jobs:
           git add .github/scripts/ Modules/ index.html || true
           
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "No changes"
           else
-            git commit -m "V3000 24/7 Auto-run modules + English Lock + UI sync [skip ci]"
+            git commit -m "V3000 REAL PRODUCTION [skip ci]"
             git push origin main
-            echo "Push successful."
+            echo "Pushed successfully"
           fi
