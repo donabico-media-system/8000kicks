@@ -3,50 +3,46 @@ import re
 from bs4 import BeautifulSoup
 
 def run():
-    print("[+] Seo-Optimizer: Đang cấu hình Hệ thống Điều hướng Toàn cầu 24/7...")
+    print("[+] Seo-Optimizer: Đang khóa cứng font và thiết lập điều hướng toàn cầu...")
     file_path = "index.html"
     if not os.path.exists(file_path): 
-        print("[-] Không tìm thấy index.html")
+        print("[-] Không tìm thấy index.html để tối ưu.")
         return
 
     with open(file_path, "r", encoding="utf-8") as f:
         soup = BeautifulSoup(f.read(), "html.parser")
 
-    # 1. NHÚNG MODULE ĐIỀU HƯỚNG TỰ ĐỘNG GEOIP CHUYỂN ĐỔI ROI HIGH-TICKET
+    # 1. NHÚNG MÃ ĐIỀU HƯỚNG TỰ ĐỘNG THEO QUỐC GIA (GEOIP ROI ROUTER)
     router_script_id = "dnbc-global-roi-router"
     existing_router = soup.find("script", id=router_script_id)
     if existing_router:
-        existing_router.decompose() # Xóa bản cũ để cập nhật bản mới sạch hơn
+        existing_router.decompose()
 
     router_script_tag = soup.new_tag("script", id=router_script_id)
     router_script_tag.string = """
-        async def activateGlobalRouting() {
-            // Danh sách thị trường mục tiêu có tỷ lệ ROI Affiliate cao
+        async function activateGlobalRouting() {
+            // Các thị trường trọng điểm có tỷ lệ chuyển đổi ROI Affiliate cao
             const HIGH_ROI_MARKETS = ['US', 'CA', 'GB', 'AU', 'NZ', 'JP', 'KR', 'SG', 'DE', 'FR', 'IT', 'ES', 'AE', 'SA'];
-            const DEFAULT_AFFILIATE_URL = "https://sjv.io/c/2543547/1110056/14303"; // Link phân phối mặc định
+            const DEFAULT_AFFILIATE_URL = "https://sjv.io/c/2543547/1110056/14303";
             
             try {
-                // Sử dụng API định vị thực địa không cần Token
+                // Gọi API thực địa công cộng để nhận biết quốc gia
                 const response = await fetch('https://ipapi.co/json/');
                 if (!response.ok) return;
                 const data = await response.json();
-                const userCountry = data.country_code; // Mã quốc gia (ISO 2 chữ cái)
+                const userCountry = data.country_code;
                 
-                console.log(`[Field Detect] Location: ${data.country_name} (${userCountry})`);
+                console.log(`[GeoIP System] User Location: ${data.country_name} (${userCountry})`);
                 
-                // Tự động tối ưu hóa đường link dựa trên vị trí thực địa của người dùng
+                // Tự động tối ưu hóa đích đến nếu người dùng thuộc nhóm thị trường cao cấp
                 if (HIGH_ROI_MARKETS.includes(userCountry) || data.currency === 'USD' || data.currency === 'EUR') {
-                    console.log("[ROI Match] Chuẩn bị tối ưu hóa luồng traffic cho thị trường cao cấp...");
-                    
-                    // Cơ chế tự động tìm tất cả các liên kết Affiliate mục tiêu để khóa đích điều hướng
                     const links = document.querySelectorAll('a[data-dnbc-lock="true"]');
                     links.forEach(link => {
-                        // Có thể thay thế URL riêng cho từng quốc gia cụ thể tại đây nếu cần
                         link.href = DEFAULT_AFFILIATE_URL;
                     });
                 }
             } catch (error) {
-                console.log("[-] Routing error or ad-blocker intercepted.");
+                console.log("[-] Routing process bypassed or ad-blocker detected.");
             }
         }
         window.addEventListener('DOMContentLoaded', activateGlobalRouting);
@@ -56,16 +52,18 @@ def run():
     else:
         soup.append(router_script_tag)
 
-    # 2. XỬ LÝ ĐIỀU HƯỚNG NÚT & INLINE FONT RÁC CỦA BOT TỰ ĐỘNG
+    # 2. THANH LỌC STYLE INLINE VÀ CHUẨN HÓA LIÊN KẾT ĐIỀU HƯỚNG
     for tag in soup.find_all(style=True):
         if "font-family" in tag["style"]:
             tag["style"] = re.sub(r"font-family\s*:\s*[^;]+;?", "", tag["style"]).strip()
 
     for a in soup.find_all("a"):
         href = a.get("href", "")
+        # Thay thế liên kết rỗng để triệt tiêu dứt điểm lỗi màn hình nhảy giật
         if href == "#" or href == "":
-            a["href"] = "javascript:void(0);" // Triệt tiêu lỗi nhảy "cà giật" màn hình
+            a["href"] = "javascript:void(0);"
             
+        # Đồng bộ văn bản hiển thị chuẩn Global cho brand đối tác
         if "8000kicks" in href or "sjv.io" in href:
             a.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"
             current_style = a.get("style", "")
@@ -73,17 +71,20 @@ def run():
             a["style"] = (clean_style + " color: #00ff66; font-weight: bold; text-decoration: none;").strip()
             a["data-dnbc-lock"] = "true"
 
-    # 3. ÉP LỚP KHÓA CỨNG HẠ TẦNG GIAO DIỆN (TIMES NEW ROMAN & VIỀN XANH)
+    # 3. KHÓA CỨNG HẠ TẦNG GIAO DIỆN (FONT TIMES NEW ROMAN & VIỀN XANH HỆ THỐNG)
     style_tag = soup.find("style", id="dnbc-core-font-lock")
     if not style_tag:
         style_tag = soup.new_tag("style", id="dnbc-core-font-lock")
-        if soup.head: soup.head.append(style_tag)
-        else: soup.append(style_tag)
+        if soup.head: 
+            soup.head.append(style_tag)
+        else: 
+            soup.append(style_tag)
+            
     style_tag.string = "html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th { font-family: 'Times New Roman', Times, serif !important; } body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }"
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(str(soup))
-    print("[===] Seo-Optimizer: Đã tích hợp thành công Cổng điều hướng thực địa GeoIP 24/7.")
+    print("[===] Seo-Optimizer: Đã áp đặt kỷ luật Times New Roman và nhúng cổng GeoIP thành công.")
 
 if __name__ == "__main__":
     run()
