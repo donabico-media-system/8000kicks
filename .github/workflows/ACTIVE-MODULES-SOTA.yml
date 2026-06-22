@@ -45,69 +45,61 @@ jobs:
           pip install httpx pydantic beautifulsoup4
           npm install dotenv || echo "skipped"
 
-      - name: Run Real Modules
+      - name: Deep Scan and Execute Modules Only
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== V3000 REAL PRODUCTION MODE ==="
-          mkdir -p Modules .github/scripts
+          echo "=== V3000 ABSOLUTE MODULES SCAN MODE ==="
+          
+          # Chỉ tập trung xử lý thư mục Modules
+          mkdir -p Modules
 
-          for script in .github/scripts/*.js; do
-            if [ -f "$script" ]; then
-              node "$script" || echo "Skipped JS"
+          # Tạo script giám sát tối cao (Interceptor Shield)
+          printf 'import os\nimport re\nfrom bs4 import BeautifulSoup\nfile_path = "index.html"\nif os.path.exists(file_path):\n    with open(file_path, "r", encoding="utf-8") as f: content = f.read()\n    if "name:" in content or "on:" in content: content = re.sub(r"^[\\s\\S]*?(?=(<!DOCTYPE html>|<html))", "", content)\n    soup = BeautifulSoup(content, "html.parser")\n    for a in soup.find_all("a"):\n        href = a.get("href", "")\n        if "8000kicks" in href or "sjv.io" in href:\n            a.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"\n            a["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: '\''Times New Roman'\'', Times, serif;"\n            a["data-dnbc-lock"] = "true"\n    content_str = str(soup)\n    content_str = content_str.replace("KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS", "EXPLORE ECO")\n    content_str = content_str.replace("Giày Gai Dầu Bền Vững Carbon Negative", "Waterproof Hemp Shoes - Carbon Negative")\n    with open(file_path, "w", encoding="utf-8") as f: f.write(content_str)\n' > clean_jail.py
+
+          # BẬT QUÉT VÔ HẠN (DEEP SCAN) TOÀN BỘ FILES .PY TRONG THƯ MỤC MODULES
+          # Tìm kiếm tất cả các file .py kể cả trong thư mục con của Modules/
+          find Modules/ -type f -name "*.py" | while read -r script; do
+            if [[ "$script" == *"Performance-Max"* || "$script" == *"clean_jail"* ]]; then
+              continue
             fi
+            echo "Processing Target Script: $script"
+            python "$script" --url "$TARGET_URL" || echo "Script $script failed or skipped"
+            
+            # Giam giữ cấu trúc, ép form chuẩn ngay sau khi file .py đó vừa chạm vào index.html
+            python clean_jail.py
           done
+          
+          rm clean_jail.py
 
-          for script in Modules/*.py .github/scripts/*.py; do
-            if [ -f "$script" ]; then
-              if [[ "$script" == *"Performance-Max"* ]]; then
-                continue
-              fi
-              python "$script" --url "$TARGET_URL" || echo "Skipped Python"
-            fi
-          done
-
-      - name: Execute Python Post-Processor Shield
+      - name: Inject Dynamic Frontend Lock & Strict Layout CSS
         run: |
-          printf 'import os\nimport re\nfrom bs4 import BeautifulSoup\nfile_path = "index.html"\nif os.path.exists(file_path):\n    with open(file_path, "r", encoding="utf-8") as f: raw_content = f.read()\n    if "name:" in raw_content or "on:" in raw_content: raw_content = re.sub(r"^[\\s\\S]*?(?=(<!DOCTYPE html>|<html))", "", raw_content)\n    soup = BeautifulSoup(raw_content, "html.parser")\n    links = soup.find_all("a")\n    for link in links:\n        href = link.get("href", "")\n        if "8000kicks" in href or "sjv.io" in href:\n            link.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"\n            link["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: '\''Times New Roman'\'', Times, serif;"\n            link["data-dnbc-lock"] = "true"\n    with open(file_path, "w", encoding="utf-8") as f: f.write(str(soup))\nprint("Shield executed.")\n' > shield_processor.py
-          python shield_processor.py
-          rm shield_processor.py
-
-      - name: Inject Clean Script & Style Append
-        run: |
-          echo '<!-- ULTRA CLEAN INFRASTRUCTURE -->' >> index.html
+          echo '' >> index.html
           echo '<script>
-            // 1. Khóa cứng và dọn dẹp các thẻ dịch rác
             function lockAndCleanAffiliateButtons() {
               const targetLinks = document.querySelectorAll("a");
               targetLinks.forEach(link => {
                 const href = link.getAttribute("href") || "";
                 if (href.includes("8000kicks") || href.includes("sjv.io")) {
-                  // Đánh dấu bẫy phần tử để các script khác không can thiệp thô bạo
                   link.setAttribute("data-dnbc-lock", "true");
-                  
-                  // Chỉ thay đổi text nếu chưa được tối ưu bởi AI Agent động
-                  if (!link.innerText.includes("EXPLORE 8000KICKS") && !link.querySelector(".dynamic-alert")) {
+                  if (!link.innerText.includes("EXPLORE 8000KICKS")) {
                     link.innerHTML = `<span class="base-text" style="font-family: '\''Times New Roman'\'', Times, serif !important;">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</span>`;
                   }
                 }
               });
             }
 
-            // 2. Bộ lọc tiếng Việt thông minh - Bỏ qua hoàn toàn các vùng Core Content và nút bấm
             function ultraCleanVietnamese() {
               const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
               let node;
               while (node = walker.nextNode()) {
                 if (node.parentElement) {
-                  // Nếu nằm trong nút bấm đã khóa hoặc vùng style/script thì bỏ qua tuyệt đối
                   if (node.parentElement.closest("[data-dnbc-lock='\''true'\'']") || 
                       node.parentElement.tagName === "SCRIPT" || 
                       node.parentElement.tagName === "STYLE") {
                     continue;
                   }
                 }
-                
                 if (/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(node.nodeValue)) {
                   node.nodeValue = node.nodeValue
                     .replace(/KHÁM PHÁ ECO - ADS AUTOMATIC \+ NODE\.JS/gi, "EXPLORE ECO")
@@ -131,15 +123,12 @@ jobs:
           echo '<style>
             html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
             body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
-            
-            /* CSS cố định cho nút không bao giờ bị nhảy kích thước khi text thay đổi */
             a[data-dnbc-lock="true"] {
               display: inline-block !important;
               color: #00ff66 !important; 
               font-weight: bold !important; 
               text-decoration: none !important; 
               font-family: "Times New Roman", Times, serif !important;
-              transition: all 0.2s ease-in-out;
             }
             table, .comparison-table { width: 100% !important; max-width: 100% !important; overflow-x: auto; display: block; }
             img { max-width: 100% !important; height: auto !important; }
@@ -153,6 +142,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 REAL + STABLE DISPLAY FIX [skip ci]"
+            git commit -m "V3000 REAL + PURE MODULES SCAN [skip ci]"
             git push origin main
           fi
