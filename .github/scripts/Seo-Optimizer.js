@@ -1,6 +1,6 @@
 /**
  * Seo-Optimizer.js
- * EATHESEN V3000-Ω SOTA | Dynamic SEO/AEO Optimizer
+ * EATHESEN V3000-Ω SOTA | Dynamic SEO/AEO Optimizer + English Lock
  */
 
 class SeoOptimizer {
@@ -10,8 +10,9 @@ class SeoOptimizer {
     }
 
     optimize() {
-        // Dynamic Title
-        document.title = document.title.replace('8000Kicks', '8000Kicks - Waterproof Hemp Shoes 2026');
+        // Dynamic Title with Lock
+        const ENGLISH_TITLE = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
+        document.title = ENGLISH_TITLE;
 
         // Meta Description
         let meta = document.querySelector('meta[name="description"]');
