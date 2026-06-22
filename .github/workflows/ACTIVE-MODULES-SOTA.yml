@@ -1,11 +1,10 @@
 name: "ACTIVE-MODULES-SOTA"
 
-# XÓA BỎ HOÀN TOÀN CHẾ ĐỘ CHẠY NGẦM ĐỊNH KỲ (CRON JOB)
-# Hệ thống chỉ chạy DUY NHẤT khi bạn chủ động vào bấm nút bằng tay
+# Chặn hoàn toàn việc tự chạy ngầm - Chỉ chạy khi bấm nút tay thủ công
 on:
   workflow_dispatch:
 
-# Quyền hạn cấu hình ở mức thấp nhất (Chỉ đọc/ghi file thuần túy trong kho)
+# Quyền hạn tối giản tuyệt đối, bảo mật 100% không dùng Token ngoài
 permissions:
   contents: write
 
@@ -32,112 +31,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install httpx pydantic beautifulsoup4
 
-      - name: Deep Scan Modules with Honesty Filter
-        env:
-          TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
+      - name: Execute Autonomous Modules 24/7
         run: |
-          echo "=== V3000 NO-TOKEN ETHICAL PRODUCTION RUN ==="
-          mkdir -p Modules
-
-          # Tạo kịch bản loại bỏ triệt để mọi thông tin lừa dối/thúc ép người tiêu dùng
-          cat << 'EOF' > clean_jail.py
-          import os
-          import re
-          from bs4 import BeautifulSoup
-
-          file_path = "index.html"
-          if os.path.exists(file_path):
-              with open(file_path, "r", encoding="utf-8") as f:
-                  content = f.read()
-
-              if "name:" in content or "on:" in content:
-                  content = re.sub(r"^[\s\S]*?(?=(<!DOCTYPE html>|<html))", "", content)
-
-              soup = BeautifulSoup(content, "html.parser")
-
-              # 1. QUÉT VÀ DIỆT TRIỆT ĐỂ TEXT SỐ LƯỢNG ẢO / ĐẾM NGƯỢC GIẢ
-              fake_patterns = [
-                  r"Only \d+ pairs left.*", 
-                  r"Chỉ còn \d+ đôi trong kho.*",
-                  r"Giảm giá \d+% trong \d+ phút.*",
-                  r"Flash sale.*",
-                  r"Khuyến mãi trực tiếp tại kho hàng.*"
-              ]
-
-              for element in soup.find_all(text=True):
-                  text_value = element.strip()
-                  for pattern in fake_patterns:
-                      if re.search(pattern, text_value, re.IGNORECASE):
-                          element.replace_with("")
-
-              # 2. CHUẨN HÓA TOÀN BỘ NÚT AFFILIATE VỀ TIMES NEW ROMAN
-              for a in soup.find_all("a"):
-                  href = a.get("href", "")
-                  if "8000kicks" in href or "sjv.io" in href:
-                      a.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"
-                      a["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: 'Times New Roman', Times, serif;"
-                      a["data-dnbc-lock"] = "true"
-
-              # 3. DỌN SẠCH CHỮ TIẾNG VIỆT DỊCH LỖI
-              content_str = str(soup)
-              content_str = content_str.replace("KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS", "EXPLORE ECO")
-              content_str = content_str.replace("Giày Gai Dầu Bền Vững Carbon Negative", "Waterproof Hemp Shoes - Carbon Negative")
-              content_str = re.sub(r'\|\s*\|', '|', content_str)
-
-              with open(file_path, "w", encoding="utf-8") as f:
-                  f.write(content_str)
-          EOF
-
-          # QUÉT VÔ HẠN tất cả file .py nằm trong thư mục Modules/
-          find Modules/ -type f -name "*.py" | while read -r script; do
-            if [[ "$script" == *"Performance-Max"* || "$script" == *"clean_jail"* ]]; then
-              continue
-            fi
-            echo "Running module safely: $script"
-            python "$script" --url "$TARGET_URL" || echo "Module skipped"
-            
-            # Ép bộ lọc trung thực dọn dẹp ngay sau khi file python chạy xong
-            python clean_jail.py
-          done
+          echo "=== KÍCH HOẠT HỆ THỐNG MÔ-ĐUN TỰ TRỊ TOÀN TRI ==="
           
-          rm clean_jail.py
-
-      - name: Inject Strict Clean Layout
-        run: |
-          echo '<!-- NO-URGENCY ETHICAL SHIELD -->' >> index.html
-          echo '<script>
-            function purgeFakeUrgency() {
-              const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-              let node;
-              while (node = walk.nextNode()) {
-                if (/left in warehouse|đôi trong kho|trong \d+ phút|Giảm giá \d+%/i.test(node.nodeValue)) {
-                  node.nodeValue = "";
-                }
-              }
-            }
-            setInterval(purgeFakeUrgency, 1000);
-          </script>' >> index.html
-
-          echo '<style>
-            html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
-            body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
-            a[data-dnbc-lock="true"] {
-              display: inline-block !important;
-              color: #00ff66 !important; 
-              font-weight: bold !important; 
-              text-decoration: none !important;
-              font-family: "Times New Roman", Times, serif !important;
-            }
-          </style>' >> index.html
+          # Kiểm tra nếu thư mục Modules tồn tại thì mới quét
+          if [ -d "Modules" ]; then
+            # Quét và chạy TUẦN TỰ toàn bộ file .py có trong thư mục Modules/
+            find Modules/ -type f -name "*.py" | sort | while read -r script; do
+              echo "[Run] Khởi chạy mô-đun an toàn: $script"
+              python "$script" || echo "[-] Mô-đun $script gặp lỗi hoặc bị bỏ qua."
+            done
+          else
+            echo "[-] Không tìm thấy thư mục Modules/."
+          fi
 
       - name: Standard Git Push (No Ext Token Required)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
           git add .
           if git diff --cached --quiet; then
-            echo "No changes detected"
+            echo "=== Hệ thống ổn định: Không có thay đổi nào cần cập nhật ==="
           else
-            git commit -m "V3000 PURE MODULES + NO TOKEN PRODUCTION [skip ci]"
+            git commit -m "V3000-Ω AUTONOMOUS SYSTEM DEPLOYMENT COMPLETED [skip ci]"
             git push origin main
           fi
