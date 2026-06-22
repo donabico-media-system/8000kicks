@@ -1,6 +1,6 @@
 /**
  * Drone-Matrix.js
- * EATHESEN V3000-Ω SOTA | Drone UX & Signal Harvesting Module + English Lock
+ * EATHESEN V3000-Ω SOTA | Drone UX & Signal Harvesting Module
  */
 
 class DroneMatrix {
