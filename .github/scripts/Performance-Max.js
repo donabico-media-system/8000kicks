@@ -34,7 +34,6 @@ class UltimatePerformanceMaxAgent {
             const utmCampaign = (urlParams.get('utm_campaign') || '').toLowerCase();
             
             const combinedContext = `${utmTerm} ${utmContent} ${utmCampaign}`;
-            console.log(`%c[Performance-Max MAX INBOUND] Parsing External Ads Copy Context: "${combinedContext}"`, "color: #3498db; font-weight: bold;");
 
             if (combinedContext.match(/(khuyen mai|giam gia|uudai|promo|sale|voucher|price|discount)/g)) return 'PROMO';
             if (combinedContext.match(/(gioi han|con lai|doc quyen|sap het|urgency|limited|last|scarcity)/g)) return 'URGENCY';
@@ -85,16 +84,11 @@ class UltimatePerformanceMaxAgent {
         return actionScores.indexOf(Math.max(...actionScores));
     }
 
-    // === FIXED INJECT FUNCTION - ENGLISH ONLY & LOCKING MECHANISM ===
     injectDominantUiTransformation(actionIdx) {
         const actionName = this.actions[actionIdx];
-        console.log(`%c[Performance-Max-ACTUATOR] Injecting: ${actionName}`, "color: #ccff00; font-weight: bold;");
-
-        // Sử dụng một selector chính xác để chỉ áp dụng cho h1 tiêu đề chính của trang
         const headlineNode = document.querySelector('h1');
 
         if (headlineNode) {
-            // Ngăn chặn ghi đè nếu phần tử đã bị can thiệp và khóa
             if (headlineNode.getAttribute('data-dnbc-lock') === 'true') return;
 
             switch (actionName) {
@@ -108,16 +102,15 @@ class UltimatePerformanceMaxAgent {
                     headlineNode.innerHTML = `⭐ 4,921 REAL USERS Verified: The Best Waterproof Hemp Shoes 2026!`;
                     break;
                 case 'VARIANT_DYNAMIC_OFFER':
-                    headlineNode.innerHTML = `🚀 SPECIAL OFFER: Get $80 Voucher when purchasing within 15 minutes!`;
+                    headlineNode.innerHTML = `🚀 SPECIAL OFFER: Get $80 Voucher within 15 minutes!`;
                     break;
                 case 'VARIANT_SEO_AEO_PUSH':
-                    headlineNode.innerHTML = `🌟 #1 Waterproof Hemp Shoes 2026 — Trusted by 4,921 Real Users!`;
+                    headlineNode.innerHTML = `🌟 #1 Waterproof Hemp Shoes 2026 — Trusted by Real Users!`;
                     break;
                 case 'VARIANT_TRUST_MAX':
-                    headlineNode.innerHTML = `✅ 100% AUTHENTIC | 2-Year Warranty | Free Returns within 30 Days`;
+                    headlineNode.innerHTML = `✅ 100% AUTHENTIC | 2-Year Warranty | Free Returns`;
                     break;
             }
-            // Khóa phần tử sau khi thay đổi để tránh bị các tác vụ tối ưu hóa khác đè chữ lên
             headlineNode.setAttribute('data-dnbc-lock', 'true');
         }
     }
@@ -134,7 +127,6 @@ if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
         if (!window.PerformanceMaxBrain) {
             window.PerformanceMaxBrain = new UltimatePerformanceMaxAgent();
-            console.log('%c[Performance-Max.js v4.0-ULTIMA-MAX] Initialized with ENGLISH ONLY content', 'color: #00ff66; font-weight: bold;');
         }
     });
 }
