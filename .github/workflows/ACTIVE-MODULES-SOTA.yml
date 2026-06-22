@@ -1,6 +1,6 @@
 # ╔════════════════════════════════════════════════════════════════════════════╗
-# ║ ACTIVE-MODULES-SOTA.yml (V13 - FULL FIXED)                                 ║
-# ║ 24/7 Auto Run All Scripts + Green Border + Fix --url                       ║
+# ║ ACTIVE-MODULES-SOTA.yml (V14 - FINAL CLEAN VERSION)                        ║
+# ║ EATHESEN V3000-Ω SOTA | 24/7 AUTO RUN + ENGLISH LOCK + GREEN BORDER       ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 name: "ACTIVE-MODULES-SOTA"
@@ -23,7 +23,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Latest Changes
+      - name: Pull Latest Changes (Fix Git Conflict)
         run: |
           git fetch origin main
           git reset --hard origin/main
@@ -40,9 +40,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install httpx pydantic
-          npm install dotenv || echo "skipped"
+          npm install dotenv google-ads-api || echo "google-ads-api skipped"
 
-      - name: Auto Run All Scripts + UI Enhancement
+      - name: Auto Run All Scripts + English Lock + UI Enhancement
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
@@ -58,17 +58,37 @@ jobs:
             fi
           done
 
-          # Run all .py files WITH --url parameter
+          # Run all .py files with --url + English language lock
           for script in Modules/*.py .github/scripts/*.py; do
             if [ -f "$script" ]; then
               echo "→ Running PY: $script"
-              python "$script" --url "$TARGET_URL" || echo "Skipped $script"
+              python "$script" --url "$TARGET_URL" --lang en || echo "Skipped $script"
             fi
           done
 
-          # Add Green Border Effect
-          echo '<!-- V3000 UI ENHANCEMENT - GREEN BORDER -->' >> index.html
-          echo '<style>body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: pulseGreen 1.5s infinite alternate ease-in-out !important; } @keyframes pulseGreen { 0% { border-color: #00cc55; } 100% { border-color: #00ff66; } }</style>' >> index.html
+          # Force English Title + Green Border Effect
+          echo '<!-- V3000 UI ENHANCEMENT - ENGLISH LOCK + GREEN BORDER -->' >> index.html
+          echo '<script>
+            document.title = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
+            // Lock title from being changed by other scripts
+            const originalTitle = document.title;
+            setInterval(() => {
+              if (document.title !== originalTitle) {
+                document.title = originalTitle;
+              }
+            }, 3000);
+          </script>' >> index.html
+          echo '<style>
+            body { 
+              border: 4px solid #00ff66 !important; 
+              box-sizing: border-box; 
+              animation: pulseGreen 1.5s infinite alternate ease-in-out !important;
+            }
+            @keyframes pulseGreen { 
+              0% { border-color: #00cc55; } 
+              100% { border-color: #00ff66; } 
+            }
+          </style>' >> index.html
 
       - name: Commit & Push Changes
         run: |
@@ -80,7 +100,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "V3000 24/7 Auto-run modules + UI sync [skip ci]"
+            git commit -m "V3000 24/7 Auto-run modules + English Lock + UI sync [skip ci]"
             git push origin main
             echo "Push successful."
           fi
