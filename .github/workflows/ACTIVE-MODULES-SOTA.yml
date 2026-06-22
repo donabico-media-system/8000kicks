@@ -33,7 +33,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - uses: actions/setup-node@v4
+          
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -52,7 +54,7 @@ jobs:
 
           for script in .github/scripts/*.js; do
             if [ -f "$script" ]; then
-              node "$script" || echo "Skipped"
+              node "$script" || echo "Skipped JS"
             fi
           done
 
@@ -61,40 +63,45 @@ jobs:
               if [[ "$script" == *"Performance-Max"* ]]; then
                 continue
               fi
-              python "$script" --url "$TARGET_URL" || echo "Skipped"
+              python "$script" --url "$TARGET_URL" || echo "Skipped Python"
             fi
           done
 
-          # Python Post-Processor bảo vệ nút và xóa text .yml thừa ở đầu file index.html
-          python -c '
-import os
-import re
-from bs4 import BeautifulSoup
+      - name: Execute Python Post-Processor Shield
+        run: |
+          cat << 'EOF' > shield_processor.py
+          import os
+          import re
+          from bs4 import BeautifulSoup
 
-file_path = "index.html"
-if os.path.exists(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        raw_content = f.read()
-    
-    if "name:" in raw_content or "on:" in raw_content:
-        raw_content = re.sub(r"^[\s\S]*?(?=(<!DOCTYPE html>|<html))", "", raw_content)
+          file_path = "index.html"
+          if os.path.exists(file_path):
+              with open(file_path, "r", encoding="utf-8") as f:
+                  raw_content = f.read()
+              
+              if "name:" in raw_content or "on:" in raw_content:
+                  raw_content = re.sub(r"^[\s\S]*?(?=(<!DOCTYPE html>|<html))", "", raw_content)
 
-    soup = BeautifulSoup(raw_content, "html.parser")
-    
-    links = soup.find_all("a")
-    for link in links:
-        href = link.get("href", "")
-        if "8000kicks" in href or "sjv.io" in href:
-            link.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"
-            link["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: \"Times New Roman\", Times, serif;"
-            link["data-dnbc-lock"] = "true"
+              soup = BeautifulSoup(raw_content, "html.parser")
+              
+              links = soup.find_all("a")
+              for link in links:
+                  href = link.get("href", "")
+                  if "8000kicks" in href or "sjv.io" in href:
+                      link.string = "EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW"
+                      link["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: 'Times New Roman', Times, serif;"
+                      link["data-dnbc-lock"] = "true"
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(str(soup))
-'
+              with open(file_path, "w", encoding="utf-8") as f:
+                  f.write(str(soup))
+          print("Python Post-Processor executed successfully.")
+          EOF
+          python shield_processor.py
+          rm shield_processor.py
 
-          # ULTRA CLEAN VIETNAMESE TEXT
-          echo '<!-- ULTRA CLEAN VIETNAMESE TEXT -->' >> index.html
+      - name: Inject Clean Script & Style Append
+        run: |
+          echo '' >> index.html
           echo '<script>
             function ultraCleanVietnamese() {
               const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -117,7 +124,6 @@ if os.path.exists(file_path):
             }
           </script>' >> index.html
 
-          # Green Border Style
           echo '<style>
             html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
             body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
@@ -125,7 +131,7 @@ if os.path.exists(file_path):
             img { max-width: 100% !important; height: auto !important; }
           </style>' >> index.html
 
-      - name: Commit & Push
+      - name: Commit & Push Verified Clean Build
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -133,6 +139,6 @@ if os.path.exists(file_path):
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 REAL + REVERT TO ORIGINAL NAME [skip ci]"
+            git commit -m "V3000 REAL + REVERT TO ORIGINAL STABLE NAME [skip ci]"
             git push origin main
           fi
