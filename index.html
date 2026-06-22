@@ -328,6 +328,14 @@
     }
     @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
     </style>
+<style>
+    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
+        border: 2px solid #FFD700 !important;
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
+        animation: golden-glow 2s infinite alternate;
+    }
+    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
+    </style>
 <style>body { border: 04px solid red !important; box-sizing: border-box; }</style>
 <style>
     .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
@@ -2143,7 +2151,6 @@ body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: 
   table, .comparison-table { width: 100% !important; max-width: 100% !important; overflow-x: auto; display: block; }
   img { max-width: 100% !important; height: auto !important; }
 </style>
-
 <script>
   function ultraCleanVietnamese() {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -2168,6 +2175,74 @@ body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: 
 <style>
   html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
   body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
+  table, .comparison-table { width: 100% !important; max-width: 100% !important; overflow-x: auto; display: block; }
+  img { max-width: 100% !important; height: auto !important; }
+</style>
+<!-- ULTRA CLEAN INFRASTRUCTURE -->
+<script>
+  // 1. Khóa cứng và dọn dẹp các thẻ dịch rác
+  function lockAndCleanAffiliateButtons() {
+    const targetLinks = document.querySelectorAll("a");
+    targetLinks.forEach(link => {
+      const href = link.getAttribute("href") || "";
+      if (href.includes("8000kicks") || href.includes("sjv.io")) {
+        // Đánh dấu bẫy phần tử để các script khác không can thiệp thô bạo
+        link.setAttribute("data-dnbc-lock", "true");
+        
+        // Chỉ thay đổi text nếu chưa được tối ưu bởi AI Agent động
+        if (!link.innerText.includes("EXPLORE 8000KICKS") && !link.querySelector(".dynamic-alert")) {
+          link.innerHTML = `<span class="base-text" style="font-family: 'Times New Roman', Times, serif !important;">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</span>`;
+        }
+      }
+    });
+  }
+
+  // 2. Bộ lọc tiếng Việt thông minh - Bỏ qua hoàn toàn các vùng Core Content và nút bấm
+  function ultraCleanVietnamese() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while (node = walker.nextNode()) {
+      if (node.parentElement) {
+        // Nếu nằm trong nút bấm đã khóa hoặc vùng style/script thì bỏ qua tuyệt đối
+        if (node.parentElement.closest("[data-dnbc-lock='true']") || 
+            node.parentElement.tagName === "SCRIPT" || 
+            node.parentElement.tagName === "STYLE") {
+          continue;
+        }
+      }
+      
+      if (/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(node.nodeValue)) {
+        node.nodeValue = node.nodeValue
+          .replace(/KHÁM PHÁ ECO - ADS AUTOMATIC \+ NODE\.JS/gi, "EXPLORE ECO")
+          .replace(/Giày Gai Dầu Bền Vững Carbon Negative/gi, "Waterproof Hemp Shoes - Carbon Negative");
+      }
+    }
+  }
+
+  function runEcosystemCore() {
+    lockAndCleanAffiliateButtons();
+    ultraCleanVietnamese();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runEcosystemCore);
+  } else {
+    runEcosystemCore();
+  }
+</script>
+<style>
+  html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
+  body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
+  
+  /* CSS cố định cho nút không bao giờ bị nhảy kích thước khi text thay đổi */
+  a[data-dnbc-lock="true"] {
+    display: inline-block !important;
+    color: #00ff66 !important; 
+    font-weight: bold !important; 
+    text-decoration: none !important; 
+    font-family: "Times New Roman", Times, serif !important;
+    transition: all 0.2s ease-in-out;
+  }
   table, .comparison-table { width: 100% !important; max-width: 100% !important; overflow-x: auto; display: block; }
   img { max-width: 100% !important; height: auto !important; }
 </style>
