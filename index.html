@@ -150,6 +150,16 @@
     }
     @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
     </style>
+    
+
+    <style>
+    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
+        border: 2px solid #FFD700 !important;
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
+        animation: golden-glow 2s infinite alternate;
+    }
+    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
+    </style>
     <style>body { border: 04px solid red !important; box-sizing: border-box; }</style>
 
     <style>
@@ -1214,6 +1224,39 @@ body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: 
 <style>body{border:4px solid #00ff66!important;box-sizing:border-box;animation:pulseGreen 1.5s infinite alternate ease-in-out!important}@keyframes pulseGreen{0%{border-color:#00cc55}100%{border-color:#00ff66}}</style>
 <!-- V3000 REAL UPDATE -->
 <script>console.log("%c[V3000 REAL] All modules running live","color:#00ff66");</script>
+<style>body{border:4px solid #00ff66!important;box-sizing:border-box;animation:pulseGreen 1.5s infinite alternate ease-in-out!important}@keyframes pulseGreen{0%{border-color:#00cc55}100%{border-color:#00ff66}}</style>
+<!-- V3000 MAX ENGLISH LOCK -->
+<script>
+  // Force Title English
+  const ENGLISH_TITLE = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
+  document.title = ENGLISH_TITLE;
+
+  // Force English Lock - Scan and replace Vietnamese text
+  function forceEnglish() {
+    // Lock Title
+    if (document.title !== ENGLISH_TITLE) {
+      document.title = ENGLISH_TITLE;
+    }
+
+    // Scan all text nodes and replace Vietnamese
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while (node = walker.nextNode()) {
+      if (/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(node.nodeValue)) {
+        // Replace common Vietnamese phrases with English
+        node.nodeValue = node.nodeValue
+          .replace(/Giày Gai Dầu Bền Vững Carbon Negative/gi, "Waterproof Hemp Shoes - Carbon Negative")
+          .replace(/Giày chống nước/gi, "Waterproof Shoes")
+          .replace(/Bền vững/gi, "Sustainable")
+          .replace(/Carbon Negative/gi, "Carbon Negative");
+      }
+    }
+  }
+
+  // Run immediately + every 2 seconds
+  forceEnglish();
+  setInterval(forceEnglish, 2000);
+</script>
 <style>body{border:4px solid #00ff66!important;box-sizing:border-box;animation:pulseGreen 1.5s infinite alternate ease-in-out!important}@keyframes pulseGreen{0%{border-color:#00cc55}100%{border-color:#00ff66}}</style>
 <!-- V3000 MAX ENGLISH LOCK -->
 <script>
