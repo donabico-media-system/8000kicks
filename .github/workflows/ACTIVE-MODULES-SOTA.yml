@@ -9,44 +9,41 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
 
+# Hạ cấp quyền về mức tối giản tuyệt đối, không yêu cầu id-token hay bảo mật mở rộng
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   real-production:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Source Code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Latest
+      - name: Pull Latest Changes
         run: |
           git fetch origin main
           git reset --hard origin/main
 
-      - name: Setup Environment
+      - name: Setup Python Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install Pure Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install httpx pydantic beautifulsoup4
 
-      - name: Deep Scan and Execute Modules with Honesty Filter
+      - name: Deep Scan Modules with Honesty Filter
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
-          echo "=== V3000 HONEST & ETHICAL PRODUCTION RUN ==="
+          echo "=== V3000 NO-TOKEN CLEAN SCAN ==="
           mkdir -p Modules
 
-          # Tạo kịch bản thanh trừng thông tin giả (Scarcity Purge Interceptor)
+          # Tạo kịch bản dọn dẹp thông tin lừa dối ngay tại chỗ
           cat << 'EOF' > clean_jail.py
           import os
           import re
@@ -57,13 +54,12 @@ jobs:
               with open(file_path, "r", encoding="utf-8") as f:
                   content = f.read()
 
-              # Xóa bỏ các đoạn code yaml/rác bị dính vào HTML nếu có
               if "name:" in content or "on:" in content:
                   content = re.sub(r"^[\s\S]*?(?=(<!DOCTYPE html>|<html))", "", content)
 
               soup = BeautifulSoup(content, "html.parser")
 
-              # 1. QUÉT VÀ DIỆT TẤT CẢ CÁC ĐOẠN TEXT GÂY ÁP LỰC ẢO / THÔNG TIN SAI LỆCH
+              # Khử bỏ triệt để các dạng text đếm ngược / tồn kho ảo
               fake_patterns = [
                   r"Only \d+ pairs left.*", 
                   r"Chỉ còn \d+ đôi trong kho.*",
@@ -72,15 +68,13 @@ jobs:
                   r"Khuyến mãi trực tiếp tại kho hàng.*"
               ]
 
-              # Duyệt tìm trong toàn bộ văn bản để xóa bỏ hoặc làm sạch
               for element in soup.find_all(text=True):
                   text_value = element.strip()
                   for pattern in fake_patterns:
                       if re.search(pattern, text_value, re.IGNORECASE):
-                          # Thay thế văn bản lừa dối bằng thông điệp trung thực hoặc xóa hẳn
                           element.replace_with("")
 
-              # 2. CHUẨN HÓA NÚT AFFILIATE - CHỈ ĐỂ THÔNG TIN SẢN PHẨM GỐC CHUẨN XÁC
+              # Trả nút bấm về định dạng Times New Roman sạch
               for a in soup.find_all("a"):
                   href = a.get("href", "")
                   if "8000kicks" in href or "sjv.io" in href:
@@ -88,38 +82,32 @@ jobs:
                       a["style"] = "color: #00ff66; font-weight: bold; text-decoration: none; font-family: 'Times New Roman', Times, serif;"
                       a["data-dnbc-lock"] = "true"
 
-              # Khôi phục hoặc chuẩn hóa các chuỗi text sạch tiếng Anh
               content_str = str(soup)
               content_str = content_str.replace("KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS", "EXPLORE ECO")
               content_str = content_str.replace("Giày Gai Dầu Bền Vững Carbon Negative", "Waterproof Hemp Shoes - Carbon Negative")
-              
-              # Dọn dẹp các ký tự trống thừa thãi sau khi xóa text giả
               content_str = re.sub(r'\|\s*\|', '|', content_str)
 
               with open(file_path, "w", encoding="utf-8") as f:
                   f.write(content_str)
           EOF
 
-          # Chạy vô hạn/toàn bộ các file .py và áp bộ lọc trung thực ngay lập tức sau mỗi file
+          # Quét vô hạn tất cả file Python trong thư mục Modules
           find Modules/ -type f -name "*.py" | while read -r script; do
             if [[ "$script" == *"Performance-Max"* || "$script" == *"clean_jail"* ]]; then
               continue
             fi
-            echo "Executing: $script"
-            python "$script" --url "$TARGET_URL" || echo "Script skipped"
-            
-            # Ép bộ lọc trung thực chạy ngay lập tức
+            echo "Running module: $script"
+            python "$script" --url "$TARGET_URL" || echo "Module skipped"
             python clean_jail.py
           done
           
           rm clean_jail.py
 
-      - name: Inject Strict Layout & Clean Scripts
+      - name: Inject Clean Script & Layout
         run: |
           echo '' >> index.html
           echo '<script>
             function purgeFakeUrgency() {
-              // Hàm Front-end bảo vệ người tiêu dùng, quét và xóa sạch nếu có text ảo lọt lưới
               const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
               let node;
               while (node = walk.nextNode()) {
@@ -133,16 +121,17 @@ jobs:
 
           echo '<style>
             html, body { overflow-x: hidden !important; max-width: 100vw !important; font-family: "Times New Roman", Times, serif !important; }
-            body { border: 4px solid #00ff66 !important; box-sizing: border-box; }
+            body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }
             a[data-dnbc-lock="true"] {
               display: inline-block !important;
               color: #00ff66 !important; 
               font-weight: bold !important; 
               text-decoration: none !important;
+              font-family: "Times New Roman", Times, serif !important;
             }
           </style>' >> index.html
 
-      - name: Commit & Push Ethical Clean Build
+      - name: Push Standard Build
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -150,6 +139,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 REAL + ETHICAL PURGE (NO FAKE INFO) [skip ci]"
+            git commit -m "V3000 REAL + STANDARD PUSH (NO TOKEN REQUIRED) [skip ci]"
             git push origin main
           fi
