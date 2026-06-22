@@ -1,10 +1,11 @@
 name: "ACTIVE-MODULES-SOTA"
 
-# Chặn hoàn toàn việc tự chạy ngầm - Chỉ chạy khi bấm nút tay thủ công
+# KHÓA CỨNG HẠ TẦNG: Chặn vĩnh viễn chạy ngầm (Cron)
+# Hệ thống chỉ kích hoạt DUY NHẤT khi bạn bấm nút tay thủ công (Manual Trigger)
 on:
   workflow_dispatch:
 
-# Quyền hạn tối giản tuyệt đối, bảo mật 100% không dùng Token ngoài
+# Quyền hạn ở mức thấp nhất: Chỉ đọc/ghi file thuần túy nội bộ kho
 permissions:
   contents: write
 
@@ -33,17 +34,25 @@ jobs:
 
       - name: Execute Autonomous Modules 24/7
         run: |
-          echo "=== KÍCH HOẠT HỆ THỐNG MÔ-ĐUN TỰ TRỊ TOÀN TRI ==="
+          echo "========================================================="
+          echo "   🔰 KÍCH HOẠT HỆ THỐNG MÔ-ĐUN TỰ TRỊ TOÀN TRI V3000   "
+          echo "========================================================="
           
-          # Kiểm tra nếu thư mục Modules tồn tại thì mới quét
           if [ -d "Modules" ]; then
-            # Quét và chạy TUẦN TỰ toàn bộ file .py có trong thư mục Modules/
+            # Dò tìm và sắp xếp thứ tự chạy tuần tự của 4 file .py trong thư mục Modules/
             find Modules/ -type f -name "*.py" | sort | while read -r script; do
-              echo "[Run] Khởi chạy mô-đun an toàn: $script"
-              python "$script" || echo "[-] Mô-đun $script gặp lỗi hoặc bị bỏ qua."
+              echo "⏳ [PROCESSING] Đang khởi chạy: $script..."
+              
+              # Thực thi mô-đun độc lập và kiểm tra mã trạng thái trả về (Exit Code)
+              if python "$script"; then
+                echo "✅ [SUCCESS] $script đã hoàn thành nhiệm vụ ổn định!"
+              else
+                echo "❌ [FAILED] $script gặp sự cố trong quá trình thực thi."
+              fi
+              echo "---------------------------------------------------------"
             done
           else
-            echo "[-] Không tìm thấy thư mục Modules/."
+            echo "⚠️ [NOT FOUND] Không tìm thấy thư mục Modules/."
           fi
 
       - name: Standard Git Push (No Ext Token Required)
@@ -53,8 +62,10 @@ jobs:
           
           git add .
           if git diff --cached --quiet; then
-            echo "=== Hệ thống ổn định: Không có thay đổi nào cần cập nhật ==="
+            echo "========================================================="
+            echo "✅ KHÔNG CÓ THAY ĐỔI - Hệ thống giữ nguyên trạng thái sạch."
+            echo "========================================================="
           else
-            git commit -m "V3000-Ω AUTONOMOUS SYSTEM DEPLOYMENT COMPLETED [skip ci]"
+            git commit -m "V3000-Ω AUTONOMOUS MO-DUL PRODUCTION INTEGRATION [skip ci]"
             git push origin main
           fi
