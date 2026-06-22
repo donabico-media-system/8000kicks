@@ -37,7 +37,7 @@ jobs:
           pip install httpx pydantic
           npm install dotenv || echo "skipped"
 
-      - name: Run Real Modules + ULTRA CLEAN
+      - name: Run All Real Modules + ULTRA CLEAN
         env:
           TARGET_URL: ${{ github.event.inputs.target_url || 'https://donabico-global-media.github.io/8000kicks/' }}
         run: |
@@ -45,66 +45,41 @@ jobs:
 
           mkdir -p Modules .github/scripts
 
-          # Run all .js files
-          for script in .github/scripts/*.js; do
+          # Run safe .js files
+          for script in .github/scripts/Drone-Matrix.js .github/scripts/Seo-Optimizer.js; do
             if [ -f "$script" ]; then
-              echo "→ REAL JS: $script"
+              echo "→ Running: $script"
               node "$script" || echo "Skipped"
             fi
           done
 
-          # Run all .py files (skip simulation)
+          # Run .py files (skip simulation)
           for script in Modules/*.py .github/scripts/*.py; do
             if [ -f "$script" ]; then
               if [[ "$script" == *"Performance-Max"* ]]; then
                 echo "→ Skipped Simulation"
                 continue
               fi
-              echo "→ REAL: $script"
+              echo "→ Running: $script"
               python "$script" --url "$TARGET_URL" || echo "Skipped"
             fi
           done
 
-          # ULTRA CLEAN VIETNAMESE TEXT
-          echo '<!-- ULTRA CLEAN VIETNAMESE TEXT -->' >> index.html
+          # ULTRA CLEAN + GREEN BORDER
+          echo '<!-- ULTRA CLEAN -->' >> index.html
           echo '<script>
-            function ultraCleanVietnamese() {
-              const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-              let node;
-              while (node = walker.nextNode()) {
-                if (/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(node.nodeValue)) {
-                  node.nodeValue = node.nodeValue
-                    .replace(/KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS/gi, "EXPLORE ECO - ADS AUTOMATIC + NODE.JS")
-                    .replace(/WAREHOUSE LIVE: .* OFF - Limited time from 8000Kicks!/gi, "WAREHOUSE LIVE: Limited Time Offer from 8000Kicks!")
-                    .replace(/Giày Gai Dầu Bền Vững Carbon Negative/gi, "Waterproof Hemp Shoes - Carbon Negative")
-                    .replace(/Giày chống nước/gi, "Waterproof Shoes")
-                    .replace(/Bền vững/gi, "Sustainable");
-                }
-              }
+            const TITLE = "8000Kicks - Waterproof Hemp Shoes | Sustainable & Durable Footwear 2026";
+            function lock() {
+              if (document.title !== TITLE) document.title = TITLE;
             }
-            ultraCleanVietnamese();
-            setInterval(ultraCleanVietnamese, 600);
+            lock();
+            setInterval(lock, 500);
           </script>' >> index.html
-
-          # Green Border + Responsive
           echo '<style>
             html, body { overflow-x: hidden !important; max-width: 100vw !important; }
-            body {
-              border: 4px solid #00ff66 !important;
-              box-sizing: border-box;
-              animation: pulseGreen 1.5s infinite alternate ease-in-out !important;
-              padding: 0 8px;
-            }
-            @keyframes pulseGreen {
-              0% { border-color: #00cc55; }
-              100% { border-color: #00ff66; }
-            }
-            table, .comparison-table {
-              width: 100% !important;
-              max-width: 100% !important;
-              overflow-x: auto;
-              display: block;
-            }
+            body { border: 4px solid #00ff66 !important; box-sizing: border-box; animation: pulseGreen 1.5s infinite alternate ease-in-out !important; padding: 0 8px; }
+            @keyframes pulseGreen { 0% { border-color: #00cc55; } 100% { border-color: #00ff66; } }
+            table, .comparison-table { width: 100% !important; max-width: 100% !important; overflow-x: auto; display: block; }
             img { max-width: 100% !important; height: auto !important; }
           </style>' >> index.html
 
@@ -118,7 +93,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "V3000 REAL + ULTRA CLEAN [skip ci]"
+            git commit -m "V3000 REAL PRODUCTION + LOCK [skip ci]"
             git push origin main
             echo "Pushed successfully"
           fi
