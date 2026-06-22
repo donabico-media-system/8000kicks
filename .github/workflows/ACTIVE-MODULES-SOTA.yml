@@ -35,6 +35,13 @@ jobs:
           echo "   🔰 KÍCH HOẠT HỆ THỐNG MÔ-ĐUN TỰ TRỊ TOÀN TRI V3000   "
           echo "========================================================="
           
+          # LỆNH THANH LỌC TỐI CAO: Khử tận gốc thư mục rác node_modules trên máy chủ ảo
+          if [ -d "node_modules" ]; then
+            echo "🔥 [FOUND] Phát hiện thư mục rác node_modules. Tiến hành tiêu diệt..."
+            rm -rf node_modules
+            echo "✅ [PURGED] Đã xóa sổ node_modules khỏi cấu trúc vận hành."
+          fi
+          
           # Cấu hình URL thực địa mặc định cho các module Siphon cũ cần tham số
           DEFAULT_URL="https://donabico-global-media.github.io/8000kicks/"
           
@@ -60,10 +67,15 @@ jobs:
             echo "⚠️ [NOT FOUND] Không tìm thấy thư mục Modules/."
           fi
 
-      - name: Standard Git Push (No Ext Token Required)
+      - name: Standard Git Push & Sync Cleanup
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Thực hiện xóa vĩnh viễn node_modules trên cây thư mục GitHub (nếu có)
+          if git status --porcelain | grep -q "node_modules"; then
+            git rm -r --cached node_modules 2>/dev/null || true
+          fi
           
           git add .
           if git diff --cached --quiet; then
@@ -71,6 +83,6 @@ jobs:
             echo "✅ KHÔNG CÓ THAY ĐỔI - Hệ thống giữ nguyên trạng thái sạch."
             echo "========================================================="
           else
-            git commit -m "V3000-Ω AUTONOMOUS SYSTEM STABILIZATION [skip ci]"
+            git commit -m "V3000-Ω AUTONOMOUS SYSTEM STABILIZATION & PURGE [skip ci]"
             git push origin main
           fi
