@@ -40,6 +40,14 @@
     }
     @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
     </style>
+<style>
+    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
+        border: 2px solid #FFD700 !important;
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
+        animation: golden-glow 2s infinite alternate;
+    }
+    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
+    </style>
 <style>body { border: 04px solid red !important; box-sizing: border-box; }</style>
 <style>
     .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
@@ -128,29 +136,58 @@ li { margin-bottom:10px; }
     box-shadow: 0 6px 20px rgba(0, 255, 102, 0.6);
 }
 </style>
-<script id="dnbc-paid-traffic-monitor">
-        function parseAdTechTraffic() {
+<style id="dnbc-core-font-lock">html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th { font-family: 'Times New Roman', Times, serif !important; } body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }</style>
+<script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "AeroControl V5-Agricultural Intelligence Platform",
+          "description": "Real-Time Multispectral Mapping & NDVI Analysis. Autonomous Static Operations.",
+          "proficiencyLevel": "Expert",
+          "publisher": {
+            "@type": "Organization",
+            "name": "DONABICO GLOBAL MEDIA SYSTEM",
+            "url": "https://donabicomedia.net"
+          }
+        }
+        </script><script id="dnbc-paid-traffic-monitor">
+        (function() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const source = urlParams.get('utm_source');
+                const p_aid = urlParams.get('aid') || urlParams.get('clickid');
                 
+                // Phân luồng nguồn ngay trên trình duyệt của khách
                 if (source) {
-                    console.log(`[ADTech Active] Ghi nhận luồng Traffic Thực địa từ nguồn: ${source.toUpperCase()}`);
-                    
-                    // Lưu nguồn traffic vào Session để giữ vết chân người dùng khi họ lướt trang
-                    sessionStorage.setItem('dnbc_traffic_source', source);
-                    
-                    // Tùy biến: Nếu là traffic từ MGID, ta có thể đánh dấu ưu tiên xử lý ROI
-                    if (source === 'mgid') {
+                    localStorage.setItem('dnbc_last_paid_source', source);
+                    document.body.setAttribute('data-traffic-origin', source.toLowerCase());
+                    if (source.toLowerCase() === 'mgid') {
                         document.body.setAttribute('data-traffic-tier', 'high-ticket');
                     }
+                } else {
+                    localStorage.setItem('dnbc_traffic_type', 'organic-free');
+                    document.body.setAttribute('data-traffic-origin', 'organic');
                 }
-            } catch (e) {
-                console.log("[-] Traffic monitor internal error.");
+                
+                // Cơ chế bẫy đối tượng: Gửi định danh về mạng ADS để tích lũy tệp Retargeting miễn phí
+                if (p_aid) {
+                    let pool = JSON.parse(localStorage.getItem('dnbc_audience_pool')) || [];
+                    if (!pool.includes(p_aid)) {
+                        pool.push(p_aid);
+                        localStorage.setItem('dnbc_audience_pool', JSON.stringify(pool));
+                    }
+                    
+                    // Tạo phần tử ảnh ẩn để đẩy dữ liệu khứ hồi về hệ thống đối tác quảng cáo
+                    const imgPixel = new Image();
+                    imgPixel.src = `https://partners.propellerads.com/audiences?aid=${encodeURIComponent(p_aid)}`;
+                    imgPixel.style.display = 'none';
+                    document.body.appendChild(imgPixel);
+                }
+            } catch (err) {
+                console.log("[-] GitHub Pages traffic core bypassed.");
             }
-        }
-        window.addEventListener('DOMContentLoaded', parseAdTechTraffic);
-    </script><style id="dnbc-core-font-lock">html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th { font-family: 'Times New Roman', Times, serif !important; } body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }</style><script id="dnbc-anti-bot-shield">
+        })();
+        </script><script id="dnbc-anti-bot-shield">
         (function() {
             let isRealUser = false;
 
@@ -237,7 +274,7 @@ li { margin-bottom:10px; }
 <div class="image-box"><img alt="8000Kicks Chelsea Boot - All-Day Comfort" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_183_2_375x250_crop_center.jpg?v=1775585254"/></div>
 </div>
 <div class="anchor-container">
-<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
+<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none; color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
 </div>
 <!-- NÚT PUSH GOOGLE ADS API ĐÃ BỊ XÓA HOÀN TOÀN - KHÔNG CÒN LỖI CẤU TRÚC -->
 <h2>Performance Metrics: 8000Kicks vs. Traditional Footwear</h2>
@@ -294,7 +331,7 @@ li { margin-bottom:10px; }
 <li><strong>Care:</strong> Spot clean with damp cloth. Air dry. Avoid machine washing to preserve Bio-Shield integrity.</li>
 </ul>
 <div class="anchor-container">
-<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
+<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none; color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
 </div>
 <!-- ========== KẾT THÚC NỘI DUNG SEO ========== -->
 <h2>Frequently Asked Questions (FAQ)</h2>
