@@ -14,36 +14,28 @@ jobs:
   autonomous-engine:
     runs-on: ubuntu-latest
     steps:
-      - name: "🎛️ Hạ cánh Codebase Vệ tinh"
+      - name: "🎛️ Checkout Codebase"
         uses: actions/checkout@v4
 
-      - name: "🌀 Khởi tạo Môi trường Python"
+      - name: "🌀 Cấu hình Môi trường"
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: "📦 Cài đặt Thư viện Lõi"
+      - name: "📦 Cài đặt Thư viện"
         run: |
           python -m pip install --upgrade pip
           pip install langgraph jinja2
 
-      - name: "🚀 Kích hoạt Bộ não Super-Core (Tự động dò tìm)"
+      - name: "🚀 Thực thi Core Nội tại"
         run: |
-          echo "[📡 SEARCHING] Đang tìm kiếm tệp Super-Core-Affiliate.py..."
-          # Lệnh find này sẽ tự động tìm tệp bất kể Chỉ huy để ở thư mục nào
+          echo "[📡 ENGINE] Khởi chạy Super-Core-Affiliate..."
+          # Tự động quét và chạy, không dùng API, không kết nối Kho 4
           CORE_FILE=$(find . -name "Super-Core-Affiliate.py" | head -n 1)
-          
-          if [ -z "$CORE_FILE" ]; then
-            echo "[🚨 CRITICAL] Không tìm thấy tệp Super-Core-Affiliate.py trong repo!"
-            exit 1
-          fi
-          
-          echo "[✅ FOUND] Tệp được tìm thấy tại: $CORE_FILE"
           python3 "$CORE_FILE"
-          echo "[✅ ENGINE SUCCESS] Landing Page đã được tái tạo."
 
-      - name: "💾 Đồng bộ hóa kết quả"
+      - name: "💾 Commit Kết quả tại chỗ"
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto-update Landing Page: 8000kicks Super Core"
+          commit_message: "Auto-update Landing Page locally"
           file_pattern: 'index.html'
