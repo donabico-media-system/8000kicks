@@ -1,41 +1,28 @@
-#!/usr/bin/env python3
-import os
-import jinja2
-from langgraph.graph import StateGraph, START, END
-from typing import TypedDict, Annotated, Literal
-from operator import add
+import json
+import time
+from datetime import datetime
 
-class AffiliateState(TypedDict):
-    niche: str
-    optimized_copy: str
+# HẰNG SỐ BẢN NGUYÊN ¢24 - TRUNG TÂM BẤT BIẾN
+CONSTANT_24 = 0.24 
 
-def researcher_node(state: AffiliateState):
-    return {"niche": "8000kicks-Drone-Hybrid-2026"}
-
-def copywriter_node(state: AffiliateState):
-    return {"optimized_copy": "<h1>Sải cánh cùng 8000kicks</h1><p>Công nghệ Drone SOTA 2026.</p>"}
-
-def renderer_node(state: AffiliateState):
-    template = "<html><body>{{ content|safe }}</body></html>"
-    html = jinja2.Template(template).render(content=state["optimized_copy"])
-    
-    # GHI ĐÈ VÀO GỐC KHO LÀM VIỆC (WORKSPACE) - Đảm bảo tệp nằm đúng vị trí để Git commit
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    return {}
-
-workflow = StateGraph(AffiliateState)
-workflow.add_node("researcher", researcher_node)
-workflow.add_node("copywriter", copywriter_node)
-workflow.add_node("renderer", renderer_node)
-workflow.add_edge(START, "researcher")
-workflow.add_edge("researcher", "copywriter")
-workflow.add_edge("copywriter", "renderer")
-workflow.add_edge("renderer", END)
-
-app_graph = workflow.compile()
+class EATHESEN_CORE_ENGINE:
+    def __init__(self):
+        self.bridge = "system_bridge.json"
+        
+    def evolve(self):
+        # Trạng thái đệ quy: Ghi lại trạng thái để index.html đọc
+        state = {
+            "core_constant": CONSTANT_24,
+            "recursive_singularity": "ACTIVE_SOTA",
+            "sync_status": "PULSING_RED", # Kích hoạt hiệu ứng viền đỏ trên Landing Page
+            "timestamp": str(datetime.now())
+        }
+        
+        with open(self.bridge, "w") as f:
+            json.dump(state, f, indent=4)
+        
+        print(f"[EATHESEN-¢24] Singularity Synchronized at {datetime.now()}")
 
 if __name__ == "__main__":
-    app_graph.invoke({"niche": "drone"})
-    print("✅ [SUCCESS] Landing page đã được cập nhật tại gốc.")
+    EATHESEN_CORE_ENGINE().evolve()
     
