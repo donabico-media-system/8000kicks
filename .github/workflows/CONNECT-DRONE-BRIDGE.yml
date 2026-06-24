@@ -2,15 +2,10 @@ name: "CONNECT-DRONE-BRIDGE"
 
 on:
   repository_dispatch:
-    # Lắng nghe xung lệnh chính xác từ Kho 4 bắn sang và từ file Mesh-Core-V3000.js đẩy về
     types: [LAUNCH_DRONE_MESH_CONNECT, OCEAN_SIGNAL_INBOUND]
-  
   schedule:
-    # Chu kỳ tự động đánh thức 24/7 kiểm tra trạng thái 13 module vệ tinh ngầm
     - cron: '*/10 * * * *'
-    
   workflow_dispatch:
-    # Giữ cổng bấm chạy thủ công bằng tay để kiểm thử mạch lệnh khi cần
 
 permissions:
   contents: write
@@ -26,6 +21,18 @@ jobs:
         with:
           persist-credentials: true
 
+      # =========================================================================
+      # BƯỚC ĐỘT PHÁ: TỰ ĐỘNG KHỞI TẠO TOKEN ĐỘNG XUYÊN KHO TỪ GITHUB APP NỘI BỘ
+      # =========================================================================
+      - name: "🔑 Sinh mã xác thực tối cao xuyên hệ thống"
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          # Truy xuất trực tiếp thông tin định danh của App đang cấu hình an toàn
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: "donabico-global-media"
+
       - name: "🌀 Khởi tạo Môi trường Python thực địa"
         uses: actions/setup-python@v5
         with:
@@ -38,12 +45,11 @@ jobs:
 
       - name: "📡 Thực thi Kết nối - Phản hồi trạng thái về Tổng trạm Kho 4"
         env:
-          # Rút và ép xung sử dụng mã xác thực cấp cao do Kho 4 ký gửi sang để bẻ gãy hoàn toàn mã lỗi 404
-          BRIDGE_TOKEN: ${{ github.event.client_payload.bridge_temporary_token || github.token }}
+          # Ép hệ thống dùng Token siêu cấp vừa sinh ra từ GitHub App để bẻ gãy lỗi 404
+          BRIDGE_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
           
-          # Định vị tọa độ chính xác của tệp cầu nối
           TARGET_FILE="Bridge/Connect-Drone-Bridge.py"
           
           if [ -f "$TARGET_FILE" ]; then
@@ -60,4 +66,4 @@ jobs:
       - name: "🔒 Khóa cổng nhận tín hiệu"
         if: always()
         run: |
-          echo "✅ [SATELLITE LOG] Tiến trình phản hồi kết nối hoàn tất."
+          echo "✅ [SATELLITE LOG] Tiến trình phản hồi kết nối hoàn tất. Token động đã tự hủy."
