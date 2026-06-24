@@ -1,5 +1,4 @@
 name: "AUTO-CORE-AFFILIATE"
-
 on:
   push:
     branches: [main]
@@ -14,29 +13,14 @@ jobs:
   autonomous-engine:
     runs-on: ubuntu-latest
     steps:
-      - name: "🎛️ Checkout Codebase"
-        uses: actions/checkout@v4
-
-      - name: "🌀 Cấu hình Môi trường"
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: "📦 Cài đặt Thư viện"
-        run: |
-          python -m pip install --upgrade pip
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
           pip install langgraph jinja2
-
-      - name: "🚀 Thực thi Core Nội tại"
-        run: |
-          echo "[📡 ENGINE] Khởi chạy Super-Core-Affiliate..."
-          # Tự động quét và chạy, không dùng API, không kết nối Kho 4
-          CORE_FILE=$(find . -name "Super-Core-Affiliate.py" | head -n 1)
-          python3 "$CORE_FILE"
-
-      - name: "💾 Commit Kết quả tại chỗ"
-        uses: stefanzweifel/git-auto-commit-action@v5
+          # Chạy trực tiếp tệp Connect-Drone-Bridge để kích hoạt Core
+          python3 Connect-Drone-Bridge.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto-update Landing Page locally"
           file_pattern: 'index.html'
- 
