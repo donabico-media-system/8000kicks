@@ -14,7 +14,8 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: uses/actions/checkout@v3
+        # ĐÃ SỬA: Đưa về cú pháp chuẩn của GitHub Actions
+        uses: actions/checkout@v3
         with:
           persist-credentials: true
           fetch-depth: 0
