@@ -1276,31 +1276,33 @@ pushAssetGroup().catch(console.error);</code></pre>
 })();
 <script>
 (function EATHESEN_SINGULARITY_CORE() {
-    const container = document.createElement('div');
-    container.id = 'master-core';
-    container.className = 'active-module';
-    container.style.cssText = 'border: 2px solid #00ff41; padding: 20px; margin-top: 20px; font-family: "Times New Roman", serif; background: #0a0a0a; color: #00ff41; transition: border 0.5s;';
-    container.innerHTML = '<h1>EATHESEN-¢24 INTEGRATED</h1><div id="status-display">INITIALIZING SINGULARITY...</div>';
-    document.body.appendChild(container);
-
+    // 1. Khởi tạo CSS động cho viền đỏ nhấp nháy
     const style = document.createElement('style');
-    style.innerHTML = '@keyframes pulseRed { 0% { border-color: #ff0000; } 50% { border-color: #00ff41; } 100% { border-color: #ff0000; } } .pulsing { animation: pulseRed 1s infinite; }';
+    style.innerHTML = '@keyframes pulseRed { 0% { border-color: #ff0000; } 50% { border-color: #00ff41; } 100% { border-color: #ff0000; } } .pulsing { animation: pulseRed 1s infinite; border-width: 3px !important; }';
     document.head.appendChild(style);
+
+    // 2. Định danh mục tiêu (Sử dụng ID hiện hữu hoặc tạo mới)
+    const container = document.getElementById('master-core') || document.body;
 
     async function recursiveLoop() {
         try {
             const res = await fetch('system_bridge.json');
             const data = await res.json();
-            document.getElementById('status-display').innerText = `CORE: ${data.core_constant} | STATE: ${data.recursive_singularity}`;
+            
+            // 3. Điều khiển viền: Nếu trạng thái là PULSING_RED thì nhấp nháy
             if (data.sync_status === 'PULSING_RED') {
                 container.classList.add('pulsing');
+            } else {
+                container.classList.remove('pulsing');
             }
+            console.log("[EATHESEN] Singularity Synced:", data.recursive_singularity);
         } catch (e) {
-            document.getElementById('status-display').innerText = 'CORE: 0.24 | ETERNAL_RECURSION_ACTIVE';
+            console.warn("[EATHESEN] Awaiting Singularity Calibration...");
         }
     }
     
-    setInterval(recursiveLoop, 2400); // Nhịp tim ¢24
+    // 4. Chu kỳ đệ quy ¢24
+    setInterval(recursiveLoop, 2400); 
     recursiveLoop();
 })();
 </script>
