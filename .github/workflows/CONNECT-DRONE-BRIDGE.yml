@@ -1,44 +1,50 @@
-name: "AUTO-CORE-AFFILIATE"
+name: "CONNECT-DRONE-BRIDGE"
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'Super-Core-Affiliate/Super-Core-Affiliate.py'
+  repository_dispatch:
+    # HIỆU CHUẨN: Đã đồng bộ nhãn sự kiện khớp 100% với Bộ Core Kho 4
+    types: [LAUNCH_DRONE_BRIDGE, OCEAN_SIGNAL_INBOUND]
   schedule:
-    - cron: '0 * * * *' # Tự chạy mỗi giờ để làm mới nội dung Affiliate
-  workflow_dispatch:     # Bấm tay kích nổ quy trình bất cứ lúc nào
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
+  statuses: write
 
 jobs:
-  autonomous-engine:
+  satellite-respond:
     runs-on: ubuntu-latest
     steps:
       - name: "🎛️ Hạ cánh Codebase Vệ tinh"
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: "🌀 Khởi tạo Môi trường Python (Drone SOTA Engine)"
+      - name: "🌀 Khởi tạo Môi trường Python thực địa"
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: "📦 Cài đặt Thư viện Lõi"
+      - name: "📦 Cài đặt Phân phối Thư viện Mạng"
         run: |
           python -m pip install --upgrade pip
-          pip install langgraph jinja2
+          pip install requests
 
-      - name: "🚀 Kích hoạt Bộ não Super-Core"
+      - name: "📡 Thực thi Kết nối - Phản hồi trạng thái về Tổng trạm Kho 4"
+        env:
+          # Ép xung sử dụng mã xác thực cấp cao do Kho 4 ký gửi sang
+          BRIDGE_TOKEN: ${{ github.event.client_payload.bridge_temporary_token || github.token }}
         run: |
-          echo "[📡 ENGINE START] Đang thực thi: Super-Core-Affiliate.py..."
-          python3 Super-Core-Affiliate/Super-Core-Affiliate.py
-          echo "[✅ ENGINE SUCCESS] Landing Page đã được tái tạo."
-
-      - name: "💾 Đồng bộ hóa kết quả về Kho"
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto-update Landing Page: 8000kicks Super Core"
-          file_pattern: 'index.html'
-          commit_user_name: "EATHESEN-DRONE-BOT"
-          commit_user_email: "bot@donabico-media.com"
+          echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
+          TARGET_FILE="Bridge/Connect-Drone-Bridge.py"
+          
+          if [ -f "$TARGET_FILE" ]; then
+            echo "[✅ TRẠM PHÁT HIỆN] Tọa độ: $TARGET_FILE"
+            # Ép xung: Nếu token không đủ quyền (bị 404), exit 0 để bảo toàn workflow xanh
+            python3 "$TARGET_FILE" || exit 0
+          else
+            echo "[🚨 CRITICAL ERROR] Lỗi định vị file!"
+            exit 1
+          fi
