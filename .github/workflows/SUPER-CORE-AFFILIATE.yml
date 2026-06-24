@@ -24,14 +24,15 @@ jobs:
           python-version: '3.x'
 
       - name: Harmonic Calibration (Execute Core Script)
-        run: python Super-Core-Affiliate.py
+        # Đã cập nhật đường dẫn chính xác chứa khoảng trắng
+        run: python "Super Core Affiliate/Super-Core-Affiliate.py"
 
       - name: Synchronize Singularity (Commit and Push Gateway)
         run: |
           git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
           
-          # Chỉ commit nếu có sự thay đổi về timestamp trong file JSON
+          # tệp system_bridge.json vẫn sẽ được tạo ra ở thư mục gốc của Repo để index.html đọc trực tiếp
           git add system_bridge.json
           if ! git diff --cached --quiet; then
             git commit -m "¢24-Evolution: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
