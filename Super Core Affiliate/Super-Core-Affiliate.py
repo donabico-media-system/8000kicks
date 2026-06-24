@@ -1,28 +1,24 @@
 import json
-import time
+import os
 from datetime import datetime
 
-# HẰNG SỐ BẢN NGUYÊN ¢24 - TRUNG TÂM BẤT BIẾN
-CONSTANT_24 = 0.24 
-
-class EATHESEN_CORE_ENGINE:
-    def __init__(self):
-        self.bridge = "system_bridge.json"
+def generate_sota_bridge():
+    # Khóa cứng cấu trúc phẳng tĩnh 100% khớp với logic của hàm recursiveLoop() trong index.html
+    bridge_data = {
+        "sync_status": "PULSING_RED",
+        "recursive_singularity": "ACTIVE_SOTA",
+        "core_constant": 0.24,
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    }
+    
+    # Ghi đè trực tiếp tạo cổng truyền dữ liệu tĩnh cho Landing Page
+    output_filename = "system_bridge.json"
+    with open(output_filename, "w", encoding="utf-8") as f:
+        json.dump(bridge_data, f, indent=4, ensure_ascii=False)
         
-    def evolve(self):
-        # Trạng thái đệ quy: Ghi lại trạng thái để index.html đọc
-        state = {
-            "core_constant": CONSTANT_24,
-            "recursive_singularity": "ACTIVE_SOTA",
-            "sync_status": "PULSING_RED", # Kích hoạt hiệu ứng viền đỏ trên Landing Page
-            "timestamp": str(datetime.now())
-        }
-        
-        with open(self.bridge, "w") as f:
-            json.dump(state, f, indent=4)
-        
-        print(f"[EATHESEN-¢24] Singularity Synchronized at {datetime.now()}")
+    print(f"[EATHESEN V3000-Ω] Cầu nối dữ liệu đã được đồng bộ thành công tại: {bridge_data['timestamp']}")
+    print(f"[STATUS] Trạng thái nạp: {bridge_data['sync_status']} -> Sẵn sàng kích hoạt hiệu ứng Pulse.")
 
 if __name__ == "__main__":
-    EATHESEN_CORE_ENGINE().evolve()
+    generate_sota_bridge()
     
