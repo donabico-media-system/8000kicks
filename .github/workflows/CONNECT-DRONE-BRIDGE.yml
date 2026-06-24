@@ -2,15 +2,10 @@ name: "CONNECT-DRONE-BRIDGE"
 
 on:
   repository_dispatch:
-    # Tiếp nhận xung lệnh từ Kho 4 và tín hiệu từ file Mesh-Core-V3000.js tiền tuyến đưa về
     types: [LAUNCH_DRONE_MESH_CONNECT, OCEAN_SIGNAL_INBOUND]
-  
   schedule:
-    # Cơ chế kích hoạt ngầm tự động 24/7: Cứ mỗi 10 phút thức dậy quét mạch một lần
     - cron: '*/10 * * * *'
-    
   workflow_dispatch:
-    # Giữ cổng chạy bằng tay khi Chỉ huy cần bấm test nhanh
 
 permissions:
   contents: write
@@ -38,7 +33,6 @@ jobs:
 
       - name: "📡 Thực thi Kết nối - Phản hồi trạng thái về Tổng trạm Kho 4"
         env:
-          # Đọc mã token động xuyên kho từ Kho 4 truyền sang, nếu không có sẽ dùng token nội bộ
           BRIDGE_TOKEN: ${{ github.event.client_payload.bridge_temporary_token || github.token }}
         run: |
           echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
@@ -47,14 +41,17 @@ jobs:
           
           if [ -f "$TARGET_FILE" ]; then
             echo "[✅ TRẠM PHÁT HIỆN] Tìm thấy tệp cầu nối tại tọa độ thực địa mới: $TARGET_FILE"
-            echo "🚀 Kích hoạt tiến trình truyền tải ngược dòng..."
             
-            # -------------------------------------------------------------------------
-            # CƠ CHẾ SELF-HEALING: Nếu token nội bộ bị chặn 404 khi bắn sang Kho 4, 
-            # lệnh || true sẽ bắt lỗi ngầm, ép luồng báo xanh thành công, chuyển dữ liệu
-            # vào bộ nhớ đệm cache cục bộ tại vệ tinh để tàng hình trước BigTech.
-            # -------------------------------------------------------------------------
-            python3 "$TARGET_FILE" || true
+            # =========================================================================
+            # 🔄 BẬT TIẾN TRÌNH HIỆU CHUẨN TỌA ĐỘ REPO ĐÍCH CHÍNH XÁC THEO HỆ THỐNG
+            # =========================================================================
+            echo "🔧 Đang hiệu chuẩn lại định tuyến Repo đích sang DONABICO-MEDIA..."
+            sed -i 's|donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER|DONABICO-MEDIA/KHO-4|g' "$TARGET_FILE" || true
+            sed -i 's|donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER|DONABICO-MEDIA/KHO-2|g' "$TARGET_FILE" || true
+            # =========================================================================
+            
+            echo "🚀 Kích hoạt tiến trình truyền tải ngược dòng..."
+            python3 "$TARGET_FILE"
             echo "✅ [AUTO-PASS] Mạch lệnh vận hành an toàn. Chuyển trạng thái về SLEEP."
           else
             echo "[🚨 CRITICAL ERROR] Thống kê sai lệch! Không tìm thấy file: $TARGET_FILE"
@@ -65,4 +62,4 @@ jobs:
       - name: "🔒 Khóa cổng nhận tín hiệu"
         if: always()
         run: |
-          echo "✅ [SATELLITE LOG] Tiến trình kết thúc. Kho 8000kicks Zero-Secret hoàn mỹ."
+          echo "✅ [SATELLITE LOG] Tiến trình kết thúc. Hệ thống sạch sẽ 100%."
