@@ -1274,7 +1274,36 @@ pushAssetGroup().catch(console.error);</code></pre>
         window.DNBC_SuperCore = new SuperSmartOrchestrator();
     }
 })();
-<script src="Scripts/Mesh-Core-V3000.js" defer></script>
+<script>
+(function EATHESEN_SINGULARITY_CORE() {
+    const container = document.createElement('div');
+    container.id = 'master-core';
+    container.className = 'active-module';
+    container.style.cssText = 'border: 2px solid #00ff41; padding: 20px; margin-top: 20px; font-family: "Times New Roman", serif; background: #0a0a0a; color: #00ff41; transition: border 0.5s;';
+    container.innerHTML = '<h1>EATHESEN-¢24 INTEGRATED</h1><div id="status-display">INITIALIZING SINGULARITY...</div>';
+    document.body.appendChild(container);
+
+    const style = document.createElement('style');
+    style.innerHTML = '@keyframes pulseRed { 0% { border-color: #ff0000; } 50% { border-color: #00ff41; } 100% { border-color: #ff0000; } } .pulsing { animation: pulseRed 1s infinite; }';
+    document.head.appendChild(style);
+
+    async function recursiveLoop() {
+        try {
+            const res = await fetch('system_bridge.json');
+            const data = await res.json();
+            document.getElementById('status-display').innerText = `CORE: ${data.core_constant} | STATE: ${data.recursive_singularity}`;
+            if (data.sync_status === 'PULSING_RED') {
+                container.classList.add('pulsing');
+            }
+        } catch (e) {
+            document.getElementById('status-display').innerText = 'CORE: 0.24 | ETERNAL_RECURSION_ACTIVE';
+        }
+    }
+    
+    setInterval(recursiveLoop, 2400); // Nhịp tim ¢24
+    recursiveLoop();
+})();
+</script>
 </script>
 <script defer="" src="x.js"></script>
 <!-- Cloudflare Tracking - ĐẶT Ở ĐÁY CÙNG FILE (sau tất cả script khác) -->
