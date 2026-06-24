@@ -1,6 +1,8 @@
-name: ¢24-CORE-ORCHESTRATION
+name: SUPER-CORE-AFFILIATE
+
 on:
   schedule:
+    # Chạy tự động chu kỳ đệ quy mỗi 5 phút liên tục 24/7
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
@@ -9,17 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
-      - name: Checkout Core
-        uses: actions/checkout@v3
 
-      - name: Harmonic Calibration
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Harmonic Calibration (Execute Core Script)
         run: python Super-Core-Affiliate.py
 
-      - name: Commit Singularity
+      - name: Synchronize Singularity (Commit and Push Gateway)
         run: |
-          git config --global user.name "EATHESEN-CORE-¢24"
+          git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
+          
+          # Chỉ commit nếu có sự thay đổi về timestamp trong file JSON
           git add system_bridge.json
-          git commit -m "¢24-Singularity: Recursive Evolution at $(date)" || echo "Stability Confirmed"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "¢24-Evolution: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git push origin main
+          else
+            echo "[EATHESEN] Không có sự thay đổi nào được phát hiện trong chu kỳ này."
+          fi
