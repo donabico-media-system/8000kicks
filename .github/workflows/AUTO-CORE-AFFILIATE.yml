@@ -39,3 +39,4 @@ jobs:
         with:
           commit_message: "Auto-update Landing Page locally"
           file_pattern: 'index.html'
+ 
