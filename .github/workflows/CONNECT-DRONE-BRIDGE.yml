@@ -33,33 +33,17 @@ jobs:
 
       - name: "📡 Thực thi Kết nối - Phản hồi trạng thái về Tổng trạm Kho 4"
         env:
+          # Thu nạp mã Token quyền lực do Kho 4 ký gửi sang, nếu trống sẽ mượn tạm quyền nội bộ
           BRIDGE_TOKEN: ${{ github.event.client_payload.bridge_temporary_token || github.token }}
         run: |
           echo "[📡 CONNECTING] Đang giải mã Token định danh mạng lưới..."
-          
           TARGET_FILE="Bridge/Connect-Drone-Bridge.py"
           
           if [ -f "$TARGET_FILE" ]; then
-            echo "[✅ TRẠM PHÁT HIỆN] Tìm thấy tệp cầu nối tại tọa độ thực địa mới: $TARGET_FILE"
-            
-            # =========================================================================
-            # 🔄 BẬT TIẾN TRÌNH HIỆU CHUẨN TỌA ĐỘ REPO ĐÍCH CHÍNH XÁC THEO HỆ THỐNG
-            # =========================================================================
-            echo "🔧 Đang hiệu chuẩn lại định tuyến Repo đích sang DONABICO-MEDIA..."
-            sed -i 's|donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER|DONABICO-MEDIA/KHO-4|g' "$TARGET_FILE" || true
-            sed -i 's|donabico-global-media/KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER|DONABICO-MEDIA/KHO-2|g' "$TARGET_FILE" || true
-            # =========================================================================
-            
+            echo "[✅ TRẠM PHÁT HIỆN] Tìm thấy tệp cầu nối tại tọa độ thực địa: $TARGET_FILE"
             echo "🚀 Kích hoạt tiến trình truyền tải ngược dòng..."
             python3 "$TARGET_FILE"
-            echo "✅ [AUTO-PASS] Mạch lệnh vận hành an toàn. Chuyển trạng thái về SLEEP."
           else
-            echo "[🚨 CRITICAL ERROR] Thống kê sai lệch! Không tìm thấy file: $TARGET_FILE"
-            find . -maxdepth 3 -not -path '*/.*'
+            echo "[🚨 CRITICAL ERROR] Không tìm thấy file tại vị trí: $TARGET_FILE"
             exit 1
           fi
-
-      - name: "🔒 Khóa cổng nhận tín hiệu"
-        if: always()
-        run: |
-          echo "✅ [SATELLITE LOG] Tiến trình kết thúc. Hệ thống sạch sẽ 100%."
