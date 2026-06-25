@@ -2,7 +2,7 @@ name: ACTIVE-MODULES-SOTA
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Chạy đệ quy liên tục mỗi 5 phút 24/7
+    - cron: '*/5 * * * *'  # Chu kỳ chạy tự động đệ quy 5 phút/lần liên tục 24/7
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,6 @@ jobs:
           python-version: '3.x'
 
       - name: Execute SOTA Core & Modules Calibration
-        # Chạy liên hoàn hai file Python để xử lý và ghi đè trực tiếp ra gốc
         run: |
           python "Modules/Active-Modules.py"
           python "Super Core Affiliate/Super-Core-Affiliate.py"
@@ -36,12 +35,17 @@ jobs:
           git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
           
-          # Chỉ quản lý và push duy nhất 1 file JSON ở thư mục gốc
+          # Quản lý duy nhất file JSON ngoài gốc
           git add system_bridge.json
           
           if ! git diff --cached --quiet; then
-            git commit -m "¢24-SOTA-Modules: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git commit -m "¢24-SOTA-Modules: Sync Matrix Verified $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            
+            # Gộp nhanh nhánh để tránh lỗi rejected
+            git pull origin main --rebase
+            
+            # Đẩy mã nguồn an toàn lên GitHub
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
           else
-            echo "[EATHESEN] Hệ thống cân bằng, bỏ qua chu kỳ Commit."
+            echo "[EATHESEN] Hệ thống cân bằng, không có thay đổi."
           fi
