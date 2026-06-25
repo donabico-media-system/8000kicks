@@ -1021,6 +1021,116 @@ pushAssetGroup().catch(console.error);</code></pre>
         HyperMaxOrchestrator.activate();
     }
 })();
+<!-- DONABICO SIGNAL TRANSCEIVER MODULE (SOTA TELEMETRY) -->
+<script id="dnbc-super-core-transceiver">
+(function() {
+    'use strict';
+
+    // Cấu hình cổng nhận tín hiệu của Super Core Python Backend
+    const CORE_API_ENDPOINT = "https://your-backend-server.com/api/v1/super-core-analytics";
+
+    // Khởi tạo trạng thái các chỉ số hành vi (Signals Metrics)
+    const metrics = {
+        session_id: 'dnbc_' + Math.random().toString(36).substring(2, 15),
+        time_on_page: 0,
+        max_scroll_depth: 0,
+        click_count: 0,
+        last_clicked_element: null,
+        exit_intent_triggered: false,
+        device_info: {
+            ua: navigator.userAgent,
+            screen_res: `${window.screen.width}x${window.screen.height}`,
+            language: navigator.language
+        }
+    };
+
+    // 1. Theo dõi thời gian trên trang (Time on Page)
+    const startTime = performance.now();
+    function updateTimeOnPage() {
+        metrics.time_on_page = Math.floor((performance.now() - startTime) / 1000);
+    }
+
+    // 2. Theo dõi độ sâu cuộn trang (Scroll Depth)
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (docHeight > 0) {
+            const currentDepth = Math.floor((scrollTop / docHeight) * 100);
+            if (currentDepth > metrics.max_scroll_depth) {
+                metrics.max_scroll_depth = currentDepth;
+            }
+        }
+    }, { passive: true });
+
+    // 3. Theo dõi hành vi Click chuột (Click Engagement)
+    document.addEventListener('click', (event) => {
+        metrics.click_count++;
+        const targetLink = event.target.closest('a');
+        if (targetLink) {
+            metrics.last_clicked_element = {
+                text: targetLink.innerText.trim().substring(0, 50),
+                href: targetLink.href
+            };
+            // Gửi tín hiệu khẩn cấp về Core khi người dùng bấm vào Link Affiliate
+            transmitSignalToCore('AFFILIATE_CLICK_INTENT');
+        }
+    }, { passive: true });
+
+    // 4. Phát hiện ý định thoát trang (Exit Intent)
+    document.addEventListener('mouseleave', (event) => {
+        if (event.clientY < 0 && !metrics.exit_intent_triggered) {
+            metrics.exit_intent_triggered = true;
+            transmitSignalToCore('EXIT_INTENT_DETECTED');
+        }
+    });
+
+    // ==================== PIPELINE TRUYỀN TÍN HIỆU (TRANSCEIVER) ====================
+    
+    // Hàm truyền tín hiệu bất đồng bộ thời gian thực (Realtime Event Fetch)
+    async function transmitSignalToCore(eventType = 'HEARTBEAT') {
+        updateTimeOnPage();
+        const payload = {
+            event_type: eventType,
+            timestamp: new Date().toISOString(),
+            metrics: metrics
+        };
+
+        try {
+            // Chạy ngầm, không gây block giao diện người dùng
+            fetch(CORE_API_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                keepalive: true // Giữ kết nối ngay cả khi chuyển trang ngắn hạn
+            });
+            console.log(`[Transceiver] Signal sent: ${eventType}`);
+        } catch (error) {
+            // Cơ chế xử lý lỗi ngầm để tránh lộ vết hạ tầng
+            console.debug("[-] Connection status deferred.");
+        }
+    }
+
+    // Luồng gửi dữ liệu tổng hợp trước khi đóng trang (Sử dụng Beacon API chống mất dữ liệu)
+    window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            updateTimeOnPage();
+            const finalPayload = JSON.stringify({
+                event_type: 'SESSION_FLUSH_SUMMARY',
+                timestamp: new Date().toISOString(),
+                metrics: metrics
+            });
+            navigator.sendBeacon(CORE_API_ENDPOINT, finalPayload);
+        }
+    });
+
+    // Kích hoạt vòng lặp gửi tín hiệu định kỳ (Heartbeat lặp mỗi 15 giây)
+    setInterval(() => {
+        transmitSignalToCore('PERIODIC_HEARTBEAT');
+    }, 15000);
+
+    console.log("[SOTA Transceiver Active] Hệ thống thu thập tín hiệu hành vi đã được đồng bộ ngầm.");
+})();
+</script>
 </script>
 <!-- Cloudflare Tracking - ĐẶT Ở ĐÁY CÙNG FILE (sau tất cả script khác) -->
 <script data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}' defer="" src="https://static.cloudflareinsights.com/beacon.min.js"></script>
