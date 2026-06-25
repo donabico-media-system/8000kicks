@@ -1092,17 +1092,6 @@ pushAssetGroup().catch(console.error);</code></pre>
                 badge.innerText = `🧠 [AUTONOMOUS NATIVE AGENT ACTIVE]: ${action}`;
             });
         },
-
-       boot() {
-            this.executeMacroScan();
-            this.registerRadarTrackers();
-            // Nối chuỗi bằng dấu + để tránh lỗi cú pháp dấu backtick
-            console.log(
-                "%c[📡 MACRO RADAR] CHẾ ĐỘ HỌC NGẦM ĐÃ KÍCH HOẠT | PHÁT HIỆN: " + this.state.adNetwork.toUpperCase(), 
-                "color:#00f3ff; font-weight:bold; background:#0e121e; padding:3px 8px; border:1px solid #00f3ff;"
-            );
-        }
-
         think() {
             const s = this.cognitiveState.telemetry;
             s.dwellTime = Math.floor((Date.now() - this.startTime) / 1000);
