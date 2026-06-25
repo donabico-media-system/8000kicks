@@ -1093,10 +1093,14 @@ pushAssetGroup().catch(console.error);</code></pre>
             });
         },
 
-        boot() {
+       boot() {
             this.executeMacroScan();
             this.registerRadarTrackers();
-            console.log("%c[📡 MACRO RADAR] CHẾ ĐỘ HỌC NGẦM ĐÃ KÍCH HOẠT | PHÁT HIỆN: " + this.state.adNetwork.toUpperCase(), "color:#00f3ff; font-weight:bold; background:#0e121e; padding:3px 8px; border:1px solid #00f3ff;");
+            // Nối chuỗi bằng dấu + để tránh lỗi cú pháp dấu backtick
+            console.log(
+                "%c[📡 MACRO RADAR] CHẾ ĐỘ HỌC NGẦM ĐÃ KÍCH HOẠT | PHÁT HIỆN: " + this.state.adNetwork.toUpperCase(), 
+                "color:#00f3ff; font-weight:bold; background:#0e121e; padding:3px 8px; border:1px solid #00f3ff;"
+            );
         }
 
         think() {
