@@ -2,8 +2,7 @@ name: ACTIVE-MODULES-SOTA
 
 on:
   schedule:
-    # Vòng lặp đệ quy quét module vô hạn mỗi 5 phút liên tục 24/7
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *'  # Chạy đệ quy liên tục mỗi 5 phút 24/7
   workflow_dispatch:
 
 jobs:
@@ -24,51 +23,25 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Step 1 - Activate & Scan All Modules
-        run: python "Modules/Active-Modules.py"
-
-      - name: Step 2 - Execute Super Core Affiliate Processing
-        run: python "Super Core Affiliate/Super-Core-Affiliate.py"
-
-      - name: Step 3 - Validate and Harmonize Core Matrix (SOTA Verification)
-        # Sử dụng Python để parse JSON trực tiếp, chống lỗi cú pháp chuỗi của bash script
+      - name: Execute SOTA Core & Modules Calibration
+        # Chạy liên hoàn hai file Python để xử lý và ghi đè trực tiếp ra gốc
         run: |
-          python -c '
-          import json, os
-          path = "Super Core Affiliate/system_bridge.json"
-          if not os.path.exists(path):
-              print("[-] Thư mục hoặc file JSON không tồn tại!"); exit(1)
-          with open(path, "r", encoding="utf-8") as f:
-              data = json.load(f)
-          if "active_modules_matrix" in data or "sync_status" in data:
-              print("[SUCCESS] Cấu trúc ma trận hoàn toàn hợp lệ."); exit(0)
-          else:
-              print("[-] Thiếu trường dữ liệu cốt lõi!"); exit(1)
-          '
+          python "Modules/Active-Modules.py"
+          python "Super Core Affiliate/Super-Core-Affiliate.py"
 
-      - name: Step 4 - Deploy Clean Signals to Landing Page
+      - name: Ghost Push Clean Signals
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
           
-          # Sao lưu file dữ liệu tổng hợp đã xử lý ra vùng nhớ tạm
-          cp "Super Core Affiliate/system_bridge.json" /tmp/system_bridge.json
+          # Chỉ quản lý và push duy nhất 1 file JSON ở thư mục gốc
+          git add system_bridge.json
           
-          # Đồng bộ cứng với máy chủ lưu trữ chính nhằm tránh xung đột nhánh
-          git fetch origin main
-          git reset --hard origin/main
-          
-          # Ép đè file tĩnh ra ngoài thư mục gốc để index.html càn quét trực tiếp
-          cp /tmp/system_bridge.json system_bridge.json
-          cp /tmp/system_bridge.json "Super Core Affiliate/system_bridge.json"
-          
-          # Thực hiện Commit & Push chế độ tàng hình
-          git add system_bridge.json "Super Core Affiliate/system_bridge.json"
           if ! git diff --cached --quiet; then
-            git commit -m "¢24-SOTA-Modules: Sync Matrix & Active Nodes $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git commit -m "¢24-SOTA-Modules: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
           else
-            echo "[EATHESEN] Trạng thái ma trận không đổi, bỏ qua chu kỳ này."
+            echo "[EATHESEN] Hệ thống cân bằng, bỏ qua chu kỳ Commit."
           fi
