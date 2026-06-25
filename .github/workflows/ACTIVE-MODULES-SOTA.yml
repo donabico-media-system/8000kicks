@@ -2,7 +2,7 @@ name: ACTIVE-MODULES-SOTA
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Chu kỳ chạy tự động đệ quy 5 phút/lần liên tục 24/7
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -35,16 +35,14 @@ jobs:
           git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
           
-          # Quản lý duy nhất file JSON ngoài gốc
           git add system_bridge.json
           
           if ! git diff --cached --quiet; then
             git commit -m "¢24-SOTA-Modules: Sync Matrix Verified $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
             
-            # Gộp nhanh nhánh để tránh lỗi rejected
-            git pull origin main --rebase
+            # CHIẾN LƯỢC ÉP ĐÈ X-STRATEGY: Ưu tiên tuyệt đối file mới sinh ra khi xảy ra xung đột
+            git pull origin main --rebase -X ours
             
-            # Đẩy mã nguồn an toàn lên GitHub
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
           else
             echo "[EATHESEN] Hệ thống cân bằng, không có thay đổi."
