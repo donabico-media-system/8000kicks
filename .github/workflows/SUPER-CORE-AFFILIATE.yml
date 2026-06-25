@@ -2,7 +2,7 @@ name: SUPER-CORE-AFFILIATE
 
 on:
   schedule:
-    # Chạy tự động chu kỳ đệ quy mỗi 5 phút liên tục 24/7[span_6](start_span)[span_6](end_span)
+    # Chạy tự động chu kỳ đệ quy mỗi 5 phút liên tục 24/7
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
@@ -10,14 +10,14 @@ jobs:
   sota-evolution:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Cấp quyền ghi để Bot có thể push file JSON lên repo[span_7](start_span)[span_7](end_span)
+      contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true # Bắt buộc giữ thông tin xác thực để push[span_8](start_span)[span_8](end_span)
-          fetch-depth: 0            # Lấy toàn bộ lịch sử commit để tránh xung đột nhánh[span_9](start_span)[span_9](end_span)
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,39 +25,30 @@ jobs:
           python-version: '3.x'
 
       - name: Harmonic Calibration (Execute Core Script)
-        # ĐẢM BẢO: Chạy script xong, kiểm tra xem file JSON nằm ở đâu để chuẩn bị di chuyển
         run: python "Super Core Affiliate/Super-Core-Affiliate.py"
 
       - name: Synchronize Singularity (Commit and Push Gateway)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Nạp Token hệ thống để xác thực quyền Push
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "EATHESEN-CORE-BOT[span_10](start_span)"[span_10](end_span)
-          git config --global user.email "core@donabicomedia.net[span_11](start_span)"[span_11](end_span)
+          git config --global user.name "EATHESEN-CORE-BOT"
+          git config --global user.email "core@donabicomedia.net"
           
-          # 1. CHIẾN LƯỢC BẢO VỆ: Quét tìm file system_bridge.json ở cả thư mục gốc và thư mục con[span_12](start_span)[span_12](end_span)
-          if [ -f "Super Core Affiliate/system_bridge.json" ]; then
-            cp "Super Core Affiliate/system_bridge.json" /tmp/system_bridge.json
-          elif [ -f "system_bridge.json" ]; then
-            cp system_bridge.json /tmp/system_bridge.json[span_13](start_span)[span_13](end_span)
-          else
-            echo "[-] KHÔNG TÌM THẤY FILE BRIDGE ĐƯỢC SINH RA! Hủy chu kỳ để bảo vệ hệ thống."
-            exit 1
-          fi
+          # 1. SAO LƯU: Bốc file JSON từ thư mục con ra vùng nhớ tạm
+          cp "Super Core Affiliate/system_bridge.json" /tmp/system_bridge.json
           
-          # 2. ĐỒNG BỘ CỨNG: Ép máy ảo cập nhật trạng thái mới nhất từ Remote[span_14](start_span)[span_14](end_span)
-          git fetch origin main[span_15](start_span)[span_15](end_span)
-          git reset --hard origin/main[span_16](start_span)[span_16](end_span)
+          # 2. ĐỒNG BỘ CỨNG: Ép máy ảo cập nhật trạng thái mới nhất từ GitHub
+          git fetch origin main
+          git reset --hard origin/main
           
-          # 3. GHI ĐÈ SOTA: Đưa tệp JSON mới nhất trở lại thư mục gốc để chuẩn bị phân phối[span_17](start_span)[span_17](end_span)
-          cp /tmp/system_bridge.json system_bridge.json[span_18](start_span)[span_18](end_span)
+          # 3. GHI ĐÈ: Đưa file JSON ra thẳng thư mục gốc để Landing Page càn quét dữ liệu
+          cp /tmp/system_bridge.json system_bridge.json
           
-          # 4. TIẾN HÀNH ĐẨY MÃ NGUỒN SẠCH CỦA BOT CÓ XÁC THỰC AN TOÀN
-          git add system_bridge.json[span_19](start_span)[span_19](end_span)
-          if ! git diff --cached --quiet; then[span_20](start_span)[span_20](end_span)
-            git commit -m "¢24-Evolution: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC[span_21](start_span)"[span_21](end_span)
-            # Sử dụng định dạng URL chứa Token để vượt qua mọi rào cản bảo mật của GitHub
+          # 4. PUSH LÊN GITHUB
+          git add system_bridge.json
+          if ! git diff --cached --quiet; then
+            git commit -m "¢24-Evolution: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
           else
-            echo "[EATHESEN] Trạng thái dữ liệu không đổi, bỏ qua chu kỳ Commit này.[span_22](start_span)"[span_22](end_span)
+            echo "[EATHESEN] Trạng thái dữ liệu không đổi, bỏ qua chu kỳ Commit này."
           fi
