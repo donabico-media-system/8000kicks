@@ -1093,11 +1093,11 @@ pushAssetGroup().catch(console.error);</code></pre>
             });
         },
 
-        {    // HÀM TELEMETRY ĐÃ ĐƯỢC CHUYỂN THÀNH CHẾ ĐỘ BYPASS AN TOÀN - KHÔNG GÂY LỖI CORS / 405
-            // Chế độ bypass an toàn nội bộ, ngắt kết nối gửi POST lỗi đến link affiliate
-            console.log("[NATIVE AGENT RADAR] Telemetry captured locally (Stealth Sync Bypassed).");
-            return;
-        },
+        boot() {
+            this.executeMacroScan();
+            this.registerRadarTrackers();
+            console.log("%c[📡 MACRO RADAR] CHẾ ĐỘ HỌC NGẦM ĐÃ KÍCH HOẠT | PHÁT HIỆN: " + this.state.adNetwork.toUpperCase(), "color:#00f3ff; font-weight:bold; background:#0e121e; padding:3px 8px; border:1px solid #00f3ff;");
+        }
 
         think() {
             const s = this.cognitiveState.telemetry;
