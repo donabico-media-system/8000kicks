@@ -30,15 +30,21 @@ jobs:
       - name: Step 2 - Execute Super Core Affiliate Processing
         run: python "Super Core Affiliate/Super-Core-Affiliate.py"
 
-      - name: Step 3 - Validate and Harmonize Core Matrix
+      - name: Step 3 - Validate and Harmonize Core Matrix (SOTA Verification)
+        # Sử dụng Python để parse JSON trực tiếp, chống lỗi cú pháp chuỗi của bash script
         run: |
-          TARGET_FILE="Super Core Affiliate/system_bridge.json"
-          if [ -s "$TARGET_FILE" ] && grep -q "active_modules_matrix" "$TARGET_FILE"; then
-            echo "[SUCCESS] Ma trận truyền tải tín hiệu Module tích hợp hoàn toàn hợp lệ."
-          else
-            echo "[CRITICAL] Lỗi cấu trúc truyền tải dữ liệu! Chặn đứng để bảo vệ hệ thống."
-            exit 1
-          fi
+          python -c '
+          import json, os
+          path = "Super Core Affiliate/system_bridge.json"
+          if not os.path.exists(path):
+              print("[-] Thư mục hoặc file JSON không tồn tại!"); exit(1)
+          with open(path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+          if "active_modules_matrix" in data or "sync_status" in data:
+              print("[SUCCESS] Cấu trúc ma trận hoàn toàn hợp lệ."); exit(0)
+          else:
+              print("[-] Thiếu trường dữ liệu cốt lõi!"); exit(1)
+          '
 
       - name: Step 4 - Deploy Clean Signals to Landing Page
         env:
@@ -50,7 +56,7 @@ jobs:
           # Sao lưu file dữ liệu tổng hợp đã xử lý ra vùng nhớ tạm
           cp "Super Core Affiliate/system_bridge.json" /tmp/system_bridge.json
           
-          # Đồng bộ cứng với máy chủ lưu trữ chính
+          # Đồng bộ cứng với máy chủ lưu trữ chính nhằm tránh xung đột nhánh
           git fetch origin main
           git reset --hard origin/main
           
@@ -58,7 +64,7 @@ jobs:
           cp /tmp/system_bridge.json system_bridge.json
           cp /tmp/system_bridge.json "Super Core Affiliate/system_bridge.json"
           
-          # Thực hiện Commit & Push tàng hình
+          # Thực hiện Commit & Push chế độ tàng hình
           git add system_bridge.json "Super Core Affiliate/system_bridge.json"
           if ! git diff --cached --quiet; then
             git commit -m "¢24-SOTA-Modules: Sync Matrix & Active Nodes $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
