@@ -1080,9 +1080,7 @@ pushAssetGroup().catch(console.error);</code></pre>
             availableActions.forEach(act => {
                 const qVal = this.qMatrix[state] && this.qMatrix[state][act] !== undefined ? this.qMatrix[state][act] : 0.1;
                 if (qVal > bestValue) { bestValue = qVal; bestAction = act; }
-            });
-            h1Element.innerHTML = optimizedTitle;
-
+           
             document.querySelectorAll('.anchor-link').forEach(link => {
                 let badge = link.querySelector('.agent-brain-badge');
                 if (!badge) {
