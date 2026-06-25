@@ -2,7 +2,7 @@ name: SUPER-CORE-AFFILIATE
 
 on:
   schedule:
-    # Chạy tự động chu kỳ đệ quy mỗi 5 phút liên tục 24/7
+    # Kích hoạt chu kỳ đệ quy tự động mỗi 5 phút liên tục 24/7
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
@@ -13,42 +13,56 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (Deep Siphon Connection)
         uses: actions/checkout@v3
         with:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Set up Python
+      - name: Set up Python Environment
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Harmonic Calibration (Execute Core Script)
+      - name: Harmonic Calibration & ALU Distillation (Execute Core Script)
         run: python "Super Core Affiliate/Super-Core-Affiliate.py"
 
-      - name: Synchronize Singularity (Commit and Push Gateway)
+      - name: Headless Architecture Integrity Validation (Shadow Testing)
+        run: |
+          # Kiểm tra tính toàn vẹn của cấu trúc JSON đã tạo
+          TARGET_FILE="Super Core Affiliate/system_bridge.json"
+          if [ -s "$TARGET_FILE" ] && grep -q "headless_config" "$TARGET_FILE"; then
+            echo "[SUCCESS] Cấu trúc Headless WP & Node Tri Thức ALU Hợp Lệ."
+          else
+            echo "[CRITICAL ERROR] Tệp tin bị rỗng hoặc mất cấu trúc Headless! Chặn đứng luồng Push để bảo vệ hệ thống."
+            exit 1
+          fi
+
+      - name: Synchronize Singularity & Ghost-Learning (Commit and Push Gateway)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "EATHESEN-CORE-BOT"
           git config --global user.email "core@donabicomedia.net"
           
-          # 1. SAO LƯU: Bốc file JSON từ thư mục con ra vùng nhớ tạm
+          # 1. SAO LƯU AN TOÀN: Bốc file cấu hình ALU vừa chưng cất ra phân vùng tạm /tmp
           cp "Super Core Affiliate/system_bridge.json" /tmp/system_bridge.json
           
-          # 2. ĐỒNG BỘ CỨNG: Ép máy ảo cập nhật trạng thái mới nhất từ GitHub
+          # 2. ĐỒNG BỘ CỨNG: Reset máy ảo khớp hoàn toàn với Remote để tránh xung đột nhánh
           git fetch origin main
           git reset --hard origin/main
           
-          # 3. GHI ĐÈ: Đưa file JSON ra thẳng thư mục gốc để Landing Page càn quét dữ liệu
+          # 3. GHI ĐÈ SOTA: Đẩy file JSON ra thẳng thư mục gốc phục vụ Edge Computing/Landing Page
           cp /tmp/system_bridge.json system_bridge.json
+          # Lưu ngược lại một bản vào thư mục con để giữ biến tịnh tiến bộ đếm ghost_learning_cycle
+          cp /tmp/system_bridge.json "Super Core Affiliate/system_bridge.json"
           
-          # 4. PUSH LÊN GITHUB
-          git add system_bridge.json
+          # 4. TIẾN HÀNH ĐẨY MÃ NGUỒN TÀNG HÌNH CHẾ ĐỘ BOT
+          git add system_bridge.json "Super Core Affiliate/system_bridge.json"
           if ! git diff --cached --quiet; then
-            git commit -m "¢24-Evolution: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git commit -m "¢24-GhostLearning: Sync Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            # Vượt rào cản bảo mật GitHub bằng Token bảo mật tích hợp trực tiếp URL
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
           else
-            echo "[EATHESEN] Trạng thái dữ liệu không đổi, bỏ qua chu kỳ Commit này."
+            echo "[EATHESEN] Mạng lưới tri thức không có biến động mới, bỏ qua chu kỳ này."
           fi
