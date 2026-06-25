@@ -1,5 +1,7 @@
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
         border: 2px solid #FFD700 !important;
@@ -1096,13 +1098,16 @@ pushAssetGroup().catch(console.error);</code></pre>
             let optimizedTitle = "8000Kicks - The World's First Waterproof Hemp Shoes";
             switch(action) {
                 case "MORPH_HERO_WATERPROOF":
-                    optimizedTitle = "8000Kicks — Giày Gai Dầu Chống Nước Tuyệt Đối | Công Nghệ Bio-Shield";
+                    // "8000Kicks \u2014 Gi\u00e0y Gai D\u1ea7u Ch\u1ed1ng N\u01b0\u1edbc Tuy\u1ec7t \u0110\u1ed1i | C\u00f4ng Ngh\u1ec7 Bio-Shield"
+                    optimizedTitle = "8000Kicks \u2014 Gi\u00e0y Gai D\u1ea7u Ch\u1ed1ng N\u01b0\u1edbc Tuy\u1ec7t \u0110\u1ed1i | C\u00f4ng Ngh\u1ec7 Bio-Shield";
                     break;
                 case "MORPH_HERO_SUSTAINABLE":
-                    optimizedTitle = "8000Kicks Eco Sneakers — Giày Thể Thao Bền Vững Carbon Negative";
+                    // "8000Kicks Eco Sneakers \u2014 Gi\u00e0y Th\u1ec3 Thao B\u1ec1n V\u1eefng Carbon Negative"
+                    optimizedTitle = "8000Kicks Eco Sneakers \u2014 Gi\u00e0y Th\u1ec3 Thao B\u1ec1n B\u1ec1n V\u1eefng Carbon Negative";
                     break;
                 case "INJECT_LIVE_URGENCY":
-                    optimizedTitle = "8000Kicks Travel Shoes — Siêu Nhẹ 320g Thay Thế Mọi Đôi Giày";
+                    // "8000Kicks Travel Shoes \u2014 Si\u00eau Nh\u1eb9 320g Thay Th\u1ebf M\u1ecdi \u0110\u00f4i Gi\u00e0y"
+                    optimizedTitle = "8000Kicks Travel Shoes \u2014 Si\u00eau Nh\u1eb9 320g Thay Th\u1ebf M\u1ecdi \u0110\u00f4i Gi\u00e0y";
                     break;
             }
             h1Element.innerHTML = optimizedTitle;
@@ -1183,7 +1188,7 @@ pushAssetGroup().catch(console.error);</code></pre>
     };
 
     // =========================================================================================
-    // KHỐI LÕI 2: CÁC MODULES MỞ RỘNG (EXTERNAL ECOSYSTEM PLUGINS - CHỈ HỖ TRỢ THÊM CHO BRAIN)
+    // KHỐI LÕI 2: CÁ C MODULES MỞ RỘNG (EXTERNAL ECOSYSTEM PLUGINS - CHỈ HỖ TRỢ THÊM CHO BRAIN)
     // =========================================================================================
     
     // Phân hệ Model Context Protocol (MCP v2) hỗ trợ đóng gói dữ liệu
@@ -1258,7 +1263,8 @@ pushAssetGroup().catch(console.error);</code></pre>
                         document.head.appendChild(styleElement);
                     }
                 }
-                liveTicker.innerText = `🔥 CẢNH BÁO HỆ THỐNG: Kho hàng chỉ còn đúng ${signal.stockLevel} sản phẩm cuối cùng thuộc lô ưu đãi này!`;
+                // "\u2014 C\u1ea2NH B\u00c1O H\u1ec6 TH\u1ed0NG: Kho h\u00e0ng ch\u1ec9 c\u00f2n \u0111\u00fang " + signal.stockLevel + " s\u1ea3n ph\u1ea9m cu\u1ed1i c\u00f9ng thu\u1ed9c l\u00f4 \u01b0u \u0111\u00e3i n\u00e0y!"
+                liveTicker.innerText = `\ud83d\udd25 C\u1ea2NH B\u00c1O H\u1ec6 TH\u1ed0NG: Kho h\u00e0ng ch\u1ec9 c\u00f2n \u0111\u00fang ${signal.stockLevel} s\u1ea3n ph\u1ea9m cu\u1ed1i c\u00f9ng thu\u1ed9c l\u00f4 \u01b0u \u0111\u00e3i n\u00e0y!`;
             });
         }
     }
