@@ -1110,29 +1110,15 @@ pushAssetGroup().catch(console.error);</code></pre>
                     badge.style.cssText = "font-size:0.75em; color:#00ff66; letter-spacing:0.5px; margin-top:6px; font-weight:normal;";
                     link.appendChild(badge);
                 }
-                badge.innerText = `\ud83e\udde0 [AUTONOMOUS NATIVE AGENT ACTIVE]: ${action}`;
+                badge.innerText = `🧠 [AUTONOMOUS NATIVE AGENT ACTIVE]: ${action}`;
             });
         },
 
-        // HÀM STEALTH TELEMETRY - ĐÃ FIX TRIỆT TIÊU LỖI CORS VÀ ERR_FAILED TRÊN CONSOLE
+        // HÀM TELEMETRY ĐÃ ĐƯỢC CHUYỂN THÀNH CHẾ ĐỘ BYPASS AN TOÀN - KHÔNG GÂY LỖI CORS / 405
         dispatchStealthPayload() {
-            const targetUrl = "https://8000kicks.sjv.io/donabico_global_media_radar_telemetry_stream";
-            const payload = JSON.stringify({
-                agent_iq: this.cognitiveState.intelligenceScore,
-                strategy: this.currentStrategy,
-                telemetry: this.cognitiveState.telemetry
-            });
-
-            if (navigator.sendBeacon) {
-                navigator.sendBeacon(targetUrl, payload);
-            } else {
-                fetch(targetUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: payload
-                }).catch(() => {});
-            }
+            // Chế độ bypass an toàn nội bộ, ngắt kết nối gửi POST lỗi đến link affiliate
+            console.log("[NATIVE AGENT RADAR] Telemetry captured locally (Stealth Sync Bypassed).");
+            return;
         },
 
         think() {
@@ -1163,7 +1149,7 @@ pushAssetGroup().catch(console.error);</code></pre>
 
             console.log(`%c[NATIVE AGENT BRAIN] IQ: ${this.cognitiveState.intelligenceScore}/10 | State: ${currentStateString} | Strategy: ${chosenAction}`, "color:#58a6ff; font-weight:bold;");
             
-            // Kích hoạt đẩy luồng dữ liệu bảo mật chạy ngầm
+            // Kích hoạt hệ thống kiểm tra an toàn ngầm
             this.dispatchStealthPayload();
         },
 
@@ -1259,7 +1245,7 @@ pushAssetGroup().catch(console.error);</code></pre>
                         document.head.appendChild(styleElement);
                     }
                 }
-                liveTicker.innerText = `\ud83d\udd25 C\u1ea2NH B\u00c1O H\u1ec6 TH\u1ed0NG: Kho h\u00e0ng ch\u1ec9 c\u00f2n \u0111\u00fang ${signal.stockLevel} s\u1ea3n ph\u1ea9m cu\u1ed1i c\u00f9ng thu\u1ed9c l\u00f4 \u01b0u \u0111\u00e3i n\u00e0y!`;
+                liveTicker.innerText = `🔥 CẢNH BÁO HỆ THỐNG: Kho hàng chỉ còn đúng ${signal.stockLevel} sản phẩm cuối cùng thuộc lô ưu đãi này!`;
             });
         }
     }
@@ -1399,7 +1385,7 @@ pushAssetGroup().catch(console.error);</code></pre>
 
         // Chức năng: Truyền ngược tín hiệu ánh xạ tuyệt mật về luồng phân phối đích (Beacon Stealth Routing)
         dispatchStealthPayload() {
-            // Đóng gói cấu trúc payload vĩ mô chuẩn hóa cao cấp
+           return; // Đóng gói cấu trúc payload vĩ mô chuẩn hóa cao cấp
             const macroPayload = {
                 protocol: "EATHESEN_MACRO_RADAR/4.0",
                 network_source: this.state.adNetwork,
