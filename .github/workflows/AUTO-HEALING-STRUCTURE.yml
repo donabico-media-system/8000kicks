@@ -1,0 +1,72 @@
+name: AUTO-HEALING-STRUCTURE
+
+on:
+  push:
+    paths:
+      - 'index.html'
+  workflow_dispatch:
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 1. Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 2
+
+      - name: 2. Identity Scan
+        id: ScanEngine
+        run: |
+          LAST_COMMITTER=$(git log -1 --format='%an' | tr '[:upper:]' '[:lower:]')
+          echo "Committer: $LAST_COMMITTER"
+          
+          if [[ "$LAST_COMMITTER" == *"donabico-global-media"* || "$LAST_COMMITTER" == *"github"* ]]; then
+            echo "IS_USER=true" >> $GITHUB_ENV
+            echo "[OK] Chấp thuận lệnh từ donabico-global-media."
+          else
+            echo "IS_USER=false" >> $GITHUB_ENV
+            echo "[WARN] Phát hiện Modules can thiệp! Kích hoạt Vá lỗi."
+          fi
+
+      - name: 3. Smart Healing
+        if: env.IS_USER == 'false'
+        run: |
+          echo "[HEAL] Đang bóc tách rác và bảo toàn dữ liệu SEO/ADS..."
+          
+          # Gom và bảo toàn mã SEO/ADS của Modules sang vùng nhớ tạm trên mây của GitHub
+          sed -n '/<meta name="keywords"/p; /<meta name="description"/p; /<meta name="robots"/p; /<script.*googletagmanager/p; /gtag(/p; /fbevents/p; /<script.*connect\.facebook\.net/p' index.html > /tmp/seo_ads_dynamic.txt || true
+          
+          # Khôi phục tệp index.html về trạng thái Bản Nguyên sạch sẽ trước đó
+          git checkout HEAD~1 -- index.html
+          
+          # Quét sạch tận gốc các thẻ <style> rác do Modules tiêm nhiễm sai quy cách
+          sed -i '/<style>/,/<\/style>/d' index.html
+          
+          # Dán trả toàn bộ mã SEO/ADS tối ưu vào ngay sau thẻ <head>
+          sed -i '/<head>/r /tmp/seo_ads_dynamic.txt' index.html
+          
+          # Khóa cứng phông chữ Times New Roman di động và viền xanh SOTA vào cuối tệp
+          sed -i 's|<\/body>|<style id="dnbc-core-lock">html, body, p, div, span, a, h1, h2, h3, h4, h5, h6 { font-family: "Times New Roman", Times, serif !important; } body { border: 4px solid #00ff66 !important; box-sizing: border-box; }</style><\/body>|g' index.html
+          
+          echo "[OK] Đã cấu trúc lại tệp hoàn mỹ."
+
+      - name: 4. Push Matrix
+        if: env.IS_USER == 'false'
+        run: |
+          git config --global user.name "EATHESEN-HEAL-BOT"
+          git config --global user.email "heal-system@donabicomedia.net"
+          
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "¢24-Heal: Protected & SEO-ADS Preserved $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git push origin main --force
+            echo "[SYNC] Đã đồng bộ cấu trúc sạch thành công!"
+          else
+            echo "[KEEP] Cấu trúc trùng khớp hoàn hảo. Giữ nguyên."
+          fi
+          
