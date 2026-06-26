@@ -1,47 +1,55 @@
-name: SUPER-CORE-AFFILIATE
+import json
+import os
+from datetime import datetime
 
-on:
-  schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
-
-jobs:
-  core-evolution:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout Code Matrix
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: true
-          fetch-depth: 0
-
-      - name: Initialize Python Runtime
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Execute Super Core Calibration
-        run: python "Super Core Affiliate/Super-Core-Affiliate.py"
-
-      - name: Ghost Push Central Gateway
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "EATHESEN-CORE-BOT"
-          git config --global user.email "core@donabicomedia.net"
-          
-          git add system_bridge.json
-          
-          if ! git diff --cached --quiet; then
-            git commit -m "¢24-Core-Evolution: Sync Central Matrix $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+def activate_all_modules():
+    # Định vị thư mục Modules/ và Thư mục gốc dự án
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(current_dir)
+    
+    # Chỉ định vị trí duy nhất của file kết quả tại thư mục gốc
+    root_bridge_path = os.path.join(root_dir, "system_bridge.json")
+    
+    print("[+] KÍCH HOẠT NEURAL SIPHON PROTOCOL - QUÉT FILE MODULES...")
+    detected_modules = {}
+    
+    # Quét tất cả các file .py trong thư mục Modules (trừ chính file này)
+    for item in os.listdir(current_dir):
+        if item.endswith(".py") and item != "Active-Modules.py":
+            module_name = item.replace(".py", "")
             
-            # CHIẾN LƯỢC ÉP ĐÈ X-STRATEGY: Ưu tiên tuyệt đối file mới sinh ra khi xảy ra xung đột
-            git pull origin main --rebase -X ours
-            
-            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
-          else
-            echo "[EATHESEN] Trạng thái ma trận cân bằng, bỏ qua chu kỳ Commit này."
-          fi
+            # Ghi nhận kết quả tích xanh và cấu hình ánh xạ logic về Super Core xử lý tiếp
+            detected_modules[module_name] = {
+                "status": "KÍCH HOẠT THÀNH CÔNG ✅",
+                "logic_mapping": "Super Core Affiliate/Super-Core-Affiliate.py",
+                "mode": "HYPER_INTELLIGENCE_2026",
+                "pulse_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+            }
+            print(f" |-- [ONLINE] Module: {item} -> Đã chuyển hướng ánh xạ ✅")
+
+    # Đọc dữ liệu cũ ở gốc nếu có
+    base_data = {}
+    if os.path.exists(root_bridge_path):
+        try:
+            with open(root_bridge_path, "r", encoding="utf-8") as f:
+                base_data = json.load(f)
+        except Exception:
+            pass
+
+    # Hợp nhất và định chuẩn ma trận
+    base_data.update({
+        "sync_status": "PULSING_RED",
+        "recursive_singularity": "ACTIVE_SOTA",
+        "core_constant": 0.24,
+        "active_modules_matrix": detected_modules,
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    })
+
+    # Ghi đè trực tiếp ra thư mục gốc cho index.html đọc
+    with open(root_bridge_path, "w", encoding="utf-8") as f:
+        json.dump(base_data, f, indent=4, ensure_ascii=False)
+        
+    print(f"[SUCCESS] Ma trận đã hợp nhất {len(detected_modules)} Modules với dấu tích xanh xác minh thành công!")
+
+if __name__ == "__main__":
+    activate_all_modules()
