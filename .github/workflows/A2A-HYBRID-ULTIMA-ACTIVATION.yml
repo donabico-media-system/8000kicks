@@ -1,0 +1,37 @@
+name: A2A-HYBRID-ULTIMA-ACTIVATION
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '.a2a/**'
+      - 'A2A_Hybrid_V3000_ULTIMA.py'
+  workflow_dispatch:
+
+jobs:
+  activate-a2a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: pip install --upgrade pip
+
+      - name: Run A2A Hybrid ULTIMA
+        run: python A2A_Hybrid_V3000_ULTIMA.py
+
+      - name: Upload A2A Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: a2a-logs
+          path: a2a_ultima.log
+
+      - name: Hybrid Sync Check
+        run: |
+          echo "MCP-A2A Hybrid Sync + ¢24 Check Complete - A2A-HYBRID-ULTIMA"
+          ls -la .a2a/
