@@ -7,7 +7,6 @@ Chức năng: Tự động biên dịch, đồng bộ hóa mã nguồn Landing P
 """
 
 import os
-import re
 
 def generate_landing_page():
     print("[+] Khởi chạy quy trình biên dịch hệ thống EATHESEN V3000-Ω...")
@@ -194,7 +193,6 @@ li { margin-bottom:10px; }
 <div class="modal" id="lightboxModal" onclick="closeLightbox()"><span class="close" onclick="closeLightbox()">×</span><div class="lightbox-wrapper"><img alt="" class="lightbox-preview" id="lightboxImage" src=""/><div class="lightbox-caption" id="lightboxCaption"></div></div></div>
 
 <script id="eathesen-hyper-max-q-learning">
-    // Hệ thống Module HyperMax Q-Learning điều hướng Real-time tối ưu hóa ROI Affiliate nâng cao.
     (function() {
         console.log("[EATHESEN ACTIVE] Khởi tạo Engine Q-Learning đồng bộ dữ liệu Realtime.");
     })();
@@ -202,17 +200,16 @@ li { margin-bottom:10px; }
 </body>
 </html>"""
 
-    # Xác định đường dẫn đầu ra chuẩn hóa landing_pages.html
-    output_dir = "8000kicks"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-        
-    output_file_path = os.path.join(output_dir, "landing_pages.html")
+    # Giải thuật tự động nhận diện thư mục cha (8000kicks) bất kể vị trí chạy file ở đâu
+    current_script_dir = os.path.dirname(os.path.abspath(__file__)) # Thư mục Protocol
+    parent_dir = os.path.dirname(current_script_dir)               # Thư mục 8000kicks cha
+    
+    output_file_path = os.path.join(parent_dir, "landing_pages.html")
     
     with open(output_file_path, "w", encoding="utf-8") as file:
         file.write(html_content)
         
-    print(f"[+] Biên dịch thành công! Dữ liệu đã xuất ra cấu trúc: {output_file_path}")
+    print(f"[+] Biên dịch thành công! File đã xuất ra vị trí: {output_file_path}")
 
 if __name__ == "__main__":
     generate_landing_page()
