@@ -1,38 +1,83 @@
-name: CONNECT-LANDING-PAGE
+name: "CONNET-LANDING-PAGE"
 
 on:
-  push:
-    branches: [ main, master ]
-    paths:
-      - 'Protocol/**'
-  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"  # Tự động quét và gom dữ liệu thực địa 6 tiếng một lần
+  workflow_dispatch:        # Cho phép bấm nút kích hoạt thu thập log thủ công bất cứ lúc nào
+
+permissions:
+  contents: write          # Cấp quyền cho Bot tự động commit ghi file log vào repo
+  issues: write            # Cấp quyền đọc và đóng Issues chứa dữ liệu sau khi xử lý xong
 
 jobs:
-  connect-landing-page-test:
+  harvest-and-compile:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
+      - name: "Checkout Brand Repository"
         uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
 
-      - name: Setup Python 3.12
+      - name: "Deploy Python Runtime Environment"
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.11"
 
-      - name: Install dependencies
+      - name: "Harvest Raw Signals From GitHub Issues"
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          echo "🛰️ [HARVEST] Khởi chạy radar quét tìm tín hiệu từ cổng Issue..."
+          mkdir -p Protocol
+          
+          # Sử dụng GitHub CLI tích hợp sẵn để cào toàn bộ Issue có nhãn 'field-log' về file json tạm
+          gh issue list --label "field-log" --state "open" --json title,body,number > Protocol/raw_harvested.json
+          
+          if [ -s "Protocol/raw_harvested.json" ]; then
+            echo "✅ Đã tải thành công các gói dữ liệu thô từ thực địa."
+          else
+            echo '[]' > Protocol/raw_harvested.json
+            echo "💤 Không tìm thấy xung tín hiệu mới nào đang mở."
+          fi
 
-      - name: Test Connect-Landing-Page.py
+      - name: "Execute Local Brain Node Compiler"
         run: |
-          python Protocol/Connect-Landing-Page.py --help || echo "FastAPI app loaded successfully"
-          python -c "
-          from Protocol.Connect_Landing_Page import app
-          print('FastAPI app imported successfully')
-          print('Routes:', [route.path for route in app.routes])
-          "
+          echo "🧠 [COMPILING] Triển khai bộ xử lý Protocol/Connect-Landing-Page.py để lọc dữ liệu tĩnh..."
+          if [ -f "Protocol/Connect-Landing-Page.py" ]; then
+            python Protocol/Connect-Landing-Page.py
+          else
+            echo "🚨 [FATAL ERROR] Không tìm thấy tệp cốt lõi Protocol/Connect-Landing-Page.py!"
+            exit 1
+          fi
 
-      - name: Health check simulation
+      - name: "Clean Up Handled Signals"
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "✅ Connect-Landing-Page.py is ready for deployment"
+          echo "🧹 [CLEAN UP] Tiến hành đóng các Issue đã được bóc tách thành công..."
+          if [ -f "Protocol/processed_numbers.txt" ]; then
+            while read -r num; do
+              gh issue close "$num" --comment "Matrix successfully compiled by DONABICO AUTOMATION BOT."
+            done < Protocol/processed_numbers.txt
+            rm Protocol/processed_numbers.txt
+            echo "✅ Đã dọn dẹp sạch sẽ các cổng nhận tín hiệu cũ."
+          else
+            echo "💤 Không có cổng tín hiệu nào cần dọn dẹp."
+          fi
+
+      - name: "Secure Commit Back to Brand Repository"
+        run: |
+          echo "📝 [SECURE COMMIT] Kiểm tra biến động cấu trúc dữ liệu ma trận..."
+          git config --local user.email "action@github.com"
+          git config --local user.name "DONABICO-AUTOMATION-BOT"
+          
+          # Chỉ tiến hành đóng gói và push nếu phát hiện có log mới được nạp vào ma trận tĩnh
+          if [ -n "$(git status --porcelain Protocol/siphon_conversion_matrix.log)" ]; then
+            git add Protocol/siphon_conversion_matrix.log
+            git commit -m "🛰️ [RADAR NETWORK] Đồng bộ ma trận dữ liệu chuyển đổi thực địa tĩnh [Automated]"
+            git push origin main
+            echo "🚀 [SUCCESS] File log đã được cập nhật an toàn vào cây thư mục 8000kicks."
+          else
+            echo "💤 [NO CHANGE] Không có tương tác mới. Giữ nguyên trạng hệ thống."
+          fi
