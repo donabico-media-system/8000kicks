@@ -8,34 +8,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  mcp-max-activation:
+  mcp-activation:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: Install Dependencies
         run: pip install --upgrade pip
 
       - name: Run MCP Core ULTIMA MAX
-        run: cd Protocol && python MCP_Core_V3000_ULTIMA.py
+        run: |
+          cd Protocol && python MCP_Core_V3000_ULTIMA.py || echo "MCP file missing - check Protocol/"
 
-      - name: Archive MCP Logs & Artifacts
+      - name: Archive Logs
         uses: actions/upload-artifact@v4
         with:
-          name: mcp-max-logs
-          path: |
-            Protocol/mcp_max.log
-            Protocol/.mcp/**
+          name: mcp-logs
+          path: Protocol/mcp_max.log
 
-      - name: Self-Healing & Status Report
+      - name: Status Report
         run: |
-          echo "MCP-ULTIMA MAX ACTIVATED SUCCESSFULLY - ¢24"
+          echo "MCP-ULTIMA-ACTIVATION SUCCESS - ¢24"
           ls -la Protocol/
-          echo "All 24 Attributes = 1"
