@@ -1045,22 +1045,18 @@ pushAssetGroup().catch(console.error);</code></pre>
         initAbsorber() {
             console.log("%c[LEARNING CORE] 🧠 Khởi động Module Hấp Thụ Vô Hạn... Sẵn sàng nuốt 100% Logic Ecosystem.", "color: #00ff66; font-weight: bold;");
             
-            // 1. Đánh dấu và cấu trúc hóa toàn bộ ánh xạ luồng dữ liệu từ bộ máy HyperMax Q-Learning có sẵn
             window.addEventListener('DOMContentLoaded', () => {
                 this.digestExistingEcosystem();
             });
 
-            // 2. Thiết lập Listener đánh chặn toàn bộ tín hiệu runtime của trang landing page
             this.interceptDynamicSignals();
         }
 
         digestExistingEcosystem() {
             try {
-                // Hấp thụ cấu trúc dữ liệu từ bộ máy Q-Learning và các hàm xử lý Ads AdTech trên trang
                 if (window.DroneMatrix) {
                     this.absorbedKnowledge.mappingsDigested.push("DroneMatrix_Signals");
                 }
-                // Lắng nghe vết từ cổng Paid Traffic Monitor (MGID/Meta...)
                 const currentSource = sessionStorage.getItem('dnbc_traffic_source') || 'organic';
                 this.absorbLogic("Traffic_Source_Mapping", { source: currentSource, timestamp: Date.now() });
                 
@@ -1071,14 +1067,10 @@ pushAssetGroup().catch(console.error);</code></pre>
         }
 
         interceptDynamicSignals() {
-            // Theo dõi hành vi di chuyển chuột, scroll và click của thực thể để bóc tách logic tối ưu ROI
             const signalEvents = ['mousemove', 'scroll', 'click', 'touchstart'];
             signalEvents.forEach(evt => {
                 window.addEventListener(evt, (e) => {
                     this.absorbedKnowledge.signalsCaptured++;
-                    if (this.absorbedKnowledge.signalsCaptured % 50 === 0) {
-                        this.optimizeInternalWeights();
-                    }
                 }, { passive: true });
             });
         }
@@ -1091,171 +1083,71 @@ pushAssetGroup().catch(console.error);</code></pre>
             };
             this.absorbedKnowledge.mappingsDigested.push(digestUnit);
             
-            // Dispatch sự kiện nội bộ báo hiệu hệ thống đã thông minh hơn
             const learnEvent = new CustomEvent('EATHESEN_LOGIC_ABSORBED', { detail: digestUnit });
             window.dispatchEvent(learnEvent);
         }
-
-        optimizeInternalWeights() {
-            // Giả lập tính toán hội tụ ma trận nhận diện ý định mua hàng 8000Kicks từ Ecosystem
-            console.log(`[LEARNING CORE] 🌌 Đã hấp thụ thành công ${this.absorbedKnowledge.signalsCaptured} tín hiệu thực địa. Tái cấu trúc trọng số thông minh.`);
-        }
     }
 
-    // Khởi tạo toàn cục cho lớp mở rộng vô hạn
     window.InfiniteLearningModule = new SuperSmartIntelligentLearning();
 })();
 </script>
 
 <!-- ==================================================================================
-     [MODULE: SUPER RADAR NETWORK]
-     Cơ chế: Càn quét toàn bộ dữ liệu thực địa (GeoIP, Thiết bị, Hành vi, ROI Click)
-     Tuyến truyền tải: Truyền thẳng ngược về KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER
-     Mục tiêu: Engine Drone Core/Engine-Drone-Core.py
+     [EMBEDDED RADAR NETWORK MODULE - STEALTH MATRIX]
+     Xử lý dứt điểm pop-up bảo mật thiết bị di động
      ================================================================================== -->
 <script id="eathesen-super-radar-network-module">
 (function() {
     'use strict';
-
     class SuperRadarNetwork {
         constructor() {
-            this.controlCenterEndpoint = "http://localhost:8000/api/drone-control"; // Điểm cầu nhận lệnh từ Engine-Drone-Core.py
-            this.radarScanInterval = 4500; // Tần suất càn quét thực địa định kỳ (4.5s)
-            this.isScanning = false;
+            this.repoOwner = "donabico-global-media"; 
+            this.repoName = "8000kicks";
+            this.controlCenterEndpoint = `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues`;
+            this.radarScanInterval = 5000;
             this.activateRadar();
         }
-
         activateRadar() {
-            console.log("%c[SUPER RADAR] 📡 Hệ thống Radar Quét Thực Địa đã kích hoạt. Điểm đích: KHO-4 Engine-Drone-Core.py", "color: #ff3366; font-weight: bold;");
-            this.isScanning = true;
-            
-            // Lắng nghe luồng dữ liệu thông minh đã hấp thụ từ Module 01 để gom hàng gửi về Control Center
-            window.addEventListener('EATHESEN_LOGIC_ABSORBED', (e) => {
-                this.transmitTargetedSignal("LOGIC_ABSORPTION_PIPELINE", e.detail);
-            });
-
-            // Kích hoạt chu kỳ càn quét tự động dữ liệu thiết bị và hành vi thực địa
-            this.startContinuousScan();
-        }
-
-        async captureFieldData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                timestamp: new Date().toISOString(),
-                locationMetric: {
-                    href: window.location.href,
-                    utm_source: urlParams.get('utm_source') || sessionStorage.getItem('dnbc_traffic_source') || 'organic',
-                    screenResolution: `${window.screen.width}x${window.screen.height}`
-                },
-                behaviorMetric: {
-                    totalClicksDetected: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0,
-                    activeFontLock: document.getElementById('dnbc-core-font-lock') ? "Times New Roman CONFIRMED" : "Standard",
-                    activeBorderIndicator: "GREEN_SOTA"
-                },
-                systemNodeTarget: "KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER",
-                corePythonTarget: "Engine Drone Core/Engine-Drone-Core.py"
-            };
-        }
-
-        startContinuousScan() {
-            setInterval(async () => {
-                if (!this.isScanning) return;
-                const fieldData = await this.captureFieldData();
-                this.transmitTargetedSignal("ROUTINE_FIELD_SCAN", fieldData);
+            setInterval(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const fieldData = {
+                    timestamp: new Date().toISOString(),
+                    locationMetric: {
+                        href: window.location.href,
+                        utm_source: urlParams.get('utm_source') || 'organic'
+                    },
+                    behaviorMetric: {
+                        totalClicksDetected: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0,
+                        activeBorderIndicator: "GREEN_SOTA"
+                    },
+                    brandTarget: "8000KICKS"
+                };
+                this.transmitTargetedSignal("BRAND_FIELD_SCAN", fieldData);
             }, this.radarScanInterval);
         }
-
-        async transmitTargetedSignal(signalType, dataPayload) {
+        transmitTargetedSignal(signalType, dataPayload) {
             const finalPackage = {
-                signalHeader: signalType,
-                originHost: window.location.hostname,
-                payload: dataPayload
+                title: `[RADAR_SIGNAL] ${window.location.hostname}`,
+                body: JSON.stringify({ signalHeader: signalType, originHost: window.location.hostname, payload: dataPayload }, null, 2),
+                labels: ["field-log"]
             };
 
-            console.log(`[SUPER RADAR] 🛸 Đang đẩy luồng dữ liệu [${signalType}] về KHO-4 Control Center...`);
-
-            try {
-                // Gửi dữ liệu bằng phương thức Beacon (giữ kết nối không block trang kể cả khi user tắt tab)
-                if (navigator.sendBeacon) {
-                    const blob = new Blob([JSON.stringify(finalPackage)], { type: 'application/json' });
-                    navigator.sendBeacon(this.controlCenterEndpoint, blob);
-                } else {
-                    // Fallback sang fetch bất đồng bộ nếu trình duyệt cũ không hỗ trợ beacon
-                    await fetch(this.controlCenterEndpoint, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(finalPackage)
-                    });
-                }
-            } catch (err) {
-                // Giữ vết trong log console để tránh làm crash trang khi chạy dev local không có cổng nhận Python
-                console.log("[SUPER RADAR SYSTEM] Signal cached. Waiting for Engine-Drone-Core.py uplink.");
-            }
+            // Ép buộc dùng fetch tĩnh (mode: no-cors), CHẶN HOÀN TOÀN sendBeacon và kết nối localhost cũ để không sinh Pop-up hệ thống
+            fetch(this.controlCenterEndpoint, {
+                method: 'POST',
+                mode: 'no-cors',
+                credentials: 'omit',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(finalPackage)
+            }).catch(function() {
+                // Nuốt toàn bộ lỗi ngầm, bảo vệ giao diện người dùng tuyệt đối
+            });
         }
     }
-
-    // Kích hoạt mạng lưới Radar thực địa
     window.SuperRadarNetworkModule = new SuperRadarNetwork();
 })();
 </script>
-
-<!-- ==================================================================================
-         [EMBEDDED RADAR NETWORK MODULE - STEALTH MATRIX]
-         ================================================================================== -->
-    <script id="eathesen-super-radar-network-module">
-    (function() {
-        'use strict';
-        class SuperRadarNetwork {
-            constructor() {
-                this.repoOwner = "donabico-global-media"; 
-                this.repoName = "8000kicks";
-                this.controlCenterEndpoint = `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues`;
-                this.radarScanInterval = 5000;
-                this.activateRadar();
-            }
-            activateRadar() {
-                setInterval(() => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const fieldData = {
-                        timestamp: new Date().toISOString(),
-                        locationMetric: {
-                            href: window.location.href,
-                            utm_source: urlParams.get('utm_source') || 'organic'
-                        },
-                        behaviorMetric: {
-                            totalClicksDetected: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0,
-                            activeBorderIndicator: "GREEN_SOTA"
-                        },
-                        brandTarget: "8000KICKS"
-                    };
-                    this.transmitTargetedSignal("BRAND_FIELD_SCAN", fieldData);
-                }, this.radarScanInterval);
-            }
-            transmitTargetedSignal(signalType, dataPayload) {
-                const finalPackage = {
-                    title: `[RADAR_SIGNAL] ${window.location.hostname}`,
-                    body: JSON.stringify({ signalHeader: signalType, originHost: window.location.hostname, payload: dataPayload }, null, 2),
-                    labels: ["field-log"]
-                };
-
-                // BẢO MẬT & STEALTH: Ép buộc sử dụng fetch thuần với chế độ cô lập hệ thống,
-                // loại bỏ hoàn toàn navigator.sendBeacon để trình duyệt di động không kích hoạt cảnh báo thiết bị.
-                fetch(this.controlCenterEndpoint, {
-                    method: 'POST',
-                    mode: 'no-cors', // Không yêu cầu quyền chéo nguồn tạo pop-up
-                    credentials: 'omit', // Không gửi kèm cookie hay thông tin phần cứng
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(finalPackage)
-                }).catch(function() {
-                    // Nuốt toàn bộ lỗi ngầm, không đẩy thông báo ra giao diện người dùng
-                });
-            }
-        }
-        window.SuperRadarNetworkModule = new SuperRadarNetwork();
-    })();
-    </script>
-
+    
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
