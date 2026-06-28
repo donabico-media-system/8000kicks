@@ -14,12 +14,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python Environment
+      - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          # Cache disabled to avoid requirements.txt error
-          cache: 'none'
 
       - name: Install Dependencies
         run: pip install --upgrade pip
@@ -29,27 +27,23 @@ jobs:
 
       - name: Run MCP Core ULTIMA MAX
         run: |
-          cd Protocol
-          python MCP_Core_V3000_ULTIMA.py || echo "MCP file missing - check Protocol folder"
+          cd Protocol && python MCP_Core_V3000_ULTIMA.py || echo "MCP missing"
 
       - name: Run A2A Hybrid ULTIMA MAX
         run: |
-          cd Protocol
-          python A2A_Hybrid_V3000_ULTIMA.py || echo "A2A file missing - check Protocol folder"
+          cd Protocol && python A2A_Hybrid_V3000_ULTIMA.py || echo "A2A missing"
 
-      - name: Archive All Logs & Artifacts
+      - name: Archive Logs
         uses: actions/upload-artifact@v4
         with:
-          name: hybrid-ultima-logs
+          name: hybrid-logs
           path: |
-            Protocol/mcp_max.log
-            Protocol/a2a_max.log
+            Protocol/*.log
             Protocol/.mcp/**
             Protocol/.a2a/**
 
-      - name: Final Status Report ¢24
+      - name: Final ¢24 Report
         run: |
-          echo "=== EATHESEN V3000-Ω HYBRID ULTIMA MAX ACTIVATED ==="
-          echo "All 5 Kho Compatible | MCP + A2A Synced"
-          echo "24 Core Attributes = 1 | Self-Healing Active"
+          echo "EATHESEN V3000-Ω HYBRID ULTIMA MAX ACTIVATED"
+          echo "MCP + A2A Synced | 24 Attributes = 1"
           ls -la Protocol/
