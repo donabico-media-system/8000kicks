@@ -4,34 +4,39 @@ on:
   push:
     branches: [ main, master ]
     paths:
-      - '.a2a/**'
-      - 'A2A_Hybrid_V3000_ULTIMA.py'
+      - 'Protocol/**'
   workflow_dispatch:
 
 jobs:
-  activate-a2a:
+  a2a-max-activation:
     runs-on: ubuntu-latest
+    needs: mcp-max-activation  # Chain after MCP
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
 
       - name: Install Dependencies
         run: pip install --upgrade pip
 
-      - name: Run A2A Hybrid ULTIMA
-        run: python A2A_Hybrid_V3000_ULTIMA.py
+      - name: Run A2A Hybrid ULTIMA MAX
+        run: cd Protocol && python A2A_Hybrid_V3000_ULTIMA.py
 
-      - name: Upload A2A Logs
+      - name: Archive A2A Logs & Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: a2a-logs
-          path: a2a_ultima.log
+          name: a2a-max-logs
+          path: |
+            Protocol/a2a_max.log
+            Protocol/.a2a/**
 
-      - name: Hybrid Sync Check
+      - name: Hybrid Sync & Status Report
         run: |
-          echo "MCP-A2A Hybrid Sync + ¢24 Check Complete - A2A-HYBRID-ULTIMA"
-          ls -la .a2a/
+          echo "A2A-HYBRID-ULTIMA MAX ACTIVATED - MCP SYNC OK - ¢24"
+          ls -la Protocol/
+          echo "Hybrid Protocol Ready for All 5 Kho"
