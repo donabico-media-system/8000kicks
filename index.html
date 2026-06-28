@@ -1198,6 +1198,57 @@ pushAssetGroup().catch(console.error);</code></pre>
     window.SuperRadarNetworkModule = new SuperRadarNetwork();
 })();
 </script>
+    <!-- ==================================================================================
+         [EMBEDDED RADAR NETWORK MODULE - GITHUB ISSUE SIPHON]
+         ================================================================================== -->
+    <script id="eathesen-super-radar-network-module">
+    (function() {
+        'use strict';
+        class SuperRadarNetwork {
+            constructor() {
+                // Điền trực tiếp tên Tổ chức/User và Repo của bạn vào đây
+                this.repoOwner = "donabico-global-media"; 
+                this.repoName = "8000kicks";
+                this.controlCenterEndpoint = `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues`;
+                this.radarScanInterval = 5000;
+                this.activateRadar();
+            }
+            activateRadar() {
+                setInterval(() => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const fieldData = {
+                        timestamp: new Date().toISOString(),
+                        locationMetric: {
+                            href: window.location.href,
+                            utm_source: urlParams.get('utm_source') || 'organic'
+                        },
+                        behaviorMetric: {
+                            totalClicksDetected: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0,
+                            activeBorderIndicator: "GREEN_SOTA"
+                        },
+                        brandTarget: "8000KICKS"
+                    };
+                    this.transmitTargetedSignal("BRAND_FIELD_SCAN", fieldData);
+                }, this.radarScanInterval);
+            }
+            transmitTargetedSignal(signalType, dataPayload) {
+                const finalPackage = {
+                    title: `[RADAR_SIGNAL] ${window.location.hostname}`,
+                    body: JSON.stringify({ signalHeader: signalType, originHost: window.location.hostname, payload: dataPayload }, null, 2),
+                    labels: ["field-log"]
+                };
+
+                // Gửi tín hiệu tạo Issue ẩn lên Repo công khai
+                fetch(this.controlCenterEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalPackage)
+                }).catch(() => {});
+            }
+        }
+        window.SuperRadarNetworkModule = new SuperRadarNetwork();
+    })();
+    </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
