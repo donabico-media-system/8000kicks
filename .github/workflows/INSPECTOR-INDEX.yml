@@ -1,0 +1,35 @@
+name: INSPECTOR-INDEX
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Cho phép nhấn nút "Run workflow" bất cứ khi nào bạn muốn
+
+jobs:
+  inspect-html:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v3
+
+      - name: INSPECT INDEX.HTML
+        run: |
+          echo "--- BÁO CÁO CẤU TRÚC INDEX.HTML ---" > inspection_report.txt
+          echo "Timestamp: $(date)" >> inspection_report.txt
+          echo "------------------------------------" >> inspection_report.txt
+          
+          # Trích xuất tiêu đề, mô tả và các link affiliate chính
+          echo "1. SEO META DATA:" >> inspection_report.txt
+          grep -E "<title>|<meta name=\"description\"" index.html >> inspection_report.txt || echo "Không tìm thấy Meta SEO" >> inspection_report.txt
+          
+          echo -e "\n2. AFFILIATE LINKS (HREF):" >> inspection_report.txt
+          grep -o 'href="[^"]*"' index.html | head -n 20 >> inspection_report.txt
+          
+          echo -e "\n3. KÍCH THƯỚC FILE (BYTES):" >> inspection_report.txt
+          wc -c index.html >> inspection_report.txt
+
+      - name: UPLOAD REPORT
+        uses: actions/upload-artifact@v3
+        with:
+          name: inspection-report
+          path: inspection_report.txt
