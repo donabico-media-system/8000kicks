@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Đảm bảo lấy toàn bộ lịch sử để thực hiện rebase chính xác
 
       - name: SET UP PYTHON ENVIRONMENT
         uses: actions/setup-python@v4
@@ -27,17 +29,21 @@ jobs:
 
       - name: COMMIT AND SYNC RECURSIVE STATE
         run: |
-          # Cấu hình định danh chính thức cho donabico-global-media
+          # Cấu hình định danh chính thức của DONABICO GLOBAL MEDIA SYSTEM
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
           
           git add system_bridge.json
           
-          # Kiểm tra thay đổi và commit tự động
+          # Kiểm tra thay đổi và tiến hành đồng bộ
           if git diff --quiet && git diff --staged --quiet; then
             echo "[-] HỆ THỐNG ĐÃ ĐỒNG BỘ - KHÔNG CÓ THAY ĐỔI MỚI."
           else
             git commit -m "[SYSTEM UPDATE] MA TRẬN ACTIVE-MODULES-SOTA CỦA DONABICO-GLOBAL-MEDIA ĐÃ TỰ ĐỘNG TỐI ƯU HÓA"
-            git push
+            
+            # Giải quyết xung đột bằng cách rebase với remote trước khi push
+            git pull --rebase origin main
+            git push origin main
+            
             echo "[SUCCESS] MA TRẬN ĐÃ ĐƯỢC ĐẨY LÊN HẠ TẦNG GITHUB CHÍNH THỨC."
           fi
