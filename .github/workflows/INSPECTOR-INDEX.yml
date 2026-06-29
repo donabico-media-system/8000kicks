@@ -3,7 +3,7 @@ name: INSPECTOR-INDEX
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Cho phép nhấn nút "Run workflow" bất cứ khi nào bạn muốn
+  workflow_dispatch: 
 
 jobs:
   inspect-html:
@@ -18,7 +18,6 @@ jobs:
           echo "Timestamp: $(date)" >> inspection_report.txt
           echo "------------------------------------" >> inspection_report.txt
           
-          # Trích xuất tiêu đề, mô tả và các link affiliate chính
           echo "1. SEO META DATA:" >> inspection_report.txt
           grep -E "<title>|<meta name=\"description\"" index.html >> inspection_report.txt || echo "Không tìm thấy Meta SEO" >> inspection_report.txt
           
@@ -29,7 +28,7 @@ jobs:
           wc -c index.html >> inspection_report.txt
 
       - name: UPLOAD REPORT
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Đã cập nhật lên v4 theo yêu cầu mới nhất của GitHub
         with:
           name: inspection-report
           path: inspection_report.txt
