@@ -19,7 +19,7 @@ jobs:
     - name: 📥 Checkout Repository Code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Lấy toàn bộ lịch sử commit để tránh lỗi rebase cạn
+        fetch-depth: 0 # Lấy toàn bộ lịch sử để tránh lỗi rebase cạn trên Git
 
     - name: 🐍 Thiết lập môi trường Python 3.10
       uses: actions/setup-python@v5
@@ -54,8 +54,7 @@ jobs:
         else
           git commit -m "🚀 [Automated] Sync & Compile 8000Kicks Landing Page index.html v3000-Ω"
           
-          # Giải pháp cốt lõi: Kéo dữ liệu mới nhất về và rebase để tránh xung đột
-          echo "[+] Đang đồng bộ dữ liệu từ Remote về máy ảo..."
+          echo "[+] Đang đồng bộ dữ liệu tránh xung đột (git pull --rebase)..."
           git pull origin main --rebase
           
           echo "[+] Tiến hành đẩy dữ liệu an toàn lên GitHub..."
