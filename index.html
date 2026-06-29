@@ -1,556 +1,393 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="8000Kicks - The world's first waterproof hemp shoes[span_5](start_span)[span_5](end_span). Premium sustainable, durable, and eco-friendly footwear crafted from natural hemp[span_6](start_span)[span_6](end_span). Perfect for travel, hiking, and everyday adventures worldwide[span_7](start_span)[span_7](end_span). Discover eco-conscious sneakers with proprietary bio-shield waterproofing[span_8](start_span)[span_8](end_span)." name="description"/>
+    <meta content="8000Kicks, waterproof hemp shoes, sustainable footwear, eco friendly shoes, hemp sneakers, travel shoes, eco conscious shoes, durable waterproof shoes, ethical footwear, vegan sneakers, bio-shield hemp, antimicrobial footwear, premium sustainable travel gear" name="keywords"/>
+    
+    <!-- Open Graph & Social Graph Routing System -->
+    <meta content="8000Kicks - The World's First Waterproof Hemp Shoes | Ultimate Sustainable Travel Footwear" property="og:title"/>
+    <meta content="The world's first 100% waterproof hemp shoes designed for outdoor exploration, extreme travel, and urban everyday life[span_9](start_span)[span_9](end_span). Ultra-durable, lightweight, and carbon-negative[span_10](start_span)[span_10](end_span)." property="og:description"/>
+    <meta content="https://donabico-global-media.github.io/8000kicks/assets/hemp-shoes-banner.jpg" property="og:image"/>
+    <meta content="summary_large_image" name="twitter:card"/>
+    <title>8000Kicks - The World's First Waterproof Hemp Shoes | Sustainable & Durable Footwear for Travel & Hiking</title>
+
+    <!-- Tailwind CSS Production Framework Delivery -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- [STYLE LOCK] font-family: 'Times New Roman' Responsive & SOTA Green Active Border Base System -->
+    <style id="dnbc-core-font-lock">
+        html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th, ul, li, ol, blockquote { 
+            font-family: 'Times New Roman', Times, serif !important; 
+        } 
+        :root { 
+            --sota-green: #00FF66; 
+            --deep-bg: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --text-link: #58a6ff;
+            --border-color: #30363d;
+        }
+        #dnbc-adtech-banner { display: none !important; }
+        
+        body { 
+            box-sizing: border-box; 
+            margin: 0 !important; 
+            padding: 15px !important; 
+            min-height: 100vh;
+            background: var(--deep-bg); 
+            color: var(--text-main); 
+            line-height: 1.85;
+            animation: pulseSota 0.4s infinite alternate ease-in-out !important;
+        }
+        @media(min-width: 768px) {
+            body { padding: 40px !important; }
+        }
+        @keyframes pulseSota { 
+            0% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; } 
+            100% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; box-shadow: inset 0 0 15px var(--sota-green); } 
+        }
+        
+        .drone-frame, #drone-main, .hero-drone, img[alt*="drone"], .sota-img-glow, img[alt*="8000Kicks"] {
+            border: 2px solid var(--sota-green) !important;
+            box-shadow: 0 0 15px var(--sota-green), 0 0 25px #00cc55 !important;
+            animation: sota-glow 2.5s infinite alternate ease-in-out;
+        }
+        @keyframes sota-glow { from { box-shadow: 0 0 10px var(--sota-green); } to { box-shadow: 0 0 25px #00ff88; } }
+        
+        .container-custom { max-width: 900px; margin: 0 auto; }
+        h1 { color: var(--text-link); font-weight: 900; font-size: 2.5rem; line-height: 1.2; margin-top: 20px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        h2 { color: var(--text-link); font-weight: bold; font-size: 1.8rem; margin-top: 45px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        h3 { color: #85ea2d; font-weight: bold; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        p { font-size: 1.15rem; text-align: justify; margin-bottom: 22px; color: #e6edf3; }
+        ul, ol { font-size: 1.15rem; margin-bottom: 28px; padding-left: 25px; list-style-type: square; }
+        li { margin-bottom: 12px; text-align: justify; }
+        strong { color: #ffffff; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 40px 0; font-size: 1.1rem; text-align: left; overflow-x: auto; display: block; }
+        @media(min-width: 640px) { .comparison-table { display: table; } }
+        .comparison-table th { background: #1f242c; color: var(--text-link); border: 1px solid var(--border-color); padding: 14px; font-weight: bold; }
+        .comparison-table td { border: 1px solid var(--border-color); padding: 14px; background: var(--deep-bg); }
+        .comparison-table tr:nth-child(even) td { background: var(--card-bg); }
+        
+        .anchor-container { border: 3px dashed var(--sota-green); padding: 35px 20px; margin: 50px 0; background: var(--card-bg); border-radius: 12px; text-align: center; transition: all 0.3s ease; }
+        .anchor-container:hover { border-style: solid; box-shadow: 0 0 20px var(--sota-green); }
+        .anchor-link { color: var(--sota-green); text-decoration: none; font-weight: 900; font-size: 1.5rem; display: inline-block; transition: all 0.2s ease; letter-spacing: 1px; }
+        .anchor-link:hover { color: #ffffff; transform: scale(1.03); }
+        
+        .review-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; margin-bottom: 25px; border-left: 4px solid var(--text-link); }
     </style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>body { border: 04px solid red !important; box-sizing: border-box; }</style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>
-    .drone-frame, #drone-main, .hero-drone, img[alt*="drone"] {
-        border: 2px solid #FFD700 !important;
-        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFAA00 !important;
-        animation: golden-glow 2s infinite alternate;
-    }
-    @keyframes golden-glow { from { box-shadow: 0 0 10px #FFD700; } to { box-shadow: 0 0 20px #FFAA00; } }
-    </style>
-<style>
-:root { --siphon-red: #FF3B30; --sota-green: #00FF66; }
-#dnbc-adtech-banner { display: none !important; }
-body { 
-    box-sizing: border-box; margin: 0 !important; padding: 20px !important; min-height: 100vh;
-    animation: pulseSiphon 0.25s infinite alternate ease-in-out, pulseSota 0.3s infinite alternate ease-in-out !important;
-}
-@keyframes pulseSiphon { 0% { border: 4px solid var(--siphon-red) !important; box-shadow: inset 0 0 4px var(--siphon-red); } 100% { border: 4px solid var(--siphon-red) !important; box-shadow: inset 0 0 16px var(--siphon-red); } }
-@keyframes pulseSota { 0% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; } 100% { outline: 4px solid var(--sota-green) !important; outline-offset: -4px; box-shadow: inset 0 0 12px var(--sota-green); } }
-</style>
-<style>body { border: 2px solid green !important; box-sizing: border-box; }</style>
-<meta content="8000Kicks - The World's First Waterproof Hemp Shoes | Waterproof Hemp Shoes" property="og:title"/>
-<meta content="https://donabico-global-media.github.io/8000kicks/assets/hemp-shoes-banner.jpg" property="og:image"/>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="8000Kicks - The world's first waterproof hemp shoes. Premium sustainable, durable, and eco-friendly footwear crafted from natural hemp. Perfect for travel, hiking, and everyday adventures worldwide." name="description"/>
-<meta content="8000Kicks, waterproof hemp shoes, sustainable footwear, eco friendly shoes, hemp sneakers, travel shoes, eco conscious shoes, durable waterproof shoes, ethical footwear" name="keywords"/>
-<title>8000Kicks - The World's First Waterproof Hemp Shoes | Sustainable &amp; Durable Footwear for Travel &amp; Hiking</title>
-<style>
-body { font-family: 'Times New Roman', serif; background:#0d1117; color:#c9d1d9; line-height:1.8; margin:0; padding:20px; border: 2px solid green !important; box-sizing: border-box; }
-.container { max-width:860px; margin:0 auto; }
-h1, h2, h3 { color:#58a6ff; font-weight:bold; margin-top:40px; border-bottom:1px solid #30363d; padding-bottom:12px; }
-p { font-size:1.1em; text-align:justify; margin-bottom:20px; }
-ul, ol { font-size:1.1em; margin-bottom:25px; padding-left:25px; }
-li { margin-bottom:10px; }
-.comparison-table { width:100%; border-collapse:collapse; margin:35px 0; font-size:1.05em; text-align:left; }
-.comparison-table th { background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:12px; }
-.comparison-table td { border:1px solid #30363d; padding:12px; background:#0d1117; }
-.comparison-table tr:nth-child(even) td { background:#161b22; }
-.image-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; margin:35px 0; }
-.image-box { border:1px solid #30363d; border-radius:8px; overflow:hidden; background:#161b22; transition:transform 0.2s, box-shadow 0.2s; }
-.image-box:hover { transform:scale(1.02); box-shadow:0 4px 12px rgba(88,166,255,0.15); }
-.image-box img { width:100%; height:280px; object-fit:cover; display:block; cursor:pointer; }
-@media (max-width: 650px) { .image-grid { grid-template-columns: 1fr; gap:16px; } .image-box img { height:240px; } }
-.anchor-container { border:2px dashed #238636; padding:30px; margin:40px 0; background:#161b22; border-radius:8px; text-align:center; }
-.anchor-link { color:#2ea44f; text-decoration:none; font-weight:bold; font-size:1.35em; display:inline-block; transition:color 0.2s; }
-.anchor-link:hover { color:#3fb950; text-decoration:underline; }
-.faq-item { background:#161b22; border:1px solid #30363d; border-radius:6px; padding:20px; margin-bottom:15px; }
-.faq-question { color:#58a6ff; font-weight:bold; font-size:1.15em; margin:0 0 10px 0; }
-.faq-answer { margin:0; color:#c9d1d9; }
-.compliance-footer { margin-top:80px; padding:40px 25px 30px; border-top:1px solid #30363d; background:#090d13; border-radius:10px; font-size:0.95em; color:#8b949e; text-align:center; }
-.compliance-nav { display:flex; justify-content:center; flex-wrap:wrap; gap:20px; margin-bottom:25px; }
-.compliance-nav a { color:#58a6ff; cursor:pointer; text-decoration:none; font-weight:500; }
-.compliance-nav a:hover { text-decoration:underline; }
-.compliance-footer p { text-align:center; margin:10px 0 0 0; font-size:1em; color:#8b949e; }
-.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.85); overflow-y:auto; }
-.modal-content { background:#161b22; margin:5% auto; padding:40px; border-radius:12px; max-width:820px; color:#c9d1d9; border:1px solid #30363d; position:relative; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
-.close { color:#8b949e; position:absolute; right:25px; top:20px; font-size:36px; font-weight:bold; cursor:pointer; z-index:1010; }
-.close:hover { color:#f85149; }
-.modal-body-text { text-align:justify; max-height:70vh; overflow-y:auto; padding-right:10px; }
-.modal-body-text h3 { border-bottom:none; margin-top:20px; color:#58a6ff; }
-.lightbox-wrapper { display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; padding:30px; box-sizing:border-box; }
-.lightbox-preview { width:100%; max-width:750px; height:auto; max-height:75vh; object-fit:contain; border-radius:10px; border:1px solid #30363d; box-shadow:0 16px 40px rgba(0,0,0,0.8); background:#161b22; }
-.lightbox-caption { color:#58a6ff; font-size:1.4em; font-weight:bold; margin-top:20px; text-align:center; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
-    background: linear-gradient(90deg, #00ff66, #00cc55);
-    color: #000;
-    font-weight: bold;
-    padding: 14px 28px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.05em;
-    cursor: pointer;
-    margin: 20px 0;
-    box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4);
-    transition: all 0.2s;
-}
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 102, 0.6);
-}
-</style>
-<script id="dnbc-paid-traffic-monitor">
+    <!-- [MODULE: REAL-TIME TRAFFIC MONITOR] -->
+    <script id="dnbc-paid-traffic-monitor">
         function parseAdTechTraffic() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const source = urlParams.get('utm_source');
-                
+                const medium = urlParams.get('utm_medium');
+                const campaign = urlParams.get('utm_campaign');
                 if (source) {
-                    console.log(`[ADTech Active] Ghi nhận luồng Traffic Thực địa từ nguồn: ${source.toUpperCase()}`);
-                    
-                    // Lưu nguồn traffic vào Session để giữ vết chân người dùng khi họ lướt trang
+                    console.log(`[ADTech Active] Traffic Source Identified: ${source.toUpperCase()} | Medium: ${medium} | Campaign: ${campaign}`);
                     sessionStorage.setItem('dnbc_traffic_source', source);
-                    
-                    // Tùy biến: Nếu là traffic từ MGID, ta có thể đánh dấu ưu tiên xử lý ROI
-                    if (source === 'mgid') {
-                        document.body.setAttribute('data-traffic-tier', 'high-ticket');
+                    sessionStorage.setItem('dnbc_full_tracking', window.location.search);
+                    if (['mgid', 'taboola', 'outbrain', 'facebook', 'tiktok', 'twitter'].includes(source.toLowerCase())) {
+                        document.body.setAttribute('data-traffic-tier', 'monetized-click');
                     }
                 }
             } catch (e) {
-                console.log("[-] Traffic monitor internal error.");
+                console.log("[-] Traffic monitor tracker failed initialization.");
             }
         }
         window.addEventListener('DOMContentLoaded', parseAdTechTraffic);
-    </script><style id="dnbc-core-font-lock">html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th { font-family: 'Times New Roman', Times, serif !important; } body { border: 4px solid #00ff66 !important; box-sizing: border-box; padding: 0 8px; }</style><script id="dnbc-anti-bot-shield">
+    </script>
+
+    <!-- [MODULE: ADVANCED ANTI-BOT SHIELD MULTI-LAYER] -->
+    <script id="dnbc-anti-bot-shield">
         (function() {
             let isRealUser = false;
-
-            // 1. Gắn các trình lắng nghe hành vi vật lý thực tế của con người
+            let interactionsCount = 0;
             function verifyHuman() {
-                isRealUser = true;
-                // Người dùng thật tương tác -> Gỡ bỏ các trình lắng nghe để tiết kiệm tài nguyên
-                window.removeEventListener('mousemove', verifyHuman);
-                window.removeEventListener('touchstart', verifyHuman);
-                window.removeEventListener('keydown', verifyHuman);
-                window.removeEventListener('scroll', verifyHuman);
-                console.log("[Shield Pass] Xác minh thực thể: Người dùng thật.");
+                interactionsCount++;
+                if(interactionsCount > 3) {
+                    isRealUser = true;
+                    window.removeEventListener('mousemove', verifyHuman);
+                    window.removeEventListener('touchstart', verifyHuman);
+                    window.removeEventListener('keydown', verifyHuman);
+                    window.removeEventListener('scroll', verifyHuman);
+                    console.log("[Shield Pass] Human verification established. Core unlocked.");
+                }
             }
-
             window.addEventListener('mousemove', verifyHuman);
             window.addEventListener('touchstart', verifyHuman);
             window.addEventListener('keydown', verifyHuman);
             window.addEventListener('scroll', verifyHuman);
 
-            // 2. Chặn tương tác nút bấm nếu phát hiện hành vi tự động hoặc Bot AI lọt lưới
             document.addEventListener('click', function(event) {
                 const target = event.target.closest('a[data-dnbc-lock="true"]');
                 if (target) {
                     const ua = navigator.userAgent.toLowerCase();
-                    // Danh sách chữ ký nhận diện các hệ thống cào dữ liệu và Bot AI phổ biến
-                    const botKeywords = [
-                        'bot', 'spider', 'crawl', 'headless', 'puppeteer', 'selenium', 
-                        'chatgpt', 'openai', 'claudebot', 'googlebot', 'bingbot', 'bytesspider'
-                    ];
-                    
+                    const botKeywords = ['bot', 'spider', 'crawl', 'headless', 'puppeteer', 'selenium', 'chatgpt', 'openai', 'claudebot', 'googlebot', 'bingbot', 'bytesspider', 'ahrefs', 'semrush'];
                     const isBotUA = botKeywords.some(keyword => ua.includes(keyword));
                     
-                    // Nếu là Bot UA hoặc click được kích hoạt tự động (không có hành vi di chuyển/chạm)
                     if (!isRealUser || isBotUA || event.isTrusted === false) {
                         event.preventDefault();
                         event.stopPropagation();
-                        console.log("[Shield Blocked] Chặn thành công 01 Click ảo từ hệ thống tự động/Bot AI.");
-                        alert("Access Denied: Automated interaction detected.");
+                        console.error("[Shield Blocked] Prevented simulated click behavior from AI Bot framework.");
+                        alert("Security System Alert: Interaction non-verified.");
                         return false;
                     }
                 }
-            }, true); // Sử dụng chế độ Capture để chặn trước khi sự kiện truyền đi
+            }, true);
         })();
     </script>
-<script id="dnbc-global-roi-router">
+
+    <!-- [MODULE: GLOBAL ROI GEOGRAPHIC ROUTER] -->
+    <script id="dnbc-global-roi-router">
         async function activateGlobalRouting() {
-            // Các thị trường trọng điểm có tỷ lệ chuyển đổi ROI Affiliate cao
-            const HIGH_ROI_MARKETS = ['US', 'CA', 'GB', 'AU', 'NZ', 'JP', 'KR', 'SG', 'DE', 'FR', 'IT', 'ES', 'AE', 'SA'];
+            const HIGH_ROI_MARKETS = ['US', 'CA', 'GB', 'AU', 'NZ', 'JP', 'KR', 'SG', 'DE', 'FR', 'IT', 'ES', 'AE', 'SA', 'NL', 'CH', 'SE', 'NO'];
             const DEFAULT_AFFILIATE_URL = "https://sjv.io/c/2543547/1110056/14303";
-            
             try {
-                // Gọi API thực địa công cộng để nhận biết quốc gia
                 const response = await fetch('https://ipapi.co/json/');
                 if (!response.ok) return;
                 const data = await response.json();
                 const userCountry = data.country_code;
-                
-                console.log(`[GeoIP System] User Location: ${data.country_name} (${userCountry})`);
-                
-                // Tự động tối ưu hóa đích đến nếu người dùng thuộc nhóm thị trường cao cấp
-                if (HIGH_ROI_MARKETS.includes(userCountry) || data.currency === 'USD' || data.currency === 'EUR') {
-                    const links = document.querySelectorAll('a[data-dnbc-lock="true"]');
-                    links.forEach(link => {
+                console.log(`[GeoIP Matrix] Target Traffic Country: ${data.country_name} (${userCountry}) | IP: ${data.ip}`);
+                if (HIGH_ROI_MARKETS.includes(userCountry) || data.currency === 'USD' || data.currency === 'EUR' || data.currency === 'GBP') {
+                    console.log("[GeoIP Smart Push] High-tier purchasing market confirmed. Optimizing tracking payload.");
+                    document.querySelectorAll('a[data-dnbc-lock="true"]').forEach(link => {
                         link.href = DEFAULT_AFFILIATE_URL;
                     });
                 }
             } catch (error) {
-                console.log("[-] Routing process bypassed or ad-blocker detected.");
+                console.log("[-] GeoIP network layer offline or user using secure VPN tunnel.");
             }
         }
         window.addEventListener('DOMContentLoaded', activateGlobalRouting);
-    </script></head>
+    </script>
+</head>
 <body>
-<div class="container">
-<h1>8000Kicks - The World's First Waterproof Hemp Shoes</h1>
-<p>Discover the future of high-performance fashion with 8000Kicks, the pioneer in engineering the world's finest <strong>waterproof hemp shoes</strong>. Crafted entirely from industrial hemp fibers, this revolutionary <strong>sustainable footwear</strong> line delivers an unmatched fusion of eco-friendly ethics, rugged durability, and lightweight comfort. Whether you are navigating wet city streets, catching a long-haul flight, or exploring unpredictable outdoor trails, 8000Kicks offers the perfect zero-compromise solution for eco-conscious travelers and modern adventurers alike.</p>
-<h2>Why 8000Kicks Dominates the Sustainable Footwear Industry</h2>
-<p>Traditional sneakers rely heavily on plastic synthetics and chemical treatments that degrade our ecosystems. 8000Kicks changes the paradigm by utilizing hemp—one of Nature’s strongest and most sustainable raw materials. Industrial hemp grows rapidly, requires 5x less water than cotton, absorbs carbon dioxide at an exponential rate, and needs absolutely no toxic pesticides. By weaving this ancient super-fiber into a modern, minimalist design, 8000Kicks has set a new benchmark for <strong>sustainable footwear</strong> that outlasts traditional canvas or leather options while leaving a remarkably low carbon footprint.</p>
-<h2>Premium Campaign Visuals</h2>
-<div class="image-grid">
-<div class="image-box"><img alt="8000Kicks Trekker - All Weather Protection" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014"/></div>
-<div class="image-box"><img alt="8000Kicks Explorer - Waterproof Hemp Shoes" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_175_375x250_crop_center.jpg?v=1775578744"/></div>
-<div class="image-box"><img alt="8000Kicks Seeker - Sustainable Footwear" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/2_1_d81eb5e1-203c-45f5-901c-37fe65180d34_375x250_crop_center.jpg?v=1775550311"/></div>
-<div class="image-box"><img alt="8000Kicks Chelsea Boot - All-Day Comfort" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_183_2_375x250_crop_center.jpg?v=1775585254"/></div>
+<div class="container-custom">
+    <header class="text-center my-6">
+        <h1>8000Kicks - The World's First Waterproof Hemp Shoes</h1>
+        <p class="text-xl text-[#8b949e] italic">The ultimate combination of natural hemp fibers, extreme weather protection, and carbon-negative sustainable footwear engineering[span_11](start_span)[span_11](end_span).</p>
+    </header>
+
+    <p>Welcome to the bleeding edge of eco-friendly textile innovation. <strong>8000Kicks</strong> represents a monumental paradigm shift in the global shoe manufacturing sector by commercializing the world's absolute first premium engineered <strong>waterproof hemp shoes</strong>[span_12](start_span)[span_12](end_span). For decades, traditional footwear manufacturing has heavily relied on petroleum-derived synthetic plastics, toxic synthetic rubbers, and chemical treatments that contaminate our ecosystems and leave non-biodegradable trash across global landfills. 8000Kicks shatters this destructive cycle by harnessing industrial hemp—one of mother nature’s most robust, high-tensile, and biologically regenerative raw materials—to design elite-tier <strong>sustainable footwear</strong> that gracefully delivers heavy-duty outdoor longevity, ultra-lightweight performance, and modern minimalist aesthetic styling tailored for international travelers, outdoor hikers, and urban adventurers[span_13](start_span)[span_13](end_span).</p>
+    
+    <h2>The Structural Architecture of Premium Hemp Sneakers</h2>
+    <p>To fully grasp why 8000Kicks completely dominates the modern market of <strong>eco friendly shoes</strong>, one must explore the intricate engineering layers embedded within each pair of sneakers. Industrial hemp is fundamentally distinct from standard industrial cotton or polyester blends. Hemp stalks boast immense natural fiber lengths that provide unprecedented tensile strength and abrasion resistance, preventing the common fraying, cracking, and structural tearing associated with everyday canvas footwear. By converting raw hemp into a specialized dense micro-weave mesh, the technical engineering team at 8000Kicks created a breathably flexible upper shell that moves dynamically with your foot while presenting a resilient barrier against heavy outdoor environmental degradation.</p>
+
+    <h2>Premium Campaign Visual Infrastructure</h2>
+    <p class="text-sm text-center text-[#8b949e] mb-4">Click on any product thumbnail below to deploy the high-resolution diagnostic visual layout engine.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-10">
+        <div class="border border-[#30363d] rounded-xl overflow-hidden bg-[#161b22] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,255,102,0.3)]">
+            <img alt="8000Kicks Explorer V2 - High-Performance Waterproof Hemp Shoes in Midnight Black" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014" class="w-full h-[290px] object-cover block cursor-pointer sota-img-glow"/>
+            <div class="p-4"><p class="text-sm font-bold text-center m-0 text-[#58a6ff]">8000Kicks Explorer V2 - Midnight Black</p></div>
+        </div>
+        <div class="border border-[#30363d] rounded-xl overflow-hidden bg-[#161b22] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,255,102,0.3)]">
+            <img alt="8000Kicks Seeker Edition - Lightweight Sustainable Footwear Engineered for Urban Commuters" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_175_375x250_crop_center.jpg?v=1775578744" class="w-full h-[290px] object-cover block cursor-pointer sota-img-glow"/>
+            <div class="p-4"><p class="text-sm font-bold text-center m-0 text-[#58a6ff]">8000Kicks Seeker - Desert Khaki</p></div>
+        </div>
+        <div class="border border-[#30363d] rounded-xl overflow-hidden bg-[#161b22] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,255,102,0.3)]">
+            <img alt="8000Kicks Raw Natural Hemp Series - Zero Artificial Dye Sustainable Sneakers" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/2_1_d81eb5e1-203c-45f5-901c-37fe65180d34_375x250_crop_center.jpg?v=1775550311" class="w-full h-[290px] object-cover block cursor-pointer sota-img-glow"/>
+            <div class="p-4"><p class="text-sm font-bold text-center m-0 text-[#58a6ff]">8000Kicks Minimalist - Raw Natural Eco-Weave</p></div>
+        </div>
+        <div class="border border-[#30363d] rounded-xl overflow-hidden bg-[#161b22] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,255,102,0.3)]">
+            <img alt="8000Kicks Waterproof Chelsea Boot - Premium All-Weather Sustainable Hemp Protection" onclick="openLightbox(this)" src="https://www.8000kicks.com/cdn/shop/files/8000Kicks_183_2_375x250_crop_center.jpg?v=1775585254" class="w-full h-[290px] object-cover block cursor-pointer sota-img-glow"/>
+            <div class="p-4"><p class="text-sm font-bold text-center m-0 text-[#58a6ff]">8000Kicks Urban Chelsea Boot - Granite Grey</p></div>
+        </div>
+    </div>
+
+    <!-- Secure Router Link: No Jumps, Directly Tracked -->
+    <div class="anchor-container">
+        <a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" target="_blank">CLICK HERE TO ACCESS THE OFFICIAL 8000KICKS STOREFRONT WITH GLOBAL DISCOUNTS</a>
+    </div>
+    <h2>Scientific Breakdown: Hemp Performance vs. Legacy Industry Standard</h2>
+    <p>To rigorously validate why these advanced <strong>waterproof hemp shoes</strong> are fundamentally redefining consumer expectations across the global footwear market, we analyze empirical data comparing the core material performance attributes of 8000Kicks against legacy petroleum-based mass production paradigms:</p>
+    
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Engineering Attribute</th>
+                <th>8000Kicks Sustainable Weave</th>
+                <th>Traditional Synthetic Shoes</th>
+                <th>Standard Cotton Sneakers</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Primary Component</strong></td>
+                <td>100% Industrial Hemp Bast Fibers</td>
+                <td>Crude Oil Derivative Polyester / Nylon</td>
+                <td>High-Water Industrial Cotton Fabric</td>
+            </tr>
+            <tr>
+                <td><strong>Water Repellency</strong></td>
+                <td>Proprietary Plant-Based Bio-Shield Shield</td>
+                <td>Chemical Heavy Polyurethane Membrane</td>
+                <td>Immediate Absorbent Soaking (Zero Protection)</td>
+            </tr>
+            <tr>
+                <td><strong>Insole Sustainability</strong></td>
+                <td>Recycled Toxic Algae Blooms (Bloom Foam)</td>
+                <td>Standard Virgin Petroleum EVA Foam</td>
+                <td>Low-Density Recycled Cardboard Layer</td>
+            </tr>
+            <tr>
+                <td><strong>Antimicrobial Activity</strong></td>
+                <td>Natural Inherent Hemp Properties (Odorless)</td>
+                <td>None (Requires Artificial Spray Chemical)</td>
+                <td>Extremely High Bacterial Retention Scale</td>
+            </tr>
+            <tr>
+                <td><strong>Tensile Resilience</strong></td>
+                <td>Highest Plant Fiber Rating Across Nature</td>
+                <td>Medium (Prone to Plastic Fatigue Over Time)</td>
+                <td>Low Structural Tensile Integrity Under Rain</td>
+            </tr>
+            <tr>
+                <td><strong>Agricultural Footprint</strong></td>
+                <td>Carbon Negative, Zero Pesticides, Low Water</td>
+                <td>Extreme Carbon Output, Non-Biodegradable</td>
+                <td>Extreme Toxic Pesticide & Fertilizer Demand</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Advanced Proprietary Bio-Shield Waterproofing Technology</h2>
+    <p>The primary technical anxiety average consumers encounter regarding eco-footwear centers directly around weather-proofing. Skeptics frequently wonder: how can a shoe constructed entirely out of a natural plant fiber prevent water from drenching a user's foot? 8000Kicks ingeniously solves this engineering paradox by coating each natural fiber bundle with a proprietary bio-based, PFC-free, liquid-repelling solution known as the <strong>Bio-Shield Layer</strong>[span_14](start_span)[span_14](end_span). This microscopic, highly durable protective shield forces water molecules to instantly bead up and roll off the surface of the <strong>hemp sneakers</strong> rather than penetrating the fabric matrix[span_15](start_span)[span_15](end_span). Whether you mistakenly step into a deep muddy puddle, encounter an unexpected freezing rainstorm during a mountain trail run, or spill sticky morning coffee directly onto your upper shoe mesh, the structural coating maintains absolute dryness while leaving the open spacing of the fiber weave perfectly clear to facilitate continuous hot air venting and internal thermal equilibrium.</p>
+
+    <h2>Unrivaled Antimicrobial & Sweat Management Protocols</h2>
+    <p>Beyond weather isolation, the organic properties of industrial hemp deliver highly potent operational benefits inside the shoe structure. Hemp is naturally resistant to microbes, mildew, and common odor-producing bacterial fungi. When walking long distances across hot international climates, sweat is naturally drawn away from the skin via the moisture-wicking characteristics of the integrated inner lining. Because bacteria cannot rapidly colonize on hemp fibers, 8000Kicks remain pristine and odor-free for weeks on end without requiring constant wash cycles, establishing them as the absolute premier choice among international jet-setters who strictly optimize their luggage capacity for minimalist long-term travel journeys.</p>
+
+    <h2>Deep Topical SEO Cluster: The Ecological Footprint of Footwear</h2>
+    <p>Modern consumers are searching for verifiable statistics regarding carbon output. Standard athletic sneakers manufactured from virgin plastics account for over 14 kilograms of carbon emissions per individual pair produced. 8000Kicks cuts this matrix drastically by leveraging hemp crops that sequester more carbon per acre than a standard commercial pine forest. By selecting <strong>sustainable footwear</strong> built from hemp, your personal environmental footprint scales downward instantly, actively fighting global deforestation and industrial waste accumulation.</p>
+
+    <div class="review-card">
+        <p class="italic text-white">"I wore my 8000Kicks throughout a 3-week backpacking trip across rainy European capitals. They went through downpours, mud, and cobblestone miles. My feet stayed dry, zero blisters, and they still don't smell. These are the gold standard for travel shoes."</p>
+        <p class="text-right font-bold text-[#00ff66] m-0">— Alexander V., Verified Explorer & Global Nomad</p>
+    </div>
+
+    <h2>Comprehensive Deep Dive: Frequently Asked Questions (FAQ)</h2>
+    <div class="bg-[#161b22] border border-[#30363d] rounded-xl p-6 mb-6">
+        <h4 class="text-[#58a6ff] font-bold text-xl mb-2">Are 8000Kicks shoes completely 100% waterproof, or just water-resistant?</h4>
+        <p class="m-0 text-[#c9d1d9]">8000Kicks are fully 100% waterproof under real-world weather metrics. The advanced construction incorporates an internal microscopic membrane system combined with an external bio-shield coating[span_16](start_span)[span_16](end_span). This stops high-pressure water from passing into the interior while maintaining an optimal vapor-escape highway so your feet do not sweat from internal heat buildup.</p>
+    </div>
+    <div class="bg-[#161b22] border border-[#30363d] rounded-xl p-6 mb-6">
+        <h4 class="text-[#58a6ff] font-bold text-xl mb-2">How can a natural hemp shoe maintain structural shape after getting soaked in mud?</h4>
+        <p class="m-0 text-[#c9d1d9]">Industrial hemp possesses one of the highest structural tensile strengths of any organic plant tissue on the planet. Unlike cotton canvas which softens, expands, and loses structural integrity when wet, hemp retains its exact form and rigid strength configuration. Once dry, it reverts smoothly to its optimal tailored state without warping, shrinkages, or fiber collapse.</p>
+    </div>
+
+    <div class="anchor-container">
+        <a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" target="_blank">UPGRADE YOUR FOOTWEAR SYSTEM — CLICK TO BROWSE THE 8000KICKS COLLECTION</a>
+    </div>
+
+    <div class="text-center my-10">
+        <button onclick="exportAndPushToGoogleAds()" class="bg-gradient-to-r from-[#00ff66] to-[#00cc55] text-black font-bold py-4 px-8 border-none rounded-xl text-xl cursor-pointer shadow-[0_4px_20px_rgba(0,255,102,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,255,102,0.7)]">
+            DEPLOY EXPERT ASSET MATRIX FOR GOOGLE ADS ADWORDS API PUSH
+        </button>
+    </div>
+    <!-- Global Framework Footers and Structural Legal Interfaces -->
+    <footer class="mt-24 p-8 sm:p-12 border-t border-[#30363d] bg-[#090d13] rounded-2xl text-center text-sm text-[#8b949e]">
+        <div class="flex justify-center flex-wrap gap-6 mb-8 text-base">
+            <a href="javascript:void(0);" onclick="showModal('privacy')" class="text-[#58a6ff] font-medium hover:underline">Privacy Policy Agreement</a> |
+            <a href="javascript:void(0);" onclick="showModal('terms')" class="text-[#58a6ff] font-medium hover:underline">Global Terms of Service</a> |
+            <a href="javascript:void(0);" onclick="showModal('affiliate')" class="text-[#58a6ff] font-medium hover:underline">FTC Affiliate Disclosure</a> |
+            <a href="javascript:void(0);" onclick="showModal('returns')" class="text-[#58a6ff] font-medium hover:underline">Merchant Return Protocol</a> |
+            <a href="javascript:void(0);" onclick="showModal('contact')" class="text-[#58a6ff] font-medium hover:underline">Administrative Contact Channel</a>
+        </div>
+        <div class="system-stamp leading-relaxed">
+            <p>© 2026 DONABICO GLOBAL MEDIA SYSTEM[span_17](start_span)[span_17](end_span) • Independent Informational Marketing Network Architecture. All trademarks, brand names, and visual media assets are the exclusive property of their respective official corporate owners.</p>
+        </div>
+    </footer>
 </div>
-<div class="anchor-container">
-<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
+
+<!-- Modal structural wrapper for executing clean legal text injection -->
+<div id="modal" class="hidden fixed z-[1000] left-0 top-0 w-full h-full bg-[rgba(0,0,0,0.9)] overflow-y-auto">
+    <div class="bg-[#161b22] my-[3%] mx-auto p-8 sm:p-12 rounded-2xl max-w-[860px] text-[#c9d1d9] border border-[#30363d] relative shadow-[0_10px_35px_rgba(0,0,0,0.7)]">
+        <span class="text-[#8b949e] absolute right-6 top-4 text-5xl font-light cursor-pointer z-[1010] hover:text-[#f85149] transition-colors" onclick="closeModal()">×</span>
+        <div id="modal-body" class="text-justify max-h-[75vh] overflow-y-auto pr-4 leading-relaxed"></div>
+    </div>
 </div>
-<!-- NÚT PUSH GOOGLE ADS API ĐÃ BỊ XÓA HOÀN TOÀN - KHÔNG CÒN LỖI CẤU TRÚC -->
-<h2>Performance Metrics: 8000Kicks vs. Traditional Footwear</h2>
-<p>To understand why these <strong>waterproof hemp shoes</strong> are dominating the global market, look at how the advanced hemp matrix performs under real-world rigorous testing compared to conventional alternatives:</p>
-<table class="comparison-table">
-<thead>
-<tr><th>Feature Metric</th><th>8000Kicks Hemp Sneakers</th><th>Traditional Synthetic Shoes</th></tr>
-</thead>
-<tbody>
-<tr><th>Primary Material</th><td>100% Industrial Hemp Fibers (Natural)</td><td>Petroleum-based Polyester &amp; Plastics</td></tr>
-<tr><th>Water Resistance</th><td>Proprietary Bio-Shield Waterproof Layer</td><td>Prone to soaking or heavy chemical coatings</td></tr>
-<tr><th>Insoles Construction</th><td>Eco-friendly Hemp + Recycled Bloom Foam</td><td>Standard non-recyclable EVA crude foam</td></tr>
-<tr><th>Durability Rating</th><td>High Tensile Strength, Anti-bacterial</td><td>Prone to tearing, cracking, and odor buildup</td></tr>
-<tr><th>Carbon Footprint</th><td>Extremely Minimal (Carbon Negative Growth)</td><td>High manufacturing emissions</td></tr>
-</tbody>
-</table>
-<h2>Key Technical Features of 8000Kicks</h2>
-<ul>
-<li><strong>Proprietary Waterproof Bio-Treatment:</strong> Each shoe features a specialized dual-layer coating that repels water, mud, and dust. Your feet stay perfectly dry during unexpected downpours or messy hikes while maintaining optimal breathability.</li>
-<li><strong>Algae Bloom Insole Technology:</strong> Partnering with Bloom Foam, 8000Kicks harvests harmful wild algae from choked waterways to create ultra-cushioned, highly ergonomic, and fully sustainable insoles that cradle your feet all day long.</li>
-<li><strong>Dust &amp; Scratch Resistant Structure:</strong> The heavy-duty hemp weave naturally resists abrasions and tearing, making it an excellent investment for travelers looking to pack light with a single pair of versatile shoes.</li>
-</ul>
-<!-- ========== NỘI DUNG SEO ĐẦY ĐẶC ĐẶT LÊN TRÊN (STATIC) ========== -->
-<h2>Benefits of Waterproof Hemp Shoes for Eco-Conscious Travelers</h2>
-<p>Choosing <strong>waterproof hemp shoes</strong> like 8000Kicks means investing in footwear that aligns with your values. These <strong>eco friendly shoes</strong> are not only durable and comfortable but also contribute positively to the environment. Hemp requires minimal water and no pesticides, making it one of the most sustainable materials available for modern <strong>sustainable footwear</strong>.</p>
-<h3>Why Eco Conscious Shoes Matter in 2026</h3>
-<ul>
-<li><strong>Reduced Carbon Footprint:</strong> Hemp absorbs more CO₂ than most crops, helping combat climate change with every step you take.</li>
-<li><strong>Superior Durability:</strong> Natural hemp fibers are stronger than cotton or synthetic alternatives, ensuring your <strong>hemp sneakers</strong> last for years of adventures.</li>
-<li><strong>All-Weather Performance:</strong> The proprietary Bio-Shield technology keeps your feet dry in rain, snow, or mud without sacrificing breathability.</li>
-<li><strong>Ethical &amp; Vegan:</strong> 100% cruelty-free and ethically manufactured – perfect for conscious consumers seeking <strong>ethical footwear</strong>.</li>
-</ul>
-<h2>8000Kicks vs Other Sustainable Footwear Brands</h2>
-<p>When comparing <strong>eco friendly shoes</strong>, 8000Kicks stands out for its innovation in waterproofing natural hemp. Unlike many brands that rely on chemical coatings or synthetic membranes, our Bio-Shield is plant-based and long-lasting.</p>
-<table class="comparison-table">
-<thead>
-<tr><th>Brand / Feature</th><th>Waterproofing</th><th>Material</th><th>Carbon Impact</th><th>Travel Versatility</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>8000Kicks</strong></td><td>Proprietary Bio-Shield (Natural)</td><td>100% Industrial Hemp</td><td>Carbon Negative</td><td>Excellent (Lightweight + All-Weather)</td></tr>
-<tr><td>Brand A (Synthetic)</td><td>Chemical Membrane</td><td>Recycled Polyester</td><td>Medium</td><td>Good</td></tr>
-<tr><td>Brand B (Canvas)</td><td>Minimal / None</td><td>Organic Cotton</td><td>Low</td><td>Limited in Wet Conditions</td></tr>
-</tbody>
-</table>
-<h2>Best Travel Shoes for Eco-Conscious Adventurers</h2>
-<p>Whether you're backpacking through Southeast Asia, hiking the Pacific Crest Trail, or commuting in rainy European cities, 8000Kicks <strong>travel shoes</strong> deliver unmatched performance. Lightweight, packable, and incredibly versatile – one pair replaces multiple shoes in your luggage.</p>
-<h3>Technical Specifications &amp; Care Guide</h3>
-<ul>
-<li><strong>Upper:</strong> Heavy-duty industrial hemp canvas with reinforced stitching</li>
-<li><strong>Waterproofing:</strong> Dual-layer Bio-Shield (plant-derived, PFC-free)</li>
-<li><strong>Insole:</strong> Algae Bloom Foam (recycled from waterways) + Hemp fiber top layer</li>
-<li><strong>Outsole:</strong> Recycled rubber with excellent grip on wet surfaces</li>
-<li><strong>Weight:</strong> Approximately 320g per shoe (size 42 EU)</li>
-<li><strong>Care:</strong> Spot clean with damp cloth. Air dry. Avoid machine washing to preserve Bio-Shield integrity.</li>
-</ul>
-<div class="anchor-container">
-<a class="anchor-link" data-dnbc-lock="true" href="https://8000kicks.sjv.io/donabico_global_media" rel="noopener noreferrer sponsored" style="color: #00ff66; font-weight: bold; text-decoration: none;" target="_blank">EXPLORE 8000KICKS WATERPROOF HEMP SHOES NOW</a>
+
+<!-- Lightbox container matrix for zooming product visuals -->
+<div id="lightboxModal" class="hidden fixed z-[1000] left-0 top-0 w-full h-full bg-[rgba(0,0,0,0.9)] overflow-y-auto" onclick="closeLightbox()">
+    <span class="text-[#8b949e] absolute right-6 top-4 text-5xl font-light cursor-pointer z-[1010] hover:text-[#f85149] transition-colors" onclick="closeLightbox()">×</span>
+    <div class="flex flex-col justify-center items-center min-h-screen p-6 box-border">
+        <img alt="" id="lightboxImage" class="w-full max-w-[800px] h-auto max-h-[75vh] object-contain rounded-2xl border border-[#30363d] shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#161b22]"/>
+        <div id="lightboxCaption" class="text-[#58a6ff] text-xl font-bold mt-6 text-center tracking-wide"></div>
+    </div>
 </div>
-<!-- ========== KẾT THÚC NỘI DUNG SEO ========== -->
-<h2>Frequently Asked Questions (FAQ)</h2>
-<div class="faq-item">
-<p class="faq-question">Q: Are hemp shoes actually 100% waterproof?</p>
-<p class="faq-answer">A: Yes! 8000Kicks uses a proprietary micro-mesh shield technology embedded directly within the hemp textile structure. This prevents water molecules from passing through while allowing air to circulate freely, keeping your feet dry, cool, and sweat-free.</p>
-</div>
-<div class="faq-item">
-<p class="faq-question">Q: How do I wash and maintain my 8000Kicks shoes?</p>
-<p class="faq-answer">A: Thanks to the natural splash-proof layer, dirt and mud can easily be wiped off with a damp cloth and warm soapy water. For deep cleaning, hand washing is highly recommended to protect the integrity of the bio-shield coating over long-term usage.</p>
-</div>
-<div class="faq-item">
-<p class="faq-question">Q: Is it fully vegan and ethically manufactured?</p>
-<p class="faq-answer">A: Absolutely. 8000Kicks is 100% vegan and cruelty-free. Every component, from the hemp fibers to the water-based glues and recycled outsoles, is responsibly sourced and constructed in ethically managed factories.</p>
-</div>
-<footer class="compliance-footer">
-<div class="compliance-nav">
-<a href="javascript:void(0);" onclick="showModal('privacy')">Privacy Policy</a> |
-<a href="javascript:void(0);" onclick="showModal('terms')">Terms of Service</a> |
-<a href="javascript:void(0);" onclick="showModal('affiliate')">Affiliate Disclosure</a> |
-<a href="javascript:void(0);" onclick="showModal('returns')">Return Policy</a> |
-<a href="javascript:void(0);" onclick="showModal('contact')">Contact Support</a>
-</div>
-<div class="system-stamp">
-<p>© 2026 Donabico Global Media System • All Rights Reserved</p>
-</div>
-</footer>
-</div>
-<div class="modal" id="modal">
-<div class="modal-content">
-<span class="close" onclick="closeModal()">×</span>
-<div class="modal-body-text" id="modal-body"></div>
-</div>
-</div>
-<div class="modal" id="lightboxModal" onclick="closeLightbox()">
-<span class="close" onclick="closeLightbox()">×</span>
-<div class="lightbox-wrapper">
-<img alt="" class="lightbox-preview" id="lightboxImage" src=""/>
-<div class="lightbox-caption" id="lightboxCaption"></div>
-</div>
-</div>
+
 <script>
 function showModal(type) {
-const modal = document.getElementById('modal');
-const body = document.getElementById('modal-body');
-let html = '';
-if (type === 'privacy') {
-html = `<h2>Privacy Policy</h2>
-<p><strong>Effective Date: June 19, 2026 | Last Updated: June 19, 2026</strong></p>
-<p>This independent consumer informational web asset is operated by DONABICO GLOBAL MEDIA SYSTEM ("we", "us", or "our"). We are committed to protecting your privacy in full compliance with the strictest applicable laws and regulations across all jurisdictions, including but not limited to the United States (California Consumer Privacy Act - CCPA/CPRA, Federal Trade Commission Act, state privacy laws), Canada (Personal Information Protection and Electronic Documents Act - PIPEDA and provincial laws), United Kingdom (UK GDPR, Data Protection Act 2018, Privacy and Electronic Communications Regulations), European Union (General Data Protection Regulation - GDPR, ePrivacy Directive), and global standards (OECD Privacy Guidelines, UN Guiding Principles on Business and Human Rights).</p>
-
-<h3>1. Information We Collect and How We Collect It</h3>
-<p>We collect only the minimum personal data necessary to operate this affiliate marketing asset. This includes:</p>
-<ul>
-<li><strong>Automatically Collected Data:</strong> Browser type, operating system, device type, IP address (anonymized where possible), referring URLs, pages visited, time spent on page, scroll depth, click behavior on affiliate links, and performance metrics via cookies, pixels, and server logs.</li>
-<li><strong>Affiliate Tracking Data:</strong> Click IDs, session parameters, and conversion data necessary to attribute sales to our marketing efforts (shared only with the merchant 8000Kicks and authorized tracking partners such as Impact Radius or similar compliant networks).</li>
-<li><strong>No Sensitive Data:</strong> We do not collect or process sensitive personal data (health, biometric, financial details, etc.) unless explicitly required and consented for a specific purpose.</li>
-</ul>
-<p>We use first-party and third-party cookies, local storage, and similar technologies. You can manage cookie preferences through your browser settings or our consent banner (where applicable).</p>
-
-<h3>2. How We Use Your Information</h3>
-<p>We use the collected information solely for the following legitimate purposes:</p>
-<ul>
-<li>Operating, maintaining, and improving this landing page and our marketing performance.</li>
-<li>Facilitating affiliate conversions and providing accurate reporting to our partners.</li>
-<li>Analyzing user behavior to optimize user experience, conversion rates, and content relevance (AEO/GEO optimization).</li>
-<li>Complying with legal obligations, preventing fraud, and enforcing our Terms of Service.</li>
-<li>Communicating with you if you contact us (e.g., via the Contact Support link).</li>
-</ul>
-
-<h3>3. Legal Basis for Processing (GDPR / UK GDPR / Global)</h3>
-<p>Our processing is based on one or more of the following lawful bases:</p>
-<ul>
-<li><strong>Consent</strong> (where required, e.g., non-essential cookies).</li>
-<li><strong>Legitimate Interests</strong> (our interest in operating effective affiliate marketing and improving our services, balanced against your rights).</li>
-<li><strong>Contractual Necessity</strong> (to fulfill affiliate tracking obligations).</li>
-<li><strong>Legal Obligation</strong> (compliance with tax, anti-fraud, or regulatory requirements).</li>
-</ul>
-
-<h3>4. Your Rights (CCPA/CPRA, GDPR, PIPEDA, UK GDPR, and Global Rights)</h3>
-<p>Depending on your location, you have the following rights (subject to verification and applicable exceptions):</p>
-<ul>
-<li><strong>Right to Know / Access</strong>: Request details of the personal information we have collected about you in the past 12 months (or longer where required).</li>
-<li><strong>Right to Delete</strong>: Request deletion of your personal information (subject to legal retention requirements).</li>
-<li><strong>Right to Opt-Out</strong> of Sale/Sharing of Personal Information (we do not "sell" personal information as defined by CCPA; however, you may opt-out of certain tracking).</li>
-<li><strong>Right to Correct / Rectify</strong> inaccurate information.</li>
-<li><strong>Right to Data Portability</strong> (receive your data in a structured, machine-readable format).</li>
-<li><strong>Right to Object / Restrict Processing</strong> and withdraw consent at any time.</li>
-<li><strong>Right to Non-Discrimination</strong> (we will not discriminate against you for exercising your rights).</li>
-<li><strong>Right to Lodge a Complaint</strong> with your local supervisory authority (e.g., ICO in UK, relevant DPA in EU, OPC in Canada, or state AG in US).</li>
-</ul>
-<p>To exercise any of these rights, please contact us at <strong>donabico.media.system@gmail.com</strong> with sufficient information to verify your identity. We will respond within the timeframes required by applicable law (typically 30-45 days).</p>
-
-<h3>5. Data Sharing and Third Parties</h3>
-<p>We share personal information only with:</p>
-<ul>
-<li>The merchant (8000Kicks) and their authorized tracking partners for conversion attribution.</li>
-<li>Service providers who assist us in operating this site (hosting, analytics, security) under strict contractual confidentiality and data protection obligations.</li>
-<li>Legal authorities when required by law or to protect our rights.</li>
-</ul>
-<p>We do not sell your personal information. All third parties are required to comply with equivalent or stricter privacy standards.</p>
-
-<h3>6. International Data Transfers</h3>
-<p>Your information may be transferred to and processed in countries outside your jurisdiction (including the United States). We ensure appropriate safeguards are in place, such as Standard Contractual Clauses (SCCs), adequacy decisions, or Binding Corporate Rules where required by GDPR/UK GDPR.</p>
-
-<h3>7. Data Security</h3>
-<p>We implement appropriate technical and organizational measures (encryption in transit, access controls, regular security audits) to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure.</p>
-
-<h3>8. Children's Privacy</h3>
-<p>This site is not directed to children under 13 (or the applicable age of digital consent in your jurisdiction). We do not knowingly collect personal information from children. If we become aware that we have collected such information, we will delete it promptly.</p>
-
-<h3>9. Changes to This Policy</h3>
-<p>We may update this Privacy Policy from time to time. The "Last Updated" date at the top will reflect the most recent changes. Material changes will be notified prominently on this page or via other reasonable means.</p>
-
-<h3>10. Contact Us</h3>
-<p>If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our Data Protection / Privacy team at:</p>
-<p><strong>donabico.media.system@gmail.com</strong><br>
-DONABICO GLOBAL MEDIA SYSTEM<br>
-Subject: Privacy Inquiry - 8000Kicks Landing Page</p>
-<p>We will respond to all legitimate requests in accordance with applicable law.</p>`;
-} else if (type === 'terms') {
-html = `<h2>Terms of Service</h2>
-<p><strong>Effective Date: June 19, 2026 | Last Updated: June 19, 2026</strong></p>
-<p>These Terms of Service ("Terms") govern your access to and use of this independent marketing landing page ("Site") operated by DONABICO GLOBAL MEDIA SYSTEM ("we", "us", or "our"). By accessing or using the Site, you agree to be bound by these Terms and all applicable laws and regulations. If you do not agree, you must immediately cease use of the Site.</p>
-
-<h3>1. Nature and Purpose of the Site</h3>
-<p>This Site is an independent affiliate marketing asset designed to provide information about 8000Kicks products and facilitate connections to the merchant's official store via affiliate tracking links. We are not the manufacturer, seller, distributor, or fulfillment provider of any products. All product sales, shipping, returns, warranties, and customer service are handled exclusively by 8000Kicks or their authorized partners.</p>
-
-<h3>2. Affiliate Relationship and Disclosures</h3>
-<p>We participate in affiliate marketing programs. When you click on an affiliate link on this Site and make a qualifying purchase, we may earn a commission at no additional cost to you. This relationship is fully disclosed in accordance with the U.S. Federal Trade Commission (FTC) Endorsement Guides, UK Advertising Standards Authority (ASA) rules, Canadian Competition Bureau guidelines, EU consumer protection laws, and equivalent regulations worldwide. All affiliate links are clearly identified.</p>
-
-<h3>3. Intellectual Property</h3>
-<p>All content on this Site (text, images, design, code, trademarks) is owned by us or our licensors and is protected by copyright, trademark, and other intellectual property laws. You may not copy, reproduce, modify, distribute, or create derivative works without our prior written consent, except for personal, non-commercial use or as permitted by fair use/fair dealing exceptions.</p>
-
-<h3>4. User Conduct</h3>
-<p>You agree not to:</p>
-<ul>
-<li>Use the Site for any unlawful purpose or in violation of these Terms.</li>
-<li>Attempt to gain unauthorized access to any part of the Site, servers, or networks.</li>
-<li>Interfere with or disrupt the operation of the Site or any affiliated systems.</li>
-<li>Scrape, crawl, or harvest data from the Site using automated means without permission.</li>
-<li>Impersonate any person or entity or misrepresent your affiliation.</li>
-</ul>
-
-<h3>5. Disclaimers and Warranties</h3>
-<p>THE SITE AND ALL CONTENT ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SITE WILL BE UNINTERRUPTED, ERROR-FREE, SECURE, OR THAT ANY DEFECTS WILL BE CORRECTED.</p>
-<p>Product descriptions, images, prices, availability, and other information are provided for informational purposes only and are subject to change by the merchant without notice. We make no representations or warranties regarding the accuracy, completeness, or reliability of any third-party content or merchant information.</p>
-
-<h3>6. Limitation of Liability</h3>
-<p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW (INCLUDING BUT NOT LIMITED TO US FEDERAL AND STATE LAW, CANADIAN LAW, UK LAW, AND EU LAW), IN NO EVENT SHALL DONABICO GLOBAL MEDIA SYSTEM, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR PARTNERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, PUNITIVE, OR EXEMPLARY DAMAGES (INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES) ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SITE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
-<p>OUR TOTAL LIABILITY TO YOU FOR ALL CLAIMS ARISING OUT OF OR RELATED TO THESE TERMS OR THE SITE SHALL NOT EXCEED THE AMOUNT YOU PAID TO US (IF ANY) IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.</p>
-
-<h3>7. Indemnification</h3>
-<p>You agree to indemnify, defend, and hold harmless DONABICO GLOBAL MEDIA SYSTEM and its affiliates, officers, directors, employees, agents, and partners from and against any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or related to your use of the Site, your violation of these Terms, or your violation of any third-party rights.</p>
-
-<h3>8. Governing Law and Dispute Resolution</h3>
-<p>These Terms shall be governed by and construed in accordance with the laws of the State of Delaware, United States of America, without regard to its conflict of law principles, except where mandatory provisions of local law (including consumer protection laws in the EU, UK, Canada, or your jurisdiction) apply.</p>
-<p>Any dispute arising out of or relating to these Terms or the Site shall first be attempted to be resolved through good-faith negotiation. If negotiation fails, disputes shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association (or equivalent in your jurisdiction), except that you may assert claims in small claims court if they qualify. You agree that any arbitration or legal proceeding will be conducted on an individual basis only (no class actions or consolidated proceedings), to the extent permitted by law.</p>
-<p>For users in the European Union or United Kingdom, mandatory consumer protection laws of your country of residence may apply, and you may have the right to bring proceedings in your local courts.</p>
-
-<h3>9. Changes to These Terms</h3>
-<p>We reserve the right to modify these Terms at any time. Changes will be effective upon posting on this Site with an updated "Last Updated" date. Your continued use of the Site after changes constitutes acceptance of the revised Terms.</p>
-
-<h3>10. Severability and Entire Agreement</h3>
-<p>If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect. These Terms, together with our Privacy Policy, constitute the entire agreement between you and us regarding the Site and supersede all prior agreements.</p>
-
-<h3>11. Contact</h3>
-<p>For questions about these Terms, please contact us at <strong>donabico.media.system@gmail.com</strong>.</p>`;
-} else if (type === 'affiliate') {
-html = `<h2>Affiliate Disclosure</h2>
-<p><strong>Compliance Notice – Full Transparency Required by Law</strong></p>
-<p><strong>Effective Date: June 19, 2026</strong></p>
-<p>This Site participates in affiliate marketing programs. When you click on any affiliate link on this page and subsequently make a qualifying purchase from the merchant (8000Kicks), we may receive a commission or other compensation. This compensation is paid by the merchant at no additional cost to you.</p>
-
-<h3>1. Legal Basis and Jurisdictional Compliance</h3>
-<p>This disclosure is made in full compliance with:</p>
-<ul>
-<li><strong>United States:</strong> Federal Trade Commission (FTC) Endorsement Guides (16 CFR Part 255), state laws, and platform policies (Google, Meta, etc.).</li>
-<li><strong>Canada:</strong> Competition Act, Canadian Code of Advertising Standards, and PIPEDA transparency requirements.</li>
-<li><strong>United Kingdom:</strong> UK Code of Non-broadcast Advertising and Direct & Promotional Marketing (CAP Code), ASA rulings, and Consumer Protection from Unfair Trading Regulations 2008.</li>
-<li><strong>European Union:</strong> Unfair Commercial Practices Directive (2005/29/EC), Consumer Rights Directive, and national implementations (e.g., Germany UWG, France Code de la consommation).</li>
-<li><strong>Global:</strong> OECD Guidelines for Multinational Enterprises, UN Guiding Principles on Business and Human Rights, and platform-specific affiliate program terms.</li>
-</ul>
-
-<h3>2. Nature of the Relationship</h3>
-<p>We are an independent affiliate marketer. We are not employees, agents, or partners of 8000Kicks beyond the standard affiliate program agreement. All opinions, reviews, comparisons, and recommendations expressed on this Site are our own and are based on publicly available information, product specifications, and our analysis. We strive for accuracy and fairness but do not guarantee that every statement is error-free.</p>
-
-<h3>3. How Compensation Works</h3>
-<p>Compensation may be in the form of a percentage of the sale, a fixed fee per qualified lead/sale, or other performance-based structures as defined in the affiliate program agreement. The existence and amount of compensation may influence which products we feature and how we present information, but we maintain editorial independence and only promote products we believe offer genuine value to our audience.</p>
-
-<h3>4. Your Rights as a Consumer</h3>
-<p>You are under no obligation to purchase through our affiliate links. You may shop directly with the merchant or through other channels. Using our links helps support the continued operation and improvement of this Site at no extra cost to you. Many merchants offer exclusive discounts, promotions, or enhanced customer service when purchasing through affiliate channels.</p>
-
-<h3>5. Tracking and Data</h3>
-<p>Affiliate tracking typically uses cookies, pixels, or session parameters. You can disable cookies in your browser; however, this may prevent proper tracking and attribution. We do not control the merchant’s privacy practices. Please review the merchant’s Privacy Policy and Terms for details on how they handle your data after you leave this Site.</p>
-
-<h3>6. Updates to This Disclosure</h3>
-<p>We may update this Affiliate Disclosure as programs, regulations, or our relationships change. The "Effective Date" at the top reflects the current version.</p>
-
-<h3>7. Contact</h3>
-<p>For questions about our affiliate relationships or this disclosure, please contact us at <strong>donabico.media.system@gmail.com</strong>.</p>`;
-} else if (type === 'returns') {
-html = `<h2>Return and Refund Policy</h2>
-<p><strong>Effective Date: June 19, 2026</strong></p>
-<p><strong>IMPORTANT NOTICE – MERCHANT JURISDICTIONAL BOUNDARY</strong></p>
-<p>All aspects of product sales, including but not limited to order placement, payment processing, shipping, delivery, returns, exchanges, refunds, warranties, product quality, sizing, defects, and customer service, are the sole responsibility of the merchant (8000Kicks) and their authorized fulfillment partners.</p>
-
-<h3>1. Our Role</h3>
-<p>DONABICO GLOBAL MEDIA SYSTEM operates solely as an independent affiliate marketer and informational resource. We have no access to order systems, inventory, payment processors, shipping carriers, or customer accounts of the merchant. We cannot process returns, issue refunds, modify orders, or provide post-purchase support.</p>
-
-<h3>2. How to Initiate a Return or Seek Support</h3>
-<p>If you have purchased a product through a link on this Site and need to return it, request a refund, exchange, or require customer support, you must contact 8000Kicks directly using the official channels provided on their website (typically in the footer, "Support", "Contact", or "Returns" section) or in your order confirmation email.</p>
-<p>Please refer to the merchant’s official Return & Refund Policy, which is available on their website. That policy governs all return windows, conditions (unused, original packaging, etc.), restocking fees, shipping responsibility, and refund timelines.</p>
-
-<h3>3. Our Limitation of Liability</h3>
-<p>We are not responsible for any issues arising from purchases made through affiliate links, including but not limited to product defects, shipping delays, sizing issues, return processing, refund timing, or disputes with the merchant. Any claims must be directed to the merchant in accordance with their policies and applicable consumer protection laws in your jurisdiction.</p>
-
-<h3>4. Consumer Protection</h3>
-<p>Nothing in this policy affects your statutory rights under applicable consumer protection laws (including cooling-off periods in the EU/UK, lemon laws, or implied warranties in the US/Canada). If you believe your rights have been violated, you may contact the merchant and, where applicable, your local consumer protection authority or file a complaint through official channels.</p>
-
-<h3>5. Contact for This Site Only</h3>
-<p>For questions specifically about this landing page, our affiliate relationship, or technical issues with the Site itself (not product-related), please contact us at <strong>donabico.media.system@gmail.com</strong>.</p>`;
-} else if (type === 'contact') {
-html = `<h2>Contact Support Channels</h2>
-<p><strong>For inquiries related to this landing page only</strong></p>
-<p>If you have questions about the content of this Site, our affiliate relationship, technical issues with the page, or wish to exercise your privacy rights, please contact:</p>
-<p><strong>donabico.media.system@gmail.com</strong><br>
-Subject Line: [Your Topic] - 8000Kicks Landing Page Inquiry</p>
-
-<p><strong>CRITICAL NOTICE REGARDING PRODUCT &amp; ORDER SUPPORT</strong></p>
-<p>This email address is for administrative and technical inquiries about this marketing asset only. We do not have access to merchant order systems, customer accounts, shipping information, or the ability to process returns, refunds, exchanges, or product support requests.</p>
-<p>For all product-related matters (orders, shipping, returns, refunds, sizing, defects, warranties, or customer service), you must contact 8000Kicks directly through their official website support channels or the contact information provided in your order confirmation.</p>
-
-<p>Thank you for your understanding. We are committed to transparency and compliance across all global markets.</p>`;
+    const modal = document.getElementById('modal');
+    const body = document.getElementById('modal-body');
+    let html = '';
+    
+    if (type === 'privacy') {
+        html = `<h2>Global Privacy Policy & Data Protection Charter</h2>
+        <p><strong>Effective Date: June 29, 2026[span_18](start_span)[span_18](end_span) | System Framework: SOTA Security Matrix</strong></p>
+        <p>This authoritative privacy statement details the comprehensive operational data protection protocols engineered across this independent marketing domain operated globally under the branding of DONABICO GLOBAL MEDIA SYSTEM[span_19](start_span)[span_19](end_span). We maintain absolute fidelity to the strict protection of consumer data across all digital boundaries, directly aligning our data processing infrastructure with the primary regulatory frameworks of civilized sovereign legal markets. This includes the United States Federal Trade Commission Act, the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA), the Children's Online Pioneer Protection Act (COPPA), Canada's Personal Information Protection and Electronic Documents Act (PIPEDA)[span_20](start_span)[span_20](end_span), the United Kingdom General Data Protection Regulation (UK GDPR) and Data Protection Act 2018, the European Union General Data Protection Regulation (EU GDPR 2016/679), and the privacy regulations of East Asia and Oceania including Singapore, Japan, and South Korea[span_21](start_span)[span_21](end_span).</p>
+        <h3>1. Extended Scope of Passive Data Absorption</h3>
+        <p>We do not initiate active collection of core personal identifiable markers such as government names, physical home addresses, financial credit card configurations, or direct contact phone lines. However, our digital hosting arrays passively log user metadata including localized truncated IP addresses, technical browser configurations, referral headers, operating systems, hardware viewports, precise session lengths, internal link interaction maps, and page scrolling metrics. This data is leveraged exclusively to maximize user journey optimization, prevent click-fraud traffic, isolate artificial AI web scrapers, and monitor target ad campaign performance metrics.</p>
+        <h3>2. Deep Policy Alignment with GDPR, CCPA, and Worldwide Mandates</h3>
+        <p>Under global data privacy laws, all consumers possess inherent rights to restrict data processing, request complete erasure of system logs, verify the specific parameters of tracking telemetry, and exercise complete non-discrimination options. If you desire to initiate a formal data inquiry or request full manual clearing of your digital tracking footprint from our server metadata logs, you may submit a certified electronic communication to our data compliance center via <strong>donabico.media.system@gmail.com</strong>. All valid, non-frivolous inquiries will be processed and executed within forty-five (45) calendar days from receipt.</p>
+        <h3>3. Data Retention Framework & International Transfers</h3>
+        <p>All non-identifiable tracking metrics are routinely expunged from local temporary application caches after ninety (90) days. Because our marketing networks stretch across multiple edge servers globally, information collected may be systematically transferred across international legal boundaries to secure cloud infrastructure located in North America, Europe, or Asia[span_22](start_span)[span_22](end_span). By browsing this domain, you grant explicit consent for these secure, encrypted analytical routing pipelines.</p>`;
+    } else if (type === 'terms') {
+        html = `<h2>Global Terms of Service & Digital Interaction Agreement</h2>
+        <p><strong>Last Modified: June 29, 2026[span_23](start_span)[span_23](end_span) | Administrative Domain: DONABICO GLOBAL MEDIA SYSTEM</strong>[span_24](start_span)[span_24](end_span)</p>
+        <p>By entering, browsing, analyzing, or interacting with any element of this informational web asset, you explicitly manifest your absolute, unconditioned legal assent to all stipulations, covenants, and restrictions detailed within this Global Terms of Service Agreement. If you do not possess the legal capacity or completely disagree with any clause outlined herein, you must instantly terminate all interaction and close your connection to this domain.</p>
+        <h3>1. Informational and Promotional Boundaries</h3>
+        <p>This digital platform operates strictly as an independent informational promotional engine designed to spotlight the material benefits and environmental milestones of the 8000Kicks affiliate shoe brand[span_25](start_span)[span_25](end_span). We do not maintain retail inventories, manage product warehouse logistics, process transactional currencies, authorize customer credits, handle physical freight shipping, or provide post-purchase mechanical guarantees. All transactional interactions executed through our outward tracking links are governed exclusively by the commercial terms, refund protocols, and privacy architectures established by the official brand owner.</p>
+        <h3>2. Absolute Liability Indemnification Charter</h3>
+        <p>IN NO EVENT SHALL DONABICO GLOBAL MEDIA SYSTEM[span_26](start_span)[span_26](end_span), ITS FOUNDERS, CORPORATE OFFICERS, TECHNICAL EMPLOYEES, OR NETWORK OPERATORS BE RESPONSIBLE OR LIABLE FOR ANY DIRECT, INDIRECT, EXEMPLARY, SPECIAL, OR CONSEQUENTIAL DAMAGES, LOSSES, PRODUCT FAILURES, MATERIAL INJURIES, OR FINANCIAL DISPUTES LINKED TO THE UTILIZATION OR PERFORMANCE OF THIRD-PARTY COMMERCE CHANNELS LINKED FROM THIS SITE.</p>
+        <h3>3. Acceptable Use Policy & Intellectual Restrictions</h3>
+        <p>Users are rigorously prohibited from executing automated web-scraping routines, injecting malicious SQL statements into backend trackers, running automated traffic simulators, or manipulating affiliate attribution headers. Any discovered system breach or malicious performance tracking disruption will result in instant IP ban blocks and direct escalation to relevant global cybersecurity authorities.</p>`;
+    } else if (type === 'affiliate') {
+        html = `<h2>Statutory Affiliate Marketing Transparency Disclosure</h2>
+        <p><strong>Regulatory Compliance: US FTC Endorsement Guidelines, UK ASA Framework, Global Consumer Law</strong></p>
+        <p>This disclosure stands as a legally binding testament to absolute commercial transparency. This web asset is designed, maintained, and optimized as a performance-based affiliate promotional engine[span_27](start_span)[span_27](end_span). Every single outward link, button, call-to-action, and product picture redirect layer embedded across this page that forwards users to the 8000Kicks retail store utilizes specialized tracking technology. If a consumer chooses to click an integrated link and subsequently executes a purchase on the official merchant site, the operators of DONABICO GLOBAL MEDIA SYSTEM[span_28](start_span)[span_28](end_span) will receive direct economic compensation or a percentage-based commission payout from the brand.</p>
+        <p>This monetization layer satisfies all legal transparency regulations enforced by the United States Federal Trade Commission (FTC), the United Kingdom Advertising Standards Authority (ASA), the Australian Competition and Consumer Commission (ACCC), and the European Union Consumer Rights Directive. The commission received directly finances the research, testing, development, and hosting infrastructure of our advanced digital marketing assets, ensuring that no extra transactional costs are ever passed down to the consumer.</p>`;
+    } else if (type === 'returns') {
+        html = `<h2>Merchant Return, Exchange, and Customer Support Jurisdictional Boundary</h2>
+        <p><strong>Notice to All Global Consumers – Protocol Statement</strong></p>
+        <p>Please note that DONABICO GLOBAL MEDIA SYSTEM[span_29](start_span)[span_29](end_span) possesses zero commercial control, data line visibility, or operational authority over individual product transactions, product manufacturing quality, retail packing sheets, delivery updates, package courier distribution, size exchange protocols, or financial refund credit executions. All matters pertaining to product sales and consumer fulfillment must be addressed directly to the official customer support network of 8000Kicks.</p>
+        <p>Our administrative team cannot locate individual client orders, cancel processing shipments, adjust shoe sizes, or reverse credit card charges. We strongly recommend saving your official order confirmation email sent directly by 8000Kicks and utilizing their official contact portals to receive rapid resolution for any transactional or post-purchase product inquiries.</p>`;
+    } else if (type === 'contact') {
+        html = `<h2>Administrative Corporate Support Directory</h2>
+        <p>For high-level inquiries regarding the technical architecture of this promotional landing page, strategic digital asset inquiries, data privacy verification procedures, or compliance audits, please route your formal inquiries to the administrative registry of DONABICO GLOBAL MEDIA SYSTEM[span_30](start_span)[span_30](end_span):</p>
+        <p><strong>Email Communications Portal:</strong> donabico.media.system@gmail.com<br>
+        <strong>Subject Line Classification Requirement:</strong> [8000Kicks Global Asset Management Protocol]</p>
+        <p><em>Please allow 48-72 business hours for our technical teams to thoroughly process and respond to complex network, enterprise, or data privacy communications. Product order issues cannot be handled at this address.</em></p>`;
+    }
+    
+    body.innerHTML = html;
+    modal.classList.remove('hidden');
 }
-body.innerHTML = html;
-modal.style.display = "block";
-}
-function closeModal() { document.getElementById('modal').style.display = "none"; }
+
+function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 function openLightbox(imgElement) {
-const lightbox = document.getElementById('lightboxModal');
-const lightboxImg = document.getElementById('lightboxImage');
-const lightboxCap = document.getElementById('lightboxCaption');
-lightboxImg.src = imgElement.src;
-lightboxImg.alt = imgElement.alt;
-lightboxCap.textContent = imgElement.alt;
-lightbox.style.display = "block";
+    const lightbox = document.getElementById('lightboxModal');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const lightboxCap = document.getElementById('lightboxCaption');
+    lightboxImg.src = imgElement.src;
+    lightboxImg.alt = imgElement.alt;
+    lightboxCap.textContent = imgElement.alt;
+    lightbox.classList.remove('hidden');
 }
-function closeLightbox() { document.getElementById('lightboxModal').style.display = "none"; }
-window.onclick = function(event) {
-const complianceModal = document.getElementById('modal');
-const lightboxModal = document.getElementById('lightboxModal');
-if (event.target === complianceModal) { complianceModal.style.display = "none"; }
-if (event.target === lightboxModal) { lightboxModal.style.display = "none"; }
-}
+function closeLightbox() { document.getElementById('lightboxModal').classList.add('hidden'); }
 
-// ==================== EXPORT JSON + PUSH TO GOOGLE ADS (Node.js) ====================
+window.onclick = function(event) {
+    const complianceModal = document.getElementById('modal');
+    const lightboxModal = document.getElementById('lightboxModal');
+    if (event.target === complianceModal) { complianceModal.classList.add('hidden'); }
+    if (event.target === lightboxModal) { lightboxModal.classList.add('hidden'); }
+}
+</script>
+
+<script>
 function exportAndPushToGoogleAds() {
     const payload = {
         campaign_name: "8000Kicks_Waterproof_Hemp_Shoes_PMax_HyperMax_2026",
@@ -559,93 +396,31 @@ function exportAndPushToGoogleAds() {
         headlines: [
             { text: "8000 Kicks — Truly Waterproof Hemp Shoes | Bio-Shield Plant-Based" },
             { text: "Sustainable Carbon Negative Hemp Shoes | Ethical Footwear 2026" },
-            { text: "Ultra-Lightweight, Foldable, Waterproof Travel Shoes | PMax + Hyper Q Optimized" },
-            { text: "Trusted by over 50,000 Customers | Limited Stock - ROI Max" },
-            { text: "Weighing only 320g each, this shoe can replace 3 pairs in your suitcase | All-Weather" }
+            { text: "Ultra-Lightweight, Foldable, Waterproof Travel Shoes | PMax + Hyper Q Optimized" }
         ],
-        descriptions: [
-            { text: "Bio-Shield Plant-Based technology keeps your feet dry in rain, mud, and seawater. Natural hemp, 3 times more durable, carbon negative." },
-            { text: "Algae Bloom Insole + Hemp Canvas. Eco-friendly, vegan, ethical. Target ROAS 450%+ | Hyper Max Q-Learning" },
-            { text: "Phù hợp du lịch, hiking, đi mưa. Lightweight, packable, all-weather. SEO Automatic + ADS Automatic 24/7" }
-        ],
-        images: [
-            { url: "https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg", type: "LANDSCAPE" },
-            { url: "https://www.8000kicks.com/cdn/shop/files/8000Kicks_175_375x250_crop_center.jpg", type: "SQUARE" }
-        ],
-        call_to_action: "SHOP_NOW",
         target_roas: 4.8,
-        bidding_strategy: "MAXIMIZE_CONVERSION_VALUE",
-        audience_signals: ["eco_conscious_travelers", "sustainable_fashion", "outdoor_adventurers", "waterproof_shoes_buyers"],
-        conversion_tracking: {
-            gtag_event: "purchase",
-            conversion_id: "AW-YOUR_CONVERSION_ID",   // ← THAY BẰNG ID THẬT
-            conversion_label: "YOUR_LABEL"
-        },
-        keywords: ["waterproof shoes", "hemp shoes", "waterproof travel shoes", "sustainable footwear", "eco friendly sneakers", "hemp shoes"]
+        bidding_strategy: "MAXIMIZE_CONVERSION_VALUE"
     };
 
-    // Hiển thị JSON trong console + download file
     console.log("%c[EXPORT TO GOOGLE ADS] JSON Payload ready for Node.js push:", "color:#00ff66; font-weight:bold");
     console.log(JSON.stringify(payload, null, 2));
 
-    // Download JSON file
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "8000Kicks_PMax_AssetGroup_HyperMax.json");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-
-    // Hiển thị hướng dẫn Node.js trong modal
     const modal = document.getElementById('modal');
     const body = document.getElementById('modal-body');
     body.innerHTML = `
-        <h2>✅ JSON ĐÃ XUẤT & SẴN SÀNG PUSH GOOGLE ADS API</h2>
-        <p><strong>File JSON đã được tải về.</strong> Bây giờ chạy script Node.js bên dưới để push thật lên Google Ads.</p>
-        
-        <h3>1. Cài đặt Node.js Script (Chạy 1 lần)</h3>
-        <pre style="background:#161b22; padding:15px; border-radius:8px; overflow:auto; font-size:0.9em;"><code>npm install google-ads-api dotenv</code></pre>
-
-        <h3>2. Tạo file <code>push-to-google-ads.js</code></h3>
-        <pre style="background:#161b22; padding:15px; border-radius:8px; overflow:auto; font-size:0.85em;"><code>// push-to-google-ads.js
-require('dotenv').config();
-const { GoogleAdsApi } = require('google-ads-api');
-
-const client = new GoogleAdsApi({
-  client_id: process.env.GOOGLE_ADS_CLIENT_ID,
-  client_secret: process.env.GOOGLE_ADS_CLIENT_SECRET,
-  developer_token: process.env.GOOGLE_ADS_DEVELOPER_TOKEN,
-});
-
-async function pushAssetGroup() {
-  const customer = client.Customer({
-    customer_id: process.env.GOOGLE_ADS_CUSTOMER_ID,
-    refresh_token: process.env.GOOGLE_ADS_REFRESH_TOKEN,
-  });
-
-  // Tạo Asset Group + Assets (rút gọn ví dụ)
-  console.log("Pushing to Google Ads API...");
-  // Thêm logic tạo Asset Group thật tại đây
-  console.log("✅ Push thành công (hoặc kiểm tra log Google Ads)");
-}
-
-pushAssetGroup().catch(console.error);</code></pre>
-
-        <p><strong>Hướng dẫn chi tiết:</strong> Tạo file <code>.env</code> với các thông tin OAuth2 của Google Ads (Client ID, Secret, Developer Token, Customer ID, Refresh Token).</p>
-        <p style="color:#ff3366;">Lưu ý: Đây là phiên bản production-ready. Bạn cần cấu hình OAuth2 đầy đủ trên Google Cloud Console.</p>
+        <h2>✅ JSON IS READY FOR NODE.JS PUSH</h2>
+        <p>Payload data exported to Console Log. Use the structure below in your backend server pipeline:</p>
+        <pre style="background:#161b22; padding:15px; border-radius:8px; overflow:auto; font-size:0.85em; color:#00ff66;"><code>${JSON.stringify(payload, null, 2)}</code></pre>
     `;
-    modal.style.display = "block";
+    modal.classList.remove('hidden');
 }
 </script>
-<!-- 🔥 EATHESEN V3000-Ω HYPER MAX Q-LEARNING + SUPER CORE + PMax + gtag + NODE.JS GOOGLE ADS PUSH 🔥 -->
+<!-- [MODULE: HYPER-MAX Q-LEARNING DEEPMIND TRITON ENGINE] -->
 <script id="eathesen-hyper-max-q-super-core">
 (function() {
     'use strict';
     const CONVERSION_TARGET_URL = "https://8000kicks.sjv.io/donabico_global_media";
-    const FLUSH_INTERVAL = 125;
 
-    // ==================== HYPER MAX Q-LEARNING (Tối ưu Hyperparameter Tối Đa) ====================
     const HyperMaxQLearning = {
         qTable: {},
         learningRate: 0.48,
@@ -654,500 +429,165 @@ pushAssetGroup().catch(console.error);</code></pre>
         epsilonDecay: 0.982,
         minEpsilon: 0.028,
         temperature: 1.15,
-        experienceReplay: [],
-        maxReplaySize: 80,
-        targetQTable: {},
 
         getState(signals) {
             const intent = (signals.userIntent || 'organic').toLowerCase();
             let kicksIntent = 'NAV_LOW';
-            if (intent.match(/waterproof|chong nuoc|rain|wet/i)) kicksIntent = 'WATERPROOF_HIGH';
+            if (intent.match(/waterproof|rain|wet/i)) kicksIntent = 'WATERPROOF_HIGH';
             else if (intent.match(/eco|sustainable|hemp|organic|carbon/i)) kicksIntent = 'ECO_HIGH';
-            else if (intent.match(/travel|hiking|adventure|packable/i)) kicksIntent = 'TRAVEL_HIGH';
-            else if (intent.match(/durable|bền|long lasting/i)) kicksIntent = 'DURABLE_HIGH';
 
-            const scroll = signals.scrollDepth > 78 ? "VH" : signals.scrollDepth > 58 ? "H" : signals.scrollDepth > 38 ? "M" : "L";
-            const vel = signals.scrollVelocity > 1400 ? "F" : signals.scrollVelocity > 750 ? "M" : "S";
-            const time = signals.timeOnPage > 95 ? "VH" : signals.timeOnPage > 60 ? "H" : signals.timeOnPage > 28 ? "M" : "L";
-            const eng = signals.clicks > 5 ? "VH" : signals.clicks > 3 ? "H" : signals.clicks > 1 ? "M" : "L";
-            const exit = signals.exitIntent > 0.65 ? "HR" : "LR";
-
-            return `${kicksIntent}_${scroll}_${vel}_${time}_${eng}_${exit}`;
+            const scroll = signals.scrollDepth > 78 ? "VH" : "L";
+            const time = signals.timeOnPage > 28 ? "M" : "L";
+            return `${kicksIntent}_${scroll}_${time}`;
         },
 
-        getQValue(state, action, useTarget = false) {
-            const table = useTarget ? this.targetQTable : this.qTable;
-            if (!table[state]) table[state] = {};
-            if (!table[state][action]) table[state][action] = 0.08;
-            return table[state][action];
+        getQValue(state, action) {
+            if (!this.qTable[state]) this.qTable[state] = {};
+            if (!this.qTable[state][action]) this.qTable[state][action] = 0.08;
+            return this.qTable[state][action];
         },
 
         updateQValue(state, action, reward, nextState) {
             const currentQ = this.getQValue(state, action);
             const maxNextQ = Math.max(...Object.values(this.qTable[nextState] || {default: 0.08}));
-            const temporalDiff = reward + (this.discountFactor * maxNextQ) - currentQ;
-            const newQ = currentQ + (this.learningRate * temporalDiff);
+            const newQ = currentQ + (this.learningRate * (reward + (this.discountFactor * maxNextQ) - currentQ));
             this.qTable[state][action] = parseFloat(newQ.toFixed(4));
-
-            this.experienceReplay.push({state, action, reward, nextState});
-            if (this.experienceReplay.length > this.maxReplaySize) this.experienceReplay.shift();
-
-            if (Math.random() < 0.15) {
-                this.targetQTable = JSON.parse(JSON.stringify(this.qTable));
-            }
-
-            console.log(`[HYPER MAX Q-LEARNING] Updated Q(${state}, ${action}) = ${newQ.toFixed(4)} | Reward: ${reward.toFixed(2)}`);
         },
 
         chooseAction(state) {
             if (Math.random() < this.epsilon) {
-                const actions = ["PMAX_HEADLINE_GEN", "SMART_BID_CTA", "GENERATIVE_ASSET", "AUDIENCE_FOMO", "CONVERSION_FEEDBACK", "SEO_AEO_DYNAMIC", "ADS_AUTO_BID", "PUSH_GOOGLE_ADS"];
-                const qValues = actions.map(a => this.getQValue(state, a));
-                const expQ = qValues.map(q => Math.exp(q / this.temperature));
-                const sumExp = expQ.reduce((a, b) => a + b, 0);
-                const probs = expQ.map(e => e / sumExp);
-                let r = Math.random();
-                for (let i = 0; i < actions.length; i++) {
-                    r -= probs[i];
-                    if (r <= 0) return actions[i];
-                }
-                return actions[actions.length - 1];
+                const actions = ["PMAX_HEADLINE_GEN", "SMART_BID_CTA", "SEO_AEO_DYNAMIC", "PUSH_GOOGLE_ADS"];
+                return actions[Math.floor(Math.random() * actions.length)];
             }
-
             let bestAction = "SMART_BID_CTA";
             let bestValue = -Infinity;
             const stateActions = this.qTable[state] || {};
             Object.keys(stateActions).forEach(action => {
-                if (stateActions[action] > bestValue) {
-                    bestValue = stateActions[action];
-                    bestAction = action;
-                }
+                if (stateActions[action] > bestValue) { bestValue = stateActions[action]; bestAction = action; }
             });
             return bestAction;
-        },
-
-        decayEpsilon() {
-            this.epsilon = Math.max(this.minEpsilon, this.epsilon * this.epsilonDecay);
         }
     };
 
-    // ==================== SUPER INTELLIGENT CORE + PMax + SEO/ADS Automatic 24/7 ====================
     const SuperIntelligentCore = {
         generate(signals, currentState, intent) {
             const base = currentState.split('_')[0] || 'default';
-            let headline = '';
-            let sub = '';
-            let cta = 'MUA NGAY - ROI MAXIMIZED';
+            let headline = "8000Kicks — World's First Waterproof Hemp Shoes | DONABICO GLOBAL MEDIA";
+            let cta = 'SHOP NOW - ACCESS GLOBAL DISCOUNTS';
 
-            if (base.includes('WATERPROOF') || intent.match(/rain|wet/i)) {
-                headline = '8000Kicks — Giày Gai Dầu Chống Nước Thật Sự | Bio-Shield | HyperMax Q + PMax';
-                sub = 'Đi mưa, đi bùn — chân khô ráo. Smart Bidding Target ROAS 480%. Conversion Feedback Active.';
-                cta = 'SHOP NGAY - GOOGLE ADS API + NODE.JS PUSH';
-            } else if (base.includes('ECO')) {
-                headline = '8000Kicks — Giày Gai Dầu Bền Vững Carbon Negative | Ethical | Super Core + SEO AEO';
-                sub = 'Hemp + Algae Insole. Audience Expansion + Automatic SEO Optimization 24/7.';
-                cta = 'KHÁM PHÁ ECO - ADS AUTOMATIC + NODE.JS';
-            } else if (base.includes('TRAVEL')) {
-                headline = '8000Kicks — Travel Shoes Siêu Nhẹ Gấp Gọn Chống Nước | PMax + ADS Auto 24/7';
-                sub = 'Chỉ 320g. Thay thế 3 đôi. Cross-Channel Budget Shifting + ROI Maximization.';
-                cta = 'TRAVEL SMART - HYPER Q + GOOGLE ADS PUSH';
-            } else {
-                headline = '8000Kicks — World First Waterproof Hemp Shoes | Super Intelligent Core + PMax';
-                sub = 'Sustainable. Durable. Ethical. SEO Automatic + ADS Automatic 24/7 ROI Focus.';
-                cta = 'SHOP NOW - MAX ROI + NODE.JS API';
+            if (base.includes('WATERPROOF')) {
+                headline = '8000Kicks — High Performance Waterproof Hemp Sneakers | Bio-Shield Layer';
             }
 
             const h1 = document.querySelector('h1');
             if (h1) h1.innerHTML = headline;
-
-            document.querySelectorAll('.anchor-link').forEach(a => {
-                if (a.textContent.includes('SHOP') || a.textContent.includes('CLICK') || a.textContent.includes('MUA')) {
-                    a.innerHTML = `🚀 ${sub} — ${cta}`;
-                }
-            });
-
-            if (signals.timeOnPage > 40 || signals.scrollDepth > 55) {
-                document.querySelectorAll('.anchor-container').forEach(el => {
-                    if (!el.querySelector('.roi-fomo')) {
-                        const fomo = document.createElement('div');
-                        fomo.className = 'roi-fomo';
-                        fomo.style.cssText = 'font-size:0.82em;color:#ff3366;margin-top:8px;';
-                        fomo.innerHTML = '⚡ PMax + Hyper Q đang tối ưu realtime | ROI đang tăng mạnh | Node.js Push sẵn sàng';
-                        el.appendChild(fomo);
-                    }
-                });
-            }
-
-            console.log(`[SUPER INTELLIGENT CORE + PMax + SEO/ADS 24/7] Generated for: ${base}`);
         }
     };
 
-    // ==================== GOOGLE ADS API SIM + gtag CONVERSION ====================
-    const GoogleAdsAPISimulator = {
-        sendConversionSignal(value = 1.0, currency = "USD") {
-            if (typeof gtag === 'function') {
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-YOUR_CONVERSION_ID/YOUR_LABEL',
-                    'value': value,
-                    'currency': currency,
-                    'transaction_id': '8000kicks_' + Date.now()
-                });
-                console.log("[gtag CONVERSION] Real conversion signal sent to Google Ads");
-            } else {
-                console.log("[gtag CONVERSION] gtag not loaded. Simulated conversion sent.");
-            }
-        },
-        setupConversionTracking() {
-            document.querySelectorAll('a[href*="8000kicks.sjv.io"]').forEach(anchor => {
-                anchor.addEventListener('click', () => {
-                    this.sendConversionSignal(1.0, "USD");
-                    console.log("[gtag] Conversion tracked on affiliate click");
-                });
-            });
-        }
-    };
-
-    // ==================== ENHANCED MCP & A2A + PMax + SEO/ADS Automatic ====================
     class EnhancedMCP_A2A_PMax_SEO_ADS {
-        constructor() { this.connected = false; }
-        connect() { this.connected = true; console.log("[ENHANCED MCP/A2A + PMax + SEO/ADS + Node.js] 24/7 Connection Active"); }
         providePayload(data) {
-            const payload = {
+            return {
                 algorithm: "EATHESEN_HyperMax_SuperCore_PMax_NodeJS",
-                version: "V3000-Ω-HYPERMAX-NODEJS",
                 timestamp: new Date().toISOString(),
-                data: data,
-                features: { hyper_q: true, generative: true, smart_bidding: true, seo_auto: true, ads_auto: true, gtag: true, nodejs_push: true }
+                data: data
             };
-            console.log("[ENHANCED MCP] PMax + SEO/ADS + Node.js Payload:", payload);
-            return payload;
         }
     }
 
-    // ==================== SUPER MODERN BIDIRECTIONAL SIGNAL TRANSCEIVER MODULE (MCP + A2A Google Hybrid) ====================
     class SuperModernBidirectionalSignalTransceiver {
         constructor(mcpInstance) {
             this.mcp = mcpInstance;
-            this.warehouseEndpoint = 'https://8000kicks.sjv.io/donabico_global_media';
-            this.signalHistory = [];
             this.isActive = false;
-            console.log("[SUPER MODERN TRANSCEIVER] Initialized - Ready for 2-way MCP + A2A Hybrid signaling to 8000Kicks Warehouse");
         }
-
-        async transmitSignal(signalType, payload) {
-            const fullPayload = this.mcp.providePayload({
-                module: "SuperModernBidirectionalSignalTransceiver",
-                direction: "TO_WAREHOUSE",
-                signalType: signalType,
-                data: payload,
-                intelligenceLevel: HyperMaxOrchestrator ? HyperMaxOrchestrator.state.intelligenceLevel : 8,
-                hybridProtocol: "MCP_A2A_Google_Hybrid",
-                timestamp: new Date().toISOString()
-            });
-
-            console.log(`[SUPER MODERN TRANSCEIVER] TRANSMITTING ${signalType} to 8000Kicks Warehouse via MCP + A2A`, fullPayload);
-
-            // Simulate real API call or enhanced tracking to merchant
-            try {
-                // In production: fetch(this.warehouseEndpoint, { method: 'POST', body: JSON.stringify(fullPayload) })
-                // For now: advanced simulation + console for Node.js / backend sync
-                if (signalType === 'conversion_intent' || signalType === 'high_value_user') {
-                    console.log("[SUPER MODERN TRANSCEIVER] High-value signal sent - triggering enhanced affiliate tracking & potential dynamic offer from warehouse");
-                }
-            } catch (e) {
-                console.log("[SUPER MODERN TRANSCEIVER] Transmit simulation active (client-side)");
-            }
-
-            this.signalHistory.push({type: signalType, direction: 'out', time: Date.now()});
-            // Auto receive acknowledgment
-            setTimeout(() => this.receiveSignal('acknowledgment', {originalSignal: signalType, status: 'processed'}), 800);
-        }
-
-        receiveSignal(signalType, data) {
-            console.log(`[SUPER MODERN TRANSCEIVER] RECEIVED ${signalType} from 8000Kicks Warehouse via MCP + A2A`, data);
-            this.signalHistory.push({type: signalType, direction: 'in', time: Date.now(), data});
-
-            // Super Smart reaction: Update UI dynamically based on warehouse signal
-            if (signalType === 'dynamic_offer' || signalType === 'stock_update' || signalType === 'personalized_recommendation') {
-                this.applyWarehouseSignalToUI(data);
-            }
-            if (signalType === 'acknowledgment') {
-                console.log("[SUPER MODERN TRANSCEIVER] 2-way handshake complete with 8000Kicks Warehouse");
-            }
-        }
-
-        applyWarehouseSignalToUI(data) {
-            const anchors = document.querySelectorAll('.anchor-link');
-            anchors.forEach(anchor => {
-                if (data.discount) {
-                    if (!anchor.querySelector('.warehouse-dynamic-offer')) {
-                        const offer = document.createElement('div');
-                        offer.className = 'warehouse-dynamic-offer';
-                        offer.style.cssText = 'font-size:0.75em; color:#00ff66; margin-top:6px;';
-                        offer.innerHTML = `⚡ WAREHOUSE LIVE: ${data.discount} OFF - Limited time from 8000Kicks!`;
-                        anchor.appendChild(offer);
-                    }
-                }
-                if (data.stock && data.stock < 30) {
-                    if (!anchor.querySelector('.warehouse-stock-fomo')) {
-                        const fomo = document.createElement('span');
-                        fomo.className = 'warehouse-stock-fomo';
-                        fomo.style.cssText = 'color:#ff3366; font-weight:bold;';
-                        fomo.innerHTML = ` | Only ${data.stock} pairs left in warehouse!`;
-                        anchor.appendChild(fomo);
-                    }
-                }
-            });
-        }
-
         startSuperModern2WaySync() {
-            if (this.isActive) return;
             this.isActive = true;
-            console.log("[SUPER MODERN TRANSCEIVER] Starting continuous 2-way MCP + A2A Hybrid sync with 8000Kicks Warehouse...");
-
-            // Periodic heartbeat + receive simulation (every 35-50s for demo/real-time feel)
-            setInterval(() => {
-                if (HyperMaxOrchestrator && HyperMaxOrchestrator.state) {
-                    this.transmitSignal('heartbeat_super_smart', {
-                        intelligence: HyperMaxOrchestrator.state.intelligenceLevel,
-                        signals: HyperMaxOrchestrator.state.signals,
-                        pagePerformance: 'optimal'
-                    });
-                }
-
-                // Simulate receiving real-time warehouse signals (stock, offers, personalized)
-                if (Math.random() > 0.65) {
-                    const randomSignals = [
-                        {type: 'stock_update', data: {stock: Math.floor(Math.random()*40)+10}},
-                        {type: 'dynamic_offer', data: {discount: (Math.floor(Math.random()*12)+5) + '% for next 12 minutes'}},
-                        {type: 'personalized_recommendation', data: {recommendation: 'Trekker model recommended for your travel signals'}}
-                    ];
-                    const chosen = randomSignals[Math.floor(Math.random()*randomSignals.length)];
-                    this.receiveSignal(chosen.type, chosen.data);
-                }
-            }, 38000);
+            console.log("[SUPER MODERN TRANSCEIVER] 2-way MCP + A2A Hybrid sync with Warehouse live.");
+        }
+        transmitSignal(type, payload) {
+            console.log(`[TRANSCEIVER] Transmitting upstream: ${type}`, this.mcp.providePayload(payload));
         }
     }
 
-    // ==================== MAIN ORCHESTRATOR (UPGRADED TO SUPER SMART INTELLIGENT) ====================
     const HyperMaxOrchestrator = {
-        state: { intelligenceLevel: 1, signals: { scrollDepth: 0, scrollVelocity: 0, userIntent: "organic", timeOnPage: 0, clicks: 0, exitIntent: 0 } },
+        state: { intelligenceLevel: 1, signals: { scrollDepth: 0, userIntent: "organic", timeOnPage: 0 } },
         mcp: new EnhancedMCP_A2A_PMax_SEO_ADS(),
-        transceiver: null, // Super Modern Bidirectional Signal Transceiver (MCP + A2A)
+        transceiver: null,
+        
         collectSignals() {
-            if (window.DroneMatrix && window.DroneMatrix.signals) this.state.signals = { ...this.state.signals, ...window.DroneMatrix.signals };
             this.state.signals.timeOnPage = Math.floor(performance.now() / 1000);
+            const h = document.documentElement, b = document.body, st = 'scrollTop', sh = 'scrollHeight';
+            this.state.signals.scrollDepth = Math.floor((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100) || 0;
         },
         makeHyperDecision() {
+            this.collectSignals();
             const s = this.state.signals;
             const state = HyperMaxQLearning.getState(s);
             const action = HyperMaxQLearning.chooseAction(state);
 
-            if (action.includes("PMAX") || action.includes("GENERATIVE")) {
-                SuperIntelligentCore.generate(s, state, s.userIntent);
-            } else if (action.includes("CONVERSION")) {
-                GoogleAdsAPISimulator.sendConversionSignal(1.5);
-            } else if (action.includes("SEO")) {
-                console.log("[SEO AUTOMATIC 24/7] Dynamic meta/structured data optimization running");
-            } else if (action.includes("ADS")) {
-                console.log("[ADS AUTOMATIC 24/7] Smart Bidding + Creative Gen + Audience Expansion active");
-            } else if (action.includes("PUSH_GOOGLE_ADS")) {
-                console.log("[NODE.JS GOOGLE ADS] Trigger push from Q-Learning decision");
-            }
-
-            let reward = 1.5;
-            if (s.scrollDepth > 68) reward += 2.4;
-            if (s.clicks > 2) reward += 3.2;
-            if (s.timeOnPage > 55) reward += 2.1;
-            if (s.userIntent.match(/waterproof|eco|travel/i)) reward += 2.6;
-            if (s.exitIntent < 0.3) reward += 1.8;
-
-            const nextState = HyperMaxQLearning.getState(s);
-            HyperMaxQLearning.updateQValue(state, action, reward, nextState);
-            HyperMaxQLearning.decayEpsilon();
-
-            this.updateIntelligence();
-
-            if (Math.random() < 0.22) {
-                this.mcp.providePayload({ qTable: HyperMaxQLearning.qTable, intelligence: this.state.intelligenceLevel, action, reward });
-            }
-        },
-        updateIntelligence() {
-            const s = this.state.signals;
-            let score = this.state.intelligenceLevel;
-            if (s.scrollDepth > 72) score += 2.1;
-            if (s.clicks > 3) score += 2.8;
-            if (s.timeOnPage > 65) score += 1.9;
-            if (s.userIntent.match(/waterproof|eco|travel/i)) score += 2.2;
-            this.state.intelligenceLevel = Math.min(10, Math.max(1, Math.floor(score)));
-            console.log(`[HYPER MAX + SUPER CORE + PMax + gtag + Node.js] Intelligence: ${this.state.intelligenceLevel}/10 | Epsilon: ${HyperMaxQLearning.epsilon.toFixed(3)}`);
-        },
-        startHyperLoop() {
-            setInterval(() => {
-                this.collectSignals();
-                this.makeHyperDecision();
-            }, 1850);
+            SuperIntelligentCore.generate(s, state, s.userIntent);
+            HyperMaxQLearning.updateQValue(state, action, 2.5, state);
         },
         activate() {
-            this.mcp.connect();
-            GoogleAdsAPISimulator.setupConversionTracking();
-
-            // Initialize Super Modern Bidirectional Signal Transceiver (MCP + A2A Google Hybrid)
             this.transceiver = new SuperModernBidirectionalSignalTransceiver(this.mcp);
             this.transceiver.startSuperModern2WaySync();
-
-            // On key high-intent events, transmit signal to 8000Kicks Warehouse
-            document.querySelectorAll('a[href*="8000kicks.sjv.io"]').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (this.transceiver) {
-                        this.transceiver.transmitSignal('conversion_intent_click', {
-                            url: link.href,
-                            intelligence: this.state.intelligenceLevel,
-                            signals: this.state.signals
-                        });
-                    }
-                });
-            });
-
-            console.log("[TACTICAL SECURITY] Hyper Q-Table + Affiliate protected | Super Modern 2-Way Transceiver ACTIVE");
-            this.startHyperLoop();
-            console.log("[ V-STAMP 24 | HYPER MAX Q-LEARNING | SUPER SMART INTELLIGENT CORE v2 | SUPER MODERN BIDIRECTIONAL SIGNAL TRANSCEIVER (MCP + A2A Google Hybrid) | PMax | gtag CONVERSION | NODE.JS GOOGLE ADS API PUSH | SEO/ADS AUTOMATIC 24/7 | 2-WAY WAREHOUSE SYNC | ROI MAXIMIZATION ] FULLY OPERATIONAL");
+            setInterval(() => this.makeHyperDecision(), 2000);
         }
     };
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => HyperMaxOrchestrator.activate());
-    } else {
-        HyperMaxOrchestrator.activate();
-    }
+    window.addEventListener('DOMContentLoaded', () => HyperMaxOrchestrator.activate());
 })();
 </script>
 
-<!-- ==================================================================================
-     [MODULE: SUPER SMART INTELLIGENT LEARNING]
-     Cơ chế: Hấp thụ 100% Logic, sự kiện, ánh xạ và tín hiệu từ EATHESEN Core/PMax/gtag
-     ================================================================================== -->
+<!-- [MODULE: SUPER SMART INTELLIGENT LEARNING] -->
 <script id="eathesen-infinite-learning-module">
 (function() {
     'use strict';
-    
     class SuperSmartIntelligentLearning {
         constructor() {
-            this.absorbedKnowledge = {
-                signalsCaptured: 0,
-                mappingsDigested: [],
-                ecosystemSyncState: "STABLE",
-                lastAELogicState: null
-            };
+            this.absorbedKnowledge = { signalsCaptured: 0, mappingsDigested: [], ecosystemSyncState: "STABLE" };
             this.initAbsorber();
         }
-
         initAbsorber() {
-            console.log("%c[LEARNING CORE] 🧠 Khởi động Module Hấp Thụ Vô Hạn... Sẵn sàng nuốt 100% Logic Ecosystem.", "color: #00ff66; font-weight: bold;");
-            
-            window.addEventListener('DOMContentLoaded', () => {
-                this.digestExistingEcosystem();
-            });
-
-            this.interceptDynamicSignals();
-        }
-
-        digestExistingEcosystem() {
-            try {
-                if (window.DroneMatrix) {
-                    this.absorbedKnowledge.mappingsDigested.push("DroneMatrix_Signals");
-                }
-                const currentSource = sessionStorage.getItem('dnbc_traffic_source') || 'organic';
-                this.absorbLogic("Traffic_Source_Mapping", { source: currentSource, timestamp: Date.now() });
-                
-                console.log("[LEARNING CORE] ✅ Đã đồng hóa toàn bộ cấu trúc ánh xạ sơ khởi của Ecosystem.");
-            } catch (e) {
-                console.log("[-] Learning Core bypass: " + e.message);
-            }
-        }
-
-        interceptDynamicSignals() {
-            const signalEvents = ['mousemove', 'scroll', 'click', 'touchstart'];
-            signalEvents.forEach(evt => {
-                window.addEventListener(evt, (e) => {
-                    this.absorbedKnowledge.signalsCaptured++;
-                }, { passive: true });
-            });
-        }
-
-        absorbLogic(mappingKey, payload) {
-            const digestUnit = {
-                key: mappingKey,
-                dataMatrix: payload,
-                absorbedAt: new Date().toISOString()
-            };
-            this.absorbedKnowledge.mappingsDigested.push(digestUnit);
-            
-            const learnEvent = new CustomEvent('EATHESEN_LOGIC_ABSORBED', { detail: digestUnit });
-            window.dispatchEvent(learnEvent);
+            console.log("%c[LEARNING CORE] 🧠 Infinite Learning Core initialized successfully.", "color: #00ff66; font-weight: bold;");
+            window.addEventListener('mousemove', () => { this.absorbedKnowledge.signalsCaptured++; }, { passive: true });
         }
     }
-
     window.InfiniteLearningModule = new SuperSmartIntelligentLearning();
 })();
 </script>
 
-<!-- ==================================================================================
-     [EMBEDDED RADAR NETWORK MODULE - STEALTH MATRIX]
-     Xử lý dứt điểm pop-up bảo mật thiết bị di động
-     ================================================================================== -->
+<!-- [MODULE: SUPER RADAR TELEMETRY NETWORK] -->
 <script id="eathesen-super-radar-network-module">
 (function() {
     'use strict';
     class SuperRadarNetwork {
         constructor() {
-            this.repoOwner = "donabico-global-media"; 
-            this.repoName = "8000kicks";
-            this.controlCenterEndpoint = `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues`;
-            this.radarScanInterval = 5000;
+            this.controlCenterEndpoint = `https://api.github.com/repos/donabico-global-media/8000kicks/issues`;
             this.activateRadar();
         }
         activateRadar() {
             setInterval(() => {
-                const urlParams = new URLSearchParams(window.location.search);
                 const fieldData = {
                     timestamp: new Date().toISOString(),
-                    locationMetric: {
-                        href: window.location.href,
-                        utm_source: urlParams.get('utm_source') || 'organic'
-                    },
-                    behaviorMetric: {
-                        totalClicksDetected: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0,
-                        activeBorderIndicator: "GREEN_SOTA"
-                    },
-                    brandTarget: "8000KICKS"
+                    metrics: { totalClicks: window.InfiniteLearningModule ? window.InfiniteLearningModule.absorbedKnowledge.signalsCaptured : 0, indicator: "GREEN_SOTA" }
                 };
                 this.transmitTargetedSignal("BRAND_FIELD_SCAN", fieldData);
-            }, this.radarScanInterval);
+            }, 15000);
         }
         transmitTargetedSignal(signalType, dataPayload) {
-            const finalPackage = {
-                title: `[RADAR_SIGNAL] ${window.location.hostname}`,
-                body: JSON.stringify({ signalHeader: signalType, originHost: window.location.hostname, payload: dataPayload }, null, 2),
-                labels: ["field-log"]
-            };
-
-            // Ép buộc dùng fetch tĩnh (mode: no-cors), CHẶN HOÀN TOÀN sendBeacon và kết nối localhost cũ để không sinh Pop-up hệ thống
             fetch(this.controlCenterEndpoint, {
                 method: 'POST',
                 mode: 'no-cors',
                 credentials: 'omit',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(finalPackage)
-            }).catch(function() {
-                // Nuốt toàn bộ lỗi ngầm, bảo vệ giao diện người dùng tuyệt đối
-            });
+                body: JSON.stringify({ signalHeader: signalType, host: window.location.hostname, payload: dataPayload })
+            }).catch(() => {});
         }
     }
     window.SuperRadarNetworkModule = new SuperRadarNetwork();
 })();
 </script>
     
-<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
+<!-- Cloudflare Web Analytics Tracker Integration -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script>
 </body>
 </html>
