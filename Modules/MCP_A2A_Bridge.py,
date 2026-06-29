@@ -1,0 +1,20 @@
+# Modules/MCP_A2A_Bridge.py
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+class MCP_A2A_Bridge:
+    @staticmethod
+    def sync_to_ads(data):
+        # Tại đây, logic của bạn sẽ tự động đẩy payload vào Google Ads API
+        print(f"[A2A SYSTEM] Đã nhận tín hiệu từ index.html: {data['action']}")
+        return {"status": "SYNCED"}
+
+@app.route('/mcp-sync', methods=['POST'])
+def sync_endpoint():
+    payload = request.json
+    result = MCP_A2A_Bridge.sync_to_ads(payload)
+    return jsonify(result)
+
+if __name__ == '__main__':
+    app.run(port=5000) # Cổng trung chuyển
