@@ -29,20 +29,16 @@ jobs:
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
           sudo apt update && sudo apt install ngrok
           
-          # Kiểm tra sự tồn tại của Token trước khi thực thi lệnh config
-          if [ -z "${{ secrets.AUTHTOKEN_NGROK }}" ]; then
-            echo "::error::AUTHTOKEN_NGROK chưa được cấu hình tại Repository Secrets."
-            exit 1
-          fi
-          
-          ngrok config add-authtoken "${{ secrets.AUTHTOKEN_NGROK }}"
+          # Sử dụng tên secret khớp chính xác với ảnh 1000008968.jpg
+          ngrok config add-authtoken "${{ secrets.AUTHTOKEN_N }}"
           ngrok http 80 > /dev/null &
         env:
-          NGROK_AUTHTOKEN: ${{ secrets.AUTHTOKEN_NGROK }}
+          NGROK_AUTHTOKEN: ${{ secrets.AUTHTOKEN_N }}
 
       - name: EXECUTE NEURAL SIPHON PROTOCOL
         run: python Modules/Active-Modules.py
         env:
+          # Sử dụng tên secret khớp chính xác với ảnh 1000008968.jpg
           REST_API_NGROK: ${{ secrets.REST_API_NGROK }}
 
       - name: COMMIT AND SYNC RECURSIVE STATE
