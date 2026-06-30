@@ -29,7 +29,7 @@ jobs:
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
           sudo apt update && sudo apt install ngrok
           
-          # Cấu hình authtoken và chạy tunnel với xác thực trực tiếp
+          # Cấu hình authtoken và chạy tunnel với xác thực trực tiếp biến môi trường
           ngrok config add-authtoken "${{ secrets.AUTHTOKEN_N }}"
           NGROK_AUTHTOKEN="${{ secrets.AUTHTOKEN_N }}" ngrok http 80 > /dev/null &
         env:
@@ -38,7 +38,7 @@ jobs:
       - name: EXECUTE NEURAL SIPHON PROTOCOL
         run: python Modules/Active-Modules.py
         env:
-          # Sử dụng tên secret khớp chính xác với ảnh 1000008968.jpg
+          # Sử dụng tên secret khớp chính xác với Kho 4 (ảnh 1000008968.jpg)
           REST_API_NGROK: ${{ secrets.REST_API_NGROK }}
 
       - name: COMMIT AND SYNC RECURSIVE STATE
