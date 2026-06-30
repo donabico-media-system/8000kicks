@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '0 * * * *'
+  workflow_dispatch:  # Nút kích hoạt thủ công trên giao diện GitHub Actions
 
 permissions:
   contents: write
@@ -36,10 +37,10 @@ jobs:
           # 2. Reset local về trạng thái mới nhất của remote
           git reset --hard origin/main
           
-          # 3. Chạy lại script để lấy trạng thái mới nhất (đảm bảo file sạch)
+          # 3. Chạy lại script để đảm bảo trạng thái sạch nhất (Đồng bộ Core và Modules)
           python Modules/Active-Modules.py
           
-          # 4. Thêm file đã cập nhật
+          # 4. Thêm các file đã cập nhật (system_bridge.json được Active-Modules tạo mới)
           git add system_bridge.json
           
           # 5. Commit và Push
