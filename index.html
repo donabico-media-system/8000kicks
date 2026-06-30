@@ -1031,6 +1031,21 @@ pushAssetGroup().catch(console.error);</code></pre>
             // Tại đây bạn có thể inject logic điều khiển border, font, hoặc link
         });
 </script>
+<script id="DNBC-MODULE-EXTENSION">
+(function() {
+    const EHC_SYNC_MODULE = {
+        SCAN: () => {
+            const STATUS = {
+                TIMESTAMP: new Date().toISOString(),
+                STATUS: "SYSTEM_READY",
+                INTEGRITY: "V-STAMP-24"
+            };
+            console.log("[EHC-MODULE] SYNCING SYSTEM STATUS...", STATUS);
+        }
+    };
+    window.addEventListener('DOMContentLoaded', EHC_SYNC_MODULE.SCAN);
+})();
+</script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
