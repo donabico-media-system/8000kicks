@@ -1022,6 +1022,15 @@ pushAssetGroup().catch(console.error);</code></pre>
     }
 })();
 </script>
+<script>
+    // Script ăng-ten: Lắng nghe trạng thái từ Bảng lệnh
+    fetch('system_bridge.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log("[SYSTEM] Kết nối thành công tới SOTA Core ✅");
+            // Tại đây bạn có thể inject logic điều khiển border, font, hoặc link
+        });
+</script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
