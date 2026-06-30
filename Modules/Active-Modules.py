@@ -26,7 +26,7 @@ def activate_all_modules():
                 "mode": "HYPER_INTELLIGENCE_2026",
                 "pulse_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
             }
-            print(f" |-- [ONLINE] Module: {item} -> Đã chuyển hướng ánh xạ ✅")
+            print(f" |-- [ONLINE] Module: {item} -> Đã chuyển hướng ánh xạ cho hệ thống DONABICO ✅")
 
     # Đọc dữ liệu cũ ở gốc nếu có
     base_data = {}
@@ -39,7 +39,7 @@ def activate_all_modules():
 
     # Hợp nhất và định chuẩn ma trận
     base_data.update({
-        "sync_status": "PULSING_RED",
+        "sync_status": "PULSING_GREEN",
         "recursive_singularity": "ACTIVE_SOTA",
         "core_constant": 0.24,
         "active_modules_matrix": detected_modules,
@@ -52,7 +52,7 @@ def activate_all_modules():
         
     print(f"[SUCCESS] Ma trận đã hợp nhất {len(detected_modules)} Modules thành công!")
 
-    # WORKFLOW MỚI: Kích hoạt Bộ não trung tâm (Super-Core-Affiliate.py)
+    # WORKFLOW: Kích hoạt Bộ não trung tâm (Super-Core-Affiliate.py)
     core_path = os.path.join(root_dir, "Super Core Affiliate", "Super-Core-Affiliate.py")
     if os.path.exists(core_path):
         print("[+] KÍCH HOẠT ĐỒNG BỘ SUPER CORE...")
