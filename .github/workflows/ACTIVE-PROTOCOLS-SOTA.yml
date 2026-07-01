@@ -1,9 +1,11 @@
 name: ACTIVE-PROTOCOLS-SOTA
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '5-59/15 * * * *'
   workflow_dispatch:
-permissions: { contents: write }
+
+permissions:
+  contents: write
 
 jobs:
   sota-sync:
@@ -13,12 +15,12 @@ jobs:
         with: { fetch-depth: 0 }
       - name: EXECUTE PROTOCOL SIPHON
         run: python Protocols/Active-Protocols.py
-      - name: ATOMIC FORCE SYNC PROTOCOLS
+      - name: ATOMIC FORCE SYNC
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
           git add Protocols-Bridge.json
           if ! git diff --cached --quiet; then
-            git commit -m "[SYNC] Update Protocols-Bridge.json"
+            git commit -m "[SYNC] Update Protocols-Bridge.json [skip ci]"
             git push origin main --force
           fi
