@@ -1,25 +1,49 @@
-      - name: SYNC & COMMIT WITH FORCE RESET
+name: ACTIVE-MODULES-SOTA
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sota-orchestration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v3
+
+      - name: SET UP PYTHON
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: CONFIGURE GIT
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
-          
-          # 1. Fetch dữ liệu mới nhất
-          git fetch origin main
-          
-          # 2. Reset hard về trạng thái remote để loại bỏ mọi thay đổi cục bộ gây lỗi
-          git reset --hard origin/main
-          
-          # 3. Chạy lại script tạo Bridge để đảm bảo dữ liệu mới nhất
-          python Modules/Active-Modules.py
-          
-          # 4. Add và commit
-          git add Modules-Bridge.json
-          
-          if ! git diff --cached --quiet; then
-            git commit -m "[SYSTEM UPDATE] MA TRẬN MODULES - FORCE SYNC - DONABICO"
-            git push origin main
-          else
-            echo "[-] KHÔNG CÓ THAY ĐỔI MỚI."
+
+      - name: EXECUTE NEURAL SIPHON PROTOCOL
+        run: python Modules/Active-Modules.py
+
+      - name: ATOMIC SYNC
+        run: |
+          # Kiểm tra thay đổi, nếu không có thì thoát êm
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "[-] KHÔNG CÓ THAY ĐỔI ĐỂ SYNC."
+            exit 0
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Đẩy thay đổi lên
+          git add Modules-Bridge.json
+          git commit -m "[SYSTEM UPDATE] MA TRẬN MODULES - DONABICO"
+          
+          # Thử push, nếu gặp xung đột (lỗi 128), thì rebase và push lại
+          if ! git push origin main; then
+            git pull --rebase origin main
+            git push origin main
+          fi
