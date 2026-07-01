@@ -3,26 +3,22 @@ on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
-
-permissions:
-  contents: write
+permissions: { contents: write }
 
 jobs:
-  sota-orchestration:
+  sota-sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: EXECUTE MODULE SIPHON
-        run: python Modules/Active-Modules.py
-      - name: ATOMIC FORCE SYNC
+        with: { fetch-depth: 0 }
+      - name: EXECUTE PROTOCOL SIPHON
+        run: python Protocols/Active-Protocols.py
+      - name: ATOMIC FORCE SYNC PROTOCOLS
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
-          git add Modules-Bridge.json
-          # Chỉ commit nếu có thay đổi thực tế
+          git add Protocols-Bridge.json
           if ! git diff --cached --quiet; then
-            git commit -m "[SYNC] Modules-Bridge.json"
+            git commit -m "[SYNC] Update Protocols-Bridge.json"
             git push origin main --force
           fi
