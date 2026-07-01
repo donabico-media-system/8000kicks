@@ -1,10 +1,7 @@
 name: ACTIVE-MODULES-SOTA
-
 on:
-  push:
-    branches: [ main ]
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/15 * * * *' # Tăng tần suất lên 15 phút/lần
   workflow_dispatch:
 
 permissions:
@@ -14,36 +11,18 @@ jobs:
   sota-orchestration:
     runs-on: ubuntu-latest
     steps:
-      - name: CHECKOUT REPOSITORY
-        uses: actions/checkout@v3
-
-      - name: SET UP PYTHON
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
         with:
-          python-version: '3.10'
-
-      - name: CONFIGURE GIT
+          fetch-depth: 0
+      - name: EXECUTE PROTOCOL SIPHON
+        run: python Protocols/Active-Protocols.py
+      - name: ATOMIC FORCE SYNC
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
-
-      - name: EXECUTE NEURAL SIPHON PROTOCOL
-        run: python Modules/Active-Modules.py
-
-      - name: ATOMIC SYNC
-        run: |
-          # Kiểm tra thay đổi, nếu không có thì thoát êm
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "[-] KHÔNG CÓ THAY ĐỔI ĐỂ SYNC."
-            exit 0
-          fi
-          
-          # Đẩy thay đổi lên
-          git add Modules-Bridge.json
-          git commit -m "[SYSTEM UPDATE] MA TRẬN MODULES - DONABICO"
-          
-          # Thử push, nếu gặp xung đột (lỗi 128), thì rebase và push lại
-          if ! git push origin main; then
-            git pull --rebase origin main
-            git push origin main
+          git add Protocols-Bridge.json
+          # Chỉ commit nếu có thay đổi thực tế
+          if ! git diff --cached --quiet; then
+            git commit -m "[SYNC] Protocols-Bridge.json"
+            git push origin main --force
           fi
