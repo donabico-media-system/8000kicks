@@ -1,10 +1,7 @@
 name: ACTIVE-PROTOCOLS-SOTA
-
 on:
-  push:
-    branches: [ main ]
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -14,18 +11,18 @@ jobs:
   sota-orchestration:
     runs-on: ubuntu-latest
     steps:
-      - name: CHECKOUT REPOSITORY
-        uses: actions/checkout@v3
-
-      - name: EXECUTE PROTOCOL SIPHON
-        run: python Protocols/Active-Protocols.py
-
-      - name: SYNC RECURSIVE STATE
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: EXECUTE MODULE SIPHON
+        run: python Modules/Active-Modules.py
+      - name: ATOMIC FORCE SYNC
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
-          git add Protocols-Bridge.json
+          git add Modules-Bridge.json
+          # Chỉ commit nếu có thay đổi thực tế
           if ! git diff --cached --quiet; then
-            git commit -m "[SYSTEM UPDATE] TỰ ĐỘNG CẬP NHẬT MA TRẬN PROTOCOLS - DONABICO GLOBAL MEDIA"
-            git push origin main
+            git commit -m "[SYNC] Modules-Bridge.json"
+            git push origin main --force
           fi
