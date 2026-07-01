@@ -1083,6 +1083,48 @@ pushAssetGroup().catch(console.error);</code></pre>
     window.addEventListener('DOMContentLoaded', EHC_SYNC_MODULE.SCAN);
 })();
 </script>
+<style>
+/* 1. CSS SENTINEL: Khóa chặt layout, chống nhảy cà dựt */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important; /* Xóa triệt để viền xanh của trang */
+    outline: none !important;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* 2. CHỈ ĐỊNH VIỀN XANH: Chỉ dành riêng cho Module, không bao trùm */
+.active-module, .module-box {
+    border: 2px solid green !important;
+    box-sizing: border-box;
+}
+
+/* 3. CHỐNG NHẢY: Vô hiệu hóa hành vi nhảy của các nút affiliate */
+a[href="#"], a[href=""] {
+    pointer-events: none;
+    cursor: default;
+}
+</style>
+<script>
+/* 4. SCRIPT TỔNG HỢP: Quét và sửa lỗi DOM theo thời gian thực */
+document.addEventListener("DOMContentLoaded", function() {
+    // Xóa viền thừa khỏi thẻ body/main nếu bị inject nhầm
+    document.body.style.border = "none";
+    
+    // Ép các liên kết không có đích không được phép thực hiện hành động nhảy trang
+    const links = document.querySelectorAll('a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === '#') {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        }
+    });
+
+    console.log("[SYSTEM] Layout Sentinel đã kích hoạt - DONABICO GLOBAL MEDIA");
+});
+</script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
