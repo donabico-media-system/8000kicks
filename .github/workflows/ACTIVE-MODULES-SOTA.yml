@@ -1,19 +1,25 @@
-      - name: SYNC & COMMIT WITH CONFLICT RESOLUTION
+      - name: SYNC & COMMIT WITH FORCE RESET
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
           
-          # 1. Đưa thay đổi vào Staging Area trước khi Pull
+          # 1. Fetch dữ liệu mới nhất
+          git fetch origin main
+          
+          # 2. Reset hard về trạng thái remote để loại bỏ mọi thay đổi cục bộ gây lỗi
+          git reset --hard origin/main
+          
+          # 3. Chạy lại script tạo Bridge để đảm bảo dữ liệu mới nhất
+          python Modules/Active-Modules.py
+          
+          # 4. Add và commit
           git add Modules-Bridge.json
           
-          # 2. Cập nhật từ remote bằng rebase
-          # Nếu có thay đổi ở remote, git sẽ tạm cất commit local, update, rồi áp dụng lại
-          git pull --rebase origin main
-          
-          # 3. Chỉ commit nếu file thực sự có thay đổi so với HEAD
           if ! git diff --cached --quiet; then
-            git commit -m "[SYSTEM UPDATE] MA TRẬN MODULES - AUTO SYNC - DONABICO"
+            git commit -m "[SYSTEM UPDATE] MA TRẬN MODULES - FORCE SYNC - DONABICO"
             git push origin main
           else
-            echo "[-] KHÔNG CÓ THAY ĐỔI MỚI. HỆ THỐNG VẪN PULSING_GREEN."
+            echo "[-] KHÔNG CÓ THAY ĐỔI MỚI."
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
