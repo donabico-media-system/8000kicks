@@ -3,7 +3,9 @@ on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
-permissions: { contents: write }
+
+permissions:
+  contents: write
 
 jobs:
   sota-sync:
@@ -13,12 +15,12 @@ jobs:
         with: { fetch-depth: 0 }
       - name: EXECUTE MODULE SIPHON
         run: python Modules/Active-Modules.py
-      - name: ATOMIC FORCE SYNC MODULES
+      - name: ATOMIC FORCE SYNC
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
           git add Modules-Bridge.json
           if ! git diff --cached --quiet; then
-            git commit -m "[SYNC] Update Modules-Bridge.json"
+            git commit -m "[SYNC] Update Modules-Bridge.json [skip ci]"
             git push origin main --force
           fi
