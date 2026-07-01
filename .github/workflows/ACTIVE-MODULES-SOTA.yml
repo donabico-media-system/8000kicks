@@ -13,40 +13,19 @@ permissions:
 jobs:
   sota-orchestration:
     runs-on: ubuntu-latest
-    
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v3
 
-      - name: SET UP PYTHON ENVIRONMENT
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
       - name: EXECUTE NEURAL SIPHON PROTOCOL
         run: python Modules/Active-Modules.py
-        env:
-          # Giữ lại nếu Modules vẫn cần gọi API (không liên quan tunnel ngrok)
-          REST_API_NGROK: ${{ secrets.REST_API_NGROK }}
 
-      - name: COMMIT AND SYNC RECURSIVE STATE
+      - name: SYNC RECURSIVE STATE
         run: |
           git config --global user.name 'donabico-global-media'
           git config --global user.email 'donabico.media.system@gmail.com'
-          
-          # Đồng bộ trạng thái mới nhất từ Repository
-          git fetch origin main
-          git reset --hard origin/main
-          
-          # Chạy lại để đảm bảo trạng thái cuối cùng được ghi vào system_bridge.json
-          python Modules/Active-Modules.py
-          
-          git add system_bridge.json
-          
-          if git diff --cached --quiet; then
-            echo "[-] KHÔNG CÓ THAY ĐỔI CẦN ĐỒNG BỘ."
-          else
-            git commit -m "[SYSTEM UPDATE] MA TRẬN ĐÃ TỰ ĐỘNG CẬP NHẬT - DONABICO GLOBAL MEDIA"
+          git add Modules-Bridge.json
+          if ! git diff --cached --quiet; then
+            git commit -m "[SYSTEM UPDATE] TỰ ĐỘNG CẬP NHẬT MA TRẬN MODULES - DONABICO GLOBAL MEDIA"
             git push origin main
-            echo "[SUCCESS] ĐỒNG BỘ THÀNH CÔNG."
           fi
