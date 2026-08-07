@@ -1,71 +1,79 @@
 import os
 import json
-import glob
-from datetime import datetime, timezone
+import sys
+import time
+import requests
 
-PROTOCOLS_DIR = "./Protocols"
-BRIDGES_DIR = "./Bridges"
-STATE_FILE = "./ESEB-Dynamic-Hyper.json"
+# Khai báo Biến Môi trường
+FINE_TOKEN = os.getenv("ESEB_FINE_TOKEN")
+CLASSIC_TOKEN = os.getenv("ESEB_CLASSIC_TOKEN")
+ORG_NAME = os.getenv("PRIMARY_ORG", "donabico-global-media")
+TARGET_INPUT = os.getenv("TARGET_REPO_INPUT", "ALL")
 
-def execute_hyper_rotation():
-    # Khởi tạo thư mục tự động nếu chưa tồn tại
-    os.makedirs(PROTOCOLS_DIR, exist_ok=True)
-    os.makedirs(BRIDGES_DIR, exist_ok=True)
+# Danh sách các Kho Vệ tinh trong Hệ sinh thái DONABICO GLOBAL MEDIA
+SATELLITE_REPOS = [
+    "KHO-1-V3000-OMEGA-SOTA",
+    "KHO-2-V3000-OMEGA-SOTA",
+    "KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER",
+    "8000kicks"
+]
 
-    # 1. Quét danh sách toàn bộ tệp .eseb chuẩn đồng tộc
-    eseb_files = sorted(glob.glob(os.path.join(PROTOCOLS_DIR, "*.eseb")))
-    if not eseb_files:
-        print("[!] Warning: No .eseb protocol files found in ./Protocols/")
-        return
-
-    # 2. Đọc trạng thái con trỏ từ tệp JSON
-    current_pointer = 0
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                state_data = json.load(f)
-                current_pointer = state_data.get("pointer", 0)
-        except Exception:
-            current_pointer = 0
-
-    # Khống chế giới hạn index mảng
-    if current_pointer >= len(eseb_files):
-        current_pointer = 0
-
-    # 3. Trích xuất tệp giao thức mục tiêu theo lượt
-    target_eseb_path = eseb_files[current_pointer]
-    file_basename = os.path.basename(target_eseb_path)
-    output_ehc_name = file_basename.rsplit(".", 1)[0] + ".ehc"
-    output_ehc_path = os.path.join(BRIDGES_DIR, output_ehc_name)
-
-    print(f"[►] [CYCLE EXECUTION] Processing [{current_pointer + 1}/{len(eseb_files)}]: {file_basename}")
-
-    # 4. Biên dịch và đóng dấu V-STAMP-24 vào tệp .ehc tại ./Bridges/
-    with open(target_eseb_path, "r", encoding="utf-8") as f_in:
-        raw_content = f_in.read()
-
-    timestamp_utc = datetime.now(timezone.utc).isoformat()
-    with open(output_ehc_path, "w", encoding="utf-8") as f_out:
-        header_comment = (
-            f"/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: {file_basename} "
-            f"| STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY: 0.00000000000000 "
-            f"| GENERATED: {timestamp_utc} */\n"
-        )
-        f_out.write(header_comment + raw_content)
-
-    print(f"[✓] [BRIDGE CREATED] Successfully compiled: {output_ehc_path}")
-
-    # 5. Cập nhật chỉ số con trỏ xoay vòng (Pointer Rotation)
-    next_pointer = (current_pointer + 1) % len(eseb_files)
-    new_state = {
-        "pointer": next_pointer,
-        "last_executed": file_basename,
-        "last_timestamp": timestamp_utc
+def update_internal_state():
+    """Tác vụ 1: Dùng FINE_TOKEN cập nhật dữ liệu nội bộ."""
+    print("🔄 [FINE_TOKEN] Đang làm mới dữ liệu trạng thái ESEB nội bộ...")
+    state_payload = {
+        "anchor": "¢24",
+        "stamp": "V-STAMP-24-SOTA",
+        "timestamp": int(time.time()),
+        "status": "ACTIVE_PULSE_STABLE"
     }
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(new_state, f, indent=2)
+    
+    os.makedirs("./code-snippets", exist_ok=True)
+    with open("./code-snippets/ESEB-Dynamic-Hyper.json", "w", encoding="utf-8") as f:
+        json.dump(state_payload, f, indent=2, ensure_ascii=False)
+    print("✅ [FINE_TOKEN] Đã cập nhật file ESEB-Dynamic-Hyper.json thành công.")
 
-    print(f"[➔] [POINTER UPDATED] Next active index: {next_pointer}")
+def dispatch_cross_repo_signal(repo_name):
+    """Tác vụ 2: Dùng CLASSIC_TOKEN phát tín hiệu liên thông sang kho khác."""
+    url = f"https://api.github.com/repos/{ORG_NAME}/{repo_name}/dispatches"
+    headers = {
+        "Authorization": f"Bearer {CLASSIC_TOKEN}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+    }
+    payload = {
+        "event_type": "FORCE_ESEB_ROTATE",
+        "client_payload": {
+            "source": "MASTER-ECOSYSTEM-V3000",
+            "anchor": "¢24",
+            "timestamp": int(time.time())
+        }
+    }
+    
+    try:
+        res = requests.post(url, headers=headers, json=payload, timeout=10)
+        if res.status_code == 204:
+            print(f"🚀 [CLASSIC_TOKEN] Bắn tín hiệu thành công tới kho: {repo_name}")
+        else:
+            print(f"⚠️ [CLASSIC_TOKEN] Thất bại tại kho {repo_name} | HTTP {res.status_code}: {res.text}")
+    except Exception as e:
+        print(f"❌ Lỗi kết nối tới kho {repo_name}: {str(e)}")
+
+def main():
+    if not FINE_TOKEN or not CLASSIC_TOKEN:
+        print("❌ LỖI BẢO MẬT: Chưa cấu hình đủ ESEB_FINE_TOKEN hoặc ESEB_CLASSIC_TOKEN trong Secrets!")
+        sys.exit(1)
+
+    # 1. Thực thi nội bộ
+    update_internal_state()
+
+    # 2. Phát tín hiệu Đa kho (Cascade Broadcast)
+    print("\n📡 [CASCADE ENGINE] Bắt đầu kích hoạt sóng tín hiệu liên thông...")
+    if TARGET_INPUT == "ALL":
+        for repo in SATELLITE_REPOS:
+            dispatch_cross_repo_signal(repo)
+    else:
+        dispatch_cross_repo_signal(TARGET_INPUT)
 
 if __name__ == "__main__":
-    execute_hyper_rotation()
+    main()
