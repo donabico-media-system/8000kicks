@@ -8,12 +8,8 @@ CLASSIC_TOKEN = os.getenv("ESEB_CLASSIC_TOKEN")
 ORG_NAME = os.getenv("PRIMARY_ORG", "donabico-media-system")
 TARGET_INPUT = os.getenv("TARGET_REPO_INPUT", "ALL")
 
-# BỎ '8000kicks' khỏi danh sách này để tránh gửi tín hiệu tự kích hoạt chính nó
-SATELLITE_REPOS = [
-    "KHO-1-V3000-OMEGA-SOTA",
-    "KHO-2-V3000-OMEGA-SOTA",
-    "KHO-4-DRONE-LANDING-PAGE-CONTROL-CENTER"
-]
+# Điền danh sách tên repository THỰC TẾ của bạn vào đây (nếu có)
+SATELLITE_REPOS = []
 
 def update_internal_eseb_state():
     print("🔄 [CLASSIC_ENGINE] Đang khởi tạo dữ liệu ESEB Dynamic Hyper...")
@@ -36,10 +32,9 @@ def update_internal_eseb_state():
     print(f"✅ [CLASSIC_ENGINE] Đã lưu thành công dữ liệu mới tại: {file_path}")
 
 def dispatch_cross_repo_signal(target_repo):
-    # Kiểm tra an toàn: Không bao giờ bắn tín hiệu lại chính repository hiện tại
     current_repo = os.getenv("GITHUB_REPOSITORY", "").split("/")[-1]
     if target_repo == current_repo:
-        print(f"⏭️ Bỏ qua bắn tín hiệu tự lặp lại chính kho hiện tại ({target_repo})")
+        print(f"⏭️ Bỏ qua kho hiện tại ({target_repo}) để tránh tự lặp.")
         return
 
     url = f"https://api.github.com/repos/{ORG_NAME}/{target_repo}/dispatches"
@@ -61,26 +56,33 @@ def dispatch_cross_repo_signal(target_repo):
         response = requests.post(url, headers=headers, json=payload, timeout=10)
         if response.status_code == 204:
             print(f"🚀 [CASCADE DISPATCH] Bắn tín hiệu thành công tới kho: {target_repo}")
+        elif response.status_code == 404:
+            print(f"⚠️ [DISPATCH FAILED 404] Không tìm thấy kho '{target_repo}'!")
         else:
-            print(f"⚠️ [DISPATCH FAILED] Kho {target_repo} trả về lỗi HTTP {response.status_code}: {response.text}")
+            print(f"⚠️ [DISPATCH FAILED] Kho {target_repo} trả về HTTP {response.status_code}: {response.text}")
     except Exception as e:
         print(f"❌ Lỗi kết nối API tới kho {target_repo}: {str(e)}")
 
 def main():
     if not CLASSIC_TOKEN:
-        print("❌ LỖI BẢO MẬT BẮT BUỘC: Chưa khai báo ESEB_CLASSIC_TOKEN trong Repository Secrets!")
+        print("❌ LỖI BẢO MẬT: Chưa khai báo ESEB_CLASSIC_TOKEN trong Secrets!")
         sys.exit(1)
 
     print("=== KÍCH HOẠT HỆ THỐNG ESEB DYNAMIC HYPER (CLASSIC TOKEN FULL SCOPE) ===")
     
+    # 1. Cập nhật state nội bộ
     update_internal_eseb_state()
 
-    print("\n📡 [CASCADE BROADCAST] Đang phát sóng điều khiển đa kho...")
-    if TARGET_INPUT == "ALL":
-        for repo in SATELLITE_REPOS:
-            dispatch_cross_repo_signal(repo)
+    # 2. Phát tín hiệu liên thông nếu có danh sách kho
+    if SATELLITE_REPOS:
+        print("\n📡 [CASCADE BROADCAST] Đang phát sóng điều khiển đa kho...")
+        if TARGET_INPUT == "ALL":
+            for repo in SATELLITE_REPOS:
+                dispatch_cross_repo_signal(repo)
+        else:
+            dispatch_cross_repo_signal(TARGET_INPUT)
     else:
-        dispatch_cross_repo_signal(TARGET_INPUT)
+        print("\nℹ️ Không có danh sách kho vệ tinh ngoại vi. Hoàn tất tác vụ nội bộ.")
 
     print("\n✅ Hoàn tất tiến trình vận hành ESEB Rotator!")
 
