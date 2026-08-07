@@ -16,7 +16,6 @@ on:
   repository_dispatch:
     types: [FORCE_ESEB_ROTATE, SIGNAL_PULSE, ACTIVE_MODULE_SYNC]
 
-# Ngăn chặn xung đột tiến trình (Race Condition) - Tự hủy job cũ nếu job mới kích hoạt
 concurrency:
   group: eseb-hyper-engine-${{ github.ref }}
   cancel-in-progress: true
@@ -57,7 +56,7 @@ jobs:
         run: |
           python ESEB-Rotator.py
 
-      - name: 05. Tự động Lưu Trạng thái & Force Push qua Classic Token
+      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Push Safe Rebase)
         run: |
           git config --global user.name "EATHESEN-BOT-V3000"
           git config --global user.email "bot@donabico.global"
@@ -65,7 +64,10 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "chore(eseb): [SOTA-SYNC] Auto update ESEB state & telemetry logs [skip ci]"
-            # Sử dụng x-access-token bảo đảm vượt 100% rào cản phân quyền 403
+            
+            # Tránh lỗi non-fast-forward bằng cách rebase dữ liệu mới nhất từ remote
+            git pull --rebase origin ${{ github.ref_name }}
+            
             git push "https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
             echo "✅ Trạng thái ESEB nội bộ đã được cập nhật & đồng bộ thành công!"
           else
