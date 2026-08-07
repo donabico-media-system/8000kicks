@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+    
+    <!-- Trang Landing Page Chính -->
+    <url>
+        <loc>https://8000kicks.donabico.com/</loc>
+        <lastmod>2026-08-07</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        
+        <!-- Hình ảnh sản phẩm Lập chỉ mục SEO Image -->
+        <image:image>
+            <image:loc>https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014</image:loc>
+            <image:title>8000Kicks Everyday Explorer V2 Waterproof Hemp Sneaker</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://www.8000kicks.com/cdn/shop/files/8000Kicks_175_375x250_crop_center.jpg?v=1775578744</image:loc>
+            <image:title>8000Kicks Crossover Waterproof Hemp Hiking Boot</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://www.8000kicks.com/cdn/shop/files/2_1_d81eb5e1-203c-45f5-901c-37fe65180d34_375x250_crop_center.jpg?v=1775550311</image:loc>
+            <image:title>8000Kicks Seeker Minimalist Hemp Sneaker</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://www.8000kicks.com/cdn/shop/files/8000Kicks_183_2_375x250_crop_center.jpg?v=1775585254</image:loc>
+            <image:title>8000Kicks Chelsea Waterproof All-Weather Hemp Boot</image:title>
+        </image:image>
+    </url>
+
+    <!-- Trang phụ / File landing html phụ (nếu có) -->
+    <url>
+        <loc>https://8000kicks.donabico.com/index.html</loc>
+        <lastmod>2026-08-07</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>
