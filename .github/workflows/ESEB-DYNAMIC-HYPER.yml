@@ -22,7 +22,7 @@ concurrency:
 
 env:
   PYTHONUNBUFFERED: "1"
-  PRIMARY_ORG: "donabico-global-media"
+  PRIMARY_ORG: "donabico-media-system"
 
 jobs:
   eseb-core-orchestrator:
@@ -30,17 +30,17 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: 01. Checkout Code Base
+      - name: 01. Checkout Code Base với ESEB_FINE_TOKEN
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.ESEB_FINE_TOKEN }}
+          persist-credentials: true
 
       - name: 02. Khởi tạo Môi trường Python SOTA
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          # Đã loại bỏ 'cache: pip' để tránh lỗi thiếu requirements.txt
 
       - name: 03. Cài đặt Thư viện Phụ thuộc (Dependencies)
         run: |
@@ -56,7 +56,7 @@ jobs:
         run: |
           python ESEB-Rotator.py
 
-      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Push via Fine-Grained)
+      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Push)
         run: |
           git config --global user.name "EATHESEN-BOT-V3000"
           git config --global user.email "bot@donabico.global"
