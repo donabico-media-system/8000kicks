@@ -1,8 +1,8 @@
-/* =================================================================================
-   ESEB DYNAMIC HYPER ROTATOR ENGINE - QUAD-SECRET INTEGRATION
-   BRAND: DONABICO GLOBAL MEDIA SYSTEM | SYSTEM: EATHESEN
-   STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY DELTA: 0.00000000000000
-   ================================================================================= */
+# =================================================================================
+# ESEB DYNAMIC HYPER ROTATOR ENGINE - QUAD-SECRET INTEGRATION
+# BRAND: DONABICO GLOBAL MEDIA SYSTEM | SYSTEM: EATHESEN
+# STAMP: V-STAMP-24 | ANCHOR: C24 | ENTROPY DELTA: 0.00000000000000
+# =================================================================================
 
 import os
 import json
