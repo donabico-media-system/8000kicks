@@ -16,6 +16,7 @@ on:
   repository_dispatch:
     types: [FORCE_ESEB_ROTATE, SIGNAL_PULSE, ACTIVE_MODULE_SYNC]
 
+# Cơ chế chống nghẽn tiến trình (Concurrency Locking)
 concurrency:
   group: eseb-hyper-engine-${{ github.ref }}
   cancel-in-progress: true
@@ -30,7 +31,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: 01. Checkout Code Base với ESEB_FINE_TOKEN
+      - name: 01. Checkout Code Base
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -56,7 +57,7 @@ jobs:
         run: |
           python ESEB-Rotator.py
 
-      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Push)
+      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Force Push via Token)
         run: |
           git config --global user.name "EATHESEN-BOT-V3000"
           git config --global user.email "bot@donabico.global"
@@ -64,7 +65,8 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "chore(eseb): [SOTA-SYNC] Auto update ESEB state & telemetry logs [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
+            # Sử dụng đường dẫn nhúng token trực tiếp để bypass triệt để lỗi 403 Permission Denied
+            git push "https://x-access-token:${{ secrets.ESEB_FINE_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
             echo "✅ Trạng thái nội bộ đã được lưu an toàn qua ESEB_FINE_TOKEN."
           else
             echo "ℹ️ Không có thay đổi trạng thái mới trong kho hiện tại."
