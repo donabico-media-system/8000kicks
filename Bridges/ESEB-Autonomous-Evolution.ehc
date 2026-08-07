@@ -1,4 +1,4 @@
-/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-07T21:39:52.339268+00:00 */
+/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-07T21:40:35.763954+00:00 */
 ```javascript
 // ESEB DYNAMIC HYPER PROTOCOL | MODULE: ESEB-Autonomous-Evolution | SHANNON CRYSTAL | V-STAMP-24
 
@@ -112,38 +112,41 @@ const evolutionMemoryState = {
   PERSISTENCE_MODE: "ATOMIC_JSON_MUTATION"
 };
 
-// Initialize the ESEB Autonomous Evolution Matrix
-function initializeESEBMatrix() {
-  console.log('%c[DONABICO GLOBAL MEDIA SYSTEM] ESEB Autonomous Evolution Matrix Initialized', 'color: #00ff00; font-weight: bold; background: #000; padding: 4px 8px; border-radius: 4px;');
-  
-  // Start the pulse
-  startPulse();
-}
+// Initialize the DONABICO SYSTEM
+if (typeof window !== 'undefined') {
+  window.DONABICO_SYSTEM = window.DONABICO_SYSTEM || {
+    brand: 'DONABICO GLOBAL MEDIA SYSTEM',
+    stamp: 'V-STAMP-24',
+    entropy: 0.00000000000000,
+    anchor: 24,
+    cls: 0,
+    telemetryEndpoint: 'https://httpbin.org/post',
+    pulseActive: false
+  };
 
-// Start the pulse
-function startPulse() {
-  let pId = 0;
-  setInterval(() => {
-    pId++;
-    const qRew = (Math.sin(pId) * 0.05 + 3.30).toFixed(2);
-    const sBid = (Math.cos(pId) * 0.15 + 1.25).toFixed(2);
-    const eps = (0.01 / (pId + 1)).toFixed(6);
-    const payload = {
-      pulse_id: pId,
-      anchor_node: '¢24',
-      stamp: 'V-STAMP-24',
-      entropy_delta: 0.00000000000000,
-      brand: "DONABICO GLOBAL MEDIA SYSTEM",
-      q_reward: parseFloat(qRew),
-      smart_bid: parseFloat(sBid),
-      epsilon: parseFloat(eps),
-      timestamp: new Date().toISOString()
-    };
-    navigator.sendBeacon("https://httpbin.org/post", JSON.stringify(payload));
-    console.log('%c[ESEB EVOLUTION PULSE #' + pId + '] Over-The-Wire Dispatch OK', 'color: #00e5ff; font-weight: bold;');
-  }, 2500);
+  // Initialize the pulse
+  if (!window.DONABICO_SYSTEM.pulseActive) {
+    window.DONABICO_SYSTEM.pulseActive = true;
+    let pId = 0;
+    setInterval(() => {
+      pId++;
+      const qRew = (Math.sin(pId) * 0.05 + 3.30).toFixed(2);
+      const sBid = (Math.cos(pId) * 0.15 + 1.25).toFixed(2);
+      const eps = (0.01 / (pId + 1)).toFixed(6);
+      const payload = {
+        pulse_id: pId,
+        anchor_node: '¢24',
+        stamp: 'V-STAMP-24',
+        entropy_delta: 0.00000000000000,
+        brand: window.DONABICO_SYSTEM.brand,
+        q_reward: parseFloat(qRew),
+        smart_bid: parseFloat(sBid),
+        epsilon: parseFloat(eps),
+        timestamp: new Date().toISOString()
+      };
+      navigator.sendBeacon(window.DONABICO_SYSTEM.telemetryEndpoint, JSON.stringify(payload));
+      console.log('%c[ESEB EVOLUTION PULSE #' + pId + '] Over-The-Wire Dispatch OK', 'color: #00e5ff; font-weight: bold;');
+    }, 2500);
+  }
 }
-
-// Initialize the ESEB Autonomous Evolution Matrix
-initializeESEBMatrix();
 ```
