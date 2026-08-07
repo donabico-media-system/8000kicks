@@ -1,9 +1,8 @@
 name: ESEB-DYNAMIC-HYPER
-
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Chu kỳ tự động kích hoạt mỗi 10 phút
-  workflow_dispatch:        # Chế độ kích hoạt thủ công
+    - cron: '*/10 * * * *'  # Chạy tự động mỗi 10 phút
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,53 +13,30 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0    # Lấy toàn bộ lịch sử commit để xử lý đồng bộ mượt mà
 
       - name: Setup Python Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Execute Sequential Dynamic Rotation
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Execute Sequential Dynamic Rotation with Quad Secrets
+        env:
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
+          NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
           python ESEB-Rotator.py
 
       - name: Commit and Push Bridge Artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
-          git config --global user.name "EATHESEN-BOT-V3000"
-          git config --global user.email "bot@donabico.global"
-
-          # 1. Đồng bộ bộ chỉ mốc Remote mới nhất, kéo về không làm mất file vừa sinh ra
-          git fetch origin ${{ github.ref_name }}
-          git reset --soft origin/${{ github.ref_name }} || true
-
-          # 2. Đưa toàn bộ tài nguyên artifact vừa sinh ra ở runner hiện tại vào staging
+          git config --global user.name "ESEB-HYPER-BOT"
+          git config --global user.email "bot@eseb.internal"
           git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
-
-          # 3. Kiểm tra sự thay đổi và đẩy dữ liệu
-          if ! git diff-index --quiet HEAD; then
-            git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]"
-
-            MAX_RETRIES=3
-            COUNT=0
-            UNTIL_PUSHED=1
-
-            # Vòng lặp Push an toàn chống Race-Condition và Merge Conflict
-            while [ $COUNT -lt $MAX_RETRIES ] && [ $UNTIL_PUSHED -ne 0 ]; do
-              git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
-              UNTIL_PUSHED=$?
-              if [ $UNTIL_PUSHED -ne 0 ]; then
-                echo "[!] Push collision detected. Re-aligning with latest remote commit..."
-                git fetch origin ${{ github.ref_name }}
-                git reset --soft origin/${{ github.ref_name }}
-                git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || true
-                COUNT=$((COUNT+1))
-                sleep 2
-              fi
-            done
-          else
-            echo "[!] No changes detected in Bridges or State File. System aligned with remote."
-          fi
+          git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
+          git push
