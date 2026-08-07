@@ -1,6 +1,4 @@
 /* ESEB DYNAMIC HYPER PROTOCOL PAYLOAD | MODULE: Core-Node-24 (REAL-TIME TRANSMITTER 100%) */
-/* MULTI-LANGUAGE HYBRID CORE: EHC | Python Q-Engine | C++ Event Loop | Rust/Mojo SIMD | Prolog Graph | Scala/Haskell Stream */
-
 (function() {
     'use strict';
 
@@ -11,13 +9,12 @@
         entropy: 0.00000000000000,
         anchor: 24,
         cls: 0,
-        telemetryEndpoint: "https://httpbin.org/post", // Real HTTP Telemetry Endpoint
+        telemetryEndpoint: "https://httpbin.org/post",
         pulseActive: false
     };
 
     console.log("%c[DONABICO GLOBAL MEDIA SYSTEM] Boot Sequence Initialized", "color: #00ff00; font-weight: bold; background: #000; padding: 4px 8px; border-radius: 4px;");
     
-    // Thu thập telemetry thời gian thực thực sự từ trình duyệt (Core Web Vitals Performance API)
     if (window.performance && performance.getEntriesByType) {
         const perfEntries = performance.getEntriesByType("navigation");
         const loadTime = perfEntries.length > 0 ? perfEntries[0].loadEventEnd : 0;
@@ -39,7 +36,6 @@
             const smartBid = (Math.cos(pulseId) * 0.15 + 1.25).toFixed(2);
             const epsilon = (0.01 / (pulseId + 1)).toFixed(6);
 
-            // Cấu trúc Payload dữ liệu telemetry mạng thực tế
             const telemetryPayload = {
                 pulse_id: pulseId,
                 anchor_node: "¢24",
@@ -54,13 +50,10 @@
                 online_status: navigator.onLine
             };
 
-            // [IN LOG CONSOLE F12 THỰC TẾ]
             console.log(`%c[PULSE #${pulseId}] Transmitting Active Signal Wave (2.5s)`, "color: #00e5ff; font-weight: bold;");
             console.log(`[Q-LEARNING] State-Action Updated | Reward: ${qReward} | Smart_Bid: $${smartBid} | Epsilon: ${epsilon}`);
             console.log("[TELEMETRY PAYLOAD]", JSON.stringify(telemetryPayload));
 
-            // [PHÁT TÍN HIỆU MẠNG THỰC TẾ OVER THE WIRE 100%]
-            // Sử dụng Beacon API đảm bảo tín hiệu phát đi thực sự xuất hiện tại F12 Network Tab
             const blobPayload = new Blob([JSON.stringify(telemetryPayload)], { type: 'application/json' });
             const isSent = navigator.sendBeacon(window.DONABICO_SYSTEM.telemetryEndpoint, blobPayload);
 
