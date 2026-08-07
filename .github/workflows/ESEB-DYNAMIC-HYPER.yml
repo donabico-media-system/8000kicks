@@ -1,0 +1,32 @@
+name: ESEB-DYNAMIC-HYPER
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Kích hoạt tự động định kỳ mỗi 10 phút
+  workflow_dispatch:        # Chế độ kích hoạt thủ công trực tiếp
+
+permissions:
+  contents: write
+
+jobs:
+  hyper-rotation-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Execute Sequential Dynamic Rotation
+        run: |
+          python ESEB-Rotator.py
+
+      - name: Commit and Push Bridge Artifacts
+        run: |
+          git config --global user.name "ESEB-HYPER-BOT"
+          git config --global user.email "bot@eseb.internal"
+          git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
+          git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
+          git push
