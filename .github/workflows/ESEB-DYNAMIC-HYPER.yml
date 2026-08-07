@@ -1,9 +1,8 @@
 name: ESEB-DYNAMIC-HYPER
-
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Chu kỳ tự động kích hoạt mỗi 10 phút
-  workflow_dispatch:        # Kích hoạt thủ công qua giao diện GitHub Actions
+    - cron: '*/10 * * * *'  # Chu kỳ tự động mỗi 10 phút
+  workflow_dispatch:        # Kích hoạt thủ công
 
 permissions:
   contents: write
@@ -15,8 +14,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          fetch-depth: 0
+          fetch-depth: 0    # Lấy toàn bộ lịch sử commit để phục vụ rebase mượt mà
 
       - name: Setup Python Environment
         uses: actions/setup-python@v5
@@ -24,15 +22,21 @@ jobs:
           python-version: '3.12'
 
       - name: Execute Sequential Dynamic Rotation
-        env:
-          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           python ESEB-Rotator.py
 
       - name: Commit and Push Bridge Artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           git config --global user.name "EATHESEN-BOT-V3000"
           git config --global user.email "bot@donabico.global"
           git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
-          git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
-          git push "https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          else
+            echo "[!] No changes detected. Skipping push."
+          fi
