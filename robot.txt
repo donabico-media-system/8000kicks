@@ -1,0 +1,33 @@
+# ========================================================
+# DONABICO GLOBAL MEDIA SYSTEM - ROBOTS CONTROL CORE
+# DOMAIN: 8000kicks.donabico.com
+# ========================================================
+
+User-agent: *
+Allow: /
+Allow: /Bridges/*.js
+Allow: /Bridges/*.ehc
+Allow: /index.html
+Allow: /sitemap.xml
+
+# Chặn thu thập các dữ liệu / cấu hình hệ thống GitHub Workflow
+Disallow: /.github/
+Disallow: /Modules/
+Disallow: /*.yml$
+Disallow: /*.py$
+
+# AI Crawler Special Directives (Allow Deep AI Handshake)
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Khai báo đường dẫn Sitemap chính thức
+Sitemap: https://8000kicks.donabico.com/sitemap.xml
