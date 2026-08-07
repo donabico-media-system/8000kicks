@@ -1,78 +1,38 @@
-name: ESEB-DYNAMIC-HYPER-SOTA-V3000
+name: ESEB-DYNAMIC-HYPER
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
-    inputs:
-      target_repo:
-        description: 'Mục tiêu bắn tín hiệu (ALL hoặc tên repo cụ thể)'
-        required: false
-        default: 'ALL'
-      force_sync:
-        description: 'Bỏ qua Cache, ép buộc xoay vòng trạng thái ESEB'
-        type: boolean
-        default: true
-  repository_dispatch:
-    types: [FORCE_ESEB_ROTATE, SIGNAL_PULSE, ACTIVE_MODULE_SYNC]
+    - cron: '*/10 * * * *'  # Chu kỳ tự động kích hoạt mỗi 10 phút
+  workflow_dispatch:        # Kích hoạt thủ công qua giao diện GitHub Actions
 
-# Cơ chế chống nghẽn tiến trình (Tự hủy job cũ khi có tín hiệu mới)
-concurrency:
-  group: eseb-hyper-engine-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  PYTHONUNBUFFERED: "1"
-  PRIMARY_ORG: "donabico-media-system"
+permissions:
+  contents: write
 
 jobs:
-  eseb-core-orchestrator:
+  hyper-rotation-job:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
     steps:
-      - name: 01. Checkout Code Base (Full Access via Classic Token)
+      - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          persist-credentials: true
+          fetch-depth: 0
 
-      - name: 02. Khởi tạo Môi trường Python SOTA
+      - name: Setup Python Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: 03. Cài đặt Thư viện Phụ thuộc (Dependencies)
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests urllib3 pyyaml jinja2
-
-      - name: 04. Vận hành ESEB Rotator & Signal Engine
+      - name: Execute Sequential Dynamic Rotation
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          PRIMARY_ORG: ${{ env.PRIMARY_ORG }}
-          EVENT_NAME: ${{ github.event_name }}
-          TARGET_REPO_INPUT: ${{ inputs.target_repo || 'ALL' }}
         run: |
           python ESEB-Rotator.py
 
-      - name: 05. Tự động Lưu Trạng thái Nội bộ (Commit & Push Auto-Resolve Conflict)
+      - name: Commit and Push Bridge Artifacts
         run: |
           git config --global user.name "EATHESEN-BOT-V3000"
           git config --global user.email "bot@donabico.global"
-          
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): [SOTA-SYNC] Auto update ESEB state & telemetry logs [skip ci]"
-            
-            # Tự động giải quyết xung đột bằng cách ưu tiên lấy dữ liệu mới tạo ở lượt chạy này (-X theirs)
-            git pull --rebase -X theirs origin ${{ github.ref_name }}
-            
-            # Push thông qua x-access-token bảo đảm vượt 100% rào cản phân quyền 403
-            git push "https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
-            
-            echo "✅ Trạng thái ESEB nội bộ đã được cập nhật & đồng bộ thành công!"
-          else
-            echo "ℹ️ Mọi dữ liệu đã ở trạng thái tối ưu nhất, không phát sinh thay đổi."
-          fi
+          git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
+          git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
+          git push "https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
