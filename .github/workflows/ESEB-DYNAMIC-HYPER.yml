@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Kéo toàn bộ history để phục vụ git rebase an toàn
+          fetch-depth: 0  # Kéo toàn bộ lịch sử để phục vụ rebase
 
       - name: Setup Python Environment
         uses: actions/setup-python@v5
@@ -42,5 +42,5 @@ jobs:
           git config --global user.email "bot@eseb.internal"
           git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
           git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
-          git pull --rebase origin main
+          git pull origin main --rebase -X theirs
           git push origin main
