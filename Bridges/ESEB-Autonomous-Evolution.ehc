@@ -1,7 +1,9 @@
-/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T00:02:57.324628+00:00 */
+/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T00:03:36.327271+00:00 */
 ```javascript
 (function() {
   'use strict';
+
+  // Initialize DONABICO_SYSTEM object
   window.DONABICO_SYSTEM = window.DONABICO_SYSTEM || {
     brand: 'DONABICO GLOBAL MEDIA SYSTEM',
     stamp: 'V-STAMP-24',
@@ -12,18 +14,28 @@
     pulseActive: false
   };
 
+  // Log initialization message
   console.log('%c[DONABICO GLOBAL MEDIA SYSTEM] Massive Scale Evolution Active - Zero Entropy', 'color: #00ff00; font-weight: bold; background: #000; padding: 4px 8px; border-radius: 4px;');
 
+  // Check if pulse is already active
   if (!window.DONABICO_SYSTEM.pulseActive) {
+    // Set pulseActive to true
     window.DONABICO_SYSTEM.pulseActive = true;
+
+    // Initialize pulse ID
     let pId = 0;
 
+    // Set interval for sending telemetry data
     setInterval(() => {
+      // Increment pulse ID
       pId++;
+
+      // Calculate qReward, smartBid, and epsilon values
       const qRew = (Math.sin(pId) * 0.05 + 3.30).toFixed(2);
       const sBid = (Math.cos(pId) * 0.15 + 1.25).toFixed(2);
       const eps = (0.01 / (pId + 1)).toFixed(6);
 
+      // Create payload object
       const payload = {
         pulse_id: pId,
         anchor_node: '¢24',
@@ -36,8 +48,10 @@
         timestamp: new Date().toISOString()
       };
 
+      // Send telemetry data using navigator.sendBeacon
       navigator.sendBeacon(window.DONABICO_SYSTEM.telemetryEndpoint, JSON.stringify(payload));
 
+      // Log successful telemetry data send
       console.log('%c[MASSIVE EVOLUTION PULSE #' + pId + '] Over-The-Wire Telemetry OK', 'color: #00e5ff; font-weight: bold;');
     }, 2500);
   }
