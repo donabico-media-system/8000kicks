@@ -2,7 +2,7 @@ name: ESEB-DYNAMIC-HYPER
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Chạy tự động mỗi 10 phút
+    - cron: '*/10 * * * *'  # Chạy tự động mỗi 10 phút[span_1](start_span)[span_1](end_span)
   workflow_dispatch:
     inputs:
       target_file:
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Kéo toàn bộ lịch sử để phục vụ rebase
+          fetch-depth: 0  # Kéo toàn bộ lịch sử để phục vụ rebase[span_2](start_span)[span_2](end_span)
 
       - name: Setup Python Environment
         uses: actions/setup-python@v5
@@ -33,7 +33,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Execute Sequential Dynamic Rotation with Quad Secrets
+      - name: Execute Sequential Dynamic Rotation with Quad Secrets & Recursive Ingestion
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
@@ -43,11 +43,11 @@ jobs:
         run: |
           python ESEB-Rotator.py
 
-      - name: Commit and Push Bridge Artifacts
+      - name: Commit and Push Bridge Artifacts & Evolution States
         run: |
           git config --global user.name "ESEB-HYPER-BOT"
           git config --global user.email "bot@eseb.internal"
-          git add Bridges/*.ehc ESEB-Dynamic-Hyper.json
-          git commit -m "Auto-Rotate ESEB Hyper Cycle [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
+          git add Bridges/*.ehc ESEB-Dynamic-Hyper.json Protocols/External-Links-Matrix.json Protocols/ESEB-Autonomous-Evolution.json
+          git commit -m "Auto-Rotate ESEB Hyper Cycle & Recursive Ingestion [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || exit 0
           git pull origin main --rebase -X theirs
           git push origin main
