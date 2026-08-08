@@ -9,17 +9,13 @@ on:
     - cron: '0 */4 * * *'
   workflow_dispatch:
 
-concurrency:
-  group: trafficsiphon-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: write
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -30,143 +26,66 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Check Secrets Status
+      - name: Check secrets
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "=== Secret Status ==="
-          [ -n "$API_GROQ_TOKEN" ]        && echo "API_GROQ_TOKEN        : present" || echo "API_GROQ_TOKEN        : missing"
-          [ -n "$ESEB_CLASSIC_TOKEN" ]    && echo "ESEB_CLASSIC_TOKEN    : present" || echo "ESEB_CLASSIC_TOKEN    : missing"
-          [ -n "$LLAMA_NVIDIA_TOKEN" ]    && echo "LLAMA_NVIDIA_TOKEN    : present" || echo "LLAMA_NVIDIA_TOKEN    : missing"
-          [ -n "$NEMOTRON_NVIDIA_TOKEN" ] && echo "NEMOTRON_NVIDIA_TOKEN : present" || echo "NEMOTRON_NVIDIA_TOKEN : missing"
+          echo "API_GROQ_TOKEN: $([ -n \"$API_GROQ_TOKEN\" ] && echo present || echo missing)"
+          echo "ESEB_CLASSIC_TOKEN: $([ -n \"$ESEB_CLASSIC_TOKEN\" ] && echo present || echo missing)"
+          echo "LLAMA_NVIDIA_TOKEN: $([ -n \"$LLAMA_NVIDIA_TOKEN\" ] && echo present || echo missing)"
+          echo "NEMOTRON_NVIDIA_TOKEN: $([ -n \"$NEMOTRON_NVIDIA_TOKEN\" ] && echo present || echo missing)"
 
-      - name: AI Enrichment (All 4 activated)
-        id: enrich
-        continue-on-error: true
-        env:
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
-          NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
+      - name: Generate ehc from eseb
         run: |
-          python3 -c '
-          import os, json, urllib.request, pathlib, datetime
+          if [ ! -f Protocols/TrafficSiphon.eseb ]; then
+            echo "ERROR: Protocols/TrafficSiphon.eseb not found"
+            exit 1
+          fi
 
-          def call_groq(prompt):
-              token = os.environ.get("API_GROQ_TOKEN")
-              if not token: return None
-              url = "https://api.groq.com/openai/v1/chat/completions"
-              data = {"model": "llama-3.3-70b-versatile", "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 400}
-              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}, method="POST")
-              try:
-                  with urllib.request.urlopen(req, timeout=20) as res:
-                      return json.loads(res.read().decode())["choices"][0]["message"]["content"].strip()
-              except Exception as e:
-                  print("Groq error:", e)
-                  return None
+          sed -n '/GENERATE_EHC_PAYLOAD_BEGIN/,/GENERATE_EHC_PAYLOAD_END/p' Protocols/TrafficSiphon.eseb | sed '1d;$d' > /tmp/payload.js
 
-          def call_nvidia(token_env, model, prompt):
-              token = os.environ.get(token_env)
-              if not token: return None
-              url = "https://integrate.api.nvidia.com/v1/chat/completions"
-              data = {"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 400}
-              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}, method="POST")
-              try:
-                  with urllib.request.urlopen(req, timeout=25) as res:
-                      return json.loads(res.read().decode())["choices"][0]["message"]["content"].strip()
-              except Exception as e:
-                  print("NVIDIA error:", e)
-                  return None
+          if [ ! -s /tmp/payload.js ]; then
+            echo "ERROR: Could not extract payload from .eseb"
+            exit 1
+          fi
 
-          prompt = "Bạn là chuyên gia SEO. Viết TITLE và DESCRIPTION ngắn bằng tiếng Việt cho trang DONABICO GLOBAL MEDIA SYSTEM. Trả về đúng format:\nTITLE: ...\nDESCRIPTION: ..."
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          SHA=$(sha256sum /tmp/payload.js | cut -c1-16)
 
-          print("→ Calling Groq...")
-          result = call_groq(prompt)
-          if not result:
-              print("→ Trying NVIDIA Llama...")
-              result = call_nvidia("LLAMA_NVIDIA_TOKEN", "meta/llama-3.1-70b-instruct", prompt)
-          if not result:
-              print("→ Trying Nemotron...")
-              result = call_nvidia("NEMOTRON_NVIDIA_TOKEN", "nvidia/nemotron-4-340b-instruct", prompt)
+          {
+            echo "/* Auto-generated by TRAFFICSIPHON workflow"
+            echo " * Time   : $NOW"
+            echo " * SHA256 : $SHA"
+            echo " * AI     : Secrets ready (Groq + NVIDIA)"
+            echo " * Do not edit by hand"
+            echo " */"
+            echo ""
+            echo "window.__TS_ENRICHMENT__ = window.__TS_ENRICHMENT__ || {};"
+            echo ""
+            cat /tmp/payload.js
+          } > Protocols/TrafficSiphon.ehc
 
-          classic_status = "active" if os.environ.get("ESEB_CLASSIC_TOKEN") else "missing"
-          enrichment = {"timestamp": datetime.datetime.utcnow().isoformat()+"Z", "source": "multi-ai", "classic_token": classic_status, "raw": result or "No AI response", "title": "", "description": ""}
+          echo "Generated Protocols/TrafficSiphon.ehc"
+          wc -l Protocols/TrafficSiphon.ehc
+          echo "$SHA" > ehc.sha256
 
-          if result:
-              for line in result.splitlines():
-                  if line.upper().startswith("TITLE:"):
-                      enrichment["title"] = line.split(":",1)[1].strip()
-                  if line.upper().startswith("DESCRIPTION:"):
-                      enrichment["description"] = line.split(":",1)[1].strip()
-
-          pathlib.Path("enrichment.json").write_text(json.dumps(enrichment, ensure_ascii=False, indent=2), encoding="utf-8")
-          print("Enrichment saved")
-          print(json.dumps(enrichment, ensure_ascii=False, indent=2))
-          '
-
-      - name: Generate .ehc
+      - name: Validate JavaScript
         run: |
-          python3 -c '
-          import hashlib, re, datetime, pathlib, sys, json, os
+          node --check Protocols/TrafficSiphon.ehc
+          echo "JavaScript syntax OK"
 
-          src = pathlib.Path("Protocols/TrafficSiphon.eseb")
-          if not src.exists():
-              print("ERROR: Protocols/TrafficSiphon.eseb not found")
-              sys.exit(1)
-
-          content = src.read_text(encoding="utf-8")
-          match = re.search(r"# ═+ GENERATE_EHC_PAYLOAD_BEGIN ═+\n(.*?)# ═+ GENERATE_EHC_PAYLOAD_END ═+", content, re.DOTALL)
-          if not match:
-              print("ERROR: Markers not found")
-              sys.exit(1)
-
-          js = match.group(1).strip() + "\n"
-          enrich_data = {}
-          if pathlib.Path("enrichment.json").exists():
-              enrich_data = json.loads(pathlib.Path("enrichment.json").read_text(encoding="utf-8"))
-
-          now = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-          sha = hashlib.sha256(js.encode()).hexdigest()[:16]
-          commit = os.environ.get("GITHUB_SHA", "local")[:8]
-
-          enrich_js = f"""
-/* AI Enrichment: {enrich_data.get("title", "")} | {enrich_data.get("description", "")} */
-window.__TS_ENRICHMENT__ = {json.dumps(enrich_data, ensure_ascii=False)};
-"""
-
-          header = f"""/* Auto-generated by TRAFFICSIPHON
- * Time    : {now}
- * Commit  : {commit}
- * SHA256  : {sha}
- * AI      : Groq + NVIDIA activated
- */
-"""
-
-          pathlib.Path("Protocols/TrafficSiphon.ehc").write_text(header + enrich_js + js, encoding="utf-8")
-          print("Generated Protocols/TrafficSiphon.ehc | SHA:", sha)
-          pathlib.Path("ehc.sha256").write_text(sha)
-          '
-
-      - name: Validate JS
-        run: node --check Protocols/TrafficSiphon.ehc && echo "JS OK"
-
-      - name: Commit & Push
+      - name: Commit and push
         run: |
           git config user.name "TrafficSiphon-Bot"
           git config user.email "bot@users.noreply.github.com"
           git add Protocols/TrafficSiphon.ehc
           if git diff --staged --quiet; then
-            echo "No changes"
+            echo "No changes to commit"
           else
             git commit -m "chore(trafficsiphon): auto-generate .ehc [$(cat ehc.sha256)]"
             git push
-            echo "Pushed"
+            echo "Pushed successfully"
           fi
