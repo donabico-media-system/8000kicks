@@ -1,13 +1,14 @@
-# TrafficSiphon Protocol - Stable Combat Edition + AI Enrichment
-# Double Q-Learning + Experience Replay + Bot Signals
-# 4 AI Secrets = server-side only | V-STAMP-24 | ¢24
-# DONABICO GLOBAL MEDIA SYSTEM
+# TrafficSiphon Protocol - Stable Combat Edition + Real Actions
+# Double Q-Learning + Experience Replay + Bot Signals + Real Boost Actions
+# Zero-DOM | V-STAMP-24 | ¢24 | DONABICO GLOBAL MEDIA SYSTEM
+# 4 AI Secrets = server-side only
 
 [ RULES ]
-- Zero-DOM
+- Zero-DOM Surface Mutation (tuyệt đối không đụng layout)
 - Zone 2 single script only
 - JSON-LD + Open Graph
 - API Keys never appear in .ehc
+- Actions now have real side-effects (dataLayer + CustomEvent + Share)
 
 [ SECRETS ]
 API_GROQ_TOKEN
@@ -44,6 +45,7 @@ NEMOTRON_NVIDIA_TOKEN
   let clickCount = 0;
   let replayBuffer = [];
   let syncCounter = 0;
+  let actionCount = { hold: 0, boost_social: 0, boost_search: 0, boost_video: 0 };
 
   function load() {
     try {
@@ -54,6 +56,7 @@ NEMOTRON_NVIDIA_TOKEN
       qTableB = data.qB || {};
       epsilon = Math.max(EPSILON_MIN, data.epsilon || 0.40);
       replayBuffer = data.replay || [];
+      actionCount = data.actionCount || actionCount;
     } catch (e) {}
   }
 
@@ -63,12 +66,77 @@ NEMOTRON_NVIDIA_TOKEN
         qA: qTableA,
         qB: qTableB,
         epsilon: epsilon,
-        replay: replayBuffer.slice(-REPLAY_SIZE)
+        replay: replayBuffer.slice(-REPLAY_SIZE),
+        actionCount: actionCount
       }));
     } catch (e) {}
   }
 
   load();
+
+  // ===== REAL ACTIONS (Zero-DOM) =====
+  function executeAction(action, state, reward) {
+    actionCount[action] = (actionCount[action] || 0) + 1;
+
+    // 1. Luôn đẩy vào dataLayer (GTM / GA4 / bất kỳ tracker nào đang lắng nghe)
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "trafficsiphon_action",
+      ts_action: action,
+      ts_state: state,
+      ts_reward: reward,
+      ts_pulse: pulseId,
+      ts_source: "TrafficSiphon",
+      ts_stamp: "V-STAMP-24"
+    });
+
+    // 2. Dispatch CustomEvent để script khác có thể lắng nghe
+    try {
+      const ev = new CustomEvent("trafficsiphon:action", {
+        detail: { action, state, reward, pulseId, timestamp: Date.now() }
+      });
+      window.dispatchEvent(ev);
+    } catch (e) {}
+
+    // 3. Hành động riêng theo từng loại
+    if (action === "boost_social") {
+      // Thử Web Share API (nếu trình duyệt + HTTPS hỗ trợ)
+      if (navigator.share && location.protocol === "https:") {
+        // Không tự động gọi share để tránh làm phiền user, chỉ chuẩn bị dữ liệu
+        window.__TS_SHARE_DATA__ = {
+          title: (window.__TS_ENRICHMENT__ && window.__TS_ENRICHMENT__.title) || document.title,
+          text: (window.__TS_ENRICHMENT__ && window.__TS_ENRICHMENT__.description) || "",
+          url: location.href
+        };
+      }
+      console.log("%c[TS] REAL → boost_social | dataLayer + event fired", "color:#ff79c6");
+    }
+
+    if (action === "boost_search") {
+      // Gửi tín hiệu nhẹ (beacon) – không chặn trang
+      try {
+        if (navigator.sendBeacon) {
+          const blob = new Blob([JSON.stringify({
+            type: "boost_search",
+            url: location.href,
+            title: document.title,
+            t: Date.now()
+          })], { type: "application/json" });
+          // Beacon đến chính origin (an toàn, không cần endpoint ngoài)
+          navigator.sendBeacon("/?ts_boost=search", blob);
+        }
+      } catch (e) {}
+      console.log("%c[TS] REAL → boost_search | dataLayer + beacon", "color:#8be9fd");
+    }
+
+    if (action === "boost_video") {
+      console.log("%c[TS] REAL → boost_video | dataLayer + event", "color:#f1fa8c");
+    }
+
+    if (action === "hold") {
+      // silent
+    }
+  }
 
   function injectBotSignals() {
     const old = document.querySelector('script[data-trafficsiphon="jsonld"]');
@@ -234,7 +302,7 @@ NEMOTRON_NVIDIA_TOKEN
     }
   }
 
-  console.log("%c[TrafficSiphon] Stable Combat + AI | V-STAMP-24 | ¢24", "color:#00ff9d;font-weight:bold");
+  console.log("%c[TrafficSiphon] Stable Combat + REAL ACTIONS | V-STAMP-24 | ¢24", "color:#00ff9d;font-weight:bold");
 
   document.addEventListener("click", function (e) {
     if (e && e.target) clickCount++;
@@ -254,6 +322,9 @@ NEMOTRON_NVIDIA_TOKEN
     const action = chooseAction(state);
     const reward = calcReward();
 
+    // Thực thi hành động thật
+    executeAction(action, state, reward);
+
     if (lastState && lastAction) {
       remember(lastState, lastAction, reward, state);
       trainFromReplay();
@@ -272,7 +343,10 @@ NEMOTRON_NVIDIA_TOKEN
     }
 
     const qAvg = (getQ(qTableA, state, action) + getQ(qTableB, state, action)) / 2;
-    console.log("%c♥ " + pulseId + " | " + state + " | " + action + " | R=" + reward + " | Q=" + qAvg.toFixed(3) + " | ε=" + epsilon.toFixed(3), "color:#00d4ff;font-size:11px");
+    console.log(
+      "%c♥ " + pulseId + " | " + state + " | " + action + " | R=" + reward + " | Q=" + qAvg.toFixed(3) + " | ε=" + epsilon.toFixed(3),
+      "color:#00d4ff;font-size:11px"
+    );
 
     if (pulseId % 8 === 0) save();
   }
@@ -289,16 +363,17 @@ NEMOTRON_NVIDIA_TOKEN
 
   window.__TrafficSiphon__ = {
     status: "ready",
-    version: "stable-combat-v5-ai",
+    version: "stable-combat-v5-real",
     stamp: "V-STAMP-24",
     anchor: "¢24",
     qSize: function () { return Object.keys(qTableA).length + Object.keys(qTableB).length; },
     epsilon: function () { return epsilon; },
     getState: getState,
+    actionCount: function () { return Object.assign({}, actionCount); },
     reinjectSignals: injectBotSignals
   };
 
-  console.log("%c[TrafficSiphon] Online | SYSTEM_READY", "color:#00ff9d;font-weight:bold");
+  console.log("%c[TrafficSiphon] Online | REAL ACTIONS ACTIVE | SYSTEM_READY", "color:#00ff9d;font-weight:bold");
 })();
 
 # ═══════════════════════════════════════════════════════════════
