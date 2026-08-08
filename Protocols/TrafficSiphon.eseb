@@ -1,168 +1,265 @@
-# TrafficSiphon Protocol
-# Single source of truth. The .ehc file is generated from this file only.
-# Hybrid mode: client-side script + optional build-time AI (Groq / NVIDIA)
+# TrafficSiphon Protocol - Full Combat Edition
+# Double Q-Learning + Experience Replay + Bot Signals (JSON-LD + Open Graph)
+# Hỗ trợ AI Enrichment từ Groq + NVIDIA (Llama + Nemotron)
+# Zero-DOM
 
 [ RULES ]
-- Do not modify the page HTML or CSS (Zero-DOM)
-- Only one script tag allowed, placed just before </body>
-- No layout shift
-- Runs entirely in the browser (GitHub Pages)
-- Optional AI enrichment happens only during GitHub Actions build
+- Zero-DOM Surface
+- Chỉ 1 thẻ script trước </body>
+- JSON-LD + Open Graph hợp lệ
+- Hỗ trợ dữ liệu làm giàu từ AI lúc build
 
-[ SECRETS - GitHub Secrets only ]
-API_GROQ_TOKEN          = Groq API (build-time)
-ESEB_CLASSIC_TOKEN      = Internal auth token (build-time)
-LLAMA_NVIDIA_TOKEN      = NVIDIA Llama (build-time)
-NEMOTRON_NVIDIA_TOKEN   = NVIDIA Nemotron (build-time)
-
-Never put real token values in any public file.
-
-[ FEATURES - Practical Q-Learning ]
-- Real states from browser (time, device, visibility, scroll)
-- Real rewards from user behavior (click, dwell, scroll depth)
-- Q-table persisted in localStorage
-- Epsilon-greedy action selection
-- Passive click capture (no visual change)
-- Index magnet: signals anchored to homepage
-- Console heartbeat every 2.5 seconds
-
-[ OUTPUT ]
-Workflow reads this file and generates: Protocols/TrafficSiphon.ehc
-Do not edit the .ehc file by hand.
+[ SECRETS ]
+API_GROQ_TOKEN
+ESEB_CLASSIC_TOKEN
+LLAMA_NVIDIA_TOKEN
+NEMOTRON_NVIDIA_TOKEN
 
 # ═══════════════════════════════════════════════════════════════
 # GENERATE_EHC_PAYLOAD_BEGIN
 # ═══════════════════════════════════════════════════════════════
 
 /**
- * TrafficSiphon.ehc
- * Auto-generated from Protocols/TrafficSiphon.eseb
- * Practical Q-Learning (real states + rewards + localStorage)
- * Do not edit manually
+ * TrafficSiphon.ehc - Full Combat Edition
+ * Double Q-Learning + Experience Replay
+ * Strong Bot Signals + AI Enrichment support
+ * Auto-generated – Do not edit by hand
  */
 
 (function TrafficSiphon() {
   "use strict";
 
-  // ── Config ───────────────────────────────────────────────────
-  const PULSE_MS   = 2500;
-  const STORAGE_KEY = "ts_qtable_v1";
-  const ALPHA      = 0.15;   // learning rate
-  const GAMMA      = 0.85;   // discount
-  const EPSILON_MIN = 0.05;
-  const EPSILON_DECAY = 0.997;
+  // ====================== CONFIG ======================
+  const PULSE_MS        = 2500;
+  const STORAGE_KEY     = "ts_dqn_v4_combat";
+  const ALPHA           = 0.18;
+  const GAMMA           = 0.90;
+  const EPSILON_MIN     = 0.04;
+  const EPSILON_DECAY   = 0.995;
+  const REPLAY_SIZE     = 120;
+  const BATCH_SIZE      = 8;
+  const TARGET_SYNC     = 12;
 
-  // Actions the agent can choose (internal priority only, Zero-DOM)
   const ACTIONS = ["hold", "boost_social", "boost_search", "boost_video"];
 
-  // ── State ────────────────────────────────────────────────────
-  let qTable     = loadQTable();
-  let epsilon    = loadEpsilon();
-  let pulseId    = 0;
-  let lastState  = null;
-  let lastAction = null;
-  let pageEnter  = Date.now();
-  let maxScroll  = 0;
+  // ====================== STATE ======================
+  let qTableA = {}, qTableB = {};
+  let epsilon = 0.40;
+  let pulseId = 0;
+  let lastState = null, lastAction = null;
+  let pageEnter = Date.now();
+  let maxScroll = 0;
   let clickCount = 0;
+  let replayBuffer = [];
+  let syncCounter = 0;
 
-  // ── Helpers ──────────────────────────────────────────────────
-  function loadQTable() {
+  // ====================== LOAD / SAVE ======================
+  function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) { return {}; }
-  }
-
-  function saveQTable() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(qTable));
-      localStorage.setItem(STORAGE_KEY + "_eps", String(epsilon));
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      qTableA = data.qA || {};
+      qTableB = data.qB || {};
+      epsilon = Math.max(EPSILON_MIN, data.epsilon || 0.40);
+      replayBuffer = data.replay || [];
     } catch (e) {}
   }
 
-  function loadEpsilon() {
+  function save() {
     try {
-      const v = localStorage.getItem(STORAGE_KEY + "_eps");
-      return v ? Math.max(EPSILON_MIN, parseFloat(v)) : 0.35;
-    } catch (e) { return 0.35; }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        qA: qTableA,
+        qB: qTableB,
+        epsilon,
+        replay: replayBuffer.slice(-REPLAY_SIZE)
+      }));
+    } catch (e) {}
   }
 
-  function getState() {
-    const hour = new Date().getHours();
-    const timeBucket = hour < 6 ? "night" : hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
-    const device = /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
-    const visible = document.visibilityState === "visible" ? "vis" : "hid";
-    const scrollBucket = maxScroll < 25 ? "s0" : maxScroll < 50 ? "s1" : maxScroll < 75 ? "s2" : "s3";
-    const dwell = Date.now() - pageEnter;
-    const dwellBucket = dwell < 10000 ? "d0" : dwell < 30000 ? "d1" : dwell < 60000 ? "d2" : "d3";
-    return [timeBucket, device, visible, scrollBucket, dwellBucket].join("|");
-  }
+  load();
 
-  function getQ(state, action) {
-    const key = state + "::" + action;
-    return qTable[key] !== undefined ? qTable[key] : 0;
-  }
+  // ====================== BOT SIGNAL + AI ENRICHMENT ======================
+  function injectBotSignals() {
+    const existing = document.querySelector('script[data-trafficsiphon="jsonld"]');
+    if (existing) existing.remove();
 
-  function setQ(state, action, value) {
-    const key = state + "::" + action;
-    qTable[key] = value;
-  }
+    const origin = location.origin;
+    const url = location.href;
 
-  function chooseAction(state) {
-    // epsilon-greedy
-    if (Math.random() < epsilon) {
-      return ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
-    }
-    let best = ACTIONS[0];
-    let bestVal = getQ(state, best);
-    for (let i = 1; i < ACTIONS.length; i++) {
-      const v = getQ(state, ACTIONS[i]);
-      if (v > bestVal) {
-        bestVal = v;
-        best = ACTIONS[i];
+    // Ưu tiên dùng dữ liệu AI Enrichment nếu có
+    const enrich = window.__TS_ENRICHMENT__ || {};
+    const title = enrich.title || document.title || "DONABICO GLOBAL MEDIA SYSTEM";
+    const description = enrich.description || 
+                        document.querySelector('meta[name="description"]')?.content || 
+                        "Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM";
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": origin + "/#website",
+          "url": origin,
+          "name": "DONABICO GLOBAL MEDIA SYSTEM",
+          "description": description,
+          "publisher": { "@id": origin + "/#organization" },
+          "inLanguage": "vi-VN",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": origin + "/?s={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": origin + "/#organization",
+          "name": "DONABICO GLOBAL MEDIA SYSTEM",
+          "url": origin,
+          "logo": {
+            "@type": "ImageObject",
+            "url": origin + "/favicon.ico"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": url + "#webpage",
+          "url": url,
+          "name": title,
+          "isPartOf": { "@id": origin + "/#website" },
+          "description": description,
+          "inLanguage": "vi-VN",
+          "datePublished": new Date().toISOString(),
+          "dateModified": new Date().toISOString()
+        }
+      ]
+    };
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.setAttribute("data-trafficsiphon", "jsonld");
+    script.textContent = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+
+    // Open Graph + Twitter
+    function setMeta(property, content, isOg = true) {
+      if (!content) return;
+      const attr = isOg ? "property" : "name";
+      let el = document.querySelector(`meta[\( {attr}=" \){property}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, property);
+        document.head.appendChild(el);
       }
+      el.setAttribute("content", content);
+    }
+
+    setMeta("og:type", "website");
+    setMeta("og:site_name", "DONABICO GLOBAL MEDIA SYSTEM");
+    setMeta("og:title", title);
+    setMeta("og:description", description);
+    setMeta("og:url", url);
+    setMeta("og:locale", "vi_VN");
+
+    setMeta("twitter:card", "summary_large_image", false);
+    setMeta("twitter:title", title, false);
+    setMeta("twitter:description", description, false);
+
+    console.log("%c[TrafficSiphon] Bot Signals + AI Enrichment applied", "color:#ffcc00;font-weight:bold");
+    if (enrich.title || enrich.description) {
+      console.log("%cAI Enrichment active:", "color:#ffcc00", enrich);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectBotSignals);
+  } else {
+    injectBotSignals();
+  }
+
+  // ====================== Q-LEARNING CORE ======================
+  function getState() {
+    const h = new Date().getHours();
+    const time = h < 6 ? "night" : h < 12 ? "morn" : h < 18 ? "aft" : "eve";
+    const device = /Mobi|Android/i.test(navigator.userAgent) ? "mob" : "desk";
+    const vis = document.visibilityState === "visible" ? "v" : "h";
+    const scroll = maxScroll < 25 ? "s0" : maxScroll < 50 ? "s1" : maxScroll < 75 ? "s2" : "s3";
+    const dwell = Date.now() - pageEnter;
+    const d = dwell < 8000 ? "d0" : dwell < 25000 ? "d1" : dwell < 55000 ? "d2" : "d3";
+    const clickLv = clickCount === 0 ? "c0" : clickCount < 3 ? "c1" : "c2";
+    return [time, device, vis, scroll, d, clickLv].join("|");
+  }
+
+  function getQ(table, state, action) {
+    return table[state + "::" + action] ?? 0;
+  }
+
+  function setQ(table, state, action, value) {
+    table[state + "::" + action] = value;
+  }
+
+  function bestAction(table, state) {
+    let best = ACTIONS[0], bestVal = getQ(table, state, best);
+    for (let i = 1; i < ACTIONS.length; i++) {
+      const v = getQ(table, state, ACTIONS[i]);
+      if (v > bestVal) { bestVal = v; best = ACTIONS[i]; }
     }
     return best;
   }
 
-  function updateQ(state, action, reward, nextState) {
-    const old = getQ(state, action);
-    let maxNext = getQ(nextState, ACTIONS[0]);
-    for (let i = 1; i < ACTIONS.length; i++) {
-      maxNext = Math.max(maxNext, getQ(nextState, ACTIONS[i]));
+  function chooseAction(state) {
+    if (Math.random() < epsilon) {
+      return ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
     }
-    const td = reward + GAMMA * maxNext - old;
-    setQ(state, action, old + ALPHA * td);
-    epsilon = Math.max(EPSILON_MIN, epsilon * EPSILON_DECAY);
-    saveQTable();
+    let best = ACTIONS[0];
+    let bestVal = (getQ(qTableA, state, best) + getQ(qTableB, state, best)) / 2;
+    for (let i = 1; i < ACTIONS.length; i++) {
+      const v = (getQ(qTableA, state, ACTIONS[i]) + getQ(qTableB, state, ACTIONS[i])) / 2;
+      if (v > bestVal) { bestVal = v; best = ACTIONS[i]; }
+    }
+    return best;
   }
 
   function calcReward() {
-    // Real reward from user behavior
     let r = 0;
-    r += Math.min(clickCount * 1.2, 6);           // clicks
-    r += Math.min(maxScroll / 20, 5);             // scroll depth
-    const dwellSec = (Date.now() - pageEnter) / 1000;
-    r += Math.min(dwellSec / 15, 4);              // time on page
-    if (document.visibilityState === "visible") r += 0.5;
+    r += Math.min(clickCount * 1.4, 7);
+    r += Math.min(maxScroll / 18, 5.5);
+    r += Math.min((Date.now() - pageEnter) / 1000 / 12, 4.5);
+    if (document.visibilityState === "visible") r += 0.7;
     return +r.toFixed(2);
   }
 
-  // ── Boot ─────────────────────────────────────────────────────
-  console.log("%c[TrafficSiphon] Started | Practical Q-Learning | Zero-DOM", "color:#00ff9d;font-weight:bold");
-  console.log("%cStates: time|device|visibility|scroll|dwell | Actions: " + ACTIONS.join(", "), "color:#7dffb3");
-  console.log("%cQ-table entries: " + Object.keys(qTable).length + " | epsilon: " + epsilon.toFixed(3), "color:#7dffb3");
+  function remember(s, a, r, s2) {
+    replayBuffer.push({ s, a, r, s2 });
+    if (replayBuffer.length > REPLAY_SIZE) replayBuffer.shift();
+  }
 
-  // ── Track real user signals (Zero-DOM) ───────────────────────
+  function trainFromReplay() {
+    if (replayBuffer.length < BATCH_SIZE) return;
+    for (let i = 0; i < BATCH_SIZE; i++) {
+      const exp = replayBuffer[Math.floor(Math.random() * replayBuffer.length)];
+      const { s, a, r, s2 } = exp;
+      if (Math.random() < 0.5) {
+        const aMax = bestAction(qTableA, s2);
+        const tdTarget = r + GAMMA * getQ(qTableB, s2, aMax);
+        const old = getQ(qTableA, s, a);
+        setQ(qTableA, s, a, old + ALPHA * (tdTarget - old));
+      } else {
+        const aMax = bestAction(qTableB, s2);
+        const tdTarget = r + GAMMA * getQ(qTableA, s2, aMax);
+        const old = getQ(qTableB, s, a);
+        setQ(qTableB, s, a, old + ALPHA * (tdTarget - old));
+      }
+    }
+  }
+
+  // ====================== BOOT ======================
+  console.log("%c[TrafficSiphon] Full Combat Edition", "color:#00ff9d;font-weight:bold");
+  console.log("%cDouble Q + Replay + Bot Signals + AI Enrichment", "color:#ffcc00");
+
   document.addEventListener("click", function (e) {
-    if (!e || !e.target) return;
+    if (!e?.target) return;
     clickCount++;
-    const signal = {
-      type: "click",
-      target: e.target.tagName,
-      magnet: "index"
-    };
-    if (window.__TRAFFIC_TELEMETRY__) window.__TRAFFIC_TELEMETRY__.push(signal);
   }, { passive: true, capture: true });
 
   window.addEventListener("scroll", function () {
@@ -173,71 +270,65 @@ Do not edit the .ehc file by hand.
     }
   }, { passive: true });
 
-  document.addEventListener("visibilitychange", function () {
-    // state will be re-read on next pulse
-  });
-
-  // ── Main learning loop ───────────────────────────────────────
+  // ====================== MAIN LOOP ======================
   function pulse() {
     pulseId++;
-    const state  = getState();
+    const state = getState();
     const action = chooseAction(state);
     const reward = calcReward();
 
-    // Temporal-difference update from previous step
-    if (lastState !== null && lastAction !== null) {
-      updateQ(lastState, lastAction, reward, state);
+    if (lastState && lastAction) {
+      remember(lastState, lastAction, reward, state);
+      trainFromReplay();
     }
 
-    lastState  = state;
+    lastState = state;
     lastAction = action;
+    syncCounter++;
+    epsilon = Math.max(EPSILON_MIN, epsilon * EPSILON_DECAY);
 
-    const qVal = getQ(state, action);
+    if (syncCounter >= TARGET_SYNC) {
+      for (const key of Object.keys(qTableA)) {
+        if (qTableB[key] === undefined) qTableB[key] = qTableA[key];
+      }
+      syncCounter = 0;
+    }
+
+    const qAvg = (getQ(qTableA, state, action) + getQ(qTableB, state, action)) / 2;
 
     console.log(
-      "%c♥ " + pulseId +
-      " | S=" + state +
-      " | A=" + action +
-      " | R=" + reward +
-      " | Q=" + qVal.toFixed(3) +
-      " | ε=" + epsilon.toFixed(3),
+      `%c♥ ${pulseId} | ${state} | \( {action} | R= \){reward} | Q=\( {qAvg.toFixed(3)} | ε= \){epsilon.toFixed(3)}`,
       "color:#00d4ff;font-size:11px"
     );
 
-    if (window.__TRAFFIC_TELEMETRY__) {
-      window.__TRAFFIC_TELEMETRY__.push({
-        pulseId: pulseId,
-        state: state,
-        action: action,
-        reward: reward,
-        q: qVal,
-        epsilon: +epsilon.toFixed(4),
-        magnet: "index"
-      });
-    }
+    if (pulseId % 8 === 0) save();
   }
 
   setInterval(pulse, PULSE_MS);
 
-  // Save on leave
   window.addEventListener("beforeunload", function () {
     if (lastState && lastAction) {
-      updateQ(lastState, lastAction, calcReward(), getState());
+      remember(lastState, lastAction, calcReward(), getState());
+      trainFromReplay();
     }
-    saveQTable();
+    save();
   });
 
-  // Public status
+  // Public API
   window.__TrafficSiphon__ = {
-    status: "ready",
+    status: "ready-combat",
+    version: "double-q-replay-bot-ai-v4",
     magnet: "index",
-    qSize: function () { return Object.keys(qTable).length; },
-    epsilon: function () { return epsilon; },
-    getState: getState,
+    qSize: () => Object.keys(qTableA).length + Object.keys(qTableB).length,
+    epsilon: () => epsilon,
+    bufferSize: () => replayBuffer.length,
+    getState,
+    reinjectSignals: injectBotSignals,
+    enrichment: () => window.__TS_ENRICHMENT__ || null,
     generatedFrom: "Protocols/TrafficSiphon.eseb"
   };
 
-  console.log("%c[TrafficSiphon] Online | Q-Learning active | localStorage enabled", "color:#00ff9d;font-weight:bold");
+  console.log("%c[TrafficSiphon] Online | Full Combat Mode active", "color:#00ff9d;font-weight:bold");
 })();
 
 # ═══════════════════════════════════════════════════════════════
