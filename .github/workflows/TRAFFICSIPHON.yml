@@ -129,7 +129,8 @@ jobs:
 
       - name: Validate JS
         run: |
-          node --check Protocols/TrafficSiphon.ehc
+          cp Protocols/TrafficSiphon.ehc /tmp/TrafficSiphon.js
+          node --check /tmp/TrafficSiphon.js
           echo "JavaScript OK"
 
       - name: Commit and push
