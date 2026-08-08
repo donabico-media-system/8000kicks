@@ -15,7 +15,7 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -29,19 +29,96 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check secrets
+      - name: AI Enrichment (4 Secrets – server-side only)
+        id: ai
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "API_GROQ_TOKEN: $([ -n \"$API_GROQ_TOKEN\" ] && echo present || echo missing)"
-          echo "ESEB_CLASSIC_TOKEN: $([ -n \"$ESEB_CLASSIC_TOKEN\" ] && echo present || echo missing)"
-          echo "LLAMA_NVIDIA_TOKEN: $([ -n \"$LLAMA_NVIDIA_TOKEN\" ] && echo present || echo missing)"
-          echo "NEMOTRON_NVIDIA_TOKEN: $([ -n \"$NEMOTRON_NVIDIA_TOKEN\" ] && echo present || echo missing)"
+          echo "=== Checking 4 Secrets ==="
+          echo "API_GROQ_TOKEN: $([ -n "$API_GROQ_TOKEN" ] && echo present || echo missing)"
+          echo "ESEB_CLASSIC_TOKEN: $([ -n "$ESEB_CLASSIC_TOKEN" ] && echo present || echo missing)"
+          echo "LLAMA_NVIDIA_TOKEN: $([ -n "$LLAMA_NVIDIA_TOKEN" ] && echo present || echo missing)"
+          echo "NEMOTRON_NVIDIA_TOKEN: $([ -n "$NEMOTRON_NVIDIA_TOKEN" ] && echo present || echo missing)"
 
-      - name: Generate ehc from eseb
+          PROMPT='You are an expert SEO + traffic strategist for DONABICO GLOBAL MEDIA SYSTEM (Vietnamese smart media platform). 
+Respond ONLY in valid JSON with these exact keys:
+{
+  "title": "high-converting title under 60 chars",
+  "description": "compelling meta description under 155 chars in Vietnamese",
+  "strategies": ["strategy1", "strategy2", "strategy3"]
+}'
+
+          ENRICH='{"title":"DONABICO GLOBAL MEDIA SYSTEM","description":"Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM","strategies":[],"aiSource":"fallback"}'
+
+          # --- 1. GROQ ---
+          if [ -n "$API_GROQ_TOKEN" ]; then
+            echo "Calling Groq..."
+            GROQ_RESP=$(curl -s -X POST "https://api.groq.com/openai/v1/chat/completions" \
+              -H "Authorization: Bearer $API_GROQ_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"model\":\"llama-3.3-70b-versatile\",\"messages\":[{\"role\":\"user\",\"content\":$(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.4,\"max_tokens\":400}" || true)
+            
+            GROQ_CONTENT=$(echo "$GROQ_RESP" | jq -r '.choices[0].message.content // empty' 2>/dev/null || true)
+            if [ -n "$GROQ_CONTENT" ]; then
+              CLEAN=$(echo "$GROQ_CONTENT" | sed -n '/{/,/}/p' | jq -c . 2>/dev/null || true)
+              if [ -n "$CLEAN" ]; then
+                ENRICH=$(echo "$CLEAN" | jq -c '. + {aiSource:"groq"}' 2>/dev/null || echo "$ENRICH")
+                echo "Groq success"
+              fi
+            fi
+          fi
+
+          # --- 2. LLAMA NVIDIA ---
+          if [ -n "\( LLAMA_NVIDIA_TOKEN" ] && [ " \)(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ]; then
+            echo "Calling Llama NVIDIA..."
+            LLAMA_RESP=$(curl -s -X POST "https://integrate.api.nvidia.com/v1/chat/completions" \
+              -H "Authorization: Bearer $LLAMA_NVIDIA_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"model\":\"meta/llama-3.1-70b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":$(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.4,\"max_tokens\":400}" || true)
+            
+            LLAMA_CONTENT=$(echo "$LLAMA_RESP" | jq -r '.choices[0].message.content // empty' 2>/dev/null || true)
+            if [ -n "$LLAMA_CONTENT" ]; then
+              CLEAN=$(echo "$LLAMA_CONTENT" | sed -n '/{/,/}/p' | jq -c . 2>/dev/null || true)
+              if [ -n "$CLEAN" ]; then
+                ENRICH=$(echo "$CLEAN" | jq -c '. + {aiSource:"llama-nvidia"}' 2>/dev/null || echo "$ENRICH")
+                echo "Llama NVIDIA success"
+              fi
+            fi
+          fi
+
+          # --- 3. NEMOTRON NVIDIA ---
+          if [ -n "\( NEMOTRON_NVIDIA_TOKEN" ] && [ " \)(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ]; then
+            echo "Calling Nemotron..."
+            NEMO_RESP=$(curl -s -X POST "https://integrate.api.nvidia.com/v1/chat/completions" \
+              -H "Authorization: Bearer $NEMOTRON_NVIDIA_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"model\":\"nvidia/nemotron-4-340b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":$(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.4,\"max_tokens\":400}" || true)
+            
+            NEMO_CONTENT=$(echo "$NEMO_RESP" | jq -r '.choices[0].message.content // empty' 2>/dev/null || true)
+            if [ -n "$NEMO_CONTENT" ]; then
+              CLEAN=$(echo "$NEMO_CONTENT" | sed -n '/{/,/}/p' | jq -c . 2>/dev/null || true)
+              if [ -n "$CLEAN" ]; then
+                ENRICH=$(echo "$CLEAN" | jq -c '. + {aiSource:"nemotron"}' 2>/dev/null || echo "$ENRICH")
+                echo "Nemotron success"
+              fi
+            fi
+          fi
+
+          # --- 4. ESEB_CLASSIC (dự phòng / nội bộ) ---
+          if [ -n "\( ESEB_CLASSIC_TOKEN" ] && [ " \)(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ]; then
+            echo "ESEB_CLASSIC present – using as final fallback marker"
+            ENRICH=$(echo "$ENRICH" | jq -c '. + {aiSource:"eseb-classic"}')
+          fi
+
+          echo "Final enrichment: $ENRICH"
+          echo "ENRICH<<EOF" >> $GITHUB_OUTPUT
+          echo "$ENRICH" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Generate ehc from eseb + AI Enrichment
         run: |
           if [ ! -f Protocols/TrafficSiphon.eseb ]; then
             echo "ERROR: Protocols/TrafficSiphon.eseb not found"
@@ -54,7 +131,6 @@ jobs:
             flag && !/^# ═/ {print}
           ' Protocols/TrafficSiphon.eseb > /tmp/payload.js
 
-          # Clean pure JS (remove residual comments if any)
           grep -v '^#' /tmp/payload.js > /tmp/payload_clean.js || true
           mv /tmp/payload_clean.js /tmp/payload.js
 
@@ -65,15 +141,17 @@ jobs:
 
           NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           SHA=$(sha256sum /tmp/payload.js | cut -c1-16)
+          ENRICH='${{ steps.ai.outputs.ENRICH }}'
 
           {
             echo "/* Auto-generated by TRAFFICSIPHON workflow"
             echo " * Time   : $NOW"
             echo " * SHA256 : $SHA"
+            echo " * AI     : server-side only (keys never included)"
             echo " * Do not edit by hand"
             echo " */"
             echo ""
-            echo "window.__TS_ENRICHMENT__ = window.__TS_ENRICHMENT__ || {};"
+            echo "window.__TS_ENRICHMENT__ = $ENRICH;"
             echo ""
             cat /tmp/payload.js
           } > Protocols/TrafficSiphon.ehc
@@ -100,29 +178,24 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore(trafficsiphon): auto-generate .ehc [$(cat ehc.sha256)]"
+          git commit -m "chore(trafficsiphon): auto-generate .ehc + AI enrichment [$(cat ehc.sha256)]"
 
-          # Retry loop – luôn ưu tiên bản .ehc vừa generate
           for i in 1 2 3 4 5; do
             echo "Push attempt $i..."
-
             if git push origin HEAD:main; then
               echo "Pushed successfully"
               exit 0
             fi
 
-            echo "Push failed – attempting rebase + resolve"
             git fetch origin main
             git rebase origin/main || true
 
-            # Nếu còn conflict trên file generate → lấy bản của chúng ta (ours)
             if [ -f Protocols/TrafficSiphon.ehc ] && grep -q '<<<<<<<' Protocols/TrafficSiphon.ehc 2>/dev/null; then
-              echo "Conflict detected – resolving with newly generated .ehc"
+              echo "Conflict – resolving with newly generated .ehc"
               git checkout --ours Protocols/TrafficSiphon.ehc
               git add Protocols/TrafficSiphon.ehc
               GIT_EDITOR=true git rebase --continue || true
             fi
-
             sleep 3
           done
 
