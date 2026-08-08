@@ -1,13 +1,11 @@
-# TrafficSiphon Protocol - Full Combat Edition
-# Double Q-Learning + Experience Replay + Bot Signals (JSON-LD + Open Graph)
-# Hỗ trợ AI Enrichment từ Groq + NVIDIA (Llama + Nemotron)
-# Zero-DOM
+# TrafficSiphon Protocol - Stable Combat Edition
+# Double Q-Learning + Experience Replay + Bot Signals
+# Zero-DOM | GitHub Pages ready
 
 [ RULES ]
-- Zero-DOM Surface
-- Chỉ 1 thẻ script trước </body>
-- JSON-LD + Open Graph hợp lệ
-- Hỗ trợ dữ liệu làm giàu từ AI lúc build
+- Zero-DOM
+- Only one script tag before </body>
+- JSON-LD + Open Graph
 
 [ SECRETS ]
 API_GROQ_TOKEN
@@ -20,29 +18,24 @@ NEMOTRON_NVIDIA_TOKEN
 # ═══════════════════════════════════════════════════════════════
 
 /**
- * TrafficSiphon.ehc - Full Combat Edition
- * Double Q-Learning + Experience Replay
- * Strong Bot Signals + AI Enrichment support
- * Auto-generated – Do not edit by hand
+ * TrafficSiphon.ehc - Stable Combat Edition
+ * Double Q-Learning + Experience Replay + Bot Signals
  */
 
 (function TrafficSiphon() {
   "use strict";
 
-  // ====================== CONFIG ======================
-  const PULSE_MS        = 2500;
-  const STORAGE_KEY     = "ts_dqn_v4_combat";
-  const ALPHA           = 0.18;
-  const GAMMA           = 0.90;
-  const EPSILON_MIN     = 0.04;
-  const EPSILON_DECAY   = 0.995;
-  const REPLAY_SIZE     = 120;
-  const BATCH_SIZE      = 8;
-  const TARGET_SYNC     = 12;
-
+  const PULSE_MS = 2500;
+  const STORAGE_KEY = "ts_dqn_v5";
+  const ALPHA = 0.18;
+  const GAMMA = 0.90;
+  const EPSILON_MIN = 0.04;
+  const EPSILON_DECAY = 0.995;
+  const REPLAY_SIZE = 120;
+  const BATCH_SIZE = 8;
+  const TARGET_SYNC = 12;
   const ACTIONS = ["hold", "boost_social", "boost_search", "boost_video"];
 
-  // ====================== STATE ======================
   let qTableA = {}, qTableB = {};
   let epsilon = 0.40;
   let pulseId = 0;
@@ -53,7 +46,6 @@ NEMOTRON_NVIDIA_TOKEN
   let replayBuffer = [];
   let syncCounter = 0;
 
-  // ====================== LOAD / SAVE ======================
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -69,9 +61,7 @@ NEMOTRON_NVIDIA_TOKEN
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        qA: qTableA,
-        qB: qTableB,
-        epsilon,
+        qA: qTableA, qB: qTableB, epsilon,
         replay: replayBuffer.slice(-REPLAY_SIZE)
       }));
     } catch (e) {}
@@ -79,20 +69,15 @@ NEMOTRON_NVIDIA_TOKEN
 
   load();
 
-  // ====================== BOT SIGNAL + AI ENRICHMENT ======================
   function injectBotSignals() {
-    const existing = document.querySelector('script[data-trafficsiphon="jsonld"]');
-    if (existing) existing.remove();
+    const old = document.querySelector('script[data-trafficsiphon="jsonld"]');
+    if (old) old.remove();
 
     const origin = location.origin;
     const url = location.href;
-
-    // Ưu tiên dùng dữ liệu AI Enrichment nếu có
     const enrich = window.__TS_ENRICHMENT__ || {};
     const title = enrich.title || document.title || "DONABICO GLOBAL MEDIA SYSTEM";
-    const description = enrich.description || 
-                        document.querySelector('meta[name="description"]')?.content || 
-                        "Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM";
+    const description = enrich.description || document.querySelector('meta[name="description"]')?.content || "Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM";
 
     const jsonLd = {
       "@context": "https://schema.org",
@@ -103,72 +88,55 @@ NEMOTRON_NVIDIA_TOKEN
           "url": origin,
           "name": "DONABICO GLOBAL MEDIA SYSTEM",
           "description": description,
-          "publisher": { "@id": origin + "/#organization" },
-          "inLanguage": "vi-VN",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": origin + "/?s={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
+          "publisher": {"@id": origin + "/#organization"},
+          "inLanguage": "vi-VN"
         },
         {
           "@type": "Organization",
           "@id": origin + "/#organization",
           "name": "DONABICO GLOBAL MEDIA SYSTEM",
-          "url": origin,
-          "logo": {
-            "@type": "ImageObject",
-            "url": origin + "/favicon.ico"
-          }
+          "url": origin
         },
         {
           "@type": "WebPage",
           "@id": url + "#webpage",
           "url": url,
           "name": title,
-          "isPartOf": { "@id": origin + "/#website" },
+          "isPartOf": {"@id": origin + "/#website"},
           "description": description,
-          "inLanguage": "vi-VN",
-          "datePublished": new Date().toISOString(),
-          "dateModified": new Date().toISOString()
+          "inLanguage": "vi-VN"
         }
       ]
     };
 
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.setAttribute("data-trafficsiphon", "jsonld");
-    script.textContent = JSON.stringify(jsonLd);
-    document.head.appendChild(script);
+    const s = document.createElement("script");
+    s.type = "application/ld+json";
+    s.setAttribute("data-trafficsiphon", "jsonld");
+    s.textContent = JSON.stringify(jsonLd);
+    document.head.appendChild(s);
 
-    // Open Graph + Twitter
-    function setMeta(property, content, isOg = true) {
+    function setMeta(prop, content, isOg) {
       if (!content) return;
       const attr = isOg ? "property" : "name";
-      let el = document.querySelector(`meta[\( {attr}=" \){property}"]`);
+      let el = document.querySelector(`meta[\( {attr}=" \){prop}"]`);
       if (!el) {
         el = document.createElement("meta");
-        el.setAttribute(attr, property);
+        el.setAttribute(attr, prop);
         document.head.appendChild(el);
       }
       el.setAttribute("content", content);
     }
 
-    setMeta("og:type", "website");
-    setMeta("og:site_name", "DONABICO GLOBAL MEDIA SYSTEM");
-    setMeta("og:title", title);
-    setMeta("og:description", description);
-    setMeta("og:url", url);
-    setMeta("og:locale", "vi_VN");
-
+    setMeta("og:type", "website", true);
+    setMeta("og:site_name", "DONABICO GLOBAL MEDIA SYSTEM", true);
+    setMeta("og:title", title, true);
+    setMeta("og:description", description, true);
+    setMeta("og:url", url, true);
     setMeta("twitter:card", "summary_large_image", false);
     setMeta("twitter:title", title, false);
     setMeta("twitter:description", description, false);
 
-    console.log("%c[TrafficSiphon] Bot Signals + AI Enrichment applied", "color:#ffcc00;font-weight:bold");
-    if (enrich.title || enrich.description) {
-      console.log("%cAI Enrichment active:", "color:#ffcc00", enrich);
-    }
+    console.log("%c[TrafficSiphon] Bot signals injected", "color:#ffcc00;font-weight:bold");
   }
 
   if (document.readyState === "loading") {
@@ -177,7 +145,6 @@ NEMOTRON_NVIDIA_TOKEN
     injectBotSignals();
   }
 
-  // ====================== Q-LEARNING CORE ======================
   function getState() {
     const h = new Date().getHours();
     const time = h < 6 ? "night" : h < 12 ? "morn" : h < 18 ? "aft" : "eve";
@@ -230,7 +197,7 @@ NEMOTRON_NVIDIA_TOKEN
   }
 
   function remember(s, a, r, s2) {
-    replayBuffer.push({ s, a, r, s2 });
+    replayBuffer.push({s, a, r, s2});
     if (replayBuffer.length > REPLAY_SIZE) replayBuffer.shift();
   }
 
@@ -238,39 +205,33 @@ NEMOTRON_NVIDIA_TOKEN
     if (replayBuffer.length < BATCH_SIZE) return;
     for (let i = 0; i < BATCH_SIZE; i++) {
       const exp = replayBuffer[Math.floor(Math.random() * replayBuffer.length)];
-      const { s, a, r, s2 } = exp;
+      const {s, a, r, s2} = exp;
       if (Math.random() < 0.5) {
         const aMax = bestAction(qTableA, s2);
-        const tdTarget = r + GAMMA * getQ(qTableB, s2, aMax);
-        const old = getQ(qTableA, s, a);
-        setQ(qTableA, s, a, old + ALPHA * (tdTarget - old));
+        const td = r + GAMMA * getQ(qTableB, s2, aMax);
+        setQ(qTableA, s, a, getQ(qTableA, s, a) + ALPHA * (td - getQ(qTableA, s, a)));
       } else {
         const aMax = bestAction(qTableB, s2);
-        const tdTarget = r + GAMMA * getQ(qTableA, s2, aMax);
-        const old = getQ(qTableB, s, a);
-        setQ(qTableB, s, a, old + ALPHA * (tdTarget - old));
+        const td = r + GAMMA * getQ(qTableA, s2, aMax);
+        setQ(qTableB, s, a, getQ(qTableB, s, a) + ALPHA * (td - getQ(qTableB, s, a)));
       }
     }
   }
 
-  // ====================== BOOT ======================
-  console.log("%c[TrafficSiphon] Full Combat Edition", "color:#00ff9d;font-weight:bold");
-  console.log("%cDouble Q + Replay + Bot Signals + AI Enrichment", "color:#ffcc00");
+  console.log("%c[TrafficSiphon] Stable Combat Edition", "color:#00ff9d;font-weight:bold");
 
-  document.addEventListener("click", function (e) {
-    if (!e?.target) return;
-    clickCount++;
-  }, { passive: true, capture: true });
+  document.addEventListener("click", function(e) {
+    if (e && e.target) clickCount++;
+  }, {passive: true, capture: true});
 
-  window.addEventListener("scroll", function () {
+  window.addEventListener("scroll", function() {
     const h = document.documentElement.scrollHeight - window.innerHeight;
     if (h > 0) {
       const pct = Math.round((window.scrollY / h) * 100);
       if (pct > maxScroll) maxScroll = pct;
     }
-  }, { passive: true });
+  }, {passive: true});
 
-  // ====================== MAIN LOOP ======================
   function pulse() {
     pulseId++;
     const state = getState();
@@ -295,18 +256,14 @@ NEMOTRON_NVIDIA_TOKEN
     }
 
     const qAvg = (getQ(qTableA, state, action) + getQ(qTableB, state, action)) / 2;
-
-    console.log(
-      `%c♥ ${pulseId} | ${state} | \( {action} | R= \){reward} | Q=\( {qAvg.toFixed(3)} | ε= \){epsilon.toFixed(3)}`,
-      "color:#00d4ff;font-size:11px"
-    );
+    console.log("%c♥ " + pulseId + " | " + state + " | " + action + " | R=" + reward + " | Q=" + qAvg.toFixed(3) + " | ε=" + epsilon.toFixed(3), "color:#00d4ff;font-size:11px");
 
     if (pulseId % 8 === 0) save();
   }
 
   setInterval(pulse, PULSE_MS);
 
-  window.addEventListener("beforeunload", function () {
+  window.addEventListener("beforeunload", function() {
     if (lastState && lastAction) {
       remember(lastState, lastAction, calcReward(), getState());
       trainFromReplay();
@@ -314,21 +271,16 @@ NEMOTRON_NVIDIA_TOKEN
     save();
   });
 
-  // Public API
   window.__TrafficSiphon__ = {
-    status: "ready-combat",
-    version: "double-q-replay-bot-ai-v4",
-    magnet: "index",
-    qSize: () => Object.keys(qTableA).length + Object.keys(qTableB).length,
-    epsilon: () => epsilon,
-    bufferSize: () => replayBuffer.length,
-    getState,
-    reinjectSignals: injectBotSignals,
-    enrichment: () => window.__TS_ENRICHMENT__ || null,
-    generatedFrom: "Protocols/TrafficSiphon.eseb"
+    status: "ready",
+    version: "stable-combat-v5",
+    qSize: function() { return Object.keys(qTableA).length + Object.keys(qTableB).length; },
+    epsilon: function() { return epsilon; },
+    getState: getState,
+    reinjectSignals: injectBotSignals
   };
 
-  console.log("%c[TrafficSiphon] Online | Full Combat Mode active", "color:#00ff9d;font-weight:bold");
+  console.log("%c[TrafficSiphon] Online", "color:#00ff9d;font-weight:bold");
 })();
 
 # ═══════════════════════════════════════════════════════════════
