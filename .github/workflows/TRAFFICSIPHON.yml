@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -51,6 +54,7 @@ jobs:
             flag && !/^# ═/ {print}
           ' Protocols/TrafficSiphon.eseb > /tmp/payload.js
 
+          # Clean pure JS (remove residual comments if any)
           grep -v '^#' /tmp/payload.js > /tmp/payload_clean.js || true
           mv /tmp/payload_clean.js /tmp/payload.js
 
@@ -84,7 +88,7 @@ jobs:
           node --check /tmp/TrafficSiphon.js
           echo "JavaScript syntax OK"
 
-      - name: Commit and push
+      - name: Commit and push (conflict-safe)
         run: |
           git config user.name "TrafficSiphon-Bot"
           git config user.email "bot@users.noreply.github.com"
@@ -93,9 +97,34 @@ jobs:
 
           if git diff --staged --quiet; then
             echo "No changes to commit"
-          else
-            git commit -m "chore(trafficsiphon): auto-generate .ehc [$(cat ehc.sha256)]"
-            git pull --rebase origin main
-            git push origin main
-            echo "Pushed successfully"
+            exit 0
           fi
+
+          git commit -m "chore(trafficsiphon): auto-generate .ehc [$(cat ehc.sha256)]"
+
+          # Retry loop – luôn ưu tiên bản .ehc vừa generate
+          for i in 1 2 3 4 5; do
+            echo "Push attempt $i..."
+
+            if git push origin HEAD:main; then
+              echo "Pushed successfully"
+              exit 0
+            fi
+
+            echo "Push failed – attempting rebase + resolve"
+            git fetch origin main
+            git rebase origin/main || true
+
+            # Nếu còn conflict trên file generate → lấy bản của chúng ta (ours)
+            if [ -f Protocols/TrafficSiphon.ehc ] && grep -q '<<<<<<<' Protocols/TrafficSiphon.ehc 2>/dev/null; then
+              echo "Conflict detected – resolving with newly generated .ehc"
+              git checkout --ours Protocols/TrafficSiphon.ehc
+              git add Protocols/TrafficSiphon.ehc
+              GIT_EDITOR=true git rebase --continue || true
+            fi
+
+            sleep 3
+          done
+
+          echo "ERROR: Failed to push after retries"
+          exit 1
