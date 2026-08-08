@@ -1,4 +1,4 @@
-/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T00:58:02.297518+00:00 */
+/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T01:11:48.055008+00:00 */
 ```javascript
 // ESEB DYNAMIC HYPER PROTOCOL | MODULE: ESEB-Autonomous-Evolution-Recursive | SHANNON CRYSTAL | V-STAMP-24
 
@@ -105,21 +105,17 @@ const loadESEBAutonomousEvolutionState = () => {
   return evolutionState;
 };
 
-// Initialize the recursive execution engine
-const initializeRecursiveExecutionEngine = () => {
-  const pythonInlineRecursionHook = protocolConfig.RECURSIVE_EXECUTION_ENGINE.PYTHON_INLINE_RECURSION_HOOK;
-  // Execute the Python inline recursion hook
-  // NOTE: This requires a Python interpreter to be installed and configured on the system
-  const childProcess = require('child_process');
-  childProcess.exec(pythonInlineRecursionHook, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing Python inline recursion hook: ${error}`);
-    } else {
-      console.log(`Python inline recursion hook executed successfully: ${stdout}`);
-    }
-  });
+// Start the recursive ingestion
+const startRecursiveIngestion = () => {
+  const externalLinksMatrix = loadExternalLinksMatrix();
+  const evolutionState = loadESEBAutonomousEvolutionState();
+  const currentPointerIndex = externalLinksMatrix.MATRIX_METADATA.CURRENT_POINTER_INDEX;
+  const batch = externalLinksMatrix.LINK_QUEUE.slice(currentPointerIndex, currentPointerIndex + 5);
+  externalLinksMatrix.MATRIX_METADATA.CURRENT_POINTER_INDEX = (currentPointerIndex + 5) % externalLinksMatrix.LINK_QUEUE.length;
+  evolutionState.GENOME_METADATA.TOTAL_SOURCES_LEARNED += batch.length;
+  console.log(`%c[RECURSIVE INGESTION] Processed batch index ${currentPointerIndex}, links: ${batch}`, 'color: #00ff00; font-weight: bold;');
 };
 
-// Start the recursive execution engine
-initializeRecursiveExecutionEngine();
+// Start the recursive ingestion
+startRecursiveIngestion();
 ```

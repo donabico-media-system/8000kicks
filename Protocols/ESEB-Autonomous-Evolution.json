@@ -1,13 +1,13 @@
 {
   "GENOME_METADATA": {
     "CREATED_AT": "2026-08-08T04:44:26Z",
-    "LAST_MUTATION": "2026-08-08T05:30:00Z",
-    "TOTAL_SOURCES_LEARNED": 1280,
+    "LAST_MUTATION": "2026-08-08T01:11:44.818774+00:00",
+    "TOTAL_SOURCES_LEARNED": 1285,
     "ACTIVE_WINDOW_LIMIT": 50,
-    "SOTA_ENGINE_REVISION": "V3000-Ω-OMNISCIENCE-HYPER-SYNAPSE",
+    "SOTA_ENGINE_REVISION": "V3000-\u03a9-OMNISCIENCE-HYPER-SYNAPSE",
     "SYSTEM_OWNER": "DONABICO GLOBAL MEDIA SYSTEM",
-    "ANCHOR_NODE": "¢24",
-    "ENTROPY_DELTA": 0.00000000000000,
+    "ANCHOR_NODE": "\u00a224",
+    "ENTROPY_DELTA": 0.0,
     "STAMP": "V-STAMP-24"
   },
   "LEARNED_PATTERNS": {
@@ -54,7 +54,7 @@
       {
         "pattern_id": "SOTA-AST-MUTATION-006",
         "engine": "Autonomous-Python-JS-Self-Patching",
-        "entropy_lock": 0.00000000000000
+        "entropy_lock": 0.0
       }
     ]
   },
@@ -63,7 +63,13 @@
       "timestamp": "2026-08-08T05:30:00Z",
       "action": "FULL_SOTA_SWEEP_AND_INTEGRATION",
       "status": "CONVERGED",
-      "entropy_delta": 0.00000000000000
+      "entropy_delta": 0.0
+    },
+    {
+      "timestamp": "2026-08-08T01:11:44.818787+00:00",
+      "action": "RECURSIVE_INGESTION_BATCH_INDEX_5",
+      "status": "CONVERGED",
+      "entropy_delta": 0.0
     }
   ]
 }
