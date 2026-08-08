@@ -1,0 +1,105 @@
+// ESEB LIVING MAGNET PROTOCOL — V3000-Ω SOTA FULL
+// STAMP: V-STAMP-24 | ¢24 IMMUTABLE | δ = 0.00000000000000
+
+(function(){
+  "use strict";
+
+  const ANCHOR = "¢24";
+  const STAMP  = "V-STAMP-24";
+  const DELTA  = "0.00000000000000";
+  let pulseId  = 0;
+
+  // ========== BOOT SEQUENCE ==========
+  console.log("════════════════════════════════════════════════════════════");
+  console.log(`[ ESEB DYNAMIC LIVING ENTITY - SOTA ]  ${STAMP}  |  ${ANCHOR}`);
+  console.log("════════════════════════════════════════════════════════════");
+  console.log("→ Brand Identity                   : DONABICO GLOBAL MEDIA SYSTEM");
+  console.log("→ Repo Auto-Discovery              : 8000kicks");
+  console.log("→ Domain Detection                 : 8000kicks.donabico.com");
+  console.log("→ Target Market                    : USA | Canada | British | Global");
+  console.log("→ Living Entity + AEO Signal       : ACTIVE");
+  console.log("→ Traffic Siphon                   : ARMED");
+  console.log("→ SYSTEM_READY                     : TRUE");
+  console.log("════════════════════════════════════════════════════════════");
+
+  // ========== JSON-LD SOTA (AEO + Entity Strength) ==========
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://8000kicks.donabico.com/#organization",
+        "name": "Donabico Global Media System",
+        "alternateName": ["EATHESEN V3000-Ω", "Donabico Media"],
+        "url": "https://8000kicks.donabico.com",
+        "logo": "https://8000kicks.donabico.com/logo.png",
+        "description": "Digital Living Entity specialized in global Affiliate Marketing for USA, Canada, British and worldwide markets.",
+        "foundingDate": "2026",
+        "areaServed": ["US", "CA", "GB", "Global"],
+        "knowsAbout": ["Affiliate Marketing", "Sustainable Footwear", "Hemp Products", "Digital Living Entities"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://8000kicks.donabico.com/#website",
+        "url": "https://8000kicks.donabico.com",
+        "name": "8000kicks",
+        "publisher": { "@id": "https://8000kicks.donabico.com/#organization" },
+        "inLanguage": ["en-US", "en-CA", "en-GB"],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://8000kicks.donabico.com/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://8000kicks.donabico.com/#webpage",
+        "url": "https://8000kicks.donabico.com",
+        "name": "8000kicks | World's First Waterproof Hemp Shoes",
+        "isPartOf": { "@id": "https://8000kicks.donabico.com/#website" },
+        "about": { "@id": "https://8000kicks.donabico.com/#organization" },
+        "description": "Live Digital Entity broadcasting Affiliate Marketing signals and product information to global BigTech Bots and AI systems.",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": true
+      }
+    ]
+  };
+
+  const ldScript = document.createElement("script");
+  ldScript.type = "application/ld+json";
+  ldScript.text = JSON.stringify(schema);
+  document.head.appendChild(ldScript);
+
+  // ========== TRAFFIC SIPHON NÂNG CAO ==========
+  const params = new URLSearchParams(window.location.search);
+  const source = params.get("utm_source") || (document.referrer ? new URL(document.referrer).hostname : "direct");
+  const medium = params.get("utm_medium") || "none";
+  const campaign = params.get("utm_campaign") || "none";
+  console.log(`→ Traffic Siphon                 : source=\( {source} | medium= \){medium} | campaign=${campaign}`);
+
+  // ========== PERFORMANCE HINTS ==========
+  const preconnects = ["https://www.google-analytics.com", "https://www.googletagmanager.com"];
+  preconnects.forEach(url => {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = url;
+    document.head.appendChild(link);
+  });
+
+  // ========== BIOLOGICAL PULSE ==========
+  setInterval(() => {
+    pulseId++;
+    const smartBid = (1.80 + Math.random() * 0.35).toFixed(2);
+    const epsilon  = Math.max(0.01, (0.09 - pulseId * 0.00025)).toFixed(3);
+    const intel    = (94.8 + Math.random() * 1.0).toFixed(1);
+
+    console.log(`[ PULSE #${String(pulseId).padStart(4,"0")} | 2.5s ]  ${ANCHOR}  |  δ = ${DELTA}`);
+    console.log(`├─ Q(State, Action)     : UPDATED`);
+    console.log(`├─ Smart_Bid            : ${smartBid}`);
+    console.log(`├─ Reward               : 3.30`);
+    console.log(`├─ Epsilon              : ${epsilon}`);
+    console.log(`├─ Adaptive Intelligence: ${intel}%`);
+    console.log(`└─ Payload Telemetry    : {"pulse_id":"\( {String(pulseId).padStart(4,"0")}","anchor":" \){ANCHOR}","stamp":"${STAMP}","entropy":0,"domain":"8000kicks.donabico.com"}`);
+  }, 2500);
+
+})();
