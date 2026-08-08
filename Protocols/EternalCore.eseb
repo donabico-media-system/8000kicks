@@ -1,0 +1,466 @@
+# EternalCore Protocol - Combat + Feedback Loop
+# Continual Learning + Prioritized Experience Replay + IndexedDB + Recursive Evolution
+# Zero-DOM | V-STAMP-24 | ¢24 | DONABICO GLOBAL MEDIA SYSTEM
+# 4 AI Secrets = server-side only | Học ngầm 24/7
+
+[ RULES ]
+- Zero-DOM Surface Mutation
+- Zone 2 single script only
+- .ehc chỉ được sinh ra bởi workflow
+- 4 API Keys never appear in .ehc
+- Neo tuyệt đối bởi ¢24
+
+[ SECRETS ]
+API_GROQ_TOKEN
+ESEB_CLASSIC_TOKEN
+LLAMA_NVIDIA_TOKEN
+NEMOTRON_NVIDIA_TOKEN
+
+# ═══════════════════════════════════════════════════════════════
+# GENERATE_EHC_PAYLOAD_BEGIN
+# ═══════════════════════════════════════════════════════════════
+
+(function EternalCore() {
+  "use strict";
+
+  const STAMP = "V-STAMP-24";
+  const ANCHOR = "¢24";
+  const MODULE = "EternalCore";
+  const PULSE_MS = 2500;
+  const DB_NAME = "EternalCoreDB";
+  const DB_VERSION = 1;
+  const STORE_NAME = "replay";
+  const META_KEY = "ec_meta_v2";
+  const SILENT = true;
+
+  const ALPHA_BASE = 0.15;
+  const GAMMA = 0.94;
+  const EPSILON_MIN = 0.025;
+  const EPSILON_DECAY = 0.9965;
+  const REPLAY_SIZE = 400;
+  const BATCH_SIZE = 12;
+  const TARGET_SYNC = 16;
+  const EVOLVE_EVERY = 36;
+
+  const ACTIONS = ["observe", "reinforce", "explore", "consolidate", "boost"];
+
+  let db = null;
+  let qTableA = {};
+  let qTableB = {};
+  let epsilon = 0.32;
+  let alpha = ALPHA_BASE;
+  let pulseId = 0;
+  let lastState = null;
+  let lastAction = null;
+  let pageEnter = Date.now();
+  let maxScroll = 0;
+  let clickCount = 0;
+  let syncCounter = 0;
+  let generation = 1;
+  let totalReward = 0;
+  let feedbackBonus = 0;
+
+  function openDB() {
+    return new Promise(function (resolve, reject) {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = function (e) {
+        const database = e.target.result;
+        if (!database.objectStoreNames.contains(STORE_NAME)) {
+          const store = database.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
+          store.createIndex("priority", "priority", { unique: false });
+        }
+      };
+      req.onsuccess = function (e) {
+        db = e.target.result;
+        resolve(db);
+      };
+      req.onerror = function (e) {
+        reject(e);
+      };
+    });
+  }
+
+  function saveExperience(exp) {
+    if (!db) return;
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    store.add(exp);
+    const countReq = store.count();
+    countReq.onsuccess = function () {
+      if (countReq.result > REPLAY_SIZE) {
+        const idx = store.index("priority");
+        const cursorReq = idx.openCursor();
+        let deleted = 0;
+        cursorReq.onsuccess = function (e) {
+          const cursor = e.target.result;
+          if (cursor && deleted < 25) {
+            store.delete(cursor.primaryKey);
+            deleted++;
+            cursor.continue();
+          }
+        };
+      }
+    };
+  }
+
+  function samplePrioritized(batchSize) {
+    return new Promise(function (resolve) {
+      if (!db) return resolve([]);
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.getAll();
+      req.onsuccess = function () {
+        const all = req.result || [];
+        if (all.length === 0) return resolve([]);
+        all.sort(function (a, b) {
+          return (b.priority || 0) - (a.priority || 0);
+        });
+        const selected = [];
+        const limit = Math.min(all.length, 90);
+        for (let i = 0; i < batchSize && i < all.length; i++) {
+          selected.push(all[Math.floor(Math.random() * limit)]);
+        }
+        resolve(selected);
+      };
+      req.onerror = function () {
+        resolve([]);
+      };
+    });
+  }
+
+  function loadMeta() {
+    try {
+      const raw = localStorage.getItem(META_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      qTableA = data.qA || {};
+      qTableB = data.qB || {};
+      epsilon = Math.max(EPSILON_MIN, data.epsilon || 0.32);
+      alpha = data.alpha || ALPHA_BASE;
+      generation = data.generation || 1;
+      totalReward = data.totalReward || 0;
+    } catch (e) {}
+  }
+
+  function saveMeta() {
+    try {
+      localStorage.setItem(META_KEY, JSON.stringify({
+        qA: qTableA,
+        qB: qTableB,
+        epsilon: epsilon,
+        alpha: alpha,
+        generation: generation,
+        totalReward: totalReward
+      }));
+    } catch (e) {}
+  }
+
+  function applyFeedback() {
+    const fb = window.__EC_FEEDBACK__ || {};
+    if (fb && typeof fb.score === "number") {
+      feedbackBonus = Math.max(-2, Math.min(3, fb.score));
+    }
+    if (fb && fb.forceAction && ACTIONS.indexOf(fb.forceAction) !== -1) {
+      window.__EC_FORCE_ACTION__ = fb.forceAction;
+    }
+  }
+
+  function executeAction(action, state, reward) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "eternalcore_combat",
+      ec_action: action,
+      ec_state: state,
+      ec_reward: reward,
+      ec_generation: generation,
+      ec_feedback_bonus: feedbackBonus,
+      ec_stamp: STAMP,
+      ec_anchor: ANCHOR,
+      ec_module: MODULE
+    });
+
+    try {
+      window.dispatchEvent(new CustomEvent("eternalcore:combat", {
+        detail: {
+          action: action,
+          state: state,
+          reward: reward,
+          generation: generation,
+          feedbackBonus: feedbackBonus,
+          pulseId: pulseId
+        }
+      }));
+    } catch (e) {}
+
+    if (action === "boost") {
+      try {
+        if (navigator.sendBeacon) {
+          const payload = JSON.stringify({
+            type: "eternal_boost",
+            url: location.href,
+            generation: generation,
+            t: Date.now()
+          });
+          navigator.sendBeacon("/?ec_boost=1", new Blob([payload], { type: "application/json" }));
+        }
+      } catch (e) {}
+    }
+  }
+
+  function injectBotSignals() {
+    const old = document.querySelector('script[data-eternalcore="jsonld"]');
+    if (old) old.remove();
+
+    const origin = location.origin;
+    const url = location.href;
+    const enrich = window.__EC_ENRICHMENT__ || {};
+    const title = enrich.title || document.title || "DONABICO GLOBAL MEDIA SYSTEM";
+    const description = enrich.description || (document.querySelector('meta[name="description"]') && document.querySelector('meta[name="description"]').content) || "Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM";
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": origin + "/#website",
+          "url": origin,
+          "name": "DONABICO GLOBAL MEDIA SYSTEM",
+          "description": description,
+          "publisher": { "@id": origin + "/#organization" },
+          "inLanguage": "vi-VN"
+        },
+        {
+          "@type": "Organization",
+          "@id": origin + "/#organization",
+          "name": "DONABICO GLOBAL MEDIA SYSTEM",
+          "url": origin
+        },
+        {
+          "@type": "WebPage",
+          "@id": url + "#webpage",
+          "url": url,
+          "name": title,
+          "isPartOf": { "@id": origin + "/#website" },
+          "description": description,
+          "inLanguage": "vi-VN"
+        }
+      ]
+    };
+
+    const s = document.createElement("script");
+    s.type = "application/ld+json";
+    s.setAttribute("data-eternalcore", "jsonld");
+    s.textContent = JSON.stringify(jsonLd);
+    document.head.appendChild(s);
+
+    function setMeta(prop, content, isOg) {
+      if (!content) return;
+      const attr = isOg ? "property" : "name";
+      let el = document.querySelector("meta[" + attr + "=\"" + prop + "\"]");
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, prop);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    }
+
+    setMeta("og:type", "website", true);
+    setMeta("og:site_name", "DONABICO GLOBAL MEDIA SYSTEM", true);
+    setMeta("og:title", title, true);
+    setMeta("og:description", description, true);
+    setMeta("og:url", url, true);
+  }
+
+  function getState() {
+    const h = new Date().getHours();
+    const time = h < 6 ? "night" : h < 12 ? "morn" : h < 18 ? "aft" : "eve";
+    const device = /Mobi|Android/i.test(navigator.userAgent) ? "mob" : "desk";
+    const vis = document.visibilityState === "visible" ? "v" : "h";
+    const scroll = maxScroll < 25 ? "s0" : maxScroll < 50 ? "s1" : maxScroll < 75 ? "s2" : "s3";
+    const dwell = Date.now() - pageEnter;
+    const d = dwell < 8000 ? "d0" : dwell < 25000 ? "d1" : dwell < 55000 ? "d2" : "d3";
+    const clickLv = clickCount === 0 ? "c0" : clickCount < 3 ? "c1" : "c2";
+    return [time, device, vis, scroll, d, clickLv].join("|");
+  }
+
+  function getQ(table, state, action) {
+    return table[state + "::" + action] || 0;
+  }
+
+  function setQ(table, state, action, value) {
+    table[state + "::" + action] = value;
+  }
+
+  function bestAction(table, state) {
+    let best = ACTIONS[0];
+    let bestVal = getQ(table, state, best);
+    for (let i = 1; i < ACTIONS.length; i++) {
+      const v = getQ(table, state, ACTIONS[i]);
+      if (v > bestVal) {
+        bestVal = v;
+        best = ACTIONS[i];
+      }
+    }
+    return best;
+  }
+
+  function chooseAction(state) {
+    if (window.__EC_FORCE_ACTION__) {
+      const forced = window.__EC_FORCE_ACTION__;
+      window.__EC_FORCE_ACTION__ = null;
+      return forced;
+    }
+    if (Math.random() < epsilon) {
+      return ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+    }
+    let best = ACTIONS[0];
+    let bestVal = (getQ(qTableA, state, best) + getQ(qTableB, state, best)) / 2;
+    for (let i = 1; i < ACTIONS.length; i++) {
+      const v = (getQ(qTableA, state, ACTIONS[i]) + getQ(qTableB, state, ACTIONS[i])) / 2;
+      if (v > bestVal) {
+        bestVal = v;
+        best = ACTIONS[i];
+      }
+    }
+    return best;
+  }
+
+  function calcReward() {
+    let r = 0;
+    r += Math.min(clickCount * 1.25, 6);
+    r += Math.min(maxScroll / 18, 5);
+    r += Math.min((Date.now() - pageEnter) / 1000 / 13, 4);
+    if (document.visibilityState === "visible") r += 0.55;
+    r += feedbackBonus;
+    return Number(r.toFixed(2));
+  }
+
+  async function trainFromReplay() {
+    const batch = await samplePrioritized(BATCH_SIZE);
+    if (batch.length === 0) return;
+
+    for (let i = 0; i < batch.length; i++) {
+      const exp = batch[i];
+      const s = exp.s;
+      const a = exp.a;
+      const r = exp.r;
+      const s2 = exp.s2;
+      let tdError = 0;
+
+      if (Math.random() < 0.5) {
+        const aMax = bestAction(qTableA, s2);
+        const td = r + GAMMA * getQ(qTableB, s2, aMax);
+        const old = getQ(qTableA, s, a);
+        setQ(qTableA, s, a, old + alpha * (td - old));
+        tdError = Math.abs(td - old);
+      } else {
+        const aMax = bestAction(qTableB, s2);
+        const td = r + GAMMA * getQ(qTableA, s2, aMax);
+        const old = getQ(qTableB, s, a);
+        setQ(qTableB, s, a, old + alpha * (td - old));
+        tdError = Math.abs(td - old);
+      }
+      exp.priority = tdError;
+    }
+  }
+
+  function recursiveEvolve() {
+    generation++;
+    alpha = Math.max(0.07, ALPHA_BASE * (0.96 + (generation % 9) * 0.005));
+    epsilon = Math.max(EPSILON_MIN, epsilon * 0.993);
+    totalReward = 0;
+  }
+
+  loadMeta();
+  applyFeedback();
+
+  openDB().then(function () {}).catch(function () {});
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectBotSignals);
+  } else {
+    injectBotSignals();
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e && e.target) clickCount++;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("scroll", function () {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    if (h > 0) {
+      const pct = Math.round((window.scrollY / h) * 100);
+      if (pct > maxScroll) maxScroll = pct;
+    }
+  }, { passive: true });
+
+  function pulse() {
+    pulseId++;
+    const state = getState();
+    const action = chooseAction(state);
+    const reward = calcReward();
+    totalReward += reward;
+
+    executeAction(action, state, reward);
+
+    if (lastState && lastAction) {
+      const exp = {
+        s: lastState,
+        a: lastAction,
+        r: reward,
+        s2: state,
+        priority: Math.abs(reward) + 0.1,
+        t: Date.now()
+      };
+      saveExperience(exp);
+      trainFromReplay();
+    }
+
+    lastState = state;
+    lastAction = action;
+    syncCounter++;
+    epsilon = Math.max(EPSILON_MIN, epsilon * EPSILON_DECAY);
+
+    if (syncCounter >= TARGET_SYNC) {
+      for (const key of Object.keys(qTableA)) {
+        if (qTableB[key] === undefined) qTableB[key] = qTableA[key];
+      }
+      syncCounter = 0;
+    }
+
+    if (pulseId % EVOLVE_EVERY === 0) recursiveEvolve();
+    if (pulseId % 10 === 0) saveMeta();
+
+    if (!SILENT || pulseId % 25 === 0) {
+      const qAvg = (getQ(qTableA, state, action) + getQ(qTableB, state, action)) / 2;
+      console.log(
+        "%c∞ " + pulseId + " | Gen " + generation + " | " + action + " | R=" + reward + " | Q=" + qAvg.toFixed(3) + " | ε=" + epsilon.toFixed(3),
+        "color:#8be9fd;font-size:11px"
+      );
+    }
+  }
+
+  setInterval(pulse, PULSE_MS);
+
+  window.addEventListener("beforeunload", function () {
+    saveMeta();
+  });
+
+  window.__EternalCore__ = {
+    status: "ready",
+    version: "combat-feedback-v1",
+    stamp: STAMP,
+    anchor: ANCHOR,
+    generation: function () { return generation; },
+    epsilon: function () { return epsilon; },
+    alpha: function () { return alpha; },
+    qSize: function () { return Object.keys(qTableA).length + Object.keys(qTableB).length; },
+    getState: getState,
+    feedbackBonus: function () { return feedbackBonus; }
+  };
+})();
+
+# ═══════════════════════════════════════════════════════════════
+# GENERATE_EHC_PAYLOAD_END
+# ═══════════════════════════════════════════════════════════════
