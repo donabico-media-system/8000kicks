@@ -47,45 +47,83 @@ jobs:
           [ -n "$LLAMA_NVIDIA_TOKEN" ] && echo "LLAMA_NVIDIA_TOKEN: present" || echo "LLAMA_NVIDIA_TOKEN: missing"
           [ -n "$NEMOTRON_NVIDIA_TOKEN" ] && echo "NEMOTRON_NVIDIA_TOKEN: present" || echo "NEMOTRON_NVIDIA_TOKEN: missing"
 
-          PROMPT='You are SEO expert for DONABICO GLOBAL MEDIA SYSTEM. Reply ONLY valid JSON: {"title":"...","description":"...","strategies":["...","...","..."]}'
+          PROMPT='You are SEO expert for DONABICO GLOBAL MEDIA SYSTEM. Reply ONLY valid JSON with exactly these keys: {"title":"string under 60 chars","description":"string under 155 chars in Vietnamese","strategies":["str1","str2","str3"]}. No markdown, no explanation.'
 
           ENRICH='{"title":"DONABICO GLOBAL MEDIA SYSTEM","description":"Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM","strategies":[],"aiSource":"fallback"}'
+
+          # Hàm trích JSON mạnh (bắt được cả khi bị bọc ```json)
+          extract_json() {
+            local text="$1"
+            echo "$text" | perl -0777 -ne 'if (/\{(?:[^{}]|(?R))*\}/s) { print $& }' 2>/dev/null || true
+          }
 
           call_ai() {
             local url="$1"
             local token="$2"
             local model="$3"
             local source="$4"
-            if [ -z "$token" ]; then return; fi
-            echo "Calling $source ..."
-            RESP=$(curl -s --max-time 25 -X POST "$url" \
+
+            if [ -z "$token" ]; then
+              echo "$source: token empty → skip"
+              return
+            fi
+
+            echo "Calling $source ($model) ..."
+            RESP=$(curl -s --max-time 30 -X POST "$url" \
               -H "Authorization: Bearer $token" \
               -H "Content-Type: application/json" \
-              -d "{\"model\":\"\( model\",\"messages\":[{\"role\":\"user\",\"content\": \)(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.3,\"max_tokens\":350}" || true)
+              -d "{\"model\":\"\( model\",\"messages\":[{\"role\":\"user\",\"content\": \)(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.25,\"max_tokens\":400}" || true)
+
+            echo "----- Raw response from $source (first 600 chars) -----"
+            echo "$RESP" | head -c 600
+            echo ""
+            echo "-------------------------------------------------------"
+
             CONTENT=$(echo "$RESP" | jq -r '.choices[0].message.content // empty' 2>/dev/null || true)
-            if [ -n "$CONTENT" ]; then
-              CLEAN=$(echo "$CONTENT" | sed -n '/{/,/}/p' | jq -c . 2>/dev/null || true)
-              if [ -n "$CLEAN" ]; then
-                ENRICH=$(echo "$CLEAN" | jq -c --arg s "$source" '. + {aiSource:$s}' 2>/dev/null || echo "$ENRICH")
-                echo "$source success"
+
+            if [ -z "$CONTENT" ]; then
+              echo "$source: no content in response"
+              return
+            fi
+
+            CLEAN=$(extract_json "$CONTENT")
+            if [ -z "$CLEAN" ]; then
+              CLEAN=$(echo "$CONTENT" | sed -n 's/.*\({.*}\).*/\1/p' | tail -1)
+            fi
+
+            if [ -n "$CLEAN" ]; then
+              if echo "$CLEAN" | jq -e . >/dev/null 2>&1; then
+                ENRICH=$(echo "$CLEAN" | jq -c --arg s "$source" '. + {aiSource:$s}')
+                echo "$source → SUCCESS"
+                echo "Parsed: $ENRICH"
+              else
+                echo "$source: extracted text is not valid JSON"
               fi
+            else
+              echo "$source: could not extract JSON"
             fi
           }
 
+          # Gọi theo thứ tự ưu tiên
           call_ai "https://api.groq.com/openai/v1/chat/completions" "$API_GROQ_TOKEN" "llama-3.3-70b-versatile" "groq"
+
           if [ "$(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ]; then
             call_ai "https://integrate.api.nvidia.com/v1/chat/completions" "$LLAMA_NVIDIA_TOKEN" "meta/llama-3.1-70b-instruct" "llama-nvidia"
           fi
+
           if [ "$(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ]; then
-            call_ai "https://integrate.api.nvidia.com/v1/chat/completions" "$NEMOTRON_NVIDIA_TOKEN" "nvidia/nemotron-4-340b-instruct" "nemotron"
+            call_ai "https://integrate.api.nvidia.com/v1/chat/completions" "$NEMOTRON_NVIDIA_TOKEN" "nvidia/llama-3.1-nemotron-70b-instruct" "nemotron"
           fi
+
           if [ "$(echo "$ENRICH" | jq -r '.aiSource')" = "fallback" ] && [ -n "$ESEB_CLASSIC_TOKEN" ]; then
             ENRICH=$(echo "$ENRICH" | jq -c '. + {aiSource:"eseb-classic"}')
+            echo "All AI failed → using eseb-classic fallback"
           fi
 
           echo "$ENRICH" > /tmp/enrich.json
-          echo "Final enrichment:"
+          echo "===== FINAL ENRICHMENT ====="
           cat /tmp/enrich.json
+          echo "============================"
 
       - name: Generate ehc
         run: |
