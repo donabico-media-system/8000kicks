@@ -50,109 +50,71 @@ jobs:
 
       - name: AI Enrichment (All 4 activated)
         id: enrich
+        continue-on-error: true
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          python3 << 'PY'
-          import os, json, urllib.request, urllib.error, pathlib, datetime
+          python3 -c '
+          import os, json, urllib.request, pathlib, datetime
 
           def call_groq(prompt):
               token = os.environ.get("API_GROQ_TOKEN")
               if not token: return None
               url = "https://api.groq.com/openai/v1/chat/completions"
-              data = {
-                  "model": "llama-3.3-70b-versatile",
-                  "messages": [{"role": "user", "content": prompt}],
-                  "temperature": 0.3,
-                  "max_tokens": 400
-              }
-              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={
-                  "Authorization": f"Bearer {token}",
-                  "Content-Type": "application/json"
-              }, method="POST")
+              data = {"model": "llama-3.3-70b-versatile", "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 400}
+              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}, method="POST")
               try:
                   with urllib.request.urlopen(req, timeout=20) as res:
-                      result = json.loads(res.read().decode())
-                      return result["choices"][0]["message"]["content"].strip()
+                      return json.loads(res.read().decode())["choices"][0]["message"]["content"].strip()
               except Exception as e:
-                  print(f"Groq error: {e}")
+                  print("Groq error:", e)
                   return None
 
           def call_nvidia(token_env, model, prompt):
               token = os.environ.get(token_env)
               if not token: return None
               url = "https://integrate.api.nvidia.com/v1/chat/completions"
-              data = {
-                  "model": model,
-                  "messages": [{"role": "user", "content": prompt}],
-                  "temperature": 0.3,
-                  "max_tokens": 400
-              }
-              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={
-                  "Authorization": f"Bearer {token}",
-                  "Content-Type": "application/json"
-              }, method="POST")
+              data = {"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 400}
+              req = urllib.request.Request(url, data=json.dumps(data).encode(), headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}, method="POST")
               try:
                   with urllib.request.urlopen(req, timeout=25) as res:
-                      result = json.loads(res.read().decode())
-                      return result["choices"][0]["message"]["content"].strip()
+                      return json.loads(res.read().decode())["choices"][0]["message"]["content"].strip()
               except Exception as e:
-                  print(f"NVIDIA ({model}) error: {e}")
+                  print("NVIDIA error:", e)
                   return None
 
-          prompt = """Bạn là chuyên gia SEO & AI Overview. 
-Hãy viết một mô tả ngắn (max 155 ký tự) và một tiêu đề phụ hấp dẫn bằng tiếng Việt 
-cho trang truyền thông số mang tên DONABICO GLOBAL MEDIA SYSTEM. 
-Trả về đúng định dạng:
-TITLE: ...
-DESCRIPTION: ..."""
+          prompt = "Bạn là chuyên gia SEO. Viết TITLE và DESCRIPTION ngắn bằng tiếng Việt cho trang DONABICO GLOBAL MEDIA SYSTEM. Trả về đúng format:\nTITLE: ...\nDESCRIPTION: ..."
 
           print("→ Calling Groq...")
           result = call_groq(prompt)
-
           if not result:
-              print("→ Groq failed, trying NVIDIA Llama...")
+              print("→ Trying NVIDIA Llama...")
               result = call_nvidia("LLAMA_NVIDIA_TOKEN", "meta/llama-3.1-70b-instruct", prompt)
-
           if not result:
-              print("→ Llama failed, trying Nemotron...")
+              print("→ Trying Nemotron...")
               result = call_nvidia("NEMOTRON_NVIDIA_TOKEN", "nvidia/nemotron-4-340b-instruct", prompt)
 
-          # ESEB_CLASSIC_TOKEN hiện dùng làm cờ xác thực nội bộ (có thể mở rộng sau)
-          classic = os.environ.get("ESEB_CLASSIC_TOKEN")
-          classic_status = "active" if classic else "missing"
+          classic_status = "active" if os.environ.get("ESEB_CLASSIC_TOKEN") else "missing"
+          enrichment = {"timestamp": datetime.datetime.utcnow().isoformat()+"Z", "source": "multi-ai", "classic_token": classic_status, "raw": result or "No AI response", "title": "", "description": ""}
 
-          enrichment = {
-              "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-              "source": "multi-ai",
-              "classic_token": classic_status,
-              "raw": result or "No AI response"
-          }
-
-          # Parse đơn giản
-          title = ""
-          desc = ""
           if result:
               for line in result.splitlines():
                   if line.upper().startswith("TITLE:"):
-                      title = line.split(":", 1)[1].strip()
+                      enrichment["title"] = line.split(":",1)[1].strip()
                   if line.upper().startswith("DESCRIPTION:"):
-                      desc = line.split(":", 1)[1].strip()
-
-          enrichment["title"] = title
-          enrichment["description"] = desc
+                      enrichment["description"] = line.split(":",1)[1].strip()
 
           pathlib.Path("enrichment.json").write_text(json.dumps(enrichment, ensure_ascii=False, indent=2), encoding="utf-8")
-          print("Enrichment result saved.")
+          print("Enrichment saved")
           print(json.dumps(enrichment, ensure_ascii=False, indent=2))
-          PY
+          '
 
-      - name: Generate .ehc with AI Enrichment
+      - name: Generate .ehc
         run: |
-          python3 << 'PY'
+          python3 -c '
           import hashlib, re, datetime, pathlib, sys, json, os
 
           src = pathlib.Path("Protocols/TrafficSiphon.eseb")
@@ -161,15 +123,12 @@ DESCRIPTION: ..."""
               sys.exit(1)
 
           content = src.read_text(encoding="utf-8")
-          pattern = r"# ═+ GENERATE_EHC_PAYLOAD_BEGIN ═+\n(.*?)# ═+ GENERATE_EHC_PAYLOAD_END ═+"
-          match = re.search(pattern, content, re.DOTALL)
+          match = re.search(r"# ═+ GENERATE_EHC_PAYLOAD_BEGIN ═+\n(.*?)# ═+ GENERATE_EHC_PAYLOAD_END ═+", content, re.DOTALL)
           if not match:
-              print("ERROR: GENERATE_EHC_PAYLOAD markers not found")
+              print("ERROR: Markers not found")
               sys.exit(1)
 
           js = match.group(1).strip() + "\n"
-
-          # Load enrichment if available
           enrich_data = {}
           if pathlib.Path("enrichment.json").exists():
               enrich_data = json.loads(pathlib.Path("enrichment.json").read_text(encoding="utf-8"))
@@ -178,51 +137,36 @@ DESCRIPTION: ..."""
           sha = hashlib.sha256(js.encode()).hexdigest()[:16]
           commit = os.environ.get("GITHUB_SHA", "local")[:8]
 
-          # Inject enrichment as comment + small config
-          enrich_comment = f"""
-/* ── AI Enrichment (Build-time) ──────────────────────────────
- * Generated : {now}
- * Source    : Multi-AI (Groq → Llama → Nemotron)
- * Classic   : {enrich_data.get("classic_token", "unknown")}
- * Title     : {enrich_data.get("title", "")}
- * Desc      : {enrich_data.get("description", "")}
- * ─────────────────────────────────────────────────────────── */
+          enrich_js = f"""
+/* AI Enrichment: {enrich_data.get("title", "")} | {enrich_data.get("description", "")} */
 window.__TS_ENRICHMENT__ = {json.dumps(enrich_data, ensure_ascii=False)};
 """
 
-          header = f"""/* Auto-generated by TRAFFICSIPHON workflow
- * Generated : {now}
- * Source    : Protocols/TrafficSiphon.eseb
- * Commit    : {commit}
- * SHA256    : {sha}
- * AI        : All 4 secrets activated (Groq + NVIDIA + Classic)
- * Do not edit by hand
+          header = f"""/* Auto-generated by TRAFFICSIPHON
+ * Time    : {now}
+ * Commit  : {commit}
+ * SHA256  : {sha}
+ * AI      : Groq + NVIDIA activated
  */
 """
 
-          final_js = header + enrich_comment + "\n" + js
-
-          out = pathlib.Path("Protocols/TrafficSiphon.ehc")
-          out.write_text(final_js, encoding="utf-8")
-          print(f"Generated {out} | SHA256: {sha}")
+          pathlib.Path("Protocols/TrafficSiphon.ehc").write_text(header + enrich_js + js, encoding="utf-8")
+          print("Generated Protocols/TrafficSiphon.ehc | SHA:", sha)
           pathlib.Path("ehc.sha256").write_text(sha)
-          PY
+          '
 
-      - name: Validate JavaScript
-        run: |
-          node --check Protocols/TrafficSiphon.ehc
-          echo "JavaScript syntax: OK"
+      - name: Validate JS
+        run: node --check Protocols/TrafficSiphon.ehc && echo "JS OK"
 
       - name: Commit & Push
         run: |
           git config user.name "TrafficSiphon-Bot"
           git config user.email "bot@users.noreply.github.com"
           git add Protocols/TrafficSiphon.ehc
-
           if git diff --staged --quiet; then
-            echo "No changes. Skip commit."
+            echo "No changes"
           else
-            git commit -m "chore(trafficsiphon): auto-generate .ehc + AI enrichment [$(cat ehc.sha256)]"
+            git commit -m "chore(trafficsiphon): auto-generate .ehc [$(cat ehc.sha256)]"
             git push
-            echo "Pushed successfully"
+            echo "Pushed"
           fi
