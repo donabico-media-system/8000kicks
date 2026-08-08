@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '*/10 * * * *'  # Chạy tự động mỗi 10 phút
   workflow_dispatch:
+    inputs:
+      target_file:
+        description: 'Tên tệp .eseb cần kiểm tra (Ví dụ: ESEB-Autonomous-Evolution.eseb)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: write
@@ -33,6 +39,7 @@ jobs:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
+          INPUT_TARGET_FILE: ${{ github.event.inputs.target_file }}
         run: |
           python ESEB-Rotator.py
 
