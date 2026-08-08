@@ -1,4 +1,4 @@
-/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T00:13:42.626627+00:00 */
+/* ESEB DYNAMIC HYPER BRIDGE | SOURCE: ESEB-Autonomous-Evolution.eseb | STAMP: V-STAMP-24 | GENERATED: 2026-08-08T00:57:38.840441+00:00 */
 ```javascript
 // ESEB DYNAMIC HYPER PROTOCOL | MODULE: ESEB-Autonomous-Evolution-Recursive | SHANNON CRYSTAL | V-STAMP-24
 
@@ -53,7 +53,7 @@ const protocolConfig = {
   }
 };
 
-// Initialize DONABICO_SYSTEM
+// Initialize the DONABICO SYSTEM
 if (typeof window !== 'undefined') {
   window.DONABICO_SYSTEM = window.DONABICO_SYSTEM || {
     brand: 'DONABICO GLOBAL MEDIA SYSTEM',
@@ -64,66 +64,58 @@ if (typeof window !== 'undefined') {
     telemetryEndpoint: 'https://httpbin.org/post',
     pulseActive: false
   };
-}
 
-// Set up recursive execution engine
-function recursiveExecutionEngine() {
-  const matrixPath = './Protocols/External-Links-Matrix.json';
-  const statePath = './Protocols/ESEB-Autonomous-Evolution.json';
-
-  // Load data from files
-  const matrixData = JSON.parse(fs.readFileSync(matrixPath, 'utf8'));
-  const stateData = JSON.parse(fs.readFileSync(statePath, 'utf8'));
-
-  // Get current pointer index
-  const idx = matrixData['MATRIX_METADATA']['CURRENT_POINTER_INDEX'];
-
-  // Get batch of links
-  const batch = matrixData['LINK_QUEUE'].slice(idx, idx + 5);
-
-  // Update current pointer index
-  matrixData['MATRIX_METADATA']['CURRENT_POINTER_INDEX'] = (idx + 5) % matrixData['LINK_QUEUE'].length;
-
-  // Update state data
-  stateData['GENOME_METADATA']['TOTAL_SOURCES_LEARNED'] += batch.length;
-
-  // Save updated data to files
-  fs.writeFileSync(matrixPath, JSON.stringify(matrixData, null, 2));
-  fs.writeFileSync(statePath, JSON.stringify(stateData, null, 2));
-
-  // Log recursive ingestion
-  console.log(`[RECURSIVE INGESTION] Processed batch index ${idx}, links: ${batch}`);
-}
-
-// Set up runtime execution payload
-function runtimeExecutionPayload() {
-  if (typeof window !== 'undefined') {
-    const script = protocolConfig['RUNTIME_EXECUTION_PAYLOAD']['SOURCE_SCRIPT'];
-    eval(script);
+  // Start the recursive evolution pulse
+  if (!window.DONABICO_SYSTEM.pulseActive) {
+    window.DONABICO_SYSTEM.pulseActive = true;
+    let pId = 0;
+    setInterval(() => {
+      pId++;
+      const qRew = (Math.sin(pId) * 0.05 + 3.30).toFixed(2);
+      const sBid = (Math.cos(pId) * 0.15 + 1.25).toFixed(2);
+      const eps = (0.01 / (pId + 1)).toFixed(6);
+      const payload = {
+        pulse_id: pId,
+        anchor_node: '¢24',
+        stamp: 'V-STAMP-24',
+        entropy_delta: 0.00000000000000,
+        brand: window.DONABICO_SYSTEM.brand,
+        q_reward: parseFloat(qRew),
+        smart_bid: parseFloat(sBid),
+        epsilon: parseFloat(eps),
+        timestamp: new Date().toISOString()
+      };
+      navigator.sendBeacon(window.DONABICO_SYSTEM.telemetryEndpoint, JSON.stringify(payload));
+      console.log(`%c[RECURSIVE EVOLUTION PULSE #${pId}] Over-The-Wire Telemetry OK`, 'color: #00e5ff; font-weight: bold;');
+    }, 2500);
   }
 }
 
-// Set up evolution memory state
-function evolutionMemoryState() {
-  const memoryFilePath = protocolConfig['EVOLUTION_MEMORY_STATE']['MEMORY_FILE_PATH'];
-  const persistenceMode = protocolConfig['EVOLUTION_MEMORY_STATE']['PERSISTENCE_MODE'];
+// Load the external links matrix
+const loadExternalLinksMatrix = () => {
+  const externalLinksMatrixPath = './Protocols/External-Links-Matrix.json';
+  const externalLinksMatrix = require(externalLinksMatrixPath);
+  return externalLinksMatrix;
+};
 
-  // Load memory data from file
-  const memoryData = JSON.parse(fs.readFileSync(memoryFilePath, 'utf8'));
+// Load the ESEB autonomous evolution state
+const loadESEBAutonomousEvolutionState = () => {
+  const evolutionStatePath = './Protocols/ESEB-Autonomous-Evolution.json';
+  const evolutionState = require(evolutionStatePath);
+  return evolutionState;
+};
 
-  // Update memory data
-  // ...
+// Start the recursive ingestion
+const startRecursiveIngestion = () => {
+  const externalLinksMatrix = loadExternalLinksMatrix();
+  const evolutionState = loadESEBAutonomousEvolutionState();
+  const currentPointerIndex = externalLinksMatrix['MATRIX_METADATA']['CURRENT_POINTER_INDEX'];
+  const batch = externalLinksMatrix['LINK_QUEUE'].slice(currentPointerIndex, currentPointerIndex + 5);
+  externalLinksMatrix['MATRIX_METADATA']['CURRENT_POINTER_INDEX'] = (currentPointerIndex + 5) % externalLinksMatrix['LINK_QUEUE'].length;
+  evolutionState['GENOME_METADATA']['TOTAL_SOURCES_LEARNED'] += batch.length;
+  console.log(`%c[RECURSIVE INGESTION] Processed batch index ${currentPointerIndex}, links: ${batch}`, 'color: #00ff00; font-weight: bold;');
+};
 
-  // Save updated memory data to file
-  fs.writeFileSync(memoryFilePath, JSON.stringify(memoryData, null, 2));
-}
-
-// Start recursive execution engine
-setInterval(recursiveExecutionEngine, 1000);
-
-// Start runtime execution payload
-runtimeExecutionPayload();
-
-// Start evolution memory state
-evolutionMemoryState();
+// Start the recursive ingestion
+startRecursiveIngestion();
 ```
