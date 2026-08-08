@@ -51,7 +51,6 @@ jobs:
 
           ENRICH='{"title":"DONABICO GLOBAL MEDIA SYSTEM","description":"Hệ thống truyền thông số thông minh – DONABICO GLOBAL MEDIA SYSTEM","strategies":[],"aiSource":"fallback"}'
 
-          # Hàm trích JSON mạnh (bắt được cả khi bị bọc ```json)
           extract_json() {
             local text="$1"
             echo "$text" | perl -0777 -ne 'if (/\{(?:[^{}]|(?R))*\}/s) { print $& }' 2>/dev/null || true
@@ -69,13 +68,25 @@ jobs:
             fi
 
             echo "Calling $source ($model) ..."
+
+            # Tạo body JSON sạch bằng jq (tránh lỗi escape)
+            BODY=$(jq -n \
+              --arg model "$model" \
+              --arg prompt "$PROMPT" \
+              '{
+                model: $model,
+                messages: [{role: "user", content: $prompt}],
+                temperature: 0.25,
+                max_tokens: 400
+              }')
+
             RESP=$(curl -s --max-time 30 -X POST "$url" \
               -H "Authorization: Bearer $token" \
               -H "Content-Type: application/json" \
-              -d "{\"model\":\"\( model\",\"messages\":[{\"role\":\"user\",\"content\": \)(echo "$PROMPT" | jq -Rs .)}],\"temperature\":0.25,\"max_tokens\":400}" || true)
+              -d "$BODY" || true)
 
-            echo "----- Raw response from $source (first 600 chars) -----"
-            echo "$RESP" | head -c 600
+            echo "----- Raw response from $source (first 700 chars) -----"
+            echo "$RESP" | head -c 700
             echo ""
             echo "-------------------------------------------------------"
 
@@ -83,6 +94,8 @@ jobs:
 
             if [ -z "$CONTENT" ]; then
               echo "$source: no content in response"
+              # In thêm error nếu có
+              echo "$RESP" | jq -r '.error.message // empty' 2>/dev/null || true
               return
             fi
 
@@ -98,9 +111,11 @@ jobs:
                 echo "Parsed: $ENRICH"
               else
                 echo "$source: extracted text is not valid JSON"
+                echo "Content was: $CONTENT"
               fi
             else
               echo "$source: could not extract JSON"
+              echo "Content was: $CONTENT"
             fi
           }
 
