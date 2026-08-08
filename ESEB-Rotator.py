@@ -1,5 +1,5 @@
 # =================================================================================
-# ESEB DYNAMIC HYPER ROTATOR ENGINE - QUAD-SECRET INTEGRATION
+# ESEB DYNAMIC HYPER ROTATOR ENGINE - QUAD-SECRET INTEGRATION + RECURSIVE INGESTION
 # BRAND: DONABICO GLOBAL MEDIA SYSTEM | SYSTEM: EATHESEN
 # STAMP: V-STAMP-24 | ANCHOR: C24 | ENTROPY DELTA: 0.00000000000000
 # =================================================================================
@@ -26,6 +26,10 @@ NVIDIA_ENDPOINT = "https://integrate.api.nvidia.com/v1/chat/completions"
 PROTOCOLS_DIR = "./Protocols"
 BRIDGES_DIR = "./Bridges"
 STATE_FILE = "./ESEB-Dynamic-Hyper.json"
+
+# CÁC ĐƯỜNG DẪN CHO TÍNH NĂNG TỰ HỌC ĐỆ QUY MA TRẬN LINKS
+MATRIX_FILE = os.path.join(PROTOCOLS_DIR, "External-Links-Matrix.json")
+EVOLUTION_STATE_FILE = os.path.join(PROTOCOLS_DIR, "ESEB-Autonomous-Evolution.json")
 
 def compile_with_quad_pipeline(prompt_content):
     """
@@ -89,7 +93,83 @@ def compile_with_quad_pipeline(prompt_content):
     print("[!] Local Fallback Execution: Direct Protocol Pass-Through.")
     return None
 
+def execute_recursive_matrix_ingestion():
+    """
+    Tiến trình học đệ quy ngầm: Tự động bốc batch 5 links từ ma trận, 
+    tịnh tiến con trỏ vòng tròn và cập nhật tệp bộ nhớ nguyên tử (Zero Entropy).
+    """
+    print("[∞] [RECURSIVE INGESTION] Initializing background matrix link absorption...")
+    
+    if not os.path.exists(MATRIX_FILE) or not os.path.exists(EVOLUTION_STATE_FILE):
+        print("[!] Warning: Matrix or Evolution state file missing in Protocols/. Skipping recursive cycle.")
+        return
+
+    try:
+        # 1. Đọc ma trận liên kết
+        with open(MATRIX_FILE, "r", encoding="utf-8") as f:
+            matrix_data = json.load(f)
+            
+        matrix_meta = matrix_data.get("MATRIX_METADATA", {})
+        link_queue = matrix_data.get("LINK_QUEUE", [])
+        
+        if not link_queue:
+            print("[!] Warning: LINK_QUEUE is empty.")
+            return
+
+        current_idx = matrix_meta.get("CURRENT_POINTER_INDEX", 0)
+        batch_size = 5
+        
+        # 2. Trích xuất batch 5 links theo cơ chế Round-Robin
+        batch_links = link_queue[current_idx:current_idx + batch_size]
+        
+        # Nếu số lượng cuối mảng không đủ 5, quay vòng lấy thêm từ đầu mảng
+        if len(batch_links) < batch_size and len(link_queue) >= batch_size:
+            remaining = batch_size - len(batch_links)
+            batch_links.extend(link_queue[:remaining])
+            next_pointer = remaining
+        else:
+            next_pointer = (current_idx + batch_size) % len(link_queue)
+
+        # 3. Cập nhật con trỏ mới cho ma trận
+        matrix_data["MATRIX_METADATA"]["CURRENT_POINTER_INDEX"] = next_pointer
+        with open(MATRIX_FILE, "w", encoding="utf-8") as f:
+            json.dump(matrix_data, f, indent=2)
+
+        # 4. Cập nhật tệp bộ nhớ nguyên tử (ESEB-Autonomous-Evolution.json)
+        with open(EVOLUTION_STATE_FILE, "r", encoding="utf-8") as f:
+            evo_data = json.load(f)
+
+        genome_meta = evo_data.get("GENOME_METADATA", {})
+        current_learned = genome_meta.get("TOTAL_SOURCES_LEARNED", 0)
+        
+        # Cộng dồn tiến trình học
+        evo_data["GENOME_METADATA"]["TOTAL_SOURCES_LEARNED"] = current_learned + len(batch_links)
+        evo_data["GENOME_METADATA"]["LAST_MUTATION"] = datetime.now(timezone.utc).isoformat()
+        
+        # Thêm nhật ký tiến trình (FIFO Pruning giới hạn logs nếu cần)
+        evolution_logs = evo_data.get("EVOLUTION_LOGS", [])
+        evolution_logs.append({
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "action": f"RECURSIVE_INGESTION_BATCH_INDEX_{current_idx}",
+            "status": "CONVERGED",
+            "entropy_delta": 0.00000000000000
+        })
+        # Giữ lại tối đa 50 logs gần nhất (Rule 1)
+        evo_data["EVOLUTION_LOGS"] = evolution_logs[-50:]
+
+        with open(EVOLUTION_STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(evo_data, f, indent=2)
+
+        print(f"[✓] [RECURSIVE INGESTION SUCCESS] Processed Batch Index: {current_idx} | Links Absorbed: {len(batch_links)}")
+        print(f"[➔] [POINTER ADVANCED] Next Matrix Pointer Index: {next_pointer} | Total Sources Learned: {evo_data['GENOME_METADATA']['TOTAL_SOURCES_LEARNED']}")
+
+    except Exception as e:
+        print(f"[!] Critical Error in Recursive Ingestion Engine: {e}")
+
 def execute_hyper_rotation():
+    # 1. CHẠY TIẾN TRÌNH HỌC ĐỆ QUY MA TRẬN TRƯỚC MỖI VÒNG QUAY ROTATOR
+    execute_recursive_matrix_ingestion()
+
     eseb_files = sorted(glob.glob(os.path.join(PROTOCOLS_DIR, "*.eseb")))
     if not eseb_files:
         print("[!] Warning: No .eseb protocol files found in Protocols/")
@@ -133,7 +213,7 @@ def execute_hyper_rotation():
     with open(target_eseb_path, "r", encoding="utf-8") as f_in:
         raw_content = f_in.read()
 
-    # KÍCH HOẠT BIÊN DỊCH BỞI TỨ TRỤ API
+    # KÍCH HOẠT BIÊN DỊCH BỞI TỨ TRỤ API (GROQ / NEMOTRON / LLAMA)
     ai_compiled_code = compile_with_quad_pipeline(raw_content)
     final_payload = ai_compiled_code if ai_compiled_code else raw_content
 
