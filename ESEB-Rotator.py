@@ -16,6 +16,9 @@ API_GROQ_TOKEN = os.getenv("API_GROQ_TOKEN")
 LLAMA_NVIDIA_TOKEN = os.getenv("LLAMA_NVIDIA_TOKEN")
 NEMOTRON_NVIDIA_TOKEN = os.getenv("NEMOTRON_NVIDIA_TOKEN")
 
+# LẤY TÊN TỆP ĐẦU VÀO TỪ WORKFLOW DISPATCH (NẾU CÓ)
+INPUT_TARGET_FILE = os.getenv("INPUT_TARGET_FILE", "").strip()
+
 # ENDPOINTS DỊCH VỤ API
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 NVIDIA_ENDPOINT = "https://integrate.api.nvidia.com/v1/chat/completions"
@@ -93,23 +96,38 @@ def execute_hyper_rotation():
         return
 
     current_pointer = 0
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                state_data = json.load(f)
-                current_pointer = state_data.get("pointer", 0)
-        except Exception:
+    target_eseb_path = None
+    file_basename = ""
+
+    # KIỂM TRA XEM CÓ CHỈ ĐỊNH TÊN TỆP THỦ CÔNG QUA WORKFLOW DISPATCH HAY KHÔNG
+    if INPUT_TARGET_FILE:
+        candidate_path = os.path.join(PROTOCOLS_DIR, INPUT_TARGET_FILE)
+        if os.path.exists(candidate_path):
+            target_eseb_path = candidate_path
+            file_basename = INPUT_TARGET_FILE
+            print(f"[🎯 [MANUAL OVERRIDE] Target file explicitly selected: {file_basename}")
+        else:
+            print(f"[!] Warning: Specified file '{INPUT_TARGET_FILE}' not found in {PROTOCOLS_DIR}. Falling back to standard rotation.")
+
+    # NẾU KHÔNG CÓ CHỈ ĐỊNH HOẶC TỆP KHÔNG TỒN TẠI, DÙNG CƠ CHẾ XOAY VÒNG TỰ ĐỘNG
+    if not target_eseb_path:
+        if os.path.exists(STATE_FILE):
+            try:
+                with open(STATE_FILE, "r", encoding="utf-8") as f:
+                    state_data = json.load(f)
+                    current_pointer = state_data.get("pointer", 0)
+            except Exception:
+                current_pointer = 0
+
+        if current_pointer >= len(eseb_files):
             current_pointer = 0
 
-    if current_pointer >= len(eseb_files):
-        current_pointer = 0
+        target_eseb_path = eseb_files[current_pointer]
+        file_basename = os.path.basename(target_eseb_path)
+        print(f"[►] [CYCLE EXECUTION] Processing [{current_pointer + 1}/{len(eseb_files)}]: {file_basename}")
 
-    target_eseb_path = eseb_files[current_pointer]
-    file_basename = os.path.basename(target_eseb_path)
     output_ehc_name = file_basename.rsplit(".", 1)[0] + ".ehc"
     output_ehc_path = os.path.join(BRIDGES_DIR, output_ehc_name)
-
-    print(f"[►] [CYCLE EXECUTION] Processing [{current_pointer + 1}/{len(eseb_files)}]: {file_basename}")
 
     os.makedirs(BRIDGES_DIR, exist_ok=True)
     with open(target_eseb_path, "r", encoding="utf-8") as f_in:
@@ -125,16 +143,19 @@ def execute_hyper_rotation():
 
     print(f"[✓] [BRIDGE CREATED] Successfully compiled: {output_ehc_path}")
 
-    next_pointer = (current_pointer + 1) % len(eseb_files)
-    new_state = {
-        "pointer": next_pointer,
-        "last_executed": file_basename,
-        "last_timestamp": datetime.now(timezone.utc).isoformat()
-    }
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(new_state, f, indent=2)
-
-    print(f"[➔] [POINTER UPDATED] Next active index: {next_pointer}")
+    # CHỈ CẬP NHẬT POINTER NẾU CHẠY TỰ ĐỘNG THEO LỊCH TRÌNH
+    if not INPUT_TARGET_FILE:
+        next_pointer = (current_pointer + 1) % len(eseb_files)
+        new_state = {
+            "pointer": next_pointer,
+            "last_executed": file_basename,
+            "last_timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(new_state, f, indent=2)
+        print(f"[➔] [POINTER UPDATED] Next active index: {next_pointer}")
+    else:
+        print("[ℹ] [MANUAL MODE] State pointer left untouched to preserve automatic rotation schedule.")
 
 if __name__ == "__main__":
     execute_hyper_rotation()
