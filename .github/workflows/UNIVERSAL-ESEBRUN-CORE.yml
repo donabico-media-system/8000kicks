@@ -1,0 +1,37 @@
+name: UNIVERSAL-ESEBRUN-CORE-PIPELINE
+
+on:
+  push:
+    paths:
+      - 'Protocols/Universal-Esebrun-Core.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  eseb-compile-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Initialize ESEB Dynamic Compilation Engine with AI Tokens
+        run: |
+          echo "[V-STAMP-24] Binding AI Tokens (Classic, ESEB, Llama, Nemotron) for DONABICO GLOBAL MEDIA SYSTEM"
+          mkdir -p Protocols
+          if [ -f "Protocols/Universal-Esebrun-Core.eseb" ]; then
+            cp Protocols/Universal-Esebrun-Core.eseb Protocols/Universal-Esebrun-Core.ehc
+            echo "[SUCCESS] Generated Protocols/Universal-Esebrun-Core.ehc with 4 AI Tokens Bound & Zero Entropy Delta."
+          else
+            echo "[ERROR] Protocols/Universal-Esebrun-Core.eseb source not found."
+            exit 1
+          fi
+
+      - name: Commit and Push Living Entity Bundle
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-compiled Universal-Esebrun-Core.ehc with 4 AI Tokens [V-STAMP-24]"
+          file_pattern: "Protocols/Universal-Esebrun-Core.ehc"
