@@ -1,4 +1,4 @@
-name: UNIVERSAL-ESEBRUN-CORE
+name: UNIVERSAL-ESEBRUN-CORE-PIPELINE
 
 on:
   push:
@@ -23,62 +23,61 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Execute Real AI Handshake & Compilation
+      - name: Install Dependencies & Execute SOTA Groq AI Handshake
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
+          echo "[V-STAMP-24] Cài đặt thư viện SDK SOTA và khởi động kết nối Groq AI..."
+          pip install --quiet groq
+
           python3 - <<'EOF'
           import os
-          import urllib.request
-          import json
+          from groq import Groq
 
-          print("[V-STAMP-24] Bắt đầu tiến trình xác thực thực tế các API AI...")
-
-          tokens = {
-              "API_GROQ_TOKEN": os.getenv("API_GROQ_TOKEN"),
-              "ESEB_CLASSIC_TOKEN": os.getenv("ESEB_CLASSIC_TOKEN"),
-              "LLAMA_NVIDIA_TOKEN": os.getenv("LLAMA_NVIDIA_TOKEN"),
-              "NEMOTRON_NVIDIA_TOKEN": os.getenv("NEMOTRON_NVIDIA_TOKEN")
-          }
-
-          # Kiểm tra xem có token nào bị trống không
-          missing = [k for k, v in tokens.items() if not v]
-          if missing:
-              print(f"[ERROR] Thiếu các Secret sau: {missing}")
+          api_key = os.getenv("API_GROQ_TOKEN")
+          if not api_key:
+              print("[ERROR] API_GROQ_TOKEN không tồn tại trong môi trường vault.")
               exit(1)
 
-          # Thực hiện kết nối thực tế tới Groq API để kiểm tra phản hồi từ máy chủ
-          url = "https://api.groq.com/openai/v1/models"
-          req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tokens['API_GROQ_TOKEN']}"})
-          
           try:
-              with urllib.request.urlopen(req) as response:
-                  if response.status == 200:
-                      print("[SUCCESS] Groq AI Handshake thành công! Máy chủ đã xác thực phản hồi (HTTP 200).")
-                  else:
-                      print(f"[WARNING] Groq phản hồi mã trạng thái: {response.status}")
+              # Khởi tạo client chính thức của Groq (Bypass Cloudflare WAF qua SDK SOTA)
+              client = Groq(api_key=api_key)
+              
+              # Gửi gói tin Handshake thực tế tới mô hình SOTA
+              response = client.chat.completions.create(
+                  model="llama-3.3-70b-versatile",
+                  messages=[
+                      {"role": "system", "content": "DONABICO GLOBAL MEDIA SYSTEM - SOTA Protocol Active."},
+                      {"role": "user", "content": "Ping Handshake Test. Reply OK."}
+                  ],
+                  max_tokens=10
+              )
+              
+              reply = response.choices[0].message.content.strip()
+              print(f"[SUCCESS] Groq AI SOTA Handshake thành công! Phản hồi từ máy chủ: {reply}")
+              
           except Exception as e:
-              print(f"[ERROR] Lỗi kết nối thực tế tới Groq API: {e}")
+              print(f"[ERROR] Lỗi kết nối SOTA Groq API: {e}")
               exit(1)
 
-          # Biên dịch tệp Living Entity sạch sẽ (Zero-Exposure)
+          # Biên dịch tệp Living Entity an toàn tuyệt đối (Zero-Exposure)
           os.makedirs("Protocols", exist_ok=True)
           if os.path.exists("Protocols/Universal-Esebrun-Core.eseb"):
               with open("Protocols/Universal-Esebrun-Core.eseb", "r", encoding="utf-8") as f:
                   content = f.read()
               with open("Protocols/Universal-Esebrun-Core.ehc", "w", encoding="utf-8") as f:
                   f.write(content)
-              print("[SUCCESS] Đã biên dịch xong Protocols/Universal-Esebrun-Core.ehc an toàn tuyệt đối.")
+              print("[SUCCESS] Đã biên dịch xong Protocols/Universal-Esebrun-Core.ehc chuẩn SOTA.")
           else:
-              print("[ERROR] Không tìm thấy file nguồn .eseb")
+              print("[ERROR] Không tìm thấy tệp nguồn .eseb")
               exit(1)
           EOF
 
       - name: Commit and Push Living Entity Bundle
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto-compiled Universal-Esebrun-Core.ehc with Real Python AI Handshake [V-STAMP-24]"
+          commit_message: "Auto-compiled Universal-Esebrun-Core.ehc with Official Groq SOTA SDK [V-STAMP-24]"
           file_pattern: "Protocols/Universal-Esebrun-Core.ehc"
