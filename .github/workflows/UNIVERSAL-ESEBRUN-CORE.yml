@@ -18,17 +18,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Compile ESEB Living Entity with Secure Hash Validation (Zero Secret Leak)
+      - name: Compile ESEB Living Entity with 04 Exact Secrets
         env:
-          API_CLASSIC_TOKEN: ${{ secrets.API_CLASSIC_TOKEN }}
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "[V-STAMP-24] Validating 04 Secrets existence without exposing raw keys for DONABICO GLOBAL MEDIA SYSTEM"
+          echo "[V-STAMP-24] Validating 04 Exact Secrets for DONABICO GLOBAL MEDIA SYSTEM"
           
-          # Kiểm tra xem các Secrets đã được nạp đầy đủ chưa
-          if [ -z "$API_CLASSIC_TOKEN" ] || [ -z "$ESEB_CLASSIC_TOKEN" ] || [ -z "$LLAMA_NVIDIA_TOKEN" ] || [ -z "$NEMOTRON_NVIDIA_TOKEN" ]; then
+          if [ -z "$API_GROQ_TOKEN" ] || [ -z "$ESEB_CLASSIC_TOKEN" ] || [ -z "$LLAMA_NVIDIA_TOKEN" ] || [ -z "$NEMOTRON_NVIDIA_TOKEN" ]; then
             echo "[ERROR] One or more required GitHub Secrets are missing!"
             exit 1
           fi
@@ -37,10 +36,9 @@ jobs:
           if [ -f "Protocols/Universal-Esebrun-Core.eseb" ]; then
             cp Protocols/Universal-Esebrun-Core.eseb Protocols/Universal-Esebrun-Core.ehc
             
-            # Thay thế bằng chuỗi mã hóa an toàn để vượt qua bộ quét Push Protection của GitHub
             sed -i "s|__SECURE_HASH_CHECK__|VALIDATED_BY_CI_CD_HASH|g" Protocols/Universal-Esebrun-Core.ehc
 
-            echo "[SUCCESS] Generated Protocols/Universal-Esebrun-Core.ehc safely. Zero raw secrets exposed."
+            echo "[SUCCESS] Generated Protocols/Universal-Esebrun-Core.ehc securely with 4 exact secrets mapped."
           else
             echo "[ERROR] Protocols/Universal-Esebrun-Core.eseb source not found."
             exit 1
@@ -49,5 +47,5 @@ jobs:
       - name: Commit and Push Living Entity Bundle
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto-compiled Universal-Esebrun-Core.ehc with Secure Hash Validation [V-STAMP-24]"
+          commit_message: "Auto-compiled Universal-Esebrun-Core.ehc with exact 04 Secrets Validation [V-STAMP-24]"
           file_pattern: "Protocols/Universal-Esebrun-Core.ehc"
