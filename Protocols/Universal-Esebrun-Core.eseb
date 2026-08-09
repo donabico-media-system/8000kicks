@@ -2,7 +2,7 @@
    ESEB UNIVERSAL DYNAMIC LIVING PROTOCOL SOURCE
    FILE: Protocols/Universal-Esebrun-Core.eseb
    STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-   ARCHITECTURE: Strict Zero-Exposure Client Protocol & Encrypted Handshake
+   ARCHITECTURE: Safe Client-Side Handshake & Secured CI/CD Environment Hash
  ============================================================================== */
 export interface EsebrunContext {
   brand: string;
