@@ -1,5 +1,5 @@
 /* ==============================================================================
-   ESEB UNIVERSAL DYNAMIC LIVING PROTOCOL SOURCE (SECURED HASH INTEGRATION)
+   ESEB UNIVERSAL DYNAMIC LIVING PROTOCOL SOURCE
    FILE: Protocols/Universal-Esebrun-Core.eseb
    STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
    ARCHITECTURE: Safe Client-Side Handshake & Secured CI/CD Environment Hash
@@ -87,10 +87,10 @@ export class UniversalEsebrunCore {
   private verifySecureState(): void {
     const isSecured = this.context.secureTokenState === 'VALIDATED_BY_CI_CD_HASH';
     const statusReport = {
-      API_CLASSIC_TOKEN: isSecured ? 'SECURED_OK' : 'VERIFIED',
-      ESEB_CLASSIC_TOKEN: isSecured ? 'SECURED_OK' : 'VERIFIED',
-      LLAMA_NVIDIA_TOKEN: isSecured ? 'SECURED_OK' : 'VERIFIED',
-      NEMOTRON_NVIDIA_TOKEN: isSecured ? 'SECURED_OK' : 'VERIFIED'
+      API_GROQ_TOKEN: isSecured ? 'SECURED_OK' : 'ACTIVE',
+      ESEB_CLASSIC_TOKEN: isSecured ? 'SECURED_OK' : 'ACTIVE',
+      LLAMA_NVIDIA_TOKEN: isSecured ? 'SECURED_OK' : 'ACTIVE',
+      NEMOTRON_NVIDIA_TOKEN: isSecured ? 'SECURED_OK' : 'ACTIVE'
     };
 
     console.log(`%c[${this.context.stamp}] [${this.context.anchor}] 04 AI API SECRETS SECURE-HASH BOUND:`, 'color: #00ff66; font-weight: bold; background: #000; padding: 4px;');
