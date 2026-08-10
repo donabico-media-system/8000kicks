@@ -32,7 +32,7 @@ jobs:
         run: |
           echo '${{ toJson(github.event.client_payload) }}' > payload_buffer.json
 
-      - name: Execute ESEB Living Terminal Engine
+      - name: Execute ESEB Living Terminal Engine & Update README Dashboard
         run: |
           NODE_CODE=$(cat << 'EOF'
           const fs = require("fs");
@@ -41,6 +41,8 @@ jobs:
           const historyFile = "LOG_HISTORY.json";
           let historyData = {
             entity_name: "EATHESEN_V3000_OMEGA_LIVING_ENTITY",
+            organization: "DONABICO MEDIA SYSTEM",
+            domain: "donabico-media-system.github.io",
             stamp: "V-STAMP-24",
             anchor: "¢24",
             vital_signs: {
@@ -72,27 +74,46 @@ jobs:
             try { fs.unlinkSync("payload_buffer.json"); } catch(e) {}
           }
 
+          // 1. Cập nhật cơ sở dữ liệu LOG_HISTORY.json
           fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
 
+          // 2. Dựng Bảng Điều Khiển Đồ Họa README.md sống động
+          const lastUpdated = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+          let readmeContent = `# 🌐 8000kicks | DONABICO MEDIA SYSTEM\n\n`;
+          readmeContent += `> **EATHESEN V3000-Ω DIGITAL LIVING ENTITY DASHBOARD**\n\n`;
+          readmeContent += `![Status](https://img.shields.io/badge/SYSTEM_STATUS-${historyData.vital_signs.status}-00FF66?style=for-the-badge&logo=github)\n`;
+          readmeContent += `![Heartbeat](https://img.shields.io/badge/HEARTBEAT-${historyData.vital_signs.heartbeat_bpm}_BPM-FF0055?style=for-the-badge&logo=activity)\n`;
+          readmeContent += `![Entropy](https://img.shields.io/badge/ENTROPY-0.00000000000000-00E5FF?style=for-the-badge)\n`;
+          readmeContent += `![Stamp](https://img.shields.io/badge/STAMP-${historyData.stamp}-7000FF?style=for-the-badge)\n\n`;
+          
+          readmeContent += `### 📡 Real-Time F12 Telemetry Stream\n\n`;
+          readmeContent += `| Pulse # | Timestamp | F12 Client Log Payload |\n`;
+          readmeContent += `| :---: | :--- | :--- |\n`;
+
+          if (historyData.history_logs.length > 0) {
+            historyData.history_logs.slice(0, 10).forEach((item, idx) => {
+              const cleanLog = item.log.replace(/\|/g, '\\|');
+              readmeContent += `| \`#${idx + 1}\` | \`${item.time}\` | \`${cleanLog}\` |\n`;
+            });
+          } else {
+            readmeContent += `| \`#0\` | \`${lastUpdated}\` | \`SYSTEM STANDBY: Waiting for client F12 pulse from index.html...\` |\n`;
+          }
+
+          readmeContent += `\n---\n\n`;
+          readmeContent += `**8000kicks** | World's first waterproof hemp shoes and sustainable travel accessories. Eco-friendly, durable, and premium vegan footwear.\n\n`;
+          readmeContent += `*Last Synced Vital Signs: \`${lastUpdated}\`*`;
+
+          fs.writeFileSync("README.md", readmeContent);
+
+          // 3. In ra Bảng Console Terminal
           console.log(B + "=========================================================================" + NC);
           console.log(BOLD + G + "  [EATHESEN CENTRAL LOG MONITOR REAL-TIME TERMINAL V3000-OMEGA]" + NC);
+          console.log(BOLD + PUR + "  ORGANIZATION: DONABICO MEDIA SYSTEM | DOMAIN: donabico-media-system.github.io" + NC);
           console.log(B + "=========================================================================" + NC);
           console.log(BOLD + Y + " [ DIGITAL LIVING ENTITY VITAL SIGNS ]" + NC);
           console.log(G + " STATUS: " + NC + BOLD + historyData.vital_signs.status + NC + " | " + G + "ENTROPY: " + NC + historyData.vital_signs.entropy);
           console.log(B + " HEARTBEAT: " + NC + historyData.vital_signs.heartbeat_bpm + " BPM | " + PUR + "COGNITION: " + NC + historyData.vital_signs.cognitive_level);
           console.log(B + " TOTAL PULSES RECORDED: " + NC + BOLD + historyData.total_pulses_recorded + NC);
-          console.log(B + "=========================================================================" + NC);
-          console.log(BOLD + G + " >>> LIVE F12 TELEMETRY STREAM (REAL-TIME MEMORY) <<<" + NC);
-          console.log(B + "-------------------------------------------------------------------------" + NC);
-
-          if (historyData.history_logs.length > 0) {
-            historyData.history_logs.slice(0, 15).forEach((item, idx) => {
-              console.log(PUR + "[" + item.time + "]" + NC + " " + G + "PULSE #" + (idx + 1) + ":" + NC + " " + B + item.log + NC);
-            });
-          } else {
-            console.log(Y + "SYSTEM STANDBY: Waiting for client F12 pulse from index.html..." + NC);
-          }
-
           console.log(B + "=========================================================================" + NC);
           EOF
           )
@@ -119,17 +140,17 @@ jobs:
           )
           node -e "$NODE_COMPILE"
 
-      - name: Safe Auto-Commit & Push (Strict ESEB State)
+      - name: Safe Auto-Commit & Push (Dynamic README & ESEB State)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add LOG_HISTORY.json Protocols/Log_Live_Monitor.ehc || true
+          git add LOG_HISTORY.json README.md Protocols/Log_Live_Monitor.ehc || true
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "ESEB-LIVING-ENTITY: Sync Vital Signs & F12 Memory [V-STAMP-24]"
+            git commit -m "ESEB-LIVING-ENTITY: Sync Dynamic README Dashboard & F12 Memory [V-STAMP-24]"
             git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
             git pull --rebase origin main || git pull --rebase origin master || true
             git push origin HEAD:main || git push origin HEAD:master || true
