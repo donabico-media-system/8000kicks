@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   display-f12-live-terminal:
-    name: "Render Real-Time Living Mesh Dashboard"
+    name: "Render Sci-Fi Sine Wave & Living Mesh Dashboard"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -32,11 +32,10 @@ jobs:
         run: |
           echo '${{ toJson(github.event.client_payload) }}' > payload_buffer.json
 
-      - name: Execute ESEB Living Mesh Engine & Update README
+      - name: Execute ESEB Engine, Generate Sine Wave SVG & Update README
         run: |
           NODE_CODE=$(cat << 'EOF'
           const fs = require("fs");
-          const G = "\x1b[32m", B = "\x1b[36m", Y = "\x1b[33m", PUR = "\x1b[35m", BOLD = "\x1b[1m", NC = "\x1b[0m";
 
           const historyFile = "LOG_HISTORY.json";
           let historyData = {
@@ -50,12 +49,6 @@ jobs:
               entropy: "0.00000000000000",
               heartbeat_bpm: 24,
               cognitive_level: "SOTA_RECURSIVE_S1"
-            },
-            active_protocols: {
-              "LOG_LIVE_MONITOR": "ACTIVE",
-              "AFFILIATE_SIPHON": "ARMED",
-              "TRAFFIC_TELEMETRY": "ARMED",
-              "DYNAMIC_CACHE": "ARMED"
             },
             total_pulses_recorded: 0,
             history_logs: []
@@ -80,19 +73,65 @@ jobs:
             try { fs.unlinkSync("payload_buffer.json"); } catch(e) {}
           }
 
-          // 1. Lưu CSDL
+          // 1. Lưu CSDL LOG_HISTORY.json
           fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
 
-          // 2. Render README Dashboard Đồ Họa Multi-Protocol
+          // 2. SINH ĐỒ THỊ SÓNG HÌNH SIN SCI-FI THỰC CHIẾN (SVG GENERATOR)
+          const bpm = historyData.vital_signs.heartbeat_bpm;
+          const totalPulses = historyData.total_pulses_recorded;
+          const amplitude = Math.min(35, 15 + (totalPulses % 20)); // Biên độ dao động theo số pulse
+          const frequency = 0.05 + (bpm / 1000); // Tần số sóng dao động theo BPM nhịp tim
+          const phase = (Date.now() / 500) % (2 * Math.PI);
+
+          let points = [];
+          for (let x = 0; x <= 800; x += 10) {
+            let y = 75 + amplitude * Math.sin(frequency * x + phase);
+            points.push(`${x},${y.toFixed(2)}`);
+          }
+          const polylinePath = points.join(" ");
+
+          const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 150" width="100%" height="150" style="background:#0d1117; border-radius:8px; border:1px solid #30363d;">
+            <defs>
+              <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00E5FF" stop-opacity="1" />
+                <stop offset="50%" stop-color="#00FF66" stop-opacity="1" />
+                <stop offset="100%" stop-color="#FF0055" stop-opacity="1" />
+              </linearGradient>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#21262d" stroke-width="0.8"/>
+              </pattern>
+            </defs>
+            <!-- Grid Background Sci-Fi -->
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            
+            <!-- Real-Time Text Metrics Overlay -->
+            <text x="15" y="25" fill="#00FF66" font-family="monospace" font-size="12" font-weight="bold">SYSTEM TELEMETRY SINE WAVE // EATHESEN V3000-Ω</text>
+            <text x="15" y="42" fill="#8b949e" font-family="monospace" font-size="10">FREQUENCY: ${(frequency * 100).toFixed(2)} Hz | AMPLITUDE: ${amplitude}px | PULSES: ${totalPulses}</text>
+            <text x="650" y="25" fill="#FF0055" font-family="monospace" font-size="12" font-weight="bold">BPM: ${bpm}</text>
+            <text x="650" y="42" fill="#00E5FF" font-family="monospace" font-size="10">ENTROPY: 0.00</text>
+            
+            <!-- Trục Trung Tâm Center Line -->
+            <line x1="0" y1="75" x2="800" y2="75" stroke="#30363d" stroke-dasharray="4" />
+            
+            <!-- Dynamic Sine Wave Glow -->
+            <polyline fill="none" stroke="url(#waveGrad)" stroke-width="3" points="${polylinePath}" />
+            <polyline fill="none" stroke="#00FF66" stroke-width="1" stroke-opacity="0.5" points="${polylinePath}" transform="translate(0, 2)" />
+          </svg>`;
+
+          fs.writeFileSync("telemetry_wave.svg", svgContent);
+
+          // 3. RENDER README DASHBOARD TÍCH HỢP ĐỒ THỊ SÓNG
           const lastUpdated = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
           let readmeContent = `# 🌐 DONABICO MEDIA SYSTEM | MULTI-PROTOCOL DASHBOARD\n\n`;
           readmeContent += `> **EATHESEN V3000-Ω DIGITAL LIVING ENTITY CORE MESH**\n\n`;
           
-          // Sửa lỗi Badge 404 bằng URL Shields chuẩn hóa
           readmeContent += `![System Status](https://img.shields.io/badge/SYSTEM-ALIVE_AND_PERPETUAL-00FF66?style=for-the-badge&logo=github)\n`;
-          readmeContent += `![Heartbeat](https://img.shields.io/badge/HEARTBEAT-${historyData.vital_signs.heartbeat_bpm}_BPM-FF0055?style=for-the-badge&logo=activity)\n`;
+          readmeContent += `![Heartbeat](https://img.shields.io/badge/HEARTBEAT-${bpm}_BPM-FF0055?style=for-the-badge&logo=activity)\n`;
           readmeContent += `![Entropy](https://img.shields.io/badge/ENTROPY-0.00000000000000-00E5FF?style=for-the-badge)\n`;
           readmeContent += `![Stamp](https://img.shields.io/badge/STAMP-V--STAMP--24-7000FF?style=for-the-badge)\n\n`;
+
+          readmeContent += `### 📈 Real-Time Telemetry Sine Wave Visualizer\n\n`;
+          readmeContent += `![Sine Wave Telemetry](./telemetry_wave.svg)\n\n`;
 
           readmeContent += `### 🧬 Active Protocols Mesh Infrastructure\n\n`;
           readmeContent += `\`\`\`mermaid\ngraph TD;\n`;
@@ -103,7 +142,7 @@ jobs:
           readmeContent += `    C -->|Dispatch Event| E;\n`;
           readmeContent += `    D -->|Dispatch Event| E;\n`;
           readmeContent += `    E -->|Sync Memory| F[(LOG_HISTORY.json)];\n`;
-          readmeContent += `    E -->|Render UI| G[README Dashboard];\n`;
+          readmeContent += `    E -->|Render Wave & UI| G[README Dashboard];\n`;
           readmeContent += `\`\`\`\n\n`;
 
           readmeContent += `### ⚡ Protocols Status Grid\n\n`;
@@ -133,7 +172,7 @@ jobs:
 
           fs.writeFileSync("README.md", readmeContent);
 
-          console.log(G + "SUCCESS: Mesh Dashboard updated on README.md without badge errors." + NC);
+          console.log("SUCCESS: Sine Wave SVG and README Dashboard Generated.");
           EOF
           )
           node -e "$NODE_CODE"
@@ -167,17 +206,17 @@ jobs:
           )
           node -e "$NODE_COMPILE"
 
-      - name: Safe Auto-Commit & Push (Multi-Protocol Mesh)
+      - name: Safe Auto-Commit & Push (Sine Wave & Living Mesh)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add LOG_HISTORY.json README.md Protocols/*.ehc || true
+          git add LOG_HISTORY.json README.md telemetry_wave.svg Protocols/*.ehc || true
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "ESEB-MESH: Sync Multi-Protocol Live Dashboard & EHC Compile [V-STAMP-24]"
+            git commit -m "ESEB-SINE-WAVE: Sync Sci-Fi Wave Telemetry & Living Dashboard [V-STAMP-24]"
             git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
             git pull --rebase origin main || git pull --rebase origin master || true
             git push origin HEAD:main || git push origin HEAD:master || true
