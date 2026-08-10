@@ -3,7 +3,7 @@
    MODULE: Log_Live_Monitor
    FILE: Protocols/Log_Live_Monitor.eseb
    STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-   TOKEN AUTH: ESEB_CLASSIC_TOKEN AUTHORIZED
+   TOKEN AUTH: ESEB_CLASSIC_TOKEN INTEGRATED
  =============================== */
 
 export interface ESEBLogMonitorConfig {
@@ -18,7 +18,7 @@ export class LogLiveMonitorEngine {
     stamp: "V-STAMP-24",
     anchor: 24,
     entropy: 0.00000000000000,
-    bufferInterval: 5000 // Gom log gửi định kỳ mỗi 5 giây
+    bufferInterval: 5000
   };
 
   public generateLivingEHC(): string {
@@ -31,11 +31,10 @@ export class LogLiveMonitorEngine {
 
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'Central-Command';
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
     return {
       owner: 'donabico-global-media',
       repo: repoName,
-      domain: window.location.hostname || 'donabico-global-media.github.io',
       stamp: '${this.config.stamp}'
     };
   };
@@ -43,7 +42,7 @@ export class LogLiveMonitorEngine {
   const env = getContext();
   const logBuffer = [];
 
-  // 1. GLOBAL CONSOLE HOOK ENGINE (Bắt trọn 100% Log F12 của mọi Protocol)
+  // 1. GLOBAL CONSOLE HOOK ENGINE
   const originalLog = console.log;
   console.log = function(...args) {
     originalLog.apply(console, args);
@@ -56,7 +55,7 @@ export class LogLiveMonitorEngine {
     } catch (e) {}
   };
 
-  // 2. DISPATCH TRANSMITTER TO GITHUB ACTIONS TERMINAL
+  // 2. DISPATCH TRANSMITTER
   const streamLogsToGitHub = () => {
     if (logBuffer.length === 0) return;
 
@@ -86,7 +85,7 @@ export class LogLiveMonitorEngine {
   };
 
   setInterval(streamLogsToGitHub, ${this.config.bufferInterval});
-  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | LIVE TELEMETRY STREAMING", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();`;
   }
 }
