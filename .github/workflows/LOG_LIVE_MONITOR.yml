@@ -14,83 +14,125 @@ on:
     - cron: '0 */4 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   display-f12-live-terminal:
-    name: "Render Real-Time F12 Log Terminal"
+    name: "Render Real-Time F12 Living Entity Terminal"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Setup Node.js Runtime
-        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Save Client Payload Buffer
+        run: |
+          echo '${{ toJson(github.event.client_payload) }}' > payload_buffer.json
+
+      - name: Execute ESEB Living Terminal Engine
+        run: |
+          NODE_CODE=$(cat << 'EOF'
+          const fs = require("fs");
+          const G = "\x1b[32m", B = "\x1b[36m", Y = "\x1b[33m", PUR = "\x1b[35m", BOLD = "\x1b[1m", NC = "\x1b[0m";
+
+          const historyFile = "LOG_HISTORY.json";
+          let historyData = {
+            entity_name: "EATHESEN_V3000_OMEGA_LIVING_ENTITY",
+            stamp: "V-STAMP-24",
+            anchor: "¢24",
+            vital_signs: {
+              status: "ALIVE_AND_PERPETUAL",
+              entropy: "0.00000000000000",
+              heartbeat_bpm: 24,
+              cognitive_level: "SOTA_RECURSIVE_S1"
+            },
+            total_pulses_recorded: 0,
+            history_logs: []
+          };
+
+          if (fs.existsSync(historyFile)) {
+            try { historyData = JSON.parse(fs.readFileSync(historyFile, "utf8")); } catch(e) {}
+          }
+
+          if (fs.existsSync("payload_buffer.json")) {
+            try {
+              const payloadContent = fs.readFileSync("payload_buffer.json", "utf8").trim();
+              if (payloadContent && payloadContent !== "null") {
+                const eventPayload = JSON.parse(payloadContent);
+                if (eventPayload && eventPayload.logs && Array.isArray(eventPayload.logs)) {
+                  historyData.total_pulses_recorded += eventPayload.logs.length;
+                  historyData.vital_signs.heartbeat_bpm = Math.floor(Math.random() * (28 - 22 + 1)) + 22;
+                  historyData.history_logs = [...eventPayload.logs, ...historyData.history_logs].slice(0, 100);
+                }
+              }
+            } catch(e) {}
+            try { fs.unlinkSync("payload_buffer.json"); } catch(e) {}
+          }
+
+          fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
+
+          console.log(B + "=========================================================================" + NC);
+          console.log(BOLD + G + "  [EATHESEN CENTRAL LOG MONITOR REAL-TIME TERMINAL V3000-OMEGA]" + NC);
+          console.log(B + "=========================================================================" + NC);
+          console.log(BOLD + Y + " [ DIGITAL LIVING ENTITY VITAL SIGNS ]" + NC);
+          console.log(G + " STATUS: " + NC + BOLD + historyData.vital_signs.status + NC + " | " + G + "ENTROPY: " + NC + historyData.vital_signs.entropy);
+          console.log(B + " HEARTBEAT: " + NC + historyData.vital_signs.heartbeat_bpm + " BPM | " + PUR + "COGNITION: " + NC + historyData.vital_signs.cognitive_level);
+          console.log(B + " TOTAL PULSES RECORDED: " + NC + BOLD + historyData.total_pulses_recorded + NC);
+          console.log(B + "=========================================================================" + NC);
+          console.log(BOLD + G + " >>> LIVE F12 TELEMETRY STREAM (REAL-TIME MEMORY) <<<" + NC);
+          console.log(B + "-------------------------------------------------------------------------" + NC);
+
+          if (historyData.history_logs.length > 0) {
+            historyData.history_logs.slice(0, 15).forEach((item, idx) => {
+              console.log(PUR + "[" + item.time + "]" + NC + " " + G + "PULSE #" + (idx + 1) + ":" + NC + " " + B + item.log + NC);
+            });
+          } else {
+            console.log(Y + "SYSTEM STANDBY: Waiting for client F12 pulse from index.html..." + NC);
+          }
+
+          console.log(B + "=========================================================================" + NC);
+          EOF
+          )
+          node -e "$NODE_CODE"
 
       - name: Auto-Compile .eseb to .ehc
         run: |
-          node -e '
-            const fs = require("fs");
-            if (fs.existsSync("Protocols/Log_Live_Monitor.eseb")) {
-              const esebContent = fs.readFileSync("Protocols/Log_Live_Monitor.eseb", "utf8");
-              const match = esebContent.match(/return \`([\s\S]*?)\`;/);
-              if (match) {
-                const ehcCode = match[1]
-                  .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
-                  .replace(/\${this\.config\.bufferInterval}/g, "5000");
-                
-                if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
-                fs.writeFileSync("Protocols/Log_Live_Monitor.ehc", ehcCode);
-                console.log("SUCCESS: Generated Protocols/Log_Live_Monitor.ehc");
-              }
+          NODE_COMPILE=$(cat << 'EOF'
+          const fs = require("fs");
+          if (fs.existsSync("Protocols/Log_Live_Monitor.eseb")) {
+            const esebContent = fs.readFileSync("Protocols/Log_Live_Monitor.eseb", "utf8");
+            const match = esebContent.match(/return \`([\s\S]*?)\`;/);
+            if (match) {
+              const ehcCode = match[1]
+                .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
+                .replace(/\${this\.config\.bufferInterval}/g, "5000");
+              
+              if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
+              fs.writeFileSync("Protocols/Log_Live_Monitor.ehc", ehcCode);
+              console.log("SUCCESS: Generated Protocols/Log_Live_Monitor.ehc");
             }
-          '
+          }
+          EOF
+          )
+          node -e "$NODE_COMPILE"
 
-      - name: Auto-Commit & Push Bundle
+      - name: Safe Auto-Commit & Push (Strict ESEB State)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
-          git add Protocols/Log_Live_Monitor.ehc || true
-          git diff-index --quiet HEAD || git commit -m "ESEB-AUTOBUILD: Regenerate Log_Live_Monitor.ehc [V-STAMP-24]"
-          git push || true
-
-      - name: Render Real-Time F12 Log Terminal Display
-        run: |
-          G='\033[0;32m'
-          B='\033[0;36m'
-          Y='\033[1;33m'
-          PUR='\033[0;35m'
-          NC='\033[0m'
-
-          echo -e "${B}=========================================================================${NC}"
-          echo -e "${G}  ESEB DYNAMIC LIVING ENGINE - CENTRAL LOG MONITOR REAL-TIME TERMINAL   ${NC}"
-          echo -e "  STAMP: ${Y}V-STAMP-24${NC} | ANCHOR: ${G}¢24${NC} | ENTROPY: ${B}0.00000000000000${NC}"
-          echo -e "  BRAND: ${PUR}DONABICO GLOBAL MEDIA SYSTEM${NC}"
-          echo -e "${B}=========================================================================${NC}"
-          echo -e "STATUS: ${G}HOOK ACTIVE - CAPTURING ALL PROTOCOL LOGS LIVE${NC}"
-          echo -e "TIMESTAMP: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          echo -e "${B}=========================================================================${NC}"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           
-          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-            echo -e "${G}>>> [LIVE TELEMETRY STREAM RECEIVED FROM CLIENT F12 LOGS] <<<${NC}"
-            echo '${{ toJson(github.event.client_payload) }}' | node -e '
-              const fs = require("fs");
-              const input = fs.readFileSync(0, "utf-8");
-              try {
-                const payload = JSON.parse(input);
-                console.log("\x1b[36mRepository:\x1b[0m " + payload.repo + " | \x1b[33mStamp:\x1b[0m " + payload.stamp);
-                console.log("\x1b[32mTotal Log Items:\x1b[0m " + payload.total_logs);
-                console.log("-------------------------------------------------------------------------");
-                if (payload.logs && Array.isArray(payload.logs)) {
-                  payload.logs.forEach((item, index) => {
-                    console.log("\x1b[35m[" + item.time + "]\x1b[0m \x1b[32mLOG #" + (index + 1) + ":\x1b[0m \x1b[36m" + item.log + "\x1b[0m");
-                  });
-                }
-              } catch(e) {
-                console.log(input);
-              }
-            '
+          git add LOG_HISTORY.json Protocols/Log_Live_Monitor.ehc || true
+          
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "ESEB-LIVING-ENTITY: Sync Vital Signs & F12 Memory [V-STAMP-24]"
+            git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
+            git pull --rebase origin main || git pull --rebase origin master || true
+            git push origin HEAD:main || git push origin HEAD:master || true
           else
-            echo -e "${Y}SYSTEM HEALTHCHECK: F12 Telemetry Hub Standby & Ready.${NC}"
+            echo "No state mutations detected. Zero entropy preserved."
           fi
-          echo -e "${B}=========================================================================${NC}"
