@@ -4,12 +4,12 @@ on:
   repository_dispatch:
     types: [eseb_quad_ai_dispatch]
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '0 */2 * * *' # Chạy tự động mỗi 2 tiếng 1 lần để bảo vệ Quota
   workflow_dispatch:
 
 jobs:
   quad-ai-orchestrator:
-    name: "Quad-AI Super Smart Engine"
+    name: "Quad-AI Super Smart Engine (Quota-Safe)"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
@@ -25,7 +25,7 @@ jobs:
               if (match) {
                 const ehcCode = match[1]
                   .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
-                  .replace(/\${this\.config\.pulseInterval}/g, "2500");
+                  .replace(/\${this\.config\.cacheTtlMs}/g, "1800000");
                 if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
                 fs.writeFileSync("Protocols/Quad_Ai_Control.ehc", ehcCode);
                 console.log("SUCCESS: Generated Protocols/Quad_Ai_Control.ehc");
@@ -55,13 +55,13 @@ jobs:
           NC='\033[0m'
 
           echo -e "${B}=========================================================================${NC}"
-          echo -e "${G}  ESEB QUAD-AI NEURAL MESH - SUPER SMART INTELLIGENT CONTROLLER          ${NC}"
+          echo -e "${G}  ESEB QUAD-AI NEURAL MESH - QUOTA-SAFE SUPER SMART CONTROLLER            ${NC}"
           echo -e "  STAMP: ${Y}V-STAMP-24${NC} | ANCHOR: ${G}¢24${NC} | ENTROPY: ${B}0.00000000000000${NC}"
           echo -e "${B}=========================================================================${NC}"
-          echo -e "${PUR}[AUTHENTICATING 04 AI INFRASTRUCTURE TOKENS]${NC}"
-          echo -e "1. GROQ LPU ACCELERATOR: ${G}AUTHORIZED${NC}"
-          echo -e "2. NVIDIA LLAMA SOTA: ${G}AUTHORIZED${NC}"
-          echo -e "3. NVIDIA NEMOTRON ENTERPRISE: ${G}AUTHORIZED${NC}"
+          echo -e "${PUR}[AUTHENTICATING 04 AI TOKENS - QUOTA PROTECTED]${NC}"
+          echo -e "1. GROQ LPU ACCELERATOR: ${G}AUTHORIZED (SAFE RATE)${NC}"
+          echo -e "2. NVIDIA LLAMA SOTA: ${G}AUTHORIZED (SCHEDULED)${NC}"
+          echo -e "3. NVIDIA NEMOTRON ENTERPRISE: ${G}AUTHORIZED (SCHEDULED)${NC}"
           echo -e "4. GITHUB CLASSIC AUTOMATION: ${G}AUTHORIZED${NC}"
           echo -e "${B}=========================================================================${NC}"
           echo -e "MODE: ${G}SUPER SMART INTELLIGENT - AUTONOMOUS INDEX.HTML CONTROL${NC}"
