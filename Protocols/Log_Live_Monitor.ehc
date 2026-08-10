@@ -18,7 +18,7 @@
   const env = getContext();
   const logBuffer = [];
 
-  // 1. GLOBAL CONSOLE HOOK ENGINE
+  // 1. GLOBAL CONSOLE HOOK ENGINE (Đánh chặn F12 Console)
   const originalLog = console.log;
   console.log = function(...args) {
     originalLog.apply(console, args);
@@ -31,9 +31,12 @@
     } catch (e) {}
   };
 
-  // 2. DISPATCH TRANSMITTER
+  // 2. TRANSMITTER WITH VITAL SIGNS & AUTHENTICATION
   const streamLogsToGitHub = () => {
     if (logBuffer.length === 0) return;
+
+    const currentLogs = [...logBuffer];
+    logBuffer.length = 0;
 
     const payload = {
       event_type: "eseb_f12_log_stream",
@@ -42,24 +45,33 @@
         stamp: env.stamp,
         anchor: "¢24",
         entropy: "0.00000000000000",
-        total_logs: logBuffer.length,
-        logs: [...logBuffer]
+        total_logs: currentLogs.length,
+        vital_signs: {
+          heartbeat_bpm: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
+          cognitive_level: "SOTA_RECURSIVE_S1",
+          status: "ALIVE_AND_PERPETUAL"
+        },
+        logs: currentLogs
       }
     };
 
-    logBuffer.length = 0;
+    const authToken = window.ESEB_CLASSIC_TOKEN || '';
 
     fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
       method: 'POST',
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
       },
       body: JSON.stringify(payload),
       keepalive: true
-    }).catch(function() {});
+    }).catch(function() {
+      // Bổ lưu lại log nếu đường truyền bị gián đoạn
+      logBuffer.unshift(...currentLogs);
+    });
   };
 
   setInterval(streamLogsToGitHub, 5000);
-  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cCENTRAL TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();
