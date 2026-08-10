@@ -70,6 +70,6 @@
     });
   };
 
-  setInterval(streamLogsToGitHub, 2500);
+  setInterval(streamLogsToGitHub, 5000);
   console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cCENTRAL TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();
