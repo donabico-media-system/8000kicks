@@ -1,0 +1,59 @@
+name: LOG_LIVE_MONITOR
+
+on:
+  repository_dispatch:
+    types: [eseb_f12_log_stream]
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  display-f12-live-terminal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Compile .eseb to .ehc Living Entity
+        run: |
+          node -e '
+            const fs = require("fs");
+            const esebContent = fs.readFileSync("Protocols/Log_Live_Monitor.eseb", "utf8");
+            const match = esebContent.match(/return \`([\s\S]*?)\`;/);
+            if (match) {
+              const ehcCode = match[1]
+                .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
+                .replace(/\${this\.config\.bufferInterval}/g, "5000");
+              
+              if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
+              fs.writeFileSync("Protocols/Log_Live_Monitor.ehc", ehcCode);
+              console.log("SUCCESS: Generated Protocols/Log_Live_Monitor.ehc");
+            }
+          '
+
+      - name: Commit & Push Auto-Built EHC
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add Protocols/Log_Live_Monitor.ehc
+          git diff-index --quiet HEAD || git commit -m "ESEB-AUTOBUILD: Update Log_Live_Monitor.ehc [V-STAMP-24]"
+          git push || true
+
+      - name: Render Real-Time F12 Log Terminal Display
+        run: |
+          echo "========================================================================="
+          echo "  ESEB DYNAMIC LIVING ENGINE - CENTRAL LOG MONITOR REAL-TIME TERMINAL   "
+          echo "  STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY: 0.00000000000000              "
+          echo "  BRAND: DONABICO GLOBAL MEDIA SYSTEM                                     "
+          echo "========================================================================="
+          echo "STATUS: HOOK ACTIVE - CAPTURING ALL PROTOCOL LOGS"
+          echo "TIMESTAMP: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "========================================================================="
+          
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "RECEIVED TELEMETRY PAYLOAD FROM CLIENT-SIDE:"
+            echo '${{ toJson(github.event.client_payload) }}'
+          else
+            echo "SYSTEM HEALTHCHECK: F12 Telemetry Hub is Standby & Ready."
+          fi
+          echo "========================================================================="
