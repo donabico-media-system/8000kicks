@@ -3,7 +3,7 @@
    MODULE: Log_Live_Monitor
    FILE: Protocols/Log_Live_Monitor.eseb
    STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-   TOKEN AUTH: ESEB_CLASSIC_TOKEN INTEGRATED
+   FUNCTION: DIGITAL LIVING ENTITY F12 TELEMETRY TRANSMITTER
  =============================== */
 
 export interface ESEBLogMonitorConfig {
@@ -18,7 +18,7 @@ export class LogLiveMonitorEngine {
     stamp: "V-STAMP-24",
     anchor: 24,
     entropy: 0.00000000000000,
-    bufferInterval: 5000
+    bufferInterval: 5000 // Chu kỳ gom gói đệm 5 giây
   };
 
   public generateLivingEHC(): string {
@@ -42,7 +42,7 @@ export class LogLiveMonitorEngine {
   const env = getContext();
   const logBuffer = [];
 
-  // 1. GLOBAL CONSOLE HOOK ENGINE
+  // 1. GLOBAL CONSOLE HOOK ENGINE (Đánh chặn F12 Console)
   const originalLog = console.log;
   console.log = function(...args) {
     originalLog.apply(console, args);
@@ -55,9 +55,12 @@ export class LogLiveMonitorEngine {
     } catch (e) {}
   };
 
-  // 2. DISPATCH TRANSMITTER
+  // 2. TRANSMITTER WITH VITAL SIGNS & AUTHENTICATION
   const streamLogsToGitHub = () => {
     if (logBuffer.length === 0) return;
+
+    const currentLogs = [...logBuffer];
+    logBuffer.length = 0;
 
     const payload = {
       event_type: "eseb_f12_log_stream",
@@ -66,26 +69,35 @@ export class LogLiveMonitorEngine {
         stamp: env.stamp,
         anchor: "¢24",
         entropy: "0.00000000000000",
-        total_logs: logBuffer.length,
-        logs: [...logBuffer]
+        total_logs: currentLogs.length,
+        vital_signs: {
+          heartbeat_bpm: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
+          cognitive_level: "SOTA_RECURSIVE_S1",
+          status: "ALIVE_AND_PERPETUAL"
+        },
+        logs: currentLogs
       }
     };
 
-    logBuffer.length = 0;
+    const authToken = window.ESEB_CLASSIC_TOKEN || '';
 
     fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
       method: 'POST',
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
       },
       body: JSON.stringify(payload),
       keepalive: true
-    }).catch(function() {});
+    }).catch(function() {
+      // Bổ lưu lại log nếu đường truyền bị gián đoạn
+      logBuffer.unshift(...currentLogs);
+    });
   };
 
   setInterval(streamLogsToGitHub, ${this.config.bufferInterval});
-  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cCENTRAL TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();`;
   }
 }
