@@ -7,6 +7,10 @@
 ![Entropy](https://img.shields.io/badge/ENTROPY-0.00000000000000-00E5FF?style=for-the-badge)
 ![Stamp](https://img.shields.io/badge/STAMP-V--STAMP--24-7000FF?style=for-the-badge)
 
+### 📈 Real-Time Telemetry Sine Wave Visualizer
+
+![Sine Wave Telemetry](./telemetry_wave.svg)
+
 ### 🧬 Active Protocols Mesh Infrastructure
 
 ```mermaid
@@ -18,7 +22,7 @@ graph TD;
     C -->|Dispatch Event| E;
     D -->|Dispatch Event| E;
     E -->|Sync Memory| F[(LOG_HISTORY.json)];
-    E -->|Render UI| G[README Dashboard];
+    E -->|Render Wave & UI| G[README Dashboard];
 ```
 
 ### ⚡ Protocols Status Grid
@@ -34,10 +38,10 @@ graph TD;
 
 | Pulse # | Timestamp | F12 Client Log Payload |
 | :---: | :--- | :--- |
-| `#0` | `2026-08-10 21:19:33 UTC` | `SYSTEM STANDBY: Waiting for client F12 pulse from index.html...` |
+| `#0` | `2026-08-10 21:26:10 UTC` | `SYSTEM STANDBY: Waiting for client F12 pulse from index.html...` |
 
 ---
 
 **8000kicks** | World's first waterproof hemp shoes and sustainable travel accessories. Eco-friendly, durable, and premium vegan footwear.
 
-*Last Synced Mesh State: `2026-08-10 21:19:33 UTC`*
+*Last Synced Mesh State: `2026-08-10 21:26:10 UTC`*
