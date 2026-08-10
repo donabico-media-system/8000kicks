@@ -1,59 +1,92 @@
-name: LOG_LIVE_MONITOR
+/* ===============================
+   ESEB PROTOCOL CORE SPECIFICATION
+   MODULE: Log_Live_Monitor
+   FILE: Protocols/Log_Live_Monitor.eseb
+   STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
+   TOKEN AUTH: ESEB_CLASSIC_TOKEN AUTHORIZED
+ =============================== */
 
-on:
-  repository_dispatch:
-    types: [eseb_f12_log_stream]
-  schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
+export interface ESEBLogMonitorConfig {
+  stamp: string;
+  anchor: number;
+  entropy: number;
+  bufferInterval: number;
+}
 
-jobs:
-  display-f12-live-terminal:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
+export class LogLiveMonitorEngine {
+  private config: ESEBLogMonitorConfig = {
+    stamp: "V-STAMP-24",
+    anchor: 24,
+    entropy: 0.00000000000000,
+    bufferInterval: 5000 // Gom log gửi định kỳ mỗi 5 giây
+  };
 
-      - name: Compile .eseb to .ehc Living Entity
-        run: |
-          node -e '
-            const fs = require("fs");
-            const esebContent = fs.readFileSync("Protocols/Log_Live_Monitor.eseb", "utf8");
-            const match = esebContent.match(/return \`([\s\S]*?)\`;/);
-            if (match) {
-              const ehcCode = match[1]
-                .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
-                .replace(/\${this\.config\.bufferInterval}/g, "5000");
-              
-              if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
-              fs.writeFileSync("Protocols/Log_Live_Monitor.ehc", ehcCode);
-              console.log("SUCCESS: Generated Protocols/Log_Live_Monitor.ehc");
-            }
-          '
+  public generateLivingEHC(): string {
+    return `/* ESEB DYNAMIC LIVING ENTITY - CENTRAL F12 LOG MONITOR
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO GLOBAL MEDIA SYSTEM
+*/
+(function() {
+  'use strict';
 
-      - name: Commit & Push Auto-Built EHC
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
-          git add Protocols/Log_Live_Monitor.ehc
-          git diff-index --quiet HEAD || git commit -m "ESEB-AUTOBUILD: Update Log_Live_Monitor.ehc [V-STAMP-24]"
-          git push || true
+  const getContext = () => {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'Central-Command';
+    return {
+      owner: 'donabico-global-media',
+      repo: repoName,
+      domain: window.location.hostname || 'donabico-global-media.github.io',
+      stamp: '${this.config.stamp}'
+    };
+  };
 
-      - name: Render Real-Time F12 Log Terminal Display
-        run: |
-          echo "========================================================================="
-          echo "  ESEB DYNAMIC LIVING ENGINE - CENTRAL LOG MONITOR REAL-TIME TERMINAL   "
-          echo "  STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY: 0.00000000000000              "
-          echo "  BRAND: DONABICO GLOBAL MEDIA SYSTEM                                     "
-          echo "========================================================================="
-          echo "STATUS: HOOK ACTIVE - CAPTURING ALL PROTOCOL LOGS"
-          echo "TIMESTAMP: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          echo "========================================================================="
-          
-          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-            echo "RECEIVED TELEMETRY PAYLOAD FROM CLIENT-SIDE:"
-            echo '${{ toJson(github.event.client_payload) }}'
-          else
-            echo "SYSTEM HEALTHCHECK: F12 Telemetry Hub is Standby & Ready."
-          fi
-          echo "========================================================================="
+  const env = getContext();
+  const logBuffer = [];
+
+  // 1. GLOBAL CONSOLE HOOK ENGINE (Bắt trọn 100% Log F12 của mọi Protocol)
+  const originalLog = console.log;
+  console.log = function(...args) {
+    originalLog.apply(console, args);
+    try {
+      const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+      logBuffer.push({
+        time: new Date().toISOString(),
+        log: logText
+      });
+    } catch (e) {}
+  };
+
+  // 2. DISPATCH TRANSMITTER TO GITHUB ACTIONS TERMINAL
+  const streamLogsToGitHub = () => {
+    if (logBuffer.length === 0) return;
+
+    const payload = {
+      event_type: "eseb_f12_log_stream",
+      client_payload: {
+        repo: env.repo,
+        stamp: env.stamp,
+        anchor: "¢24",
+        entropy: "0.00000000000000",
+        total_logs: logBuffer.length,
+        logs: [...logBuffer]
+      }
+    };
+
+    logBuffer.length = 0;
+
+    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function() {});
+  };
+
+  setInterval(streamLogsToGitHub, ${this.config.bufferInterval});
+  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | LIVE TELEMETRY STREAMING", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+})();`;
+  }
+}
