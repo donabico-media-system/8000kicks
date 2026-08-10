@@ -1,0 +1,51 @@
+name: CDN_INDEX_SIGNAL
+
+on:
+  push:
+    paths:
+      - 'Protocols/Cdn_Index_Signal.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy-signal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Compile .eseb to .ehc Living Entity
+        run: |
+          node -e '
+            const fs = require("fs");
+            const esebContent = fs.readFileSync("Protocols/Cdn_Index_Signal.eseb", "utf8");
+            const match = esebContent.match(/return \`([\s\S]*?)\`;/);
+            if (match) {
+              const ehcCode = match[1]
+                .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
+                .replace(/\${this\.config\.pulseInterval}/g, "2500");
+              
+              if (!fs.existsSync("Protocols")) {
+                fs.mkdirSync("Protocols");
+              }
+              fs.writeFileSync("Protocols/Cdn_Index_Signal.ehc", ehcCode);
+              console.log("SUCCESS: Generated Protocols/Cdn_Index_Signal.ehc");
+            } else {
+              console.error("ERROR: Failed to extract EHC template from .eseb file");
+              process.exit(1);
+            }
+          '
+
+      - name: Deploy Dynamic Bundle to Repository
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add Protocols/Cdn_Index_Signal.ehc
+          git diff-index --quiet HEAD || git commit -m "ESEB-AUTOBUILD: Update Cdn_Index_Signal.ehc [V-STAMP-24]"
+          git push
