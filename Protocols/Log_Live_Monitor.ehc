@@ -7,10 +7,10 @@
 
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
     return {
+      owner: 'donabico-global-media',
       repo: repoName,
-      domain: window.location.hostname || 'donabico-global-media.github.io',
       stamp: 'V-STAMP-24'
     };
   };
@@ -18,25 +18,20 @@
   const env = getContext();
   const logBuffer = [];
 
-  // 1. GLOBAL CONSOLE HOOK ENGINE (Đánh chặn 100% Log F12 của MỌI Protocol)
+  // 1. GLOBAL CONSOLE HOOK ENGINE
   const originalLog = console.log;
   console.log = function(...args) {
-    // Gọi hàm log gốc để trình duyệt F12 vẫn hiển thị bình thường
     originalLog.apply(console, args);
-
     try {
-      // Bóc tách nội dung Log để đưa vào bộ đệm Telemetry
       const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
       logBuffer.push({
         time: new Date().toISOString(),
         log: logText
       });
-    } catch (e) {
-      // Fail-safe giữ entropy = 0
-    }
+    } catch (e) {}
   };
 
-  // 2. TELEMETRY STREAM TRANSMITTER (Bắn dữ liệu ngầm về GitHub API / Webhook)
+  // 2. DISPATCH TRANSMITTER
   const streamLogsToGitHub = () => {
     if (logBuffer.length === 0) return;
 
@@ -52,19 +47,19 @@
       }
     };
 
-    // Xóa bộ đệm sau khi đóng gói
     logBuffer.length = 0;
 
-    // Gửi ngầm qua navigator.sendBeacon (Không làm giật/lag giao diện UI)
-    if (navigator.sendBeacon) {
-      const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-      navigator.sendBeacon('https://api.github.com/repos/donabico-global-media/' + env.repo + '/dispatches', blob);
-    }
+    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function() {});
   };
 
-  // Kích hoạt chu kỳ đẩy Log định kỳ ngầm
   setInterval(streamLogsToGitHub, 5000);
-
-  // Thông báo Hub đã kích hoạt thành công
-  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | LISTENING TO ALL PROTOCOLS", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[ESEB CENTRAL MONITOR V3000-Ω] %cLOG HOOK ACTIVE | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();
