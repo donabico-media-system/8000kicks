@@ -1,4 +1,4 @@
-# 🌐 DONABICO MEDIA SYSTEM | MULTI-PROTOCOL DASHBOARD
+# 🌐 DONABICO-MEDIA-SYSTEM | 8000KICKS
 
 > **EATHESEN V3000-Ω DIGITAL LIVING ENTITY CORE MESH**
 
@@ -15,33 +15,22 @@
 
 ```mermaid
 graph TD;
-    A[index.html Client] -->|F12 Telemetry Stream| B(Log_Live_Monitor.ehc);
-    A -->|Traffic & UTM Siphon| C(Affiliate_Siphon.ehc);
-    A -->|Cache Injection| D(AI_Cache_Siphon.ehc);
+    A[index.html Client] -->|F12 Telemetry Stream| B(Organic_Traffic_Booster.ehc);
+    A -->|Traffic & UTM Siphon| C(Super_Affiliate_Core.ehc);
     B -->|Dispatch Event| E[GitHub Actions Living Core];
     C -->|Dispatch Event| E;
-    D -->|Dispatch Event| E;
     E -->|Sync Memory| F[(LOG_HISTORY.json)];
     E -->|Render Wave & UI| G[README Dashboard];
 ```
-
-### ⚡ Protocols Status Grid
-
-| Protocol Module | Status | Engine Layer | Target Surface |
-| :--- | :---: | :---: | :---: |
-| `Protocols/Log_Live_Monitor.eseb` | `ONLINE` | `F12 Telemetry` | `index.html` |
-| `Protocols/Affiliate_Siphon.eseb` | `ARMED` | `Traffic Siphon` | `Redirect Botton Links` |
-| `Protocols/AI_Cache_Siphon.eseb` | `ARMED` | `Browser Cache` | `DOM Shadow Layer` |
-| `Protocols/Multi_Protocol_Mesh.eseb` | `READY` | `Central Router` | `Global Core` |
 
 ### 📡 Live F12 Telemetry Stream (Pulses Recorded: `0`)
 
 | Pulse # | Timestamp | F12 Client Log Payload |
 | :---: | :--- | :--- |
-| `#0` | `2026-08-10 22:07:23 UTC` | `SYSTEM STANDBY: Waiting for client F12 pulse from index.html...` |
+| `#0` | `2026-08-10 22:07:57 UTC` | `SYSTEM STANDBY: Waiting for client F12 pulse from index.html...` |
 
 ---
 
-**8000kicks** | World's first waterproof hemp shoes and sustainable travel accessories. Eco-friendly, durable, and premium vegan footwear.
+**NODE IDENTITY:** `8000kicks` | **NETWORK:** `donabico-media-system` | **SURFACE:** `donabico-media-system.github.io/8000kicks`
 
-*Last Synced Mesh State: `2026-08-10 22:07:23 UTC`*
+*Last Synced Mesh State: `2026-08-10 22:07:57 UTC`*

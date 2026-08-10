@@ -109,5 +109,5 @@
 
   bootSequence();
   injectDynamicOG();
-  setInterval(pulseLoop, 5000);
+  setInterval(pulseLoop, 2500);
 })();
