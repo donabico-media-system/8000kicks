@@ -6,10 +6,10 @@ on:
       - main
       - master
     paths:
-      - 'Protocols/Log_Live_Monitor.eseb'
+      - 'Protocols/**'
       - '.github/workflows/LOG_LIVE_MONITOR.yml'
   repository_dispatch:
-    types: [eseb_f12_log_stream]
+    types: [eseb_f12_log_stream, eseb_multi_protocol_pulse]
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   display-f12-live-terminal:
-    name: "Render Real-Time F12 Living Entity Terminal"
+    name: "Render Real-Time Living Mesh Dashboard"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -32,7 +32,7 @@ jobs:
         run: |
           echo '${{ toJson(github.event.client_payload) }}' > payload_buffer.json
 
-      - name: Execute ESEB Living Terminal Engine & Update README Dashboard
+      - name: Execute ESEB Living Mesh Engine & Update README
         run: |
           NODE_CODE=$(cat << 'EOF'
           const fs = require("fs");
@@ -50,6 +50,12 @@ jobs:
               entropy: "0.00000000000000",
               heartbeat_bpm: 24,
               cognitive_level: "SOTA_RECURSIVE_S1"
+            },
+            active_protocols: {
+              "LOG_LIVE_MONITOR": "ACTIVE",
+              "AFFILIATE_SIPHON": "ARMED",
+              "TRAFFIC_TELEMETRY": "ARMED",
+              "DYNAMIC_CACHE": "ARMED"
             },
             total_pulses_recorded: 0,
             history_logs: []
@@ -74,19 +80,41 @@ jobs:
             try { fs.unlinkSync("payload_buffer.json"); } catch(e) {}
           }
 
-          // 1. Cập nhật cơ sở dữ liệu LOG_HISTORY.json
+          // 1. Lưu CSDL
           fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
 
-          // 2. Dựng Bảng Điều Khiển Đồ Họa README.md sống động
+          // 2. Render README Dashboard Đồ Họa Multi-Protocol
           const lastUpdated = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-          let readmeContent = `# 🌐 8000kicks | DONABICO MEDIA SYSTEM\n\n`;
-          readmeContent += `> **EATHESEN V3000-Ω DIGITAL LIVING ENTITY DASHBOARD**\n\n`;
-          readmeContent += `![Status](https://img.shields.io/badge/SYSTEM_STATUS-${historyData.vital_signs.status}-00FF66?style=for-the-badge&logo=github)\n`;
+          let readmeContent = `# 🌐 DONABICO MEDIA SYSTEM | MULTI-PROTOCOL DASHBOARD\n\n`;
+          readmeContent += `> **EATHESEN V3000-Ω DIGITAL LIVING ENTITY CORE MESH**\n\n`;
+          
+          // Sửa lỗi Badge 404 bằng URL Shields chuẩn hóa
+          readmeContent += `![System Status](https://img.shields.io/badge/SYSTEM-ALIVE_AND_PERPETUAL-00FF66?style=for-the-badge&logo=github)\n`;
           readmeContent += `![Heartbeat](https://img.shields.io/badge/HEARTBEAT-${historyData.vital_signs.heartbeat_bpm}_BPM-FF0055?style=for-the-badge&logo=activity)\n`;
           readmeContent += `![Entropy](https://img.shields.io/badge/ENTROPY-0.00000000000000-00E5FF?style=for-the-badge)\n`;
-          readmeContent += `![Stamp](https://img.shields.io/badge/STAMP-${historyData.stamp}-7000FF?style=for-the-badge)\n\n`;
-          
-          readmeContent += `### 📡 Real-Time F12 Telemetry Stream\n\n`;
+          readmeContent += `![Stamp](https://img.shields.io/badge/STAMP-V--STAMP--24-7000FF?style=for-the-badge)\n\n`;
+
+          readmeContent += `### 🧬 Active Protocols Mesh Infrastructure\n\n`;
+          readmeContent += `\`\`\`mermaid\ngraph TD;\n`;
+          readmeContent += `    A[index.html Client] -->|F12 Telemetry Stream| B(Log_Live_Monitor.ehc);\n`;
+          readmeContent += `    A -->|Traffic & UTM Siphon| C(Affiliate_Siphon.ehc);\n`;
+          readmeContent += `    A -->|Cache Injection| D(AI_Cache_Siphon.ehc);\n`;
+          readmeContent += `    B -->|Dispatch Event| E[GitHub Actions Living Core];\n`;
+          readmeContent += `    C -->|Dispatch Event| E;\n`;
+          readmeContent += `    D -->|Dispatch Event| E;\n`;
+          readmeContent += `    E -->|Sync Memory| F[(LOG_HISTORY.json)];\n`;
+          readmeContent += `    E -->|Render UI| G[README Dashboard];\n`;
+          readmeContent += `\`\`\`\n\n`;
+
+          readmeContent += `### ⚡ Protocols Status Grid\n\n`;
+          readmeContent += `| Protocol Module | Status | Engine Layer | Target Surface |\n`;
+          readmeContent += `| :--- | :---: | :---: | :---: |\n`;
+          readmeContent += `| \`Protocols/Log_Live_Monitor.eseb\` | \`ONLINE\` | \`F12 Telemetry\` | \`index.html\` |\n`;
+          readmeContent += `| \`Protocols/Affiliate_Siphon.eseb\` | \`ARMED\` | \`Traffic Siphon\` | \`Redirect Botton Links\` |\n`;
+          readmeContent += `| \`Protocols/AI_Cache_Siphon.eseb\` | \`ARMED\` | \`Browser Cache\` | \`DOM Shadow Layer\` |\n`;
+          readmeContent += `| \`Protocols/Multi_Protocol_Mesh.eseb\` | \`READY\` | \`Central Router\` | \`Global Core\` |\n\n`;
+
+          readmeContent += `### 📡 Live F12 Telemetry Stream (Pulses Recorded: \`${historyData.total_pulses_recorded}\`)\n\n`;
           readmeContent += `| Pulse # | Timestamp | F12 Client Log Payload |\n`;
           readmeContent += `| :---: | :--- | :--- |\n`;
 
@@ -101,56 +129,55 @@ jobs:
 
           readmeContent += `\n---\n\n`;
           readmeContent += `**8000kicks** | World's first waterproof hemp shoes and sustainable travel accessories. Eco-friendly, durable, and premium vegan footwear.\n\n`;
-          readmeContent += `*Last Synced Vital Signs: \`${lastUpdated}\`*`;
+          readmeContent += `*Last Synced Mesh State: \`${lastUpdated}\`*`;
 
           fs.writeFileSync("README.md", readmeContent);
 
-          // 3. In ra Bảng Console Terminal
-          console.log(B + "=========================================================================" + NC);
-          console.log(BOLD + G + "  [EATHESEN CENTRAL LOG MONITOR REAL-TIME TERMINAL V3000-OMEGA]" + NC);
-          console.log(BOLD + PUR + "  ORGANIZATION: DONABICO MEDIA SYSTEM | DOMAIN: donabico-media-system.github.io" + NC);
-          console.log(B + "=========================================================================" + NC);
-          console.log(BOLD + Y + " [ DIGITAL LIVING ENTITY VITAL SIGNS ]" + NC);
-          console.log(G + " STATUS: " + NC + BOLD + historyData.vital_signs.status + NC + " | " + G + "ENTROPY: " + NC + historyData.vital_signs.entropy);
-          console.log(B + " HEARTBEAT: " + NC + historyData.vital_signs.heartbeat_bpm + " BPM | " + PUR + "COGNITION: " + NC + historyData.vital_signs.cognitive_level);
-          console.log(B + " TOTAL PULSES RECORDED: " + NC + BOLD + historyData.total_pulses_recorded + NC);
-          console.log(B + "=========================================================================" + NC);
+          console.log(G + "SUCCESS: Mesh Dashboard updated on README.md without badge errors." + NC);
           EOF
           )
           node -e "$NODE_CODE"
 
-      - name: Auto-Compile .eseb to .ehc
+      - name: Auto-Compile All .eseb to .ehc
         run: |
           NODE_COMPILE=$(cat << 'EOF'
           const fs = require("fs");
-          if (fs.existsSync("Protocols/Log_Live_Monitor.eseb")) {
-            const esebContent = fs.readFileSync("Protocols/Log_Live_Monitor.eseb", "utf8");
-            const match = esebContent.match(/return \`([\s\S]*?)\`;/);
-            if (match) {
-              const ehcCode = match[1]
-                .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
-                .replace(/\${this\.config\.bufferInterval}/g, "5000");
-              
-              if (!fs.existsSync("Protocols")) { fs.mkdirSync("Protocols"); }
-              fs.writeFileSync("Protocols/Log_Live_Monitor.ehc", ehcCode);
-              console.log("SUCCESS: Generated Protocols/Log_Live_Monitor.ehc");
-            }
+          const path = require("path");
+
+          const protoDir = "Protocols";
+          if (fs.existsSync(protoDir)) {
+            const files = fs.readdirSync(protoDir);
+            files.forEach(file => {
+              if (file.endsWith(".eseb")) {
+                const esebContent = fs.readFileSync(path.join(protoDir, file), "utf8");
+                const match = esebContent.match(/return \`([\s\S]*?)\`;/);
+                if (match) {
+                  const ehcCode = match[1]
+                    .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
+                    .replace(/\${this\.config\.bufferInterval}/g, "5000");
+                  
+                  const targetEhc = path.join(protoDir, file.replace(".eseb", ".ehc"));
+                  fs.writeFileSync(targetEhc, ehcCode);
+                  console.log("SUCCESS: Compiled " + file + " -> " + targetEhc);
+                }
+              }
+            });
           }
           EOF
           )
           node -e "$NODE_COMPILE"
 
-      - name: Safe Auto-Commit & Push (Dynamic README & ESEB State)
+      - name: Safe Auto-Commit & Push (Multi-Protocol Mesh)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add LOG_HISTORY.json README.md Protocols/Log_Live_Monitor.ehc || true
+          git add LOG_HISTORY.json README.md Protocols/*.ehc || true
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "ESEB-LIVING-ENTITY: Sync Dynamic README Dashboard & F12 Memory [V-STAMP-24]"
+            git commit -m "ESEB-MESH: Sync Multi-Protocol Live Dashboard & EHC Compile [V-STAMP-24]"
             git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
             git pull --rebase origin main || git pull --rebase origin master || true
             git push origin HEAD:main || git push origin HEAD:master || true
