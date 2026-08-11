@@ -22,27 +22,27 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Execute ESEB Super Smart Concurrent AI Execution
+      - name: Execute ESEB 5-Token Concurrent AI Execution
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          LLAMA_META_TOKEN: ${{ secrets.LLAMA_META_TOKEN }}
+          NANO_NVIDIA_TOKEN: ${{ secrets.NANO_NVIDIA_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "=== STARTING ESEB SUPER SMART COMPILATION ==="
+          echo "=== STARTING ESEB 5-TOKEN COMPILATION ==="
           python Protocols/Cdn_Index_Signal.eseb
-          echo "=== EXECUTING PARALLEL SERVERLESS AI REST APIS ==="
+          echo "=== EXECUTING 5-TOKEN PARALLEL SERVERLESS AI REST APIS ==="
           node Protocols/Cdn_Index_Signal.js
-          echo "=== SUPER SMART EXECUTION COMPLETE: ENTROPY = 0 ==="
+          echo "=== 5-TOKEN EXECUTION COMPLETE: ENTROPY = 0 ==="
 
-      - name: Commit and Push Living Entity Artifacts with Clean Stash Sync
+      - name: Commit and Push Living Entity Artifacts with Force Sync
         run: |
           git config --global user.name "Donabico-Action-Bot"
           git config --global user.email "bot@donabico.global"
-          git stash --include-untracked || true
+          git fetch origin
+          git checkout main || git checkout master
           git pull origin main --rebase || git pull origin master --rebase || true
-          git stash pop || true
           git add Protocols/Cdn_Index_Signal.ehc Protocols/Cdn_Index_Signal.js
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync Cdn_Index_Signal Super Smart Living Entities [V-STAMP-24]"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync Cdn_Index_Signal 5-Token Living Entities [V-STAMP-24]"
           git push origin HEAD:main || git push origin HEAD:master
