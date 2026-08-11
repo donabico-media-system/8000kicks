@@ -1,9 +1,0 @@
-# Unblock ESEB Protocols & Build Engine
-!Protocols/
-!Protocols/*.eseb
-!Protocols/*.ehc
-!Build_Engine.js
-!*.html
-!*.xml
-!*.json
-!*.txt
