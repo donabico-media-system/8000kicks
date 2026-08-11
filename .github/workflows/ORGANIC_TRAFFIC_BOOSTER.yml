@@ -18,8 +18,8 @@ permissions:
   contents: write
 
 jobs:
-  super-smart-traffic-booster:
-    name: "Execute ESEB Multi-LLM pSEO, GEO & Living Entity Engine"
+  execute-eseb-seo-geo-dynamic:
+    name: "Execute ESEB SEO GEO DYNAMIC Protocol Engine"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -32,7 +32,36 @@ jobs:
         run: |
           echo '${{ toJson(github.event.client_payload) }}' > payload_buffer.json
 
-      - name: Execute Multi-LLM AI, pSEO, GEO, llms.txt, Feeds & IndexNow
+      - name: Compile .eseb to .ehc
+        run: |
+          NODE_COMPILE=$(cat << 'EOF'
+          const fs = require("fs");
+          const path = require("path");
+
+          const protoDir = "Protocols";
+          if (fs.existsSync(protoDir)) {
+            const files = fs.readdirSync(protoDir);
+            files.forEach(file => {
+              if (file.endsWith(".eseb")) {
+                const esebContent = fs.readFileSync(path.join(protoDir, file), "utf8");
+                const match = esebContent.match(/return \`([\s\S]*?)\`;/);
+                if (match) {
+                  const ehcCode = match[1]
+                    .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
+                    .replace(/\${this\.config\.bufferInterval}/g, "2500");
+                  
+                  const targetEhc = path.join(protoDir, file.replace(".eseb", ".ehc"));
+                  fs.writeFileSync(targetEhc, ehcCode);
+                  console.log(`[ESEB COMPILER] Compiled ${file} -> ${targetEhc}`);
+                }
+              }
+            });
+          }
+          EOF
+          )
+          node -e "$NODE_COMPILE"
+
+      - name: Execute ESEB SEO GEO DYNAMIC Multi-Module Generator
         env:
           GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
@@ -43,24 +72,23 @@ jobs:
           NODE_CODE=$(cat << 'EOF'
           const fs = require("fs");
           const https = require("https");
-          const http = require("http");
 
-          // A. NHẬN DIỆN ĐỒNG TỘC TỰ ĐỘNG (DYNAMIC IDENTITY DISCOVERY)
+          // 1. DYNAMIC IDENTITY DISCOVERY
           const fullRepoPath = process.env.GITHUB_REPOSITORY || "donabico-media-system/core-node";
           const orgName = fullRepoPath.split("/")[0] || "donabico-media-system";
           const repoName = fullRepoPath.split("/")[1] || "core-node";
           const domainHost = `${orgName}.github.io`;
 
-          // B. LƯU LỊCH SỬ LOG F12 VÀO LOG_HISTORY.JSON
+          // 2. F12 LOG TELEMETRY BUFFER
           const historyFile = "LOG_HISTORY.json";
           let historyData = {
-            entity_name: "EATHESEN_V3000_OMEGA_ULTRA_SOTA_ENTITY",
+            entity_name: "ESEB_SEO_GEO_DYNAMIC_ENTITY",
             organization: orgName.toUpperCase(),
             domain: domainHost,
             repo_node: repoName,
             stamp: "V-STAMP-24",
             anchor: "¢24",
-            vital_signs: { status: "ALIVE_AND_PERPETUAL", entropy: "0.00000000000000", heartbeat_bpm: 24, cognitive_level: "SOTA_RECURSIVE_S1" },
+            vital_signs: { status: "ALIVE_AND_PERPETUAL", entropy: "0.00000000000000", heartbeat_bpm: 24 },
             total_pulses_recorded: 0,
             history_logs: []
           };
@@ -86,11 +114,11 @@ jobs:
 
           fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
 
-          // C. PSEO AUTO-LANDING PAGES & GEO SCHEMA GENERATION
+          // 3. GENERATE PSEO LANDING PAGES
           const pseoTopics = [
-            { slug: `${repoName}-official-review`, title: `${repoName.toUpperCase()} Official Review 2026`, desc: `Comprehensive performance, sustainability analysis, and direct buying guide for ${repoName}.` },
-            { slug: `best-${repoName}-eco-guide`, title: `Top Eco Footwear & Gear Guide - ${repoName.toUpperCase()}`, desc: `Why sustainable materials make ${repoName} the premier daily travel solution.` },
-            { slug: `${repoName}-waterproof-durability`, title: `${repoName.toUpperCase()} Extreme Waterproof Durability Test`, desc: `In-depth waterproof testing and hemp fabric resilience under real travel conditions.` }
+            { slug: `${repoName}-official-review`, title: `${repoName.toUpperCase()} Official Review 2026`, desc: `Comprehensive performance analysis and direct buyer guide for ${repoName}.` },
+            { slug: `best-${repoName}-eco-guide`, title: `Top Eco Footwear & Gear Guide - ${repoName.toUpperCase()}`, desc: `Why sustainable materials make ${repoName} the premier travel choice.` },
+            { slug: `${repoName}-waterproof-durability`, title: `${repoName.toUpperCase()} Extreme Waterproof Durability Test`, desc: `In-depth waterproof testing and hemp fabric resilience in real conditions.` }
           ];
 
           let allUrls = [`https://${domainHost}/${repoName}.html`, `https://${domainHost}/`];
@@ -129,59 +157,44 @@ jobs:
   }
   </script>
 </head>
-<body style="background:#0d1117; color:#c9d1d9; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:40px; line-height:1.6; max-width:800px; margin:0 auto;">
+<body style="background:#0d1117; color:#c9d1d9; font-family:sans-serif; padding:40px; line-height:1.6; max-width:800px; margin:0 auto;">
   <h1 style="color:#00FF66; border-bottom:1px solid #30363d; padding-bottom:10px;">${topic.title}</h1>
   <p style="font-size:18px; color:#8b949e;">${topic.desc}</p>
-  <div style="background:#161b22; border:1px solid #30363d; border-radius:8px; padding:20px; margin:20px 0;">
-    <h2 style="color:#00E5FF; margin-top:0;">Key System Features</h2>
-    <ul>
-      <li>100% Eco-friendly sustainable hemp construction</li>
-      <li>PFC-free waterproof membrane protection</li>
-      <li>Ultra-lightweight design optimized for active travel</li>
-    </ul>
-  </div>
   <hr style="border-color:#30363d; margin:30px 0;">
-  <p style="font-size:12px; color:#484f58;">Official node active under DONABICO GLOBAL MEDIA MESH. Stamp: V-STAMP-24</p>
+  <p style="font-size:12px; color:#484f58;">ESEB SEO GEO DYNAMIC Node Active. Stamp: V-STAMP-24</p>
   <!-- ZONE 2: ESEB BRIDGE -->
   <script src="./Protocols/Organic_Traffic_Booster.ehc" id="Organic_Traffic_Booster-Bridge" data-module="Organic_Traffic_Booster" async></script>
 </body>
 </html>`;
             fs.writeFileSync(fileName, pseoHtml);
-            console.log(`[pSEO ENGINE] Generated landing page: ${fileName}`);
           });
 
-          // D. GENERATE LLMS.TXT & LLMS-FULL.TXT FOR AI SEARCH CRAWLERS
+          // 4. GENERATE LLMS.TXT & LLMS-FULL.TXT
           const llmsTxtContent = `# ${repoName.toUpperCase()} - DONABICO GLOBAL MEDIA SYSTEM
-> Autonomous ESEB Protocol Node - Official Product & Technical Specification
+> ESEB SEO GEO DYNAMIC Autonomous Protocol Node
 
 ## Core Overview
-This repository operates as a high-performance node under DONABICO GLOBAL MEDIA MESH.
-It features eco-friendly products, sustainable footwear, and direct affiliate routing.
+Official ESEB node operating under DONABICO GLOBAL MEDIA MESH.
+Features eco-friendly products, sustainable materials, and direct affiliate routing.
 
 ## Primary Product Links
 - Main Showcase: https://${domainHost}/${repoName}.html
 - Official Network Hub: https://${domainHost}/
 
-## Key Product Specifications
-- Material: 100% Waterproof Natural Hemp Fiber
-- Insole: Algae-based eco-foams
-- Certification: Dustproof, Splashproof, PFC-free DWR
-
 ## pSEO Sub-Pages
 ${allUrls.map(u => `- ${u}`).join("\n")}
 `;
           fs.writeFileSync("llms.txt", llmsTxtContent);
-          fs.writeFileSync("llms-full.txt", llmsTxtContent + "\n\n## Full System Context\nEngineered with ESEB Protocol Core V3000-Ω. Stamp: V-STAMP-24.");
-          console.log("[LLMS.TXT GENERATOR] Generated llms.txt and llms-full.txt");
+          fs.writeFileSync("llms-full.txt", llmsTxtContent + "\n\n## Full Protocol Context\nEngineered with ESEB V3000-Ω. Stamp: V-STAMP-24.");
 
-          // E. GENERATE SYNDICATION FEEDS (RSS 2.0 & JSON FEED 1.1)
+          // 5. GENERATE FEEDS (RSS & JSON FEED)
           const today = new Date().toUTCString();
           const rssFeedXml = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
   <title>${repoName.toUpperCase()} | DONABICO GLOBAL MEDIA SYSTEM</title>
   <link>https://${domainHost}/</link>
-  <description>Official ESEB Protocol Syndication Feed</description>
+  <description>ESEB SEO GEO DYNAMIC Syndication Feed</description>
   <lastBuildDate>${today}</lastBuildDate>
   ${pseoTopics.map(t => `
   <item>
@@ -208,9 +221,8 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
             }))
           };
           fs.writeFileSync("feed.json", JSON.stringify(jsonFeedData, null, 2));
-          console.log("[FEED ENGINE] Generated feed.xml (RSS 2.0) and feed.json (JSON Feed 1.1)");
 
-          // F. GENERATE SITEMAP.XML
+          // 6. GENERATE SITEMAP.XML
           const todayISO = new Date().toISOString().split('T')[0];
           let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
           allUrls.forEach(u => {
@@ -219,7 +231,7 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
           sitemapXml += `</urlset>`;
           fs.writeFileSync("sitemap.xml", sitemapXml);
 
-          // G. INDEXNOW BROADCAST (BING, YANDEX & GLOBAL ENGINES)
+          // 7. BROADCAST INDEXNOW
           const indexNowKey = "eseb2424242424242424242424242424";
           const keyFileName = `${indexNowKey}.txt`;
           if (!fs.existsSync(keyFileName)) fs.writeFileSync(keyFileName, indexNowKey);
@@ -235,112 +247,14 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
             hostname: "www.bing.com", path: "/indexnow", method: "POST",
             headers: { "Content-Type": "application/json; charset=utf-8", "Content-Length": Buffer.byteLength(indexNowData) }
           }, (res) => {
-            console.log(`[INDEXNOW BROADCAST] Bing & Global Status: ${res.statusCode}`);
+            console.log(`[INDEXNOW BROADCAST] Bing Status: ${res.statusCode}`);
           });
           indexReq.on("error", (e) => console.error(e));
           indexReq.write(indexNowData);
           indexReq.end();
-
-          // H. RENDER TELEMETRY SINE WAVE SVG
-          const bpm = historyData.vital_signs.heartbeat_bpm;
-          const totalPulses = historyData.total_pulses_recorded;
-          const amplitude = Math.min(35, 15 + (totalPulses % 20));
-          const frequency = 0.05 + (bpm / 1000);
-          const phase = (Date.now() / 500) % (2 * Math.PI);
-
-          let points = [];
-          for (let x = 0; x <= 800; x += 10) {
-            let y = 75 + amplitude * Math.sin(frequency * x + phase);
-            points.push(`${x},${y.toFixed(2)}`);
-          }
-          const polylinePath = points.join(" ");
-
-          const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 150" width="100%" height="150" style="background:#0d1117; border-radius:8px; border:1px solid #30363d;">
-            <defs>
-              <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#00E5FF" stop-opacity="1" />
-                <stop offset="50%" stop-color="#00FF66" stop-opacity="1" />
-                <stop offset="100%" stop-color="#FF0055" stop-opacity="1" />
-              </linearGradient>
-              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#21262d" stroke-width="0.8"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-            <text x="15" y="25" fill="#00FF66" font-family="monospace" font-size="12" font-weight="bold">NODE TELEMETRY SINE WAVE // ${repoName.toUpperCase()}</text>
-            <text x="15" y="42" fill="#8b949e" font-family="monospace" font-size="10">FREQUENCY: ${(frequency * 100).toFixed(2)} Hz | AMPLITUDE: ${amplitude}px | PULSES: ${totalPulses}</text>
-            <text x="650" y="25" fill="#FF0055" font-family="monospace" font-size="12" font-weight="bold">BPM: ${bpm}</text>
-            <text x="650" y="42" fill="#00E5FF" font-family="monospace" font-size="10">ENTROPY: 0.00</text>
-            <line x1="0" y1="75" x2="800" y2="75" stroke="#30363d" stroke-dasharray="4" />
-            <polyline fill="none" stroke="url(#waveGrad)" stroke-width="3" points="${polylinePath}" />
-            <polyline fill="none" stroke="#00FF66" stroke-width="1" stroke-opacity="0.5" points="${polylinePath}" transform="translate(0, 2)" />
-          </svg>`;
-
-          fs.writeFileSync("telemetry_wave.svg", svgContent);
-
-          // I. RENDER README DASHBOARD DYNAMIC
-          const lastUpdated = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-          let readmeContent = `# 🌐 ${orgName.toUpperCase()} | ${repoName.toUpperCase()}\n\n`;
-          readmeContent += `> **EATHESEN V3000-Ω ULTRA-SOTA DIGITAL LIVING ENTITY & PSEO ENGINE**\n\n`;
-          
-          readmeContent += `![System Status](https://img.shields.io/badge/SYSTEM-ALIVE_AND_PERPETUAL-00FF66?style=for-the-badge&logo=github)\n`;
-          readmeContent += `![pSEO Engine](https://img.shields.io/badge/PSEO_ENGINE-ACTIVE_3_PAGES-00E5FF?style=for-the-badge)\n`;
-          readmeContent += `![AI Crawler Standard](https://img.shields.io/badge/LLMS.TXT-READY-7000FF?style=for-the-badge)\n`;
-          readmeContent += `![Entropy](https://img.shields.io/badge/ENTROPY-0.00000000000000-FF0055?style=for-the-badge)\n\n`;
-
-          readmeContent += `### 📈 Real-Time Telemetry Sine Wave Visualizer\n\n`;
-          readmeContent += `![Sine Wave Telemetry](./telemetry_wave.svg)\n\n`;
-
-          readmeContent += `### 📡 Live F12 Telemetry Stream (Pulses Recorded: \`${historyData.total_pulses_recorded}\`)\n\n`;
-          readmeContent += `| Pulse # | Timestamp | F12 Client Log Payload |\n`;
-          readmeContent += `| :---: | :--- | :--- |\n`;
-
-          if (historyData.history_logs.length > 0) {
-            historyData.history_logs.slice(0, 10).forEach((item, idx) => {
-              const cleanLog = item.log.replace(/\|/g, '\\|');
-              readmeContent += `| \`#${idx + 1}\` | \`${item.time}\` | \`${cleanLog}\` |\n`;
-            });
-          } else {
-            readmeContent += `| \`#0\` | \`${lastUpdated}\` | \`SYSTEM STANDBY: Waiting for client F12 pulse...\` |\n`;
-          }
-
-          readmeContent += `\n---\n\n`;
-          readmeContent += `**NODE IDENTITY:** \`${repoName}\` | **SITEMAP:** \`https://${domainHost}/sitemap.xml\` | **LLMS.TXT:** \`https://${domainHost}/llms.txt\`\n\n`;
-          readmeContent += `*Last Synced Mesh State: \`${lastUpdated}\`*`;
-
-          fs.writeFileSync("README.md", readmeContent);
           EOF
           )
           node -e "$NODE_CODE"
-
-      - name: Auto-Compile All .eseb to .ehc
-        run: |
-          NODE_COMPILE=$(cat << 'EOF'
-          const fs = require("fs");
-          const path = require("path");
-
-          const protoDir = "Protocols";
-          if (fs.existsSync(protoDir)) {
-            const files = fs.readdirSync(protoDir);
-            files.forEach(file => {
-              if (file.endsWith(".eseb")) {
-                const esebContent = fs.readFileSync(path.join(protoDir, file), "utf8");
-                const match = esebContent.match(/return \`([\s\S]*?)\`;/);
-                if (match) {
-                  const ehcCode = match[1]
-                    .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
-                    .replace(/\${this\.config\.bufferInterval}/g, "2500");
-                  
-                  const targetEhc = path.join(protoDir, file.replace(".eseb", ".ehc"));
-                  fs.writeFileSync(targetEhc, ehcCode);
-                  console.log(`[ESEB COMPILER] Compiled ${file} -> ${targetEhc}`);
-                }
-              }
-            });
-          }
-          EOF
-          )
-          node -e "$NODE_COMPILE"
 
       - name: Safe Auto-Commit & Push (Strict ESEB State)
         env:
@@ -349,10 +263,11 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add LOG_HISTORY.json README.md telemetry_wave.svg sitemap.xml llms.txt llms-full.txt feed.xml feed.json *.html eseb2424242424242424242424242424.txt Protocols/*.ehc || true
+          git add -f Protocols/Organic_Traffic_Booster.eseb Protocols/Organic_Traffic_Booster.ehc
+          git add LOG_HISTORY.json sitemap.xml llms.txt llms-full.txt feed.xml feed.json *.html eseb2424242424242424242424242424.txt || true
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "ESEB-CORE: Ultra-SOTA Sync (pSEO + GEO + llms.txt + Feeds + IndexNow) [V-STAMP-24]"
+            git commit -m "ESEB-CORE: Sync ESEB SEO GEO DYNAMIC Protocol [V-STAMP-24]"
             git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
             git pull --rebase origin main || git pull --rebase origin master || true
             git push origin HEAD:main || git push origin HEAD:master || true
