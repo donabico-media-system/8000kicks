@@ -58,13 +58,9 @@ jobs:
             git commit -m "ESEB-CORE: Hard Seal & Sync ESEB Protocols [V-STAMP-24]"
             git remote set-url origin "https://x-access-token:${AUTH_TOKEN}@github.com/${{ github.repository }}.git"
             
-            # Fetch và tự động giải quyết xung đột bằng cách ưu tiên tệp mới sinh tại local
+            # Kéo code từ remote về và ép tự động ưu tiên tệp cục bộ (theirs) chống xung đột
             git fetch origin ${{ github.ref_name }}
-            git rebase origin/${{ github.ref_name }} || {
-              git checkout --ours feed.json feed.xml sitemap.xml llms.txt llms-full.txt || true
-              git add feed.json feed.xml sitemap.xml llms.txt llms-full.txt || true
-              git rebase --continue || git rebase --abort || true
-            }
+            git merge origin/${{ github.ref_name }} -X theirs --no-edit || true
             
             git push origin HEAD:${{ github.ref_name }}
           else
