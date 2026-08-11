@@ -101,7 +101,7 @@
         system_state: "PERPETUAL_TRANSMITTING"
       };
       console.log("%c[ESEB BROADCAST 2.5s # " + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
-    }, ${this.config.pulseInterval});
+    }, 2500);
   };
 
   if (document.readyState === 'complete') {
