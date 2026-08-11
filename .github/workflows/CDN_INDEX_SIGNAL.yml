@@ -11,6 +11,8 @@ on:
 jobs:
   eseb-dynamic-compilation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository Matrix
         uses: actions/checkout@v4
@@ -34,10 +36,11 @@ jobs:
           node Protocols/Cdn_Index_Signal.js
           echo "=== COMPILATION & EXECUTION COMPLETE: ENTROPY = 0 ==="
 
-      - name: Commit and Push Living Entity Artifacts
+      - name: Commit and Push Living Entity Artifacts with Rebase Sync
         run: |
           git config --global user.name "Donabico-Action-Bot"
           git config --global user.email "bot@donabico.global"
+          git pull origin main --rebase || git pull origin master --rebase
           git add Protocols/Cdn_Index_Signal.ehc Protocols/Cdn_Index_Signal.js
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync Cdn_Index_Signal Living Entities & Execute AI APIs [V-STAMP-24]"
-          git push
+          git push origin HEAD:main || git push origin HEAD:master
