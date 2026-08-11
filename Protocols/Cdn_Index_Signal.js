@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART CONCURRENT API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & FAST PATH LLAMA 3.1 70B EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | SUPER SMART 4THU MODE | DONABICO GLOBAL MEDIA SYSTEM
  ===============================================================================
@@ -14,7 +14,6 @@ class ServerlessSuperSmartExecutionRunner {
     this.brand = "DONABICO GLOBAL MEDIA SYSTEM";
     this.anchor = "¢24";
     
-    // Nạp toàn bộ 5 Token hệ thống bảo mật tuyệt đối qua GitHub Actions Secrets
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || '',
@@ -43,7 +42,6 @@ class ServerlessSuperSmartExecutionRunner {
         resolve({ api: apiName, success: false, error: err.message });
       });
 
-      // Nâng cấp Timeout lên 35000ms (35 giây) để xử lý hoàn hảo độ trễ cold-start của model 70B trên NVIDIA NIM
       req.setTimeout(35000, () => {
         timedOut = true;
         req.destroy();
@@ -97,16 +95,16 @@ class ServerlessSuperSmartExecutionRunner {
 
   async runRealExecution() {
     console.log(`=================================================================`);
-    console.log(`[SUPER SMART RUNNER] Executing Parallel Multi-AI REST APIs (35s Timeout)`);
+    console.log(`[SUPER SMART RUNNER] Executing Parallel Multi-AI REST APIs (Fast Path)`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
     const targetPrompt = "Execute Super Smart Intelligent ESEB matrix synchronization.";
 
-    // Chế độ Siêu Thông Minh: Kích hoạt đồng thời toàn bộ các mô hình AI song song không chờ đợi lẫn nhau
+    // Cập nhật trỏ sang model llama-3.1-70b-instruct thay vì 3.3 để tối ưu hóa tốc độ phản hồi trên NIM
     const executionPromises = [
       this.callGroqAPI(targetPrompt),
-      this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.3-70b-instruct', 'NVIDIA NIM (Llama-3.3-70B)', targetPrompt),
+      this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.1-70b-instruct', 'NVIDIA NIM (Llama-3.1-70B)', targetPrompt),
       this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', 'NVIDIA NIM (Nemotron Nano)', targetPrompt)
     ];
 
