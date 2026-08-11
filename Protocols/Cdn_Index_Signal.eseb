@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION (SUPER SMART CONCURRENT EXECUTION MODE)
+ESEB PROTOCOL CORE SPECIFICATION (LLAMA 3.1 70B FAST PATH UPDATE)
 MODULE: Cdn_Index_Signal
 FILE: Protocols/Cdn_Index_Signal.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
@@ -140,10 +140,10 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated Protocols/{self.module_name}.ehc")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) chạy song song đồng thời tất cả các model AI bằng Promise.allSettled"""
+        """Tạo sinh tệp .js (Serverless Runner Engine) trỏ sang model llama-3.1-70b-instruct"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART CONCURRENT API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & FAST PATH LLAMA 3.1 70B EXECUTOR
  MODULE: Protocols/{self.module_name}.js
  STAMP: {self.stamp} | SUPER SMART 4THU MODE | {self.brand}
  ===============================================================================
@@ -157,7 +157,6 @@ class ServerlessSuperSmartExecutionRunner {{
     this.brand = "{self.brand}";
     this.anchor = "{self.constant_anchor}";
     
-    // Nạp toàn bộ 5 Token hệ thống bảo mật tuyệt đối qua GitHub Actions Secrets
     this.tokens = {{
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || '',
@@ -186,7 +185,6 @@ class ServerlessSuperSmartExecutionRunner {{
         resolve({{ api: apiName, success: false, error: err.message }});
       }});
 
-      // Nâng cấp Timeout lên 35000ms (35 giây) để xử lý hoàn hảo độ trễ cold-start của model 70B trên NVIDIA NIM
       req.setTimeout(35000, () => {{
         timedOut = true;
         req.destroy();
@@ -240,16 +238,16 @@ class ServerlessSuperSmartExecutionRunner {{
 
   async runRealExecution() {{
     console.log(`=================================================================`);
-    console.log(`[SUPER SMART RUNNER] Executing Parallel Multi-AI REST APIs (35s Timeout)`);
+    console.log(`[SUPER SMART RUNNER] Executing Parallel Multi-AI REST APIs (Fast Path)`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
     const targetPrompt = "Execute Super Smart Intelligent ESEB matrix synchronization.";
 
-    // Chế độ Siêu Thông Minh: Kích hoạt đồng thời toàn bộ các mô hình AI song song không chờ đợi lẫn nhau
+    // Cập nhật trỏ sang model llama-3.1-70b-instruct thay vì 3.3 để tối ưu hóa tốc độ phản hồi trên NIM
     const executionPromises = [
       this.callGroqAPI(targetPrompt),
-      this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.3-70b-instruct', 'NVIDIA NIM (Llama-3.3-70B)', targetPrompt),
+      this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.1-70b-instruct', 'NVIDIA NIM (Llama-3.1-70B)', targetPrompt),
       this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', 'NVIDIA NIM (Nemotron Nano)', targetPrompt)
     ];
 
