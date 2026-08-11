@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION (STRICT REAL API EXECUTION FIX)
+ESEB PROTOCOL CORE SPECIFICATION (STRICT TIMEOUT & STABILITY FIX)
 MODULE: Cdn_Index_Signal
 FILE: Protocols/Cdn_Index_Signal.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: CDN EDGE DISPATCH & ENFORCED MULTI-AI REST API EXECUTOR
+FUNCTION: CDN EDGE DISPATCH & ROBUST MULTI-AI REST API EXECUTOR WITH TIMEOUT
 ===============================================================================
 """
 
@@ -140,18 +140,18 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated Protocols/{self.module_name}.ehc")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) ép buộc gọi trực tiếp REST API thực chiến"""
+        """Tạo sinh tệp .js (Serverless Runner Engine) tích hợp cơ chế Strict Timeout chống treo tiến trình"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & ENFORCED REAL AI REST API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & ROBUST TIMEOUT API EXECUTOR
  MODULE: Protocols/{self.module_name}.js
- STAMP: {self.stamp} | 4THU ENFORCED EXECUTION | {self.brand}
+ STAMP: {self.stamp} | 4THU TIMEOUT-PROTECTED | {self.brand}
  ===============================================================================
 **/
 
 const https = require('https');
 
-class ServerlessEnforcedExecutionRunner {{
+class ServerlessTimeoutExecutionRunner {{
   constructor() {{
     this.stamp = "{self.stamp}";
     this.brand = "{self.brand}";
@@ -166,12 +166,43 @@ class ServerlessEnforcedExecutionRunner {{
     }};
   }}
 
+  async sendRequestWithTimeout(options, payload, apiName) {{
+    return new Promise((resolve) => {{
+      let timedOut = false;
+      const req = https.request(options, (res) => {{
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => {{
+          if (timedOut) return;
+          console.log(`[${{apiName}} RESPONSE] Status Code: ${{res.statusCode}} | Length: ${{data.length}}`);
+          resolve(data);
+        }});
+      }});
+
+      req.on('error', (err) => {{
+        if (timedOut) return;
+        console.error(`[${{apiName}} ERROR] ${{err.message}}`);
+        resolve(null);
+      }});
+
+      // Cài đặt giới hạn thời gian timeout là 8000ms (8 giây) để không bao giờ bị treo workflow
+      req.setTimeout(8000, () => {{
+        timedOut = true;
+        req.destroy();
+        console.warn(`[${{apiName}} WARNING] Request timed out after 8000ms. Bypassing safely.`);
+        resolve(null);
+      }});
+
+      if (payload) req.write(payload);
+      req.end();
+    }});
+  }}
+
   async callGroqAPI(promptText) {{
     if (!this.tokens.apiGroq) {{
-      console.log(`[GROQ API] Skipped: API_GROQ_TOKEN not provided.`);
+      console.log(`[GROQ API] Skipped: Token not provided.`);
       return null;
     }}
-    console.log(`[GROQ API] Initiating HTTP POST Request to api.groq.com...`);
     const payload = JSON.stringify({{
       model: "llama-3.3-70b-versatile",
       messages: [{{"role": "user", "content": promptText}}]
@@ -187,36 +218,20 @@ class ServerlessEnforcedExecutionRunner {{
       }}
     }};
 
-    return new Promise((resolve) => {{
-      const req = https.request(options, (res) => {{
-        let data = '';
-        res.on('data', (chunk) => data += chunk);
-        res.on('end', () => {{
-          console.log(`[GROQ API RESPONSE] Status HTTP Code: ${{res.statusCode}} | Body length: ${{data.length}}`);
-          resolve(data);
-        }});
-      }});
-      req.on('error', (err) => {{
-        console.error(`[GROQ API ERROR] ${{err.message}}`);
-        resolve(null);
-      }});
-      req.write(payload);
-      req.end();
-    }});
+    return await this.sendRequestWithTimeout(options, payload, 'GROQ API');
   }}
 
   async callNvidiaNIMAPI(tokenKey, modelName, promptText) {{
     const token = this.tokens[tokenKey];
     if (!token) {{
-      console.log(`[NVIDIA NIM API (${{modelName}}] Skipped: Token ${{tokenKey}} not provided.`);
+      console.log(`[NVIDIA NIM API (${{modelName}})] Skipped: Token not provided.`);
       return null;
     }}
-    console.log(`[NVIDIA NIM API] Initiating HTTP POST Request for ${{modelName}}...`);
     const payload = JSON.stringify({{
       model: modelName,
       messages: [{{"role": "user", "content": promptText}}],
       temperature: 0.5,
-      max_tokens: 256
+      max_tokens: 128
     }});
 
     const options = {{
@@ -229,47 +244,31 @@ class ServerlessEnforcedExecutionRunner {{
       }}
     }};
 
-    return new Promise((resolve) => {{
-      const req = https.request(options, (res) => {{
-        let data = '';
-        res.on('data', (chunk) => data += chunk);
-        res.on('end', () => {{
-          console.log(`[NVIDIA NIM API RESPONSE (${{modelName}})] Status HTTP Code: ${{res.statusCode}} | Body length: ${{data.length}}`);
-          resolve(data);
-        }});
-      }});
-      req.on('error', (err) => {{
-        console.error(`[NVIDIA NIM API ERROR (${{modelName}})] ${{err.message}}`);
-        resolve(null);
-      }});
-      req.write(payload);
-      req.end();
-    }});
+    return await this.sendRequestWithTimeout(options, payload, `NVIDIA NIM (${{modelName}})`);
   }}
 
   async runRealExecution() {{
     console.log(`=================================================================`);
-    console.log(`[SERVERLESS RUNNER] Enforcing Real AI REST API Execution`);
+    console.log(`[SERVERLESS RUNNER] Executing Robust API Calls with 8s Timeout`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
-    const targetPrompt = "Execute autonomous synchronization for ESEB telemetry matrix.";
+    const targetPrompt = "Initialize ESEB secure edge telemetry sync.";
 
-    // Gọi trực tiếp các REST API
     await this.callGroqAPI(targetPrompt);
     await this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.3-70b-instruct', targetPrompt);
     await this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-4-34b-instruct', targetPrompt);
 
-    console.log(`[SERVERLESS RUNNER] Enforced Execution Pipelines Finished. Entropy delta = 0.`);
+    console.log(`[SERVERLESS RUNNER] All Execution Pipelines Completed Safely. Entropy delta = 0.`);
   }}
 }}
 
 if (require.main === module) {{
-  const runner = new ServerlessEnforcedExecutionRunner();
+  const runner = new ServerlessTimeoutExecutionRunner();
   runner.runRealExecution();
 }}
 
-module.exports = ServerlessEnforcedExecutionRunner;
+module.exports = ServerlessTimeoutExecutionRunner;
 """
         with open(f"Protocols/{self.module_name}.js", "w", encoding="utf-8") as f:
             f.write(js_content)
