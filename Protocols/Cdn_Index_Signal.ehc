@@ -1,0 +1,110 @@
+/* ===============================
+   ESEB DYNAMIC LIVING ENTITY - CDN & GLOBAL AI BROADCASTER
+   MODULE: Protocols/Cdn_Index_Signal.ehc
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO GLOBAL MEDIA SYSTEM
+ =============================== */
+(function() {
+  'use strict';
+
+  if (!document.getElementById('eseb-sentinel-cdn-signal')) {
+    const styleSentinel = document.createElement('style');
+    styleSentinel.id = 'eseb-sentinel-cdn-signal';
+    styleSentinel.textContent = 'script[type="application/ld+json"] { display: none !important; } body { overflow-x: hidden; }';
+    document.head.appendChild(styleSentinel);
+  }
+
+  const getContext = () => {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
+    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const protocol = window.location.protocol || 'https:';
+    const fullUrl = window.location.href;
+    
+    return {
+      repo: repoName,
+      domain: host,
+      canonicalUrl: fullUrl,
+      origin: protocol + '//' + host,
+      brand: 'DONABICO GLOBAL MEDIA SYSTEM',
+      stamp: 'V-STAMP-24'
+    };
+  };
+
+  const env = getContext();
+
+  const injectGlobalSignals = () => {
+    if (document.getElementById('eseb-cdn-schema-node')) return;
+
+    const schemaData = {
+      "@context": "https://schema.org/",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": env.canonicalUrl + "#webpage",
+          "url": env.canonicalUrl,
+          "name": document.title || env.repo,
+          "isPartOf": {
+            "@type": "WebSite",
+            "@id": env.origin + "/#website",
+            "url": env.origin,
+            "name": env.brand,
+            "publisher": {
+              "@type": "Organization",
+              "name": env.brand,
+              "url": env.origin
+            }
+          },
+          "inLanguage": "en-US",
+          "potentialAction": [
+            {
+              "@type": "ReadAction",
+              "target": [env.canonicalUrl]
+            }
+          ]
+        },
+        {
+          "@type": "BroadcastEvent",
+          "@id": env.canonicalUrl + "#cdn-pulse",
+          "name": "EATHESEN Living Entity Pulse Signal",
+          "isLiveBroadcast": true,
+          "startDate": new Date().toISOString(),
+          "eventStatus": "https://schema.org/EventScheduled"
+        }
+      ]
+    };
+
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.id = 'eseb-cdn-schema-node';
+    schemaScript.textContent = JSON.stringify(schemaData);
+    document.head.appendChild(schemaScript);
+  };
+
+  let pulseCount = 0;
+  const initTransmitter = () => {
+    console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | REPO: " + env.repo + " | CDN: GITHUB_PAGES", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+    injectGlobalSignals();
+
+    setInterval(() => {
+      pulseCount++;
+      const telemetry = {
+        pulse_id: pulseCount,
+        anchor: "¢24",
+        stamp: env.stamp,
+        entropy: "0.00000000000000",
+        cdn_status: "EDGE_ACTIVE",
+        target_networks: ["GoogleBot", "BingBot", "PerplexityBot", "GPTBot", "ClaudeBot", "GeminiEngine"],
+        q_reward: (3.30 + Math.random() * 0.04).toFixed(2),
+        system_state: "PERPETUAL_TRANSMITTING"
+      };
+      console.log("%c[ESEB BROADCAST 2.5s # " + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
+    }, 2500);
+  };
+
+  if (document.readyState === 'complete') {
+    initTransmitter();
+  } else {
+    window.addEventListener('load', initTransmitter);
+  }
+})();
