@@ -35,16 +35,12 @@ jobs:
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "[INFO] Running ESEB Serverless AI REST API Engine..."
-          if [ -f "Protocols/Super_Affiliate_Core.js" ]; then
-            node Protocols/Super_Affiliate_Core.js
-          else
-            node -e "console.log('[SOTA RUNNER] Initialized via Action Pipeline. Entropy delta = 0.');"
-          fi
+          echo "[INFO] Running ESEB Serverless AI REST API Engine with Real Token Authentication..."
+          node Protocols/Super_Affiliate_Core.js
 
       - name: Commit & Sync Living Entities
         run: |
           git config --global user.name "donabico-global-media[bot]"
           git config --global user.email "bot@donabico.com"
           git add Protocols/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync Super_Affiliate_Core artifacts [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): execute real AI tokens and sync Super_Affiliate_Core artifacts [skip ci]" && git push)
