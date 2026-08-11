@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Execute ESEB Dynamic Living Engine Compilation
+      - name: Execute ESEB Dynamic Living Engine Compilation & AI Execution
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
@@ -28,14 +28,16 @@ jobs:
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
         run: |
-          echo "=== STARTING ESEB DUAL-PIPELINE COMPILATION (FULL TOKENS) ==="
+          echo "=== STARTING ESEB DUAL-PIPELINE COMPILATION & REAL AI EXECUTION ==="
           python Protocols/Cdn_Index_Signal.eseb
-          echo "=== COMPILATION COMPLETE: .ehc & .js GENERATED SUCCESSFULLY ==="
+          echo "=== EXECUTING SERVERLESS RUNNER AI API PIPELINES ==="
+          node Protocols/Cdn_Index_Signal.js
+          echo "=== COMPILATION & EXECUTION COMPLETE: ENTROPY = 0 ==="
 
       - name: Commit and Push Living Entity Artifacts
         run: |
           git config --global user.name "Donabico-Action-Bot"
           git config --global user.email "bot@donabico.global"
           git add Protocols/Cdn_Index_Signal.ehc Protocols/Cdn_Index_Signal.js
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync Cdn_Index_Signal Living Entities with Full Tokens [V-STAMP-24]"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync Cdn_Index_Signal Living Entities & Execute AI APIs [V-STAMP-24]"
           git push
