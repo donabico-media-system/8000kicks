@@ -1,24 +1,23 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & CONCURRENT API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & 4-TOKEN STREAMLINED CONCURRENT EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
- STAMP: V-STAMP-24 | 4THU MODE | DONABICO GLOBAL MEDIA SYSTEM
+ STAMP: V-STAMP-24 | 4-TOKEN 4THU MODE | DONABICO GLOBAL MEDIA SYSTEM
  ===============================================================================
 **/
 
 const https = require('https');
 
-class ServerlessExecutionRunner {
+class Serverless4TokenExecutionRunner {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO GLOBAL MEDIA SYSTEM";
     this.anchor = "¢24";
     
-    // Nạp chính xác Token bảo mật từ GitHub Actions Secrets (Đã chuyển đổi NANO_NVIDIA_TOKEN thành OPEN_AI_TOKEN)
+    // Nạp chính xác 4 Token cốt lõi từ GitHub Actions Secrets (Loại bỏ hoàn toàn OpenAI/Nano thừa)
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || '',
-      openAi: process.env.OPEN_AI_TOKEN || '',
       llamaNvidia: process.env.LLAMA_NVIDIA_TOKEN || '',
       nemotronNvidia: process.env.NEMOTRON_NVIDIA_TOKEN || ''
     };
@@ -73,26 +72,6 @@ class ServerlessExecutionRunner {
     return await this.sendRequestWithTimeout(options, payload, 'GROQ API (Llama 3.3)');
   }
 
-  async callOpenAIAPI(promptText) {
-    if (!this.tokens.openAi) return { api: 'OPENAI API', success: false, error: 'NO_TOKEN' };
-    const payload = JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [{"role": "user", "content": promptText}],
-      temperature: 0.5,
-      max_tokens: 128
-    });
-    const options = {
-      hostname: 'api.openai.com',
-      path: '/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.tokens.openAi}`
-      }
-    };
-    return await this.sendRequestWithTimeout(options, payload, 'OPENAI API (GPT-4o-mini)');
-  }
-
   async callNvidiaNIMAPI(tokenKey, modelName, apiLabel, promptText) {
     const token = this.tokens[tokenKey];
     if (!token) return { api: apiLabel, success: false, error: 'NO_TOKEN' };
@@ -116,16 +95,15 @@ class ServerlessExecutionRunner {
 
   async runRealExecution() {
     console.log(`=================================================================`);
-    console.log(`[SERVERLESS RUNNER] Executing Parallel Multi-AI REST APIs`);
-    console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
+    console.log(`[4-TOKEN RUNNER] Executing Parallel 3-AI & Classic Synchronization`);
+    console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor} | Classic Token Active: ${!!this.tokens.esebClassic}`);
     console.log(`=================================================================`);
 
-    const targetPrompt = "Execute ESEB matrix synchronization.";
+    const targetPrompt = "Execute ESEB 4-Token streamlined matrix synchronization.";
 
-    // Kích hoạt song song các đường dẫn API kết hợp Groq, OpenAI và NVIDIA NIM còn lại
+    // Kích hoạt song song chính xác 3 AI hiện tại (Groq + 2 NVIDIA ổn định) cùng sự hiện diện của ESEB Classic Token
     const executionPromises = [
       this.callGroqAPI(targetPrompt),
-      this.callOpenAIAPI(targetPrompt),
       this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.1-8b-instruct', 'NVIDIA NIM (Llama 3.1 8B)', targetPrompt),
       this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', 'NVIDIA NIM (Nemotron Extra)', targetPrompt)
     ];
@@ -140,13 +118,13 @@ class ServerlessExecutionRunner {
       }
     });
 
-    console.log(`[SERVERLESS RUNNER] All Concurrent Execution Pipelines Completed. Entropy delta = 0.`);
+    console.log(`[4-TOKEN RUNNER] All Concurrent Execution Pipelines Completed. Entropy delta = 0.`);
   }
 }
 
 if (require.main === module) {
-  const runner = new ServerlessExecutionRunner();
+  const runner = new Serverless4TokenExecutionRunner();
   runner.runRealExecution();
 }
 
-module.exports = ServerlessExecutionRunner;
+module.exports = Serverless4TokenExecutionRunner;
