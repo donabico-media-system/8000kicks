@@ -1,12 +1,12 @@
-#!/usr/init/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION
+ESEB PROTOCOL CORE SPECIFICATION (STRICT REAL API EXECUTION FIX)
 MODULE: Cdn_Index_Signal
 FILE: Protocols/Cdn_Index_Signal.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: CDN EDGE DISPATCH & GLOBAL AI/SEARCH NEURAL BROADCASTER
+FUNCTION: CDN EDGE DISPATCH & ENFORCED MULTI-AI REST API EXECUTOR
 ===============================================================================
 """
 
@@ -23,7 +23,7 @@ class CdnIndexSignalEngineCore:
         self.pulse_interval = 2500
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc (Client-Side Living Entity Runtime) tích hợp CDN Edge Dispatch & AI Broadcaster[span_2](start_span)[span_2](end_span)"""
+        """Tạo sinh tệp .ehc (Client-Side Living Entity Runtime) bảo toàn Zero-DOM Surface"""
         ehc_content = f"""/* ===============================
    ESEB DYNAMIC LIVING ENTITY - CDN & GLOBAL AI BROADCASTER
    MODULE: Protocols/{self.module_name}.ehc
@@ -33,15 +33,13 @@ class CdnIndexSignalEngineCore:
 (function() {{
   'use strict';
 
-  // 1. Sentinel Layout Shield (Khóa giật khung hình & Giấu thẻ ngầm)[span_3](start_span)[span_3](end_span)
   if (!document.getElementById('eseb-sentinel-cdn-signal')) {{
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-cdn-signal';
-    styleSentinel.textContent = 'script[type="application/ld+json"] {{ display: none !important; }}';
+    styleSentinel.textContent = 'script[type="application/ld+json"] {{ display: none !important; }} body {{ overflow-x: hidden; }}';
     document.head.appendChild(styleSentinel);
   }}
 
-  // 2. Auto-Discovery Multi-Repository Matrix (Tự động trích xuất ngữ cảnh)[span_4](start_span)[span_4](end_span)
   const getContext = () => {{
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
@@ -61,7 +59,6 @@ class CdnIndexSignalEngineCore:
 
   const env = getContext();
 
-  // 3. SOTA JSON-LD Injection (Phát tín hiệu Tối ưu hóa AI Search & Search Engine Index)[span_5](start_span)[span_5](end_span)
   const injectGlobalSignals = () => {{
     if (document.getElementById('eseb-cdn-schema-node')) return;
 
@@ -110,7 +107,6 @@ class CdnIndexSignalEngineCore:
     document.head.appendChild(schemaScript);
   }};
 
-  // 4. Biological Pulse F12 Transmitter (2.5s Perpetual Cycle)[span_6](start_span)[span_6](end_span)
   let pulseCount = 0;
   const initTransmitter = () => {{
     console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | REPO: " + env.repo + " | CDN: GITHUB_PAGES", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
@@ -144,42 +140,136 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated Protocols/{self.module_name}.ehc")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) bảo mật API Token và điều phối CDN Edge Dispatch"""
+        """Tạo sinh tệp .js (Serverless Runner Engine) ép buộc gọi trực tiếp REST API thực chiến"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & EDGE DISPATCH ENGINE
+ ESEB PROTOCOL: SERVERLESS RUNNER & ENFORCED REAL AI REST API EXECUTOR
  MODULE: Protocols/{self.module_name}.js
- STAMP: {self.stamp} | SECURE BROADCASTER | {self.brand}
+ STAMP: {self.stamp} | 4THU ENFORCED EXECUTION | {self.brand}
  ===============================================================================
 **/
 
 const https = require('https');
 
-class ServerlessCDNRunner {{
+class ServerlessEnforcedExecutionRunner {{
   constructor() {{
     this.stamp = "{self.stamp}";
     this.brand = "{self.brand}";
     this.anchor = "{self.constant_anchor}";
-    this.groqToken = process.env.API_GROQ_TOKEN || '';
-    this.nvidiaToken = process.env.LLAMA_NVIDIA_TOKEN || '';
+    
+    this.tokens = {{
+      esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
+      apiGroq: process.env.API_GROQ_TOKEN || '',
+      llamaMeta: process.env.LLAMA_META_TOKEN || '',
+      llamaNvidia: process.env.LLAMA_NVIDIA_TOKEN || '',
+      nemotronNvidia: process.env.NEMOTRON_NVIDIA_TOKEN || ''
+    }};
   }}
 
-  async broadcastSignal() {{
-    console.log(`[CDN RUNNER] Broadcasting signal via Serverless Runner under ${{this.brand}} [${{this.stamp}}]`);
-    if (this.groqToken || this.nvidiaToken) {{
-      console.log(`[AI API BROADCAST] Neural connection established securely. Entropy delta = 0.`);
-    }} else {{
-      console.log(`[AI API BROADCAST] Running in zero-backend edge node mode.`);
+  async callGroqAPI(promptText) {{
+    if (!this.tokens.apiGroq) {{
+      console.log(`[GROQ API] Skipped: API_GROQ_TOKEN not provided.`);
+      return null;
     }}
+    console.log(`[GROQ API] Initiating HTTP POST Request to api.groq.com...`);
+    const payload = JSON.stringify({{
+      model: "llama-3.3-70b-versatile",
+      messages: [{{"role": "user", "content": promptText}}]
+    }});
+
+    const options = {{
+      hostname: 'api.groq.com',
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {{
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${{this.tokens.apiGroq}}`
+      }}
+    }};
+
+    return new Promise((resolve) => {{
+      const req = https.request(options, (res) => {{
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => {{
+          console.log(`[GROQ API RESPONSE] Status HTTP Code: ${{res.statusCode}} | Body length: ${{data.length}}`);
+          resolve(data);
+        }});
+      }});
+      req.on('error', (err) => {{
+        console.error(`[GROQ API ERROR] ${{err.message}}`);
+        resolve(null);
+      }});
+      req.write(payload);
+      req.end();
+    }});
+  }}
+
+  async callNvidiaNIMAPI(tokenKey, modelName, promptText) {{
+    const token = this.tokens[tokenKey];
+    if (!token) {{
+      console.log(`[NVIDIA NIM API (${{modelName}}] Skipped: Token ${{tokenKey}} not provided.`);
+      return null;
+    }}
+    console.log(`[NVIDIA NIM API] Initiating HTTP POST Request for ${{modelName}}...`);
+    const payload = JSON.stringify({{
+      model: modelName,
+      messages: [{{"role": "user", "content": promptText}}],
+      temperature: 0.5,
+      max_tokens: 256
+    }});
+
+    const options = {{
+      hostname: 'integrate.api.nvidia.com',
+      path: '/v1/chat/completions',
+      method: 'POST',
+      headers: {{
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${{token}}`
+      }}
+    }};
+
+    return new Promise((resolve) => {{
+      const req = https.request(options, (res) => {{
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => {{
+          console.log(`[NVIDIA NIM API RESPONSE (${{modelName}})] Status HTTP Code: ${{res.statusCode}} | Body length: ${{data.length}}`);
+          resolve(data);
+        }});
+      }});
+      req.on('error', (err) => {{
+        console.error(`[NVIDIA NIM API ERROR (${{modelName}})] ${{err.message}}`);
+        resolve(null);
+      }});
+      req.write(payload);
+      req.end();
+    }});
+  }}
+
+  async runRealExecution() {{
+    console.log(`=================================================================`);
+    console.log(`[SERVERLESS RUNNER] Enforcing Real AI REST API Execution`);
+    console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
+    console.log(`=================================================================`);
+
+    const targetPrompt = "Execute autonomous synchronization for ESEB telemetry matrix.";
+
+    // Gọi trực tiếp các REST API
+    await this.callGroqAPI(targetPrompt);
+    await this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.3-70b-instruct', targetPrompt);
+    await this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-4-34b-instruct', targetPrompt);
+
+    console.log(`[SERVERLESS RUNNER] Enforced Execution Pipelines Finished. Entropy delta = 0.`);
   }}
 }}
 
 if (require.main === module) {{
-  const runner = new ServerlessCDNRunner();
-  runner.broadcastSignal();
+  const runner = new ServerlessEnforcedExecutionRunner();
+  runner.runRealExecution();
 }}
 
-module.exports = ServerlessCDNRunner;
+module.exports = ServerlessEnforcedExecutionRunner;
 """
         with open(f"Protocols/{self.module_name}.js", "w", encoding="utf-8") as f:
             f.write(js_content)
