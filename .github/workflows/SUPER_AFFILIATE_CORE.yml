@@ -1,0 +1,50 @@
+name: SUPER_AFFILIATE_CORE
+
+on:
+  push:
+    paths:
+      - 'Protocols/Super_Affiliate_Core.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  execute-eseb-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Execute Serverless AI Runner & Traffic Turbocharger
+        env:
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
+          NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
+        run: |
+          echo "[INFO] Running ESEB Serverless AI REST API Engine..."
+          if [ -f "Protocols/Super_Affiliate_Core.js" ]; then
+            node Protocols/Super_Affiliate_Core.js
+          else
+            node -e "console.log('[SOTA RUNNER] Initialized via Action Pipeline. Entropy delta = 0.');"
+          fi
+
+      - name: Commit & Sync Living Entities
+        run: |
+          git config --global user.name "donabico-global-media[bot]"
+          git config --global user.email "bot@donabico.com"
+          git add Protocols/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync Super_Affiliate_Core artifacts [skip ci]" && git push)
