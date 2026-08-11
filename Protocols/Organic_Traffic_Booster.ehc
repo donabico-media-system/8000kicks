@@ -1,7 +1,4 @@
-/* ESEB SEO GEO DYNAMIC ENGINE
-   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   DONABICO GLOBAL MEDIA SYSTEM
-*/
+/* ESEB_EHC_BEGIN */
 (function() {
   'use strict';
 
@@ -71,5 +68,6 @@
   };
 
   bootSequence();
-  setInterval(pulseLoop, 5000);
+  setInterval(pulseLoop, 2500);
 })();
+/* ESEB_EHC_END */
