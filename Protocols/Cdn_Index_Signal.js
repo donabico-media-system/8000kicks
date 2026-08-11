@@ -102,10 +102,10 @@ class Serverless5TokenExecutionRunner {
 
     const targetPrompt = "Execute 5-Token ESEB matrix synchronization.";
 
-    // Kích hoạt song song bằng 5 Token phân định rõ ràng
+    // Kích hoạt song song bằng 5 Token phân định rõ ràng với đường dẫn nvidia/ chuẩn xác
     const executionPromises = [
       this.callGroqAPI(targetPrompt),
-      this.callNvidiaNIMAPI('nanoNvidia', 'llama-3.1-nemotron-nano-8b-v1', 'NVIDIA NIM (Nano Nemotron 8B)', targetPrompt),
+      this.callNvidiaNIMAPI('nanoNvidia', 'nvidia/llama-3.1-nemotron-nano-8b-v1', 'NVIDIA NIM (Nano Nemotron 8B)', targetPrompt),
       this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.1-8b-instruct', 'NVIDIA NIM (Llama 3.1 8B)', targetPrompt),
       this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', 'NVIDIA NIM (Nemotron Extra)', targetPrompt)
     ];
