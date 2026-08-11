@@ -47,7 +47,6 @@ class SuperAffiliateCoreEngine:
 
   const env = getContext();
 
-  // 1. MODULE: Sentinel Layout Shield (Bảo toàn CLS = 0)
   if (!document.getElementById('eseb-sentinel-turbo-affiliate')) {{
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-turbo-affiliate';
@@ -55,7 +54,6 @@ class SuperAffiliateCoreEngine:
     document.head.appendChild(styleSentinel);
   }}
 
-  // 2. MODULE: Automagic Image Siphon & Lazy Load Enhancer
   const optimizeImages = () => {{
     document.querySelectorAll('img').forEach(img => {{
       if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
@@ -66,7 +64,6 @@ class SuperAffiliateCoreEngine:
     }});
   }};
 
-  // 3. MODULE: W3C JSON-LD Schema & Semantic Siphon (Organic Search Engine Capture)
   const injectGeoSchema = () => {{
     if (!document.getElementById('eseb-turbo-schema')) {{
       const scriptSchema = document.createElement('script');
@@ -84,7 +81,6 @@ class SuperAffiliateCoreEngine:
     }}
   }};
 
-  // 4. MODULE: Multi-Routing Affiliate Link Optimizer & UTM Preserver
   const optimizeAffiliateLinks = () => {{
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'donabico_organic_siphon';
@@ -101,7 +97,6 @@ class SuperAffiliateCoreEngine:
     }});
   }};
 
-  // 5. MODULE: Quota-Safe Local Cache Siphon
   const getCachedAiState = () => {{
     try {{
       const cached = localStorage.getItem(CACHE_KEY);
@@ -119,7 +114,6 @@ class SuperAffiliateCoreEngine:
     }} catch(e) {{}}
   }};
 
-  // 6. MODULE: Real-Time Telemetry & Biological Pulse (2.5s)
   let pulseCount = 0;
   const processTurboLoop = () => {{
     pulseCount++;
@@ -202,24 +196,36 @@ class ServerlessTurboRunner {{
         res.on('data', chunk => data += chunk);
         res.on('end', () => {{
           console.log(`[${{apiName}} RESPONSE] Status Code: ${{res.statusCode}} | Length: ${{data.length}}`);
+          if (res.statusCode === 200 || res.statusCode === 202) {{
+            console.log(`[${{apiName}}] AUTHENTICATED & VERIFIED OK 200 ✅`);
+          }}
           resolve({{ api: apiName, success: true, status: res.statusCode }});
         }});
       }});
-      req.on('error', err => resolve({{ api: apiName, success: false, error: err.message }}));
+      req.on('error', err => {{
+        console.error(`[${{apiName}} ERROR] ${{err.message}}`);
+        resolve({{ api: apiName, success: false, error: err.message }});
+      }});
       if (payload) req.write(payload);
       req.end();
     }});
   }}
 
   async callGroq(prompt) {{
-    if (!this.tokens.apiGroq) return;
+    if (!this.tokens.apiGroq) {{
+      console.log("[GROQ API] Token missing, skipping.");
+      return;
+    }}
     const payload = JSON.stringify({{ model: "llama-3.3-70b-versatile", messages: [{{"role": "user", "content": prompt}}] }});
     return await this.sendRequest({{ hostname: 'api.groq.com', path: '/openai/v1/chat/completions', method: 'POST', headers: {{ 'Content-Type': 'application/json', 'Authorization': `Bearer ${{this.tokens.apiGroq}}` }} }}, payload, 'GROQ API (Llama 3.3)');
   }}
 
   async callNvidia(tokenKey, model, label, prompt) {{
     const token = this.tokens[tokenKey];
-    if (!token) return;
+    if (!token) {{
+      console.log(`[${{label}}] Token missing, skipping.`);
+      return;
+    }}
     const payload = JSON.stringify({{ model: model, messages: [{{"role": "user", "content": prompt}}], max_tokens: 128 }});
     return await this.sendRequest({{ hostname: 'integrate.api.nvidia.com', path: '/v1/chat/completions', method: 'POST', headers: {{ 'Content-Type': 'application/json', 'Authorization': `Bearer ${{token}}` }} }}, payload, label);
   }}
@@ -231,12 +237,12 @@ class ServerlessTurboRunner {{
       keyLocation: `https://${{domain}}/eseb_indexnow_key_v3000.txt`,
       urlList: urlList
     }});
-    return await this.sendRequest({{ hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST', headers: {{ 'Content-Type': 'application/json' }} }}, payload, 'IndexNow Broadcast (Status 202)');
+    return await this.sendRequest({{ hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST', headers: {{ 'Content-Type': 'application/json' }} }}, payload, 'IndexNow Broadcast');
   }}
 
   async run() {{
     console.log(`=================================================================`);
-    console.log(`[TURBO RUNNER] Executing Concurrent AI Pipelines & Traffic Turbo`);
+    console.log(`[TURBO RUNNER] Executing Concurrent AI REST API & Traffic Turbo`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
@@ -261,66 +267,7 @@ module.exports = ServerlessTurboRunner;
             f.write(js_content)
         print(f"[SUCCESS] Generated Protocols/{self.module_name}.js")
 
-    def generate_github_workflow(self):
-        yml_content = f"""name: Execute ESEB Super Affiliate Turbo Engine
-
-on:
-  push:
-    paths:
-      - 'Protocols/{self.module_name}.eseb'
-  schedule:
-    - cron: '0 */4 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  eseb-turbo-execution:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js Runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup Python Environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Execute Serverless AI Runner & Traffic Turbocharger
-        env:
-          ESEB_CLASSIC_TOKEN: ${{{{ secrets.ESEB_CLASSIC_TOKEN }}}}
-          API_GROQ_TOKEN: ${{{{ secrets.API_GROQ_TOKEN }}}}
-          LLAMA_NVIDIA_TOKEN: ${{{{ secrets.LLAMA_NVIDIA_TOKEN }}}}
-          NEMOTRON_NVIDIA_TOKEN: ${{{{ secrets.NEMOTRON_NVIDIA_TOKEN }}}}
-        run: |
-          echo "[INFO] Running ESEB Serverless AI REST API Engine..."
-          if [ -f "Protocols/{self.module_name}.js" ]; then
-            node Protocols/{self.module_name}.js
-          else
-            node -e "console.log('[SOTA RUNNER] Initialized via Action Pipeline. Entropy delta = 0.');"
-          fi
-
-      - name: Commit & Sync Living Entities
-        run: |
-          git config --global user.name "donabico-global-media[bot]"
-          git config --global user.email "bot@donabico.com"
-          git add Protocols/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync Super Affiliate Turbo artifacts [skip ci]" && git push)
-"""
-        os.makedirs(".github/workflows", exist_ok=True)
-        workflow_path = f".github/workflows/{self.module_name}.yml"
-        with open(workflow_path, "w", encoding="utf-8") as f:
-            f.write(yml_content)
-        print(f"[SUCCESS] Generated {workflow_path}")
-
 if __name__ == "__main__":
     engine = SuperAffiliateCoreEngine()
     engine.generate_client_ehc()
     engine.generate_serverless_runner_js()
-    engine.generate_github_workflow()
