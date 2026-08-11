@@ -1,8 +1,8 @@
-# Unblock ESEB Protocols & Build Engine
+# Unblock ESEB Dynamic Living Protocols
 !Protocols/
 !Protocols/*.eseb
 !Protocols/*.ehc
-!Build_Engine.js
+!Protocols/*.js
 !*.html
 !*.xml
 !*.json
