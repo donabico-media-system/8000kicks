@@ -28,7 +28,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Execute Serverless AI Runner & Traffic Turbocharger
+      - name: Compile and Generate ESEB Living Entities via Python Core
+        run: |
+          echo "[INFO] Compiling .eseb to generate .ehc and .js files..."
+          python3 Protocols/Super_Affiliate_Core.eseb
+
+      - name: Execute Serverless AI Runner & Traffic Turbocharger with Real Tokens
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
@@ -43,4 +48,4 @@ jobs:
           git config --global user.name "donabico-global-media[bot]"
           git config --global user.email "bot@donabico.com"
           git add Protocols/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): execute real AI tokens and sync Super_Affiliate_Core artifacts [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-compile and sync Super_Affiliate_Core artifacts [skip ci]" && git push)
