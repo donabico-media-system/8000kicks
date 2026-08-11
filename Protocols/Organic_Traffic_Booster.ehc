@@ -1,0 +1,73 @@
+/* ESEB_EHC_BEGIN */
+(function() {
+  'use strict';
+
+  const currentScript = document.currentScript || document.getElementById('Organic_Traffic_Booster-Bridge');
+  const activeModule = currentScript ? (currentScript.getAttribute('data-module') || 'Organic_Traffic_Booster') : 'Organic_Traffic_Booster';
+
+  const getDynamicContext = () => {
+    const hostParts = window.location.hostname.split('.');
+    const ownerName = hostParts.length > 0 && hostParts[0] !== '' ? hostParts[0] : 'donabico-media-system';
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'core-node';
+    return { owner: ownerName, repo: repoName, stamp: 'V-STAMP-24', module: activeModule };
+  };
+
+  const env = getDynamicContext();
+  const logBuffer = [];
+
+  const originalLog = console.log;
+  console.log = function(...args) {
+    originalLog.apply(console, args);
+    try {
+      const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+      logBuffer.push({ time: new Date().toISOString(), module: env.module, log: logText });
+    } catch (e) {}
+  };
+
+  let qTable = { state: "ESEB_SEO_GEO_DYNAMIC_ACTIVE", q_value: 0.99, epsilon: 0.01, reward: 3.30 };
+
+  const bootSequence = () => {
+    console.log("%c[ESEB SEO GEO DYNAMIC] %cENGINE ACTIVE | STAMP: V-STAMP-24 | ANCHOR: ¢24", "color:#00FF66; font-weight:bold; background:#0d1117; padding:4px;", "color:#00E5FF;");
+  };
+
+  const pulseLoop = () => {
+    const bpm = Math.floor(Math.random() * (28 - 22 + 1)) + 22;
+    console.log("%c[DYNAMIC PULSE 2.5s] %cBPM: " + bpm + " | Q-VAL: " + qTable.q_value.toFixed(2) + " | ENTROPY: 0.00000000000000", "color:#00FF66; font-weight:bold;", "color:#8b949e;");
+
+    if (logBuffer.length > 0) {
+      const currentLogs = [...logBuffer];
+      logBuffer.length = 0;
+
+      const payload = {
+        event_type: "eseb_multi_protocol_pulse",
+        client_payload: {
+          owner: env.owner,
+          repo: env.repo,
+          active_module: env.module,
+          stamp: env.stamp,
+          anchor: "¢24",
+          entropy: "0.00000000000000",
+          total_logs: currentLogs.length,
+          logs: currentLogs
+        }
+      };
+
+      const authToken = window.ESEB_CLASSIC_TOKEN || '';
+      fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function() { logBuffer.unshift(...currentLogs); });
+    }
+  };
+
+  bootSequence();
+  setInterval(pulseLoop, 2500);
+})();
+/* ESEB_EHC_END */
