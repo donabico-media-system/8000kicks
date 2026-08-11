@@ -1,10 +1,17 @@
+/* ===============================
+   ESEB PROTOCOL BUILD ENGINE
+   FILE: Build_Engine.js
+   STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
+   FUNCTION: ESEB SEO GEO DYNAMIC ENGINE
+ =============================== */
+
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
 console.log("=== STARTING ESEB SEO GEO DYNAMIC BUILD ENGINE ===");
 
-// 1. BIÊN DỊCH .ESEB SANG .EHC
+// 1. BIÊN DỊCH TẤT CẢ CÁC TỆP .ESEB SANG .EHC BẰNG BOUNDARY MARKERS
 const protoDir = "Protocols";
 if (fs.existsSync(protoDir)) {
   const files = fs.readdirSync(protoDir);
@@ -28,13 +35,13 @@ if (fs.existsSync(protoDir)) {
   });
 }
 
-// 2. TỰ ĐỘNG BÓC TÁCH NGUYÊN CẢNH (DYNAMIC CONTEXT)
+// 2. TỰ ĐỘNG BÓC TÁCH NGUYÊN CẢNH ĐỒNG TỘC (DYNAMIC IDENTITY DISCOVERY)
 const fullRepoPath = process.env.GITHUB_REPOSITORY || "donabico-media-system/core-node";
 const orgName = fullRepoPath.split("/")[0] || "donabico-media-system";
 const repoName = fullRepoPath.split("/")[1] || "core-node";
 const domainHost = `${orgName}.github.io`;
 
-// 3. GHI LỊCH SỬ F12 LOG TELEMETRY
+// 3. GHI LỊCH SỬ F12 LOG TELEMETRY (PAYLOAD BUFFER)
 const historyFile = "LOG_HISTORY.json";
 let historyData = {
   entity_name: "ESEB_SEO_GEO_DYNAMIC_ENTITY",
@@ -189,7 +196,7 @@ sitemapXml += `</urlset>`;
 fs.writeFileSync("sitemap.xml", sitemapXml);
 console.log("[SITEMAP ENGINE] Generated sitemap.xml");
 
-// 8. KHỞI CHẠY INDEXNOW BROADCAST TOÀN CẦU
+// 8. KHỞI CHẠY INDEXNOW BROADCAST TOÀN CẦU (CÓ PROCESS.EXIT CHỐNG TREO)
 const indexNowKey = "eseb2424242424242424242424242424";
 const keyFileName = `${indexNowKey}.txt`;
 if (!fs.existsSync(keyFileName)) fs.writeFileSync(keyFileName, indexNowKey);
@@ -202,13 +209,28 @@ const indexNowData = JSON.stringify({
 });
 
 const indexReq = https.request({
-  hostname: "www.bing.com", path: "/indexnow", method: "POST",
+  hostname: "www.bing.com",
+  path: "/indexnow",
+  method: "POST",
+  timeout: 5000,
   headers: { "Content-Type": "application/json; charset=utf-8", "Content-Length": Buffer.byteLength(indexNowData) }
 }, (res) => {
   console.log(`[INDEXNOW BROADCAST] Microsoft Bing & Global Status: ${res.statusCode}`);
+  console.log("=== BUILD ENGINE EXECUTED SUCCESSFULLY ===");
+  process.exit(0);
 });
-indexReq.on("error", (e) => console.error("[INDEXNOW ERROR]", e));
+
+indexReq.on("error", (e) => {
+  console.error("[INDEXNOW ERROR]", e);
+  console.log("=== BUILD ENGINE EXECUTED WITH WARNINGS ===");
+  process.exit(0);
+});
+
+indexReq.on("timeout", () => {
+  indexReq.destroy();
+  console.warn("[INDEXNOW TIMEOUT] Connection closed cleanly.");
+  process.exit(0);
+});
+
 indexReq.write(indexNowData);
 indexReq.end();
-
-console.log("=== BUILD ENGINE EXECUTED SUCCESSFULLY ===");
