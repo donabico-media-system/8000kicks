@@ -34,10 +34,9 @@ jobs:
 
       - name: Compile .eseb to .ehc
         run: |
-          NODE_COMPILE=$(cat << 'EOF'
+          node -e '
           const fs = require("fs");
           const path = require("path");
-
           const protoDir = "Protocols";
           if (fs.existsSync(protoDir)) {
             const files = fs.readdirSync(protoDir);
@@ -49,7 +48,6 @@ jobs:
                   const ehcCode = match[1]
                     .replace(/\${this\.config\.stamp}/g, "V-STAMP-24")
                     .replace(/\${this\.config\.bufferInterval}/g, "2500");
-                  
                   const targetEhc = path.join(protoDir, file.replace(".eseb", ".ehc"));
                   fs.writeFileSync(targetEhc, ehcCode);
                   console.log(`[ESEB COMPILER] Compiled ${file} -> ${targetEhc}`);
@@ -57,9 +55,7 @@ jobs:
               }
             });
           }
-          EOF
-          )
-          node -e "$NODE_COMPILE"
+          '
 
       - name: Execute ESEB SEO GEO DYNAMIC Multi-Module Generator
         env:
@@ -69,17 +65,15 @@ jobs:
           ESEB_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          NODE_CODE=$(cat << 'EOF'
+          node -e '
           const fs = require("fs");
           const https = require("https");
 
-          // 1. DYNAMIC IDENTITY DISCOVERY
           const fullRepoPath = process.env.GITHUB_REPOSITORY || "donabico-media-system/core-node";
           const orgName = fullRepoPath.split("/")[0] || "donabico-media-system";
           const repoName = fullRepoPath.split("/")[1] || "core-node";
           const domainHost = `${orgName}.github.io`;
 
-          // 2. F12 LOG TELEMETRY BUFFER
           const historyFile = "LOG_HISTORY.json";
           let historyData = {
             entity_name: "ESEB_SEO_GEO_DYNAMIC_ENTITY",
@@ -114,7 +108,6 @@ jobs:
 
           fs.writeFileSync(historyFile, JSON.stringify(historyData, null, 2));
 
-          // 3. GENERATE PSEO LANDING PAGES
           const pseoTopics = [
             { slug: `${repoName}-official-review`, title: `${repoName.toUpperCase()} Official Review 2026`, desc: `Comprehensive performance analysis and direct buyer guide for ${repoName}.` },
             { slug: `best-${repoName}-eco-guide`, title: `Top Eco Footwear & Gear Guide - ${repoName.toUpperCase()}`, desc: `Why sustainable materials make ${repoName} the premier travel choice.` },
@@ -169,42 +162,12 @@ jobs:
             fs.writeFileSync(fileName, pseoHtml);
           });
 
-          // 4. GENERATE LLMS.TXT & LLMS-FULL.TXT
-          const llmsTxtContent = `# ${repoName.toUpperCase()} - DONABICO GLOBAL MEDIA SYSTEM
-> ESEB SEO GEO DYNAMIC Autonomous Protocol Node
-
-## Core Overview
-Official ESEB node operating under DONABICO GLOBAL MEDIA MESH.
-Features eco-friendly products, sustainable materials, and direct affiliate routing.
-
-## Primary Product Links
-- Main Showcase: https://${domainHost}/${repoName}.html
-- Official Network Hub: https://${domainHost}/
-
-## pSEO Sub-Pages
-${allUrls.map(u => `- ${u}`).join("\n")}
-`;
+          const llmsTxtContent = `# ${repoName.toUpperCase()} - DONABICO GLOBAL MEDIA SYSTEM\n> ESEB SEO GEO DYNAMIC Autonomous Protocol Node\n\n## Core Overview\nOfficial ESEB node operating under DONABICO GLOBAL MEDIA MESH.\nFeatures eco-friendly products, sustainable materials, and direct affiliate routing.\n\n## Primary Product Links\n- Main Showcase: https://${domainHost}/${repoName}.html\n- Official Network Hub: https://${domainHost}/\n\n## pSEO Sub-Pages\n${allUrls.map(u => `- ${u}`).join("\n")}\n`;
           fs.writeFileSync("llms.txt", llmsTxtContent);
           fs.writeFileSync("llms-full.txt", llmsTxtContent + "\n\n## Full Protocol Context\nEngineered with ESEB V3000-Ω. Stamp: V-STAMP-24.");
 
-          // 5. GENERATE FEEDS (RSS & JSON FEED)
           const today = new Date().toUTCString();
-          const rssFeedXml = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
-<channel>
-  <title>${repoName.toUpperCase()} | DONABICO GLOBAL MEDIA SYSTEM</title>
-  <link>https://${domainHost}/</link>
-  <description>ESEB SEO GEO DYNAMIC Syndication Feed</description>
-  <lastBuildDate>${today}</lastBuildDate>
-  ${pseoTopics.map(t => `
-  <item>
-    <title>${t.title}</title>
-    <link>https://${domainHost}/${t.slug}.html</link>
-    <description>${t.desc}</description>
-    <pubDate>${today}</pubDate>
-  </item>`).join("")}
-</channel>
-</rss>`;
+          const rssFeedXml = `<?xml version="1.0" encoding="UTF-8" ?>\n<rss version="2.0">\n<channel>\n  <title>${repoName.toUpperCase()} | DONABICO GLOBAL MEDIA SYSTEM</title>\n  <link>https://${domainHost}/</link>\n  <description>ESEB SEO GEO DYNAMIC Syndication Feed</description>\n  <lastBuildDate>${today}</lastBuildDate>\n  ${pseoTopics.map(t => `\n  <item>\n    <title>${t.title}</title>\n    <link>https://${domainHost}/${t.slug}.html</link>\n    <description>${t.desc}</description>\n    <pubDate>${today}</pubDate>\n  </item>`).join("")}\n</channel>\n</rss>`;
           fs.writeFileSync("feed.xml", rssFeedXml);
 
           const jsonFeedData = {
@@ -222,7 +185,6 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
           };
           fs.writeFileSync("feed.json", JSON.stringify(jsonFeedData, null, 2));
 
-          // 6. GENERATE SITEMAP.XML
           const todayISO = new Date().toISOString().split('T')[0];
           let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
           allUrls.forEach(u => {
@@ -231,7 +193,6 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
           sitemapXml += `</urlset>`;
           fs.writeFileSync("sitemap.xml", sitemapXml);
 
-          // 7. BROADCAST INDEXNOW
           const indexNowKey = "eseb2424242424242424242424242424";
           const keyFileName = `${indexNowKey}.txt`;
           if (!fs.existsSync(keyFileName)) fs.writeFileSync(keyFileName, indexNowKey);
@@ -247,14 +208,12 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
             hostname: "www.bing.com", path: "/indexnow", method: "POST",
             headers: { "Content-Type": "application/json; charset=utf-8", "Content-Length": Buffer.byteLength(indexNowData) }
           }, (res) => {
-            console.log(`[INDEXNOW BROADCAST] Bing Status: ${res.statusCode}`);
+            console.log(`[INDEXNOW BROADCAST] Status: ${res.statusCode}`);
           });
           indexReq.on("error", (e) => console.error(e));
           indexReq.write(indexNowData);
           indexReq.end();
-          EOF
-          )
-          node -e "$NODE_CODE"
+          '
 
       - name: Safe Auto-Commit & Push (Strict ESEB State)
         env:
@@ -263,11 +222,11 @@ ${allUrls.map(u => `- ${u}`).join("\n")}
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add -f Protocols/Organic_Traffic_Booster.eseb Protocols/Organic_Traffic_Booster.ehc
+          git add -f Protocols/Organic_Traffic_Booster.eseb Protocols/Organic_Traffic_Booster.ehc || true
           git add LOG_HISTORY.json sitemap.xml llms.txt llms-full.txt feed.xml feed.json *.html eseb2424242424242424242424242424.txt || true
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "ESEB-CORE: Sync ESEB SEO GEO DYNAMIC Protocol [V-STAMP-24]"
+            git commit -m "ESEB-CORE: Fix YAML & Sync ESEB SEO GEO DYNAMIC [V-STAMP-24]"
             git set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" || true
             git pull --rebase origin main || git pull --rebase origin master || true
             git push origin HEAD:main || git push origin HEAD:master || true
