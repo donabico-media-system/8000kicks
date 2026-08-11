@@ -22,10 +22,7 @@ export class OrganicTrafficBoosterEngine {
   };
 
   public generateLivingEHC(): string {
-    return `/* ESEB SEO GEO DYNAMIC ENGINE
-   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   DONABICO GLOBAL MEDIA SYSTEM
-*/
+    return `/* ESEB_EHC_BEGIN */
 (function() {
   'use strict';
 
@@ -37,7 +34,7 @@ export class OrganicTrafficBoosterEngine {
     const ownerName = hostParts.length > 0 && hostParts[0] !== '' ? hostParts[0] : 'donabico-media-system';
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : 'core-node';
-    return { owner: ownerName, repo: repoName, stamp: '${this.config.stamp}', module: activeModule };
+    return { owner: ownerName, repo: repoName, stamp: 'V-STAMP-24', module: activeModule };
   };
 
   const env = getDynamicContext();
@@ -95,7 +92,8 @@ export class OrganicTrafficBoosterEngine {
   };
 
   bootSequence();
-  setInterval(pulseLoop, ${this.config.bufferInterval});
-})();`;
+  setInterval(pulseLoop, 2500);
+})();
+/* ESEB_EHC_END */`;
   }
 }
