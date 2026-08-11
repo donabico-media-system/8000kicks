@@ -6,7 +6,7 @@
   'use strict';
 
   const CACHE_KEY = 'EATHESEN_SUPER_AFFILIATE_CACHE';
-  const CACHE_TTL = ${this.config.cacheTtlMs};
+  const CACHE_TTL = 1800000;
 
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
@@ -161,6 +161,6 @@
   };
 
   injectGeoSchema();
-  setInterval(processSuperAffiliateLoop, ${this.config.pulseInterval});
+  setInterval(processSuperAffiliateLoop, 2500);
   console.log("%c[SUPER AFFILIATE CORE] %cARMED & FULLY OPERATIONAL", "color: #FF0055; font-weight: bold;", "color: #FFFFFF;");
 })();
