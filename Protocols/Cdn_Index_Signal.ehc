@@ -7,15 +7,13 @@
 (function() {
   'use strict';
 
-  // 1. Sentinel Layout Shield (Khóa giật khung hình & Giấu thẻ ngầm)[span_3](start_span)[span_3](end_span)
   if (!document.getElementById('eseb-sentinel-cdn-signal')) {
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-cdn-signal';
-    styleSentinel.textContent = 'script[type="application/ld+json"] { display: none !important; }';
+    styleSentinel.textContent = 'script[type="application/ld+json"] { display: none !important; } body { overflow-x: hidden; }';
     document.head.appendChild(styleSentinel);
   }
 
-  // 2. Auto-Discovery Multi-Repository Matrix (Tự động trích xuất ngữ cảnh)[span_4](start_span)[span_4](end_span)
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
@@ -35,7 +33,6 @@
 
   const env = getContext();
 
-  // 3. SOTA JSON-LD Injection (Phát tín hiệu Tối ưu hóa AI Search & Search Engine Index)[span_5](start_span)[span_5](end_span)
   const injectGlobalSignals = () => {
     if (document.getElementById('eseb-cdn-schema-node')) return;
 
@@ -84,7 +81,6 @@
     document.head.appendChild(schemaScript);
   };
 
-  // 4. Biological Pulse F12 Transmitter (2.5s Perpetual Cycle)[span_6](start_span)[span_6](end_span)
   let pulseCount = 0;
   const initTransmitter = () => {
     console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | REPO: " + env.repo + " | CDN: GITHUB_PAGES", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
