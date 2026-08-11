@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION (STRICT TIMEOUT & STABILITY FIX)
+ESEB PROTOCOL CORE SPECIFICATION (FINAL NIM TIMEOUT & MODEL PATH FIX)
 MODULE: Cdn_Index_Signal
 FILE: Protocols/Cdn_Index_Signal.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: CDN EDGE DISPATCH & ROBUST MULTI-AI REST API EXECUTOR WITH TIMEOUT
+FUNCTION: CDN EDGE DISPATCH & STABLE MULTI-AI REST API EXECUTOR
 ===============================================================================
 """
 
@@ -140,18 +140,18 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated Protocols/{self.module_name}.ehc")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) tích hợp cơ chế Strict Timeout chống treo tiến trình"""
+        """Tạo sinh tệp .js (Serverless Runner Engine) với Timeout tối ưu 20s và model Nemotron chuẩn xác"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & ROBUST TIMEOUT API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & OPTIMIZED 20s TIMEOUT API EXECUTOR
  MODULE: Protocols/{self.module_name}.js
- STAMP: {self.stamp} | 4THU TIMEOUT-PROTECTED | {self.brand}
+ STAMP: {self.stamp} | 4THU STABLE EXECUTION | {self.brand}
  ===============================================================================
 **/
 
 const https = require('https');
 
-class ServerlessTimeoutExecutionRunner {{
+class ServerlessStableExecutionRunner {{
   constructor() {{
     this.stamp = "{self.stamp}";
     this.brand = "{self.brand}";
@@ -185,11 +185,11 @@ class ServerlessTimeoutExecutionRunner {{
         resolve(null);
       }});
 
-      // Cài đặt giới hạn thời gian timeout là 8000ms (8 giây) để không bao giờ bị treo workflow
-      req.setTimeout(8000, () => {{
+      // Nâng Timeout lên 20000ms (20 giây) để bù đắp độ trễ khởi động cold start của NVIDIA NIM
+      req.setTimeout(20000, () => {{
         timedOut = true;
         req.destroy();
-        console.warn(`[${{apiName}} WARNING] Request timed out after 8000ms. Bypassing safely.`);
+        console.warn(`[${{apiName}} WARNING] Request timed out after 20000ms. Bypassing safely.`);
         resolve(null);
       }});
 
@@ -249,26 +249,27 @@ class ServerlessTimeoutExecutionRunner {{
 
   async runRealExecution() {{
     console.log(`=================================================================`);
-    console.log(`[SERVERLESS RUNNER] Executing Robust API Calls with 8s Timeout`);
+    console.log(`[SERVERLESS RUNNER] Executing Stable API Calls with 20s Timeout`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
     const targetPrompt = "Initialize ESEB secure edge telemetry sync.";
 
+    // Thực thi gọi các API chuẩn xác với model Nemotron mới nhất (nvidia/nemotron-3-nano-30b-a3b)
     await this.callGroqAPI(targetPrompt);
     await this.callNvidiaNIMAPI('llamaNvidia', 'meta/llama-3.3-70b-instruct', targetPrompt);
-    await this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-4-34b-instruct', targetPrompt);
+    await this.callNvidiaNIMAPI('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', targetPrompt);
 
     console.log(`[SERVERLESS RUNNER] All Execution Pipelines Completed Safely. Entropy delta = 0.`);
   }}
 }}
 
 if (require.main === module) {{
-  const runner = new ServerlessTimeoutExecutionRunner();
+  const runner = new ServerlessStableExecutionRunner();
   runner.runRealExecution();
 }}
 
-module.exports = ServerlessTimeoutExecutionRunner;
+module.exports = ServerlessStableExecutionRunner;
 """
         with open(f"Protocols/{self.module_name}.js", "w", encoding="utf-8") as f:
             f.write(js_content)
