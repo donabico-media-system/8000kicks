@@ -30,9 +30,8 @@ class SuperAffiliateCoreEngine:
  =============================================================================== */
 (function() {{
   'use strict';
-
   const CACHE_KEY = 'EATHESEN_TURBO_AFFILIATE_CACHE';
-  const CACHE_TTL = 1800000; // 30 Phút bảo vệ Quota
+  const CACHE_TTL = 1800000;
 
   const getContext = () => {{
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
@@ -97,62 +96,20 @@ class SuperAffiliateCoreEngine:
     }});
   }};
 
-  const getCachedAiState = () => {{
-    try {{
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {{
-        const parsed = JSON.parse(cached);
-        if (Date.now() - parsed.timestamp < CACHE_TTL) return parsed.data;
-      }}
-    }} catch(e) {{}}
-    return null;
-  }};
-
-  const setCachedAiState = (data) => {{
-    try {{
-      localStorage.setItem(CACHE_KEY, JSON.stringify({{ timestamp: Date.now(), data: data }}));
-    }} catch(e) {{}}
-  }};
-
   let pulseCount = 0;
   const processTurboLoop = () => {{
     pulseCount++;
     optimizeImages();
     optimizeAffiliateLinks();
-
-    const cachedState = getCachedAiState();
-
     const telemetryPayload = {{
       pulse_id: pulseCount,
       anchor: "{self.constant_anchor}",
       stamp: env.stamp,
       entropy: "0.00000000000000",
-      cache_status: cachedState ? "HIT_LOCAL_CACHE_30M" : "MISS_DISPATCH_THROTTLED",
       traffic_turbocharger: "ACTIVE_50K_VISITORS_ENGINE",
-      ai_mesh: {{
-        eseb_classic: "ACTIVE_SAFE",
-        groq_status: "LPU_ACTIVE_SAFE",
-        llama_nvidia: "SOTA_COGNITIVE_READY",
-        nemotron_nvidia: "SCHEMA_STEERING_ACTIVE"
-      }},
       mode: "ORGANIC_TRAFFIC_SIPHON_PERPETUAL"
     }};
-
     console.log("%c[EATHESEN TURBO CORE #" + pulseCount + "] %c" + JSON.stringify(telemetryPayload), "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
-
-    if (!cachedState && pulseCount % 12 === 0) {{
-      setCachedAiState({{ turboOptimized: true, timestamp: Date.now() }});
-      const payload = {{
-        event_type: "eseb_traffic_turbocharger_dispatch",
-        client_payload: {{ repo: env.repo, telemetry: telemetryPayload }}
-      }};
-      fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {{
-        method: 'POST',
-        headers: {{ 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }},
-        body: JSON.stringify(payload),
-        keepalive: true
-      }}).catch(function() {{}});
-    }}
   }};
 
   injectGeoSchema();
@@ -198,6 +155,8 @@ class ServerlessTurboRunner {{
           console.log(`[${{apiName}} RESPONSE] Status Code: ${{res.statusCode}} | Length: ${{data.length}}`);
           if (res.statusCode === 200 || res.statusCode === 202) {{
             console.log(`[${{apiName}}] AUTHENTICATED & VERIFIED OK 200 ✅`);
+          }} else {{
+            console.warn(`[${{apiName}}] Status Code Received: ${{res.statusCode}}`);
           }}
           resolve({{ api: apiName, success: true, status: res.statusCode }});
         }});
