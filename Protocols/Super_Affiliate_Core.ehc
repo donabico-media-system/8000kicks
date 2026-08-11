@@ -1,0 +1,94 @@
+/* ===============================================================================
+   ESEB DYNAMIC LIVING ENTITY - SUPER AFFILIATE CORE & TRAFFIC TURBOCHARGER
+   MODULE: Protocols/Super_Affiliate_Core.ehc
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO GLOBAL MEDIA SYSTEM
+ =============================================================================== */
+(function() {
+  'use strict';
+  const CACHE_KEY = 'EATHESEN_TURBO_AFFILIATE_CACHE';
+  const CACHE_TTL = 1800000;
+
+  const getContext = () => {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    return {
+      owner: 'donabico-global-media',
+      repo: repoName,
+      domain: window.location.hostname || '8000kicks.donabico.com',
+      stamp: 'V-STAMP-24'
+    };
+  };
+
+  const env = getContext();
+
+  if (!document.getElementById('eseb-sentinel-turbo-affiliate')) {
+    const styleSentinel = document.createElement('style');
+    styleSentinel.id = 'eseb-sentinel-turbo-affiliate';
+    styleSentinel.textContent = 'a, button, img { transition: opacity 0.2s ease-in-out; }';
+    document.head.appendChild(styleSentinel);
+  }
+
+  const optimizeImages = () => {
+    document.querySelectorAll('img').forEach(img => {
+      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+      if (!img.alt) img.alt = "Official Turbo Affiliate Display - " + env.domain;
+      img.onerror = () => {
+        img.src = 'https://donabico-global-media.github.io/shop/assets/images/fallback-product.webp';
+      };
+    });
+  };
+
+  const injectGeoSchema = () => {
+    if (!document.getElementById('eseb-turbo-schema')) {
+      const scriptSchema = document.createElement('script');
+      scriptSchema.id = 'eseb-turbo-schema';
+      scriptSchema.type = 'application/ld+json';
+      scriptSchema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "EATHESEN Super Affiliate Turbo Offer",
+        "brand": {"@type": "Brand", "name": "DONABICO GLOBAL MEDIA SYSTEM"},
+        "description": "SOTA Organic Traffic Turbocharger & Affiliate Steering Page",
+        "offers": {"@type": "AggregateOffer", "priceCurrency": "USD", "price": "37.00", "availability": "https://schema.org/InStock"}
+      });
+      document.head.appendChild(scriptSchema);
+    }
+  };
+
+  const optimizeAffiliateLinks = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source') || 'donabico_organic_siphon';
+    const utmMedium = urlParams.get('utm_medium') || 'traffic_turbocharger';
+
+    document.querySelectorAll('a[href*="affiliate"], a[href*="shop"], .cta-btn').forEach(link => {
+      try {
+        const targetUrl = new URL(link.href, window.location.origin);
+        targetUrl.searchParams.set('utm_source', utmSource);
+        targetUrl.searchParams.set('utm_medium', utmMedium);
+        targetUrl.searchParams.set('eseb_stamp', env.stamp);
+        link.href = targetUrl.toString();
+      } catch(e) {}
+    });
+  };
+
+  let pulseCount = 0;
+  const processTurboLoop = () => {
+    pulseCount++;
+    optimizeImages();
+    optimizeAffiliateLinks();
+    const telemetryPayload = {
+      pulse_id: pulseCount,
+      anchor: "¢24",
+      stamp: env.stamp,
+      entropy: "0.00000000000000",
+      traffic_turbocharger: "ACTIVE_50K_VISITORS_ENGINE",
+      mode: "ORGANIC_TRAFFIC_SIPHON_PERPETUAL"
+    };
+    console.log("%c[EATHESEN TURBO CORE #" + pulseCount + "] %c" + JSON.stringify(telemetryPayload), "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+  };
+
+  injectGeoSchema();
+  setInterval(processTurboLoop, 2500);
+  console.log("%c[TRAFFIC TURBOCHARGER] %cARMED & FULLY OPERATIONAL", "color: #FF0055; font-weight: bold;", "color: #FFFFFF;");
+})();
