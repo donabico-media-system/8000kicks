@@ -56,7 +56,7 @@ jobs:
           
           if ! git diff --staged --quiet; then
             git commit -m "ESEB-CORE: Hard Seal & Sync ESEB Protocols [V-STAMP-24]"
-            git set-url origin "https://x-access-token:${AUTH_TOKEN}@github.com/${{ github.repository }}.git"
+            git remote set-url origin "https://x-access-token:${AUTH_TOKEN}@github.com/${{ github.repository }}.git"
             git push origin HEAD:${{ github.ref_name }}
           else
             echo "Zero entropy preserved. No changes detected."
