@@ -6,7 +6,7 @@
   'use strict';
 
   const CACHE_KEY = 'ESEB_QUAD_AI_CACHE';
-  const CACHE_TTL = ${this.config.cacheTtlMs};
+  const CACHE_TTL = 1800000;
 
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
