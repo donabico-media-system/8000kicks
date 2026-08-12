@@ -1,0 +1,76 @@
+/* ===============================================================================
+   ESEB DYNAMIC LIVING ENTITY - MULTI-PROTOCOL F12 LIVE TELEMETRY BRIDGE
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO GLOBAL MEDIA SYSTEM
+ =============================================================================== */
+(function() {
+  'use strict';
+
+  const getContext = () => {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    return {
+      owner: 'donabico-global-media',
+      repo: repoName,
+      stamp: 'V-STAMP-24'
+    };
+  };
+
+  const env = getContext();
+  const logBuffer = [];
+
+  const originalLog = console.log;
+  console.log = function(...args) {
+    originalLog.apply(console, args);
+    try {
+      const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+      logBuffer.push({
+        time: new Date().toISOString(),
+        log: logText
+      });
+    } catch (e) {}
+  };
+
+  const streamLogsToGitHub = () => {
+    if (logBuffer.length === 0) return;
+
+    const currentLogs = [...logBuffer];
+    logBuffer.length = 0;
+
+    const payload = {
+      event_type: "eseb_f12_multisync_stream",
+      client_payload: {
+        owner: env.owner,
+        repo: env.repo,
+        stamp: env.stamp,
+        anchor: "¢24",
+        entropy: "0.00000000000000",
+        total_logs: currentLogs.length,
+        vital_signs: {
+          heartbeat_bpm: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
+          cognitive_level: "SOTA_RECURSIVE_S1",
+          status: "ALIVE_AND_PERPETUAL"
+        },
+        logs: currentLogs
+      }
+    };
+
+    const authToken = window.ESEB_CLASSIC_TOKEN || '';
+
+    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function() {
+      logBuffer.unshift(...currentLogs);
+    });
+  };
+
+  setInterval(streamLogsToGitHub, 2500);
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cMULTI-PROTOCOL TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+})();
