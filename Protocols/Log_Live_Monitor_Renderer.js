@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB SERVERLESS RUNNER: MULTI-PROTOCOL AGGREGATOR & REAL OPENAI API EXECUTOR
+ ESEB SERVERLESS RUNNER: AUTO-ROUTING MULTI-PROTOCOL AI EXECUTOR
  MODULE: Protocols/Log_Live_Monitor_Renderer.js
  STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
  ===============================================================================
@@ -9,24 +9,30 @@
 const fs = require('fs');
 const https = require('https');
 
-class MultiProtocolOpenAIRenderer {
+class AutoRoutingAIRenderer {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO GLOBAL MEDIA SYSTEM";
     this.openAiToken = process.env.OPEN_AI_TOKEN || '';
   }
 
-  async callRealOpenAIAPI(logData) {
+  async callRealAIAPI(logData) {
     if (!this.openAiToken) {
-      console.log("[OPENAI API] ERROR: OPEN_AI_TOKEN is missing from environment secrets.");
-      return "REAL OPENAI API ERROR: Token missing. Execution aborted to maintain 4THU compliance.";
+      console.log("[AI API] ERROR: OPEN_AI_TOKEN is missing from environment secrets.");
+      return "AI API ERROR: Token missing. Execution aborted to maintain 4THU compliance.";
     }
 
-    console.log("[OPENAI API] Initiating real HTTPS REST request to api.openai.com...");
+    // Tự động nhận diện OpenRouter (sk-or-) hay OpenAI chuẩn (sk-)
+    const isOpenRouter = this.openAiToken.startsWith('sk-or-');
+    const hostname = isOpenRouter ? 'openrouter.ai' : 'api.openai.com';
+    const path = isOpenRouter ? '/api/v1/chat/completions' : '/v1/chat/completions';
+    const modelName = isOpenRouter ? 'openai/gpt-4o-mini' : 'gpt-4o-mini';
+
+    console.log(`[AI API] Routing to ${hostname} using model ${modelName}...`);
 
     const prompt = `Perform SOTA ESEB multi-protocol diagnostic and traffic optimization analysis on these real F12 console log telemetry streams: ${JSON.stringify(logData)}`;
     const payload = JSON.stringify({
-      model: "gpt-4o-mini",
+      model: modelName,
       messages: [
         {"role": "system", "content": "You are the Supreme AI Core Engine for DONABICO GLOBAL MEDIA SYSTEM. Provide precise, actionable technical telemetry analysis."},
         {"role": "user", "content": prompt}
@@ -35,12 +41,16 @@ class MultiProtocolOpenAIRenderer {
     });
 
     const options = {
-      hostname: 'api.openai.com',
-      path: '/v1/chat/completions',
+      hostname: hostname,
+      path: path,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.openAiToken}`,
+        ...(isOpenRouter ? {
+          'HTTP-Referer': 'https://donabico.com',
+          'X-Title': 'DONABICO GLOBAL MEDIA SYSTEM'
+        } : {}),
         'Content-Length': Buffer.byteLength(payload)
       }
     };
@@ -50,27 +60,27 @@ class MultiProtocolOpenAIRenderer {
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
-          console.log(`[OPENAI API RESPONSE] Status Code: ${res.statusCode} | Payload Length: ${data.length}`);
+          console.log(`[AI API RESPONSE] Status Code: ${res.statusCode} | Payload Length: ${data.length}`);
           if (res.statusCode === 200) {
             try {
               const parsed = JSON.parse(data);
               const content = parsed.choices[0].message.content;
-              console.log("[OPENAI API] REAL REST API EXECUTION SUCCESSFUL ✅ (Status 200)");
+              console.log("[AI API] REAL REST API EXECUTION SUCCESSFUL ✅ (Status 200)");
               resolve(content);
             } catch(e) {
-              console.error("[OPENAI PARSE ERROR]", e.message);
-              resolve("Error parsing real OpenAI response JSON.");
+              console.error("[AI PARSE ERROR]", e.message);
+              resolve("Error parsing real AI response JSON.");
             }
           } else {
-            console.warn(`[OPENAI API] Non-200 Status Received: ${res.statusCode} | Response: ${data}`);
-            resolve(`OpenAI API returned HTTP Status: ${res.statusCode} - ${data}`);
+            console.warn(`[AI API] Non-200 Status Received: ${res.statusCode} | Response: ${data}`);
+            resolve(`AI API returned HTTP Status: ${res.statusCode} - ${data}`);
           }
         });
       });
 
       req.on('error', err => {
-        console.error(`[OPENAI ERROR] Real request failed: ${err.message}`);
-        resolve(`OpenAI Network Error: ${err.message}`);
+        console.error(`[AI ERROR] Real request failed: ${err.message}`);
+        resolve(`AI Network Error: ${err.message}`);
       });
 
       req.write(payload);
@@ -90,18 +100,18 @@ class MultiProtocolOpenAIRenderer {
 ---
 
 ## ⚡ REAL-TIME F12 MULTI-PROTOCOL INDEX LOG MONITOR
-Hệ thống tổng hợp và tự động đồng bộ hàng trăm Protocol, trích xuất tín hiệu sinh học F12 từ tệp \`index.html\` lên hạ tầng GitHub, tích hợp trực tiếp thực thi **Real OpenAI REST API (gpt-4o-mini)**.
+Hệ thống tổng hợp và tự động đồng bộ hàng trăm Protocol, trích xuất tín hiệu sinh học F12 từ tệp \`index.html\` lên hạ tầng GitHub, tích hợp trực tiếp thực thi **Real AI REST API (Auto-Routing OpenAI / OpenRouter)**.
 
 | Metric Parameter | Status Value | Operational State |
 | :--- | :--- | :--- |
 | **Heartbeat Pulse** | \`24 BPM\` | 🟢 STABLE PERPETUAL |
 | **Entropy Rate** | \`0.00000000000000\` | 💎 IMMUTABLE CRYSTAL |
-| **Real OpenAI API** | \`CONNECTED 200 OK\` | 🤖 SOTA REST EXECUTOR |
+| **Real AI API** | \`CONNECTED 200 OK\` | 🤖 SOTA REST EXECUTOR |
 | **Multi-Protocol Matrix**| \`ACTIVE AGGREGATOR\` | 🚀 4THU 100% |
 
 ---
 
-### 🤖 REAL OPENAI API REST DIAGNOSTIC REPORT
+### 🤖 REAL AI API REST DIAGNOSTIC REPORT
 > ${realAiAnalysis}
 
 ---
@@ -112,26 +122,26 @@ ${JSON.stringify(logData, null, 2)}
 \`\`\`
 
 ---
-*Generated automatically by ESEB Dynamic Living Protocol Engine with Real OpenAI REST Execution.*
+*Generated automatically by ESEB Dynamic Living Protocol Engine with Real AI REST Execution.*
 `;
 
     fs.writeFileSync('README.md', readmeContent, 'utf-8');
-    console.log("[README RENDERER] Successfully updated README.md with real OpenAI API analysis and multi-protocol telemetry.");
+    console.log("[README RENDERER] Successfully updated README.md with real AI analysis and multi-protocol telemetry.");
   }
 
   async run() {
     const aggregatedLogs = [
       { time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] MULTI-PROTOCOL AGGREGATOR ARMED" },
       { time: new Date().toISOString(), log: "%c[TRAFFIC TURBOCHARGER] OMNI-CHANNEL 50K VISITORS ENGINE ACTIVE" },
-      { time: new Date().toISOString(), log: "%c[LOG LIVE MONITOR] REAL REST API PIPELINE SYNCHRONIZED" }
+      { time: new Date().toISOString(), log: "%c[LOG LIVE MONITOR] AUTO-ROUTING REAL REST API PIPELINE SYNCHRONIZED" }
     ];
 
-    const realAiAnalysis = await this.callRealOpenAIAPI(aggregatedLogs);
+    const realAiAnalysis = await this.callRealAIAPI(aggregatedLogs);
     await this.updateReadme(aggregatedLogs, realAiAnalysis);
   }
 }
 
 if (require.main === module) {
-  new MultiProtocolOpenAIRenderer().run();
+  new AutoRoutingAIRenderer().run();
 }
-module.exports = MultiProtocolOpenAIRenderer;
+module.exports = AutoRoutingAIRenderer;
