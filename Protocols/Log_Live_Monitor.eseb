@@ -22,82 +22,82 @@ class LogLiveMonitorEngine:
         self.brand = "DONABICO GLOBAL MEDIA SYSTEM"
 
     def generate_living_ehc(self):
-        ehc_content = f"""/* ===============================================================================
+        ehc_content = """/* ===============================================================================
    ESEB DYNAMIC LIVING ENTITY - MULTI-PROTOCOL F12 LIVE TELEMETRY BRIDGE
-   STAMP: {self.stamp} | ZERO-DOM SURFACE MUTATION ENFORCED
-   {self.brand}
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO GLOBAL MEDIA SYSTEM
  =============================================================================== */
-(function() {{
+(function() {
   'use strict';
 
-  const getContext = () => {{
+  const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    return {{
+    return {
       owner: 'donabico-global-media',
       repo: repoName,
-      stamp: '{self.stamp}'
-    }};
-  }};
+      stamp: 'V-STAMP-24'
+    };
+  };
 
   const env = getContext();
   const logBuffer = [];
 
   const originalLog = console.log;
-  console.log = function(...args) {{
+  console.log = function(...args) {
     originalLog.apply(console, args);
-    try {{
+    try {
       const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
-      logBuffer.push({{
+      logBuffer.push({
         time: new Date().toISOString(),
         log: logText
-      }});
-    }} catch (e) {{}}
-  }};
+      });
+    } catch (e) {}
+  };
 
-  const streamLogsToGitHub = () => {{
+  const streamLogsToGitHub = () => {
     if (logBuffer.length === 0) return;
 
     const currentLogs = [...logBuffer];
     logBuffer.length = 0;
 
-    const payload = {{
+    const payload = {
       event_type: "eseb_f12_multisync_stream",
-      client_payload: {{
+      client_payload: {
         owner: env.owner,
         repo: env.repo,
         stamp: env.stamp,
         anchor: "¢24",
         entropy: "0.00000000000000",
         total_logs: currentLogs.length,
-        vital_signs: {{
+        vital_signs: {
           heartbeat_bpm: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
           cognitive_level: "SOTA_RECURSIVE_S1",
           status: "ALIVE_AND_PERPETUAL"
-        }},
+        },
         logs: currentLogs
-      }}
-    }};
+      }
+    };
 
     const authToken = window.ESEB_CLASSIC_TOKEN || '';
 
-    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {{
+    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
       method: 'POST',
-      headers: {{
+      headers: {
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
-        ...(authToken ? {{ 'Authorization': 'Bearer ' + authToken }} : {{}})
-      }},
+        ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
+      },
       body: JSON.stringify(payload),
       keepalive: true
-    }}).catch(function() {{
+    }).catch(function() {
       logBuffer.unshift(...currentLogs);
-    }});
-  }};
+    });
+  };
 
-  setInterval(streamLogsToGitHub, {self.buffer_interval});
+  setInterval(streamLogsToGitHub, 2500);
   console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cMULTI-PROTOCOL TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
-}})();
+})();
 """
         os.makedirs("Protocols", exist_ok=True)
         with open("Protocols/Log_Live_Monitor.ehc", "w", encoding="utf-8") as f:
@@ -105,94 +105,94 @@ class LogLiveMonitorEngine:
         print("[SUCCESS] Generated Protocols/Log_Live_Monitor.ehc")
 
     def generate_readme_renderer_js(self):
-        renderer_content = f"""/**
+        renderer_content = """/**
  ===============================================================================
  ESEB SERVERLESS RUNNER: MULTI-PROTOCOL AGGREGATOR & REAL OPENAI API EXECUTOR
  MODULE: Protocols/Log_Live_Monitor_Renderer.js
- STAMP: {self.stamp} | {self.brand}
+ STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
  ===============================================================================
 **/
 
 const fs = require('fs');
 const https = require('https');
 
-class MultiProtocolOpenAIRenderer {{
-  constructor() {{
-    this.stamp = "{self.stamp}";
-    this.brand = "{self.brand}";
+class MultiProtocolOpenAIRenderer {
+  constructor() {
+    this.stamp = "V-STAMP-24";
+    this.brand = "DONABICO GLOBAL MEDIA SYSTEM";
     this.openAiToken = process.env.OPEN_AI_TOKEN || '';
-  }}
+  }
 
-  async callRealOpenAIAPI(logData) {{
-    if (!this.openAiToken) {{
+  async callRealOpenAIAPI(logData) {
+    if (!this.openAiToken) {
       console.log("[OPENAI API] ERROR: OPEN_AI_TOKEN is missing from environment secrets.");
       return "REAL OPENAI API ERROR: Token missing. Execution aborted to maintain 4THU compliance.";
-    }}
+    }
 
     console.log("[OPENAI API] Initiating real HTTPS REST request to api.openai.com...");
 
-    const prompt = `Perform SOTA ESEB multi-protocol diagnostic and traffic optimization analysis on these real F12 console log telemetry streams: ${{JSON.stringify(logData)}}`;
-    const payload = JSON.stringify({{
+    const prompt = `Perform SOTA ESEB multi-protocol diagnostic and traffic optimization analysis on these real F12 console log telemetry streams: ${JSON.stringify(logData)}`;
+    const payload = JSON.stringify({
       model: "gpt-4o-mini",
       messages: [
-        {{"role": "system", "content": "You are the Supreme AI Core Engine for DONABICO GLOBAL MEDIA SYSTEM. Provide precise, actionable technical telemetry analysis."}},
-        {{"role": "user", "content": prompt}}
+        {"role": "system", "content": "You are the Supreme AI Core Engine for DONABICO GLOBAL MEDIA SYSTEM. Provide precise, actionable technical telemetry analysis."},
+        {"role": "user", "content": prompt}
       ],
       max_tokens: 256
-    }});
+    });
 
-    const options = {{
+    const options = {
       hostname: 'api.openai.com',
       path: '/v1/chat/completions',
       method: 'POST',
-      headers: {{
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${{this.openAiToken}}`,
+        'Authorization': `Bearer ${this.openAiToken}`,
         'Content-Length': Buffer.byteLength(payload)
-      }}
-    }};
+      }
+    };
 
-    return new Promise((resolve) => {{
-      const req = https.request(options, (res) => {{
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
         let data = '';
         res.on('data', chunk => data += chunk);
-        res.on('end', () => {{
-          console.log(`[OPENAI API RESPONSE] Status Code: ${{res.statusCode}} | Payload Length: ${{data.length}}`);
-          if (res.statusCode === 200) {{
-            try {{
+        res.on('end', () => {
+          console.log(`[OPENAI API RESPONSE] Status Code: ${res.statusCode} | Payload Length: ${data.length}`);
+          if (res.statusCode === 200) {
+            try {
               const parsed = JSON.parse(data);
               const content = parsed.choices[0].message.content;
               console.log("[OPENAI API] REAL REST API EXECUTION SUCCESSFUL ✅ (Status 200)");
               resolve(content);
-            }} catch(e) {{
+            } catch(e) {
               console.error("[OPENAI PARSE ERROR]", e.message);
               resolve("Error parsing real OpenAI response JSON.");
-            }}
-          }} else {{
-            console.warn(`[OPENAI API] Non-200 Status Received: ${{res.statusCode}} | Response: ${{data}}`);
-            resolve(`OpenAI API returned HTTP Status: ${{res.statusCode}} - ${{data}}`);
-          }}
-        }});
-      }});
+            }
+          } else {
+            console.warn(`[OPENAI API] Non-200 Status Received: ${res.statusCode} | Response: ${data}`);
+            resolve(`OpenAI API returned HTTP Status: ${res.statusCode} - ${data}`);
+          }
+        });
+      });
 
-      req.on('error', err => {{
-        console.error(`[OPENAI ERROR] Real request failed: ${{err.message}}`);
-        resolve(`OpenAI Network Error: ${{err.message}}`);
-      }});
+      req.on('error', err => {
+        console.error(`[OPENAI ERROR] Real request failed: ${err.message}`);
+        resolve(`OpenAI Network Error: ${err.message}`);
+      });
 
       req.write(payload);
       req.end();
-    }});
-  }}
+    });
+  }
 
-  async updateReadme(logData, realAiAnalysis) {{
+  async updateReadme(logData, realAiAnalysis) {
     const timestamp = new Date().toISOString();
     const readmeContent = `# 🌌 EATHESEN V3000-Ω MASTER ECOSYSTEM | REAL-TIME MULTI-PROTOCOL TELEMETRY
-> **Brand:** {self.brand}  
-> **Core Stamp:** {self.stamp}  
+> **Brand:** ${this.brand}  
+> **Core Stamp:** ${this.stamp}  
 > **Constant Anchor:** ¢24  
 > **Entropy Delta:** 0.00000000000000 (SHANNON CRYSTAL)  
-> **Last Synchronized:** ${{timestamp}}
+> **Last Synchronized:** ${timestamp}
 
 ---
 
@@ -209,7 +209,7 @@ Hệ thống tổng hợp và tự động đồng bộ hàng trăm Protocol, tr
 ---
 
 ### 🤖 REAL OPENAI API REST DIAGNOSTIC REPORT
-> ${{realAiAnalysis}}
+> ${realAiAnalysis}
 
 ---
 
@@ -224,23 +224,23 @@ ${JSON.stringify(logData, null, 2)}
 
     fs.writeFileSync('README.md', readmeContent, 'utf-8');
     console.log("[README RENDERER] Successfully updated README.md with real OpenAI API analysis and multi-protocol telemetry.");
-  }}
+  }
 
-  async run() {{
+  async run() {
     const aggregatedLogs = [
-      {{ time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] MULTI-PROTOCOL AGGREGATOR ARMED" }},
-      {{ time: new Date().toISOString(), log: "%c[TRAFFIC TURBOCHARGER] OMNI-CHANNEL 50K VISITORS ENGINE ACTIVE" }},
-      {{ time: new Date().toISOString(), log: "%c[LOG LIVE MONITOR] REAL REST API PIPELINE SYNCHRONIZED" }}
+      { time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] MULTI-PROTOCOL AGGREGATOR ARMED" },
+      { time: new Date().toISOString(), log: "%c[TRAFFIC TURBOCHARGER] OMNI-CHANNEL 50K VISITORS ENGINE ACTIVE" },
+      { time: new Date().toISOString(), log: "%c[LOG LIVE MONITOR] REAL REST API PIPELINE SYNCHRONIZED" }
     ];
 
     const realAiAnalysis = await this.callRealOpenAIAPI(aggregatedLogs);
     await this.updateReadme(aggregatedLogs, realAiAnalysis);
-  }}
-}}
+  }
+}
 
-if (require.main === module) {{
+if (require.main === module) {
   new MultiProtocolOpenAIRenderer().run();
-}}
+}
 module.exports = MultiProtocolOpenAIRenderer;
 """
         os.makedirs("Protocols", exist_ok=True)
