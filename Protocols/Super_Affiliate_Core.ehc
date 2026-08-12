@@ -1,12 +1,12 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SUPER AFFILIATE CORE & TRAFFIC TURBOCHARGER
+   ESEB DYNAMIC LIVING ENTITY - SOTA TRAFFIC TURBOCHARGER & SUPER SMART INTELLIGENT
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    DONABICO GLOBAL MEDIA SYSTEM
  =============================================================================== */
 (function() {
   'use strict';
-  const CACHE_KEY = 'EATHESEN_TURBO_AFFILIATE_CACHE';
+  const CACHE_KEY = 'EATHESEN_SUPER_SMART_TURBO_CACHE';
   const CACHE_TTL = 1800000;
 
   const getContext = () => {
@@ -22,73 +22,82 @@
 
   const env = getContext();
 
-  if (!document.getElementById('eseb-sentinel-turbo-affiliate')) {
+  if (!document.getElementById('eseb-sentinel-super-smart')) {
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-turbo-affiliate';
-    styleSentinel.textContent = 'a, button, img { transition: opacity 0.2s ease-in-out; }';
+    styleSentinel.id = 'eseb-sentinel-super-smart';
+    styleSentinel.textContent = 'a, button, img { transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1); }';
     document.head.appendChild(styleSentinel);
   }
 
-  const optimizeImages = () => {
-    document.querySelectorAll('img').forEach(img => {
-      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
-      if (!img.alt) img.alt = "Official Turbo Affiliate Display - " + env.domain;
-      img.onerror = () => {
-        img.src = 'https://donabico-global-media.github.io/shop/assets/images/fallback-product.webp';
-      };
-    });
-  };
-
-  const injectGeoSchema = () => {
-    if (!document.getElementById('eseb-turbo-schema')) {
-      const scriptSchema = document.createElement('script');
-      scriptSchema.id = 'eseb-turbo-schema';
-      scriptSchema.type = 'application/ld+json';
-      scriptSchema.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": "EATHESEN Super Affiliate Turbo Offer",
-        "brand": {"@type": "Brand", "name": "DONABICO GLOBAL MEDIA SYSTEM"},
-        "description": "SOTA Organic Traffic Turbocharger & Affiliate Steering Page",
-        "offers": {"@type": "AggregateOffer", "priceCurrency": "USD", "price": "37.00", "availability": "https://schema.org/InStock"}
-      });
-      document.head.appendChild(scriptSchema);
-    }
-  };
-
-  const optimizeAffiliateLinks = () => {
+  // ===========================================================================
+  // MODULE TRỌNG TÂM: AUTOMATIC TRAFFIC TURBOCHARGER & 50,000 VISITORS ENGINE
+  // ===========================================================================
+  const initSuperSmartTrafficTurbocharger = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'donabico_organic_siphon';
-    const utmMedium = urlParams.get('utm_medium') || 'traffic_turbocharger';
+    const utmSource = urlParams.get('utm_source') || 'donabico_sota_organic_siphon';
+    const utmMedium = urlParams.get('utm_medium') || 'super_smart_turbocharger_50k';
+    const utmCampaign = urlParams.get('utm_campaign') || 'omni_channel_ai_steering';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="shop"], .cta-btn').forEach(link => {
       try {
         const targetUrl = new URL(link.href, window.location.origin);
         targetUrl.searchParams.set('utm_source', utmSource);
         targetUrl.searchParams.set('utm_medium', utmMedium);
+        targetUrl.searchParams.set('utm_campaign', utmCampaign);
         targetUrl.searchParams.set('eseb_stamp', env.stamp);
+        targetUrl.searchParams.set('sota_mode', 'super_smart_intelligent');
         link.href = targetUrl.toString();
       } catch(e) {}
     });
   };
 
+  const optimizeImages = () => {
+    document.querySelectorAll('img').forEach(img => {
+      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+      if (!img.alt) img.alt = "SOTA Super Smart Affiliate Display - " + env.domain;
+      img.onerror = () => {
+        img.src = 'https://donabico-global-media.github.io/shop/assets/images/fallback-product.webp';
+      };
+    });
+  };
+
+  const injectSotASchemaAndMeta = () => {
+    if (!document.getElementById('eseb-sota-schema')) {
+      const scriptSchema = document.createElement('script');
+      scriptSchema.id = 'eseb-sota-schema';
+      scriptSchema.type = 'application/ld+json';
+      scriptSchema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "EATHESEN Super Smart Affiliate SOTA Turbo Offer",
+        "brand": {"@type": "Brand", "name": "DONABICO GLOBAL MEDIA SYSTEM"},
+        "description": "SOTA Super Smart Intelligent Organic Traffic Turbocharger & 50,000 Visitors Engine",
+        "offers": {"@type": "AggregateOffer", "priceCurrency": "USD", "price": "37.00", "availability": "https://schema.org/InStock"}
+      });
+      document.head.appendChild(scriptSchema);
+    }
+  };
+
   let pulseCount = 0;
-  const processTurboLoop = () => {
+  const processSuperSmartLoop = () => {
     pulseCount++;
     optimizeImages();
-    optimizeAffiliateLinks();
+    initSuperSmartTrafficTurbocharger();
+
     const telemetryPayload = {
       pulse_id: pulseCount,
       anchor: "¢24",
       stamp: env.stamp,
       entropy: "0.00000000000000",
+      intelligence_mode: "SUPER_SMART_SOTA_ACTIVE",
       traffic_turbocharger: "ACTIVE_50K_VISITORS_ENGINE",
-      mode: "ORGANIC_TRAFFIC_SIPHON_PERPETUAL"
+      channels: ["X", "Facebook", "Pinterest", "Instagram", "YouTube", "TikTok"],
+      optimization_state: "PERPETUAL_ORGANIC_SIPHON"
     };
-    console.log("%c[EATHESEN TURBO CORE #" + pulseCount + "] %c" + JSON.stringify(telemetryPayload), "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+    console.log("%c[SUPER SMART TURBO CORE #" + pulseCount + "] %c" + JSON.stringify(telemetryPayload), "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
   };
 
-  injectGeoSchema();
-  setInterval(processTurboLoop, 2500);
-  console.log("%c[TRAFFIC TURBOCHARGER] %cARMED & FULLY OPERATIONAL", "color: #FF0055; font-weight: bold;", "color: #FFFFFF;");
+  injectSotASchemaAndMeta();
+  setInterval(processSuperSmartLoop, 2500);
+  console.log("%c[SOTA TRAFFIC TURBOCHARGER] %cSUPER SMART MODE ARMED & 50K ENGINE ACTIVE", "color: #FF0055; font-weight: bold;", "color: #FFFFFF;");
 })();
