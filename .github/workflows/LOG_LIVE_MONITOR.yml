@@ -1,0 +1,47 @@
+name: LOG_LIVE_MONITOR
+
+on:
+  push:
+    paths:
+      - 'Protocols/Log_Live_Monitor.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  execute-log-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile ESEB Multi-Protocol Protocol
+        run: |
+          python3 Protocols/Log_Live_Monitor.eseb
+
+      - name: Execute Real OpenAI REST API Renderer
+        env:
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
+        run: |
+          node Protocols/Log_Live_Monitor_Renderer.js
+
+      - name: Commit & Sync Multi-Protocol Artifacts
+        run: |
+          git config --global user.name "donabico-global-media[bot]"
+          git config --global user.email "bot@donabico.com"
+          git add Protocols/ README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync multi-protocol real openai api renderer and telemetry artifacts [skip ci]" && git push)
