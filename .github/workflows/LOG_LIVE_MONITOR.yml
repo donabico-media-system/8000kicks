@@ -44,6 +44,15 @@ jobs:
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/donabico-media-system/8000kicks.git
-          git pull --rebase origin main || true
+          
+          # 1. Đưa các thay đổi vào khu vực chờ (Staging)
           git add Protocols/ README.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync multi-protocol real ai api renderer and telemetry artifacts [skip ci]" && git push origin main)
+          
+          # 2. Kiểm tra nếu có thay đổi thì Commit -> Pull Rebase -> Push
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(eseb): auto-sync multi-protocol real ai api renderer and telemetry artifacts [skip ci]"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "No changes to commit. Entropy delta = 0."
+          fi
