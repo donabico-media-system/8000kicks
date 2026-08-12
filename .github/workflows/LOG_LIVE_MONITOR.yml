@@ -32,7 +32,7 @@ jobs:
         run: |
           python3 Protocols/Log_Live_Monitor.eseb
 
-      - name: Execute Real OpenAI REST API Renderer
+      - name: Execute Real AI REST API Renderer
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
@@ -41,8 +41,9 @@ jobs:
 
       - name: Commit & Sync Multi-Protocol Artifacts
         run: |
-          git config --global user.name "donabico-global-media[bot]"
+          git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/donabico-media-system/8000kicks.git
+          git pull --rebase origin main || true
           git add Protocols/ README.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync multi-protocol real openai api renderer and telemetry artifacts [skip ci]" && git push)
- 
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(eseb): auto-sync multi-protocol real ai api renderer and telemetry artifacts [skip ci]" && git push origin main)
