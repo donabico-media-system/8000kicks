@@ -45,13 +45,21 @@ jobs:
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/donabico-media-system/8000kicks.git
           
-          # 1. Đưa các thay đổi vào khu vực chờ (Staging)
+          # 1. Fetch và Rebase trước để đồng bộ kho
+          git fetch origin main
+          git rebase origin/main || {
+            echo "Rebase conflict detected. Resolving automatically by favoring latest generated artifacts..."
+            git checkout --ours README.md Protocols/ || true
+            git add README.md Protocols/ || true
+            git rebase --continue || git rebase --abort || true
+          }
+          
+          # 2. Đưa các thay đổi vào khu vực chờ
           git add Protocols/ README.md
           
-          # 2. Kiểm tra nếu có thay đổi thì Commit -> Pull Rebase -> Push
+          # 3. Commit và Push an toàn tuyệt đối
           if ! git diff --staged --quiet; then
             git commit -m "chore(eseb): auto-sync multi-protocol real ai api renderer and telemetry artifacts [skip ci]"
-            git pull --rebase origin main
             git push origin main
           else
             echo "No changes to commit. Entropy delta = 0."
