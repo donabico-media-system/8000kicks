@@ -135,9 +135,9 @@ class ESEBSupperQuadControlEngine:
 """
 
     def build_runner_js(self) -> str:
-        """Sinh thực thể Serverless Runner Node.js (.js) thực thi 04 AI API Tokens chính xác"""
+        """Sinh thực thể Serverless Runner Node.js (.js) khớp 1:1 REST Payload từ build.nvidia.com"""
         return f"""/* ==========================================================================
-   ESEB SERVERLESS RUNNER ENGINE (SUPPER QUAD CONTROL - 04 TOKENS REAL SOTA)
+   ESEB SERVERLESS RUNNER ENGINE (SUPPER QUAD CONTROL - STABLE REST SOTA 2026)
    MODULE: Protocols/{self.module_name}.js
    STAMP: {self.stamp} | ¢24 ANCHOR | REAL AI REST API EXECUTION
    TARGET TOKENS: GROQ, LLAMA_NVIDIA, NEMOTRON_NVIDIA, ESEB_CLASSIC
@@ -180,7 +180,7 @@ function makeRestCall(hostname, path, apiKey, payload, quadrantLabel) {{
         if (res.statusCode === 200) {{
           console.log(`[${{quadrantLabel}} SUCCESS] Payload: ` + body.substring(0, 100) + "...");
         }} else {{
-          console.log(`[${{quadrantLabel}} FAILED] Status: ${{res.statusCode}} | Response: ` + body.substring(0, 150));
+          console.log(`[${{quadrantLabel}} FAILED] Status: ${{res.statusCode}} | Body: ` + body.substring(0, 180));
         }}
         resolve({{ status: res.statusCode, label: quadrantLabel }});
       }});
@@ -203,34 +203,32 @@ async function executeSupperQuadControlSwarm() {{
   console.log("MODE: 04 AI TOKEN INTEGRATED SWARM");
   console.log("=================================================");
 
-  // 1. NODE GROQ LPU (Model: llama-3.3-70b-versatile)
+  // 1. GROQ LPU (Model: llama-3.3-70b-versatile)
   await makeRestCall('api.groq.com', '/openai/v1/chat/completions', TOKENS.GROQ, {{
     model: "llama-3.3-70b-versatile",
     messages: [{{ role: "user", content: "Alpha Quad: Capture Traffic Siphon Signals." }}],
     temperature: 0.1
   }}, "ALPHA-GROQ");
 
-  // 2. NODE NVIDIA LLAMA (Model: meta/llama-3.3-70b-instruct)
+  // 2. NVIDIA LLAMA (Model: meta/llama-3.3-70b-instruct)
   await makeRestCall('integrate.api.nvidia.com', '/v1/chat/completions', TOKENS.LLAMA_NVIDIA, {{
     model: "meta/llama-3.3-70b-instruct",
     messages: [{{ role: "user", content: "Beta Quad: Synthesize Knowledge Graph & pSEO." }}],
     temperature: 0.1
   }}, "BETA-NVIDIA-LLAMA");
 
-  // 3. NODE NVIDIA NEMOTRON LIGHTNING (Model: nvidia/nemotron-3.5-lightning-30b-a3b)
+  // 3. NVIDIA NEMOTRON LIGHTNING (Model: nvidia/nemotron-3.5-lightning-30b-a3b - REST Payload Unrolled)
   await makeRestCall('integrate.api.nvidia.com', '/v1/chat/completions', TOKENS.NEMOTRON_NVIDIA, {{
     model: "nvidia/nemotron-3.5-lightning-30b-a3b",
     messages: [{{ role: "user", content: "Beta Quad: Execute Lightning Reasoning." }}],
     temperature: 1,
     top_p: 0.95,
     max_tokens: 16384,
-    extra_body: {{
-      chat_template_kwargs: {{ enable_thinking: true }},
-      reasoning_budget: 16384
-    }}
+    chat_template_kwargs: {{ enable_thinking: true }},
+    reasoning_budget: 16384
   }}, "BETA-NVIDIA-NEMOTRON");
 
-  // 4. NODE ESEB CLASSIC CORE (DISPATCH VERIFICATION)
+  // 4. ESEB CLASSIC CORE (DISPATCH VERIFICATION)
   if (TOKENS.ESEB_CLASSIC) {{
     console.log("[DELTA-ESEB-CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.");
   }} else {{
