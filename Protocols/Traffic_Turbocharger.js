@@ -66,9 +66,10 @@ class StandaloneTrafficTurboBroadcaster {
   }
 
   async pingGlobalTrafficServices(siteName, siteUrl) {
+    // Chọn lọc duy nhất các Pingback Endpoint mở 100% không bị block 403
     const pingServices = [
       { host: 'rpc.pingomatic.com', port: 80, path: '/' },
-      { host: 'ping.blo.gs', port: 80, path: '/' }
+      { host: 'rpc.twingly.com', port: 80, path: '/' }
     ];
 
     console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Global Syndication Hubs for: ${siteUrl}`);
@@ -83,7 +84,7 @@ class StandaloneTrafficTurboBroadcaster {
           method: 'POST',
           headers: {
             'Content-Type': 'text/xml',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
             'Content-Length': Buffer.byteLength(xmlPayload)
           },
           timeout: 3000
