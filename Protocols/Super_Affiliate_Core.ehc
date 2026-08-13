@@ -1,140 +1,76 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SOTA TRAFFIC TURBOCHARGER & SUPER SMART INTELLIGENT
+   ESEB DYNAMIC LIVING ENTITY - SUPER AFFILIATE CORE (CLIENT SIDE)
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   BRAND: DONABICO GLOBAL MEDIA SYSTEM
+   BRAND: DONABICO MEDIA SYSTEM
  =============================================================================== */
 (function() {
   'use strict';
 
   const getContext = () => {
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
+    const origin = protocol + '//' + host;
 
     return {
-      repo: repoName,
       domain: host,
       canonicalUrl: fullUrl,
-      origin: protocol + '//' + host,
-      brand: 'DONABICO GLOBAL MEDIA SYSTEM',
+      origin: origin,
+      brand: 'DONABICO MEDIA SYSTEM',
       stamp: 'V-STAMP-24'
     };
   };
 
   const env = getContext();
 
-  // 1. Sentinel Shield (CLS = 0)
-  if (!document.getElementById('eseb-sentinel-super-smart')) {
+  if (!document.getElementById('eseb-sentinel-super-aff')) {
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-super-smart';
-    styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] { display: none !important; } a, button { transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1); }';
+    styleSentinel.id = 'eseb-sentinel-super-aff';
+    styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] { display: none !important; }';
     document.head.appendChild(styleSentinel);
   }
 
-  // 2. SOTA Traffic Turbocharger Engine
-  const initSuperSmartTrafficTurbocharger = () => {
+  const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'donabico_sota_organic_siphon';
-    const utmMedium = urlParams.get('utm_medium') || 'super_smart_turbocharger_50k';
-    const utmCampaign = urlParams.get('utm_campaign') || 'omni_channel_ai_steering';
+    const utmSource = urlParams.get('utm_source') || 'super_affiliate_core';
+    const utmMedium = urlParams.get('utm_medium') || 'omni_siphon';
 
-    document.querySelectorAll('a[href*="affiliate"], a[href*="shop"], .cta-btn').forEach(link => {
+    document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
       try {
-        const targetUrl = new URL(link.href, window.location.origin);
+        let href = link.href || link.getAttribute('data-href');
+        if (!href) return;
+        
+        const targetUrl = new URL(href, env.origin);
         targetUrl.searchParams.set('utm_source', utmSource);
         targetUrl.searchParams.set('utm_medium', utmMedium);
-        targetUrl.searchParams.set('utm_campaign', utmCampaign);
         targetUrl.searchParams.set('eseb_stamp', env.stamp);
-        targetUrl.searchParams.set('sota_mode', 'super_smart_intelligent');
-        link.href = targetUrl.toString();
+        
+        if (link.tagName === 'A') link.href = targetUrl.toString();
 
-        if (!link.dataset.prefetchBound) {
-          link.dataset.prefetchBound = "true";
+        if (!link.dataset.affArmed) {
+          link.dataset.affArmed = "true";
           link.addEventListener('pointerover', () => {
-            const prefetchLink = document.createElement('link');
-            prefetchLink.rel = 'prefetch';
-            prefetchLink.href = link.href;
-            document.head.appendChild(prefetchLink);
+            const p = document.createElement('link');
+            p.rel = 'prefetch';
+            p.href = targetUrl.toString();
+            document.head.appendChild(p);
           }, { once: true });
         }
       } catch(e) {}
     });
   };
 
-  // 3. Schema JSON-LD Injection
-  const injectSotASchemaAndMeta = () => {
-    const oldNode = document.getElementById('eseb-sota-schema');
-    if (oldNode) oldNode.remove();
-
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Product",
-          "@id": env.canonicalUrl + "#product",
-          "name": document.title || env.brand + " Offer",
-          "brand": { "@type": "Brand", "name": env.brand },
-          "description": "SOTA Super Smart Intelligent Organic Traffic Turbocharger Engine",
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "price": "37.00",
-            "availability": "https://schema.org/InStock",
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "applicableCountry": "US",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays": 30,
-              "returnMethod": "https://schema.org/ReturnByMail",
-              "returnFees": "https://schema.org/FreeReturn"
-            },
-            "shippingDetails": {
-              "@type": "OfferShippingDetails",
-              "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "USD" },
-              "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
-              "deliveryTime": {
-                "@type": "ShippingDeliveryTime",
-                "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY" },
-                "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
-              }
-            }
-          }
-        }
-      ]
-    };
-
-    const scriptSchema = document.createElement('script');
-    scriptSchema.id = 'eseb-sota-schema';
-    scriptSchema.type = 'application/ld+json';
-    scriptSchema.setAttribute('data-eseb', 'true');
-    scriptSchema.textContent = JSON.stringify(schemaData);
-    document.head.appendChild(scriptSchema);
-  };
-
-  // 4. Biological Pulse Loop (2.5s)
   let pulseCount = 0;
-  const processSuperSmartLoop = () => {
+  const runPulse = () => {
     pulseCount++;
-    initSuperSmartTrafficTurbocharger();
-
-    const telemetryPayload = {
-      pulse_id: pulseCount,
-      anchor: "¢24",
-      stamp: env.stamp,
-      entropy: "0.00000000000000",
-      intelligence_mode: "SUPER_SMART_SOTA_ACTIVE",
-      traffic_turbocharger: "ACTIVE_50K_VISITORS_ENGINE",
-      channels: ["X", "Facebook", "Pinterest", "Instagram", "YouTube", "TikTok"],
-      optimization_state: "PERPETUAL_ORGANIC_SIPHON"
-    };
-    console.log("%c[SUPER SMART TURBO CORE #" + pulseCount + "] %c" + JSON.stringify(telemetryPayload), "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+    armAffiliateLinks();
+    
+    if (pulseCount % 4 === 0) {
+      console.log("%c[SUPER AFFILIATE CORE ACTIVE] %cDomain: " + env.domain + " | Link Prefetch Ready", "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+    }
   };
 
-  injectSotASchemaAndMeta();
-  processSuperSmartLoop();
-  setInterval(processSuperSmartLoop, 2500);
-  console.log("%c[SOTA TRAFFIC TURBOCHARGER] %cSUPER SMART DUAL-TOKEN MODE ARMED", "color: #FF0055; font-weight: bold;", "color: #FFFFFF;");
+  runPulse();
+  setInterval(runPulse, 2500);
 })();
