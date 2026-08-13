@@ -31,13 +31,11 @@ jobs:
         run: |
           python Protocols/Supper_Quad_Control.eseb
 
-      - name: Execute Serverless Runner Supper Quad AI Swarm
+      - name: Execute Serverless Runner 04 AI Token Swarm
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          CEREBRAS_API_TOKEN: ${{ secrets.CEREBRAS_API_TOKEN }}
           LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
-          OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Supper_Quad_Control.js
@@ -48,10 +46,9 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile supper quad living entities [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile 04-token supper quad living entities [V-STAMP-24]"
             git pull --rebase origin main || git rebase --skip
             git push origin HEAD:main
           else
             echo "No changes detected. Skipping commit."
           fi
- 
