@@ -1,9 +1,9 @@
-name: SUPPER_QUAD_CONTROL
+name: SUPER_QUAD_CONTROL
 
 on:
   push:
     paths:
-      - 'Protocols/Supper_Quad_Control.eseb'
+      - 'Protocols/Super_Quad_Control.eseb'
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  eseb-supper-quad-execution:
+  eseb-super-quad-execution:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -32,14 +32,14 @@ jobs:
 
       - name: Compile ESEB Protocol (.eseb -> .ehc + .js)
         run: |
-          python Protocols/Supper_Quad_Control.eseb
+          python Protocols/Super_Quad_Control.eseb
 
       - name: Execute Serverless Dual-Token Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
-          node Protocols/Supper_Quad_Control.js
+          node Protocols/Super_Quad_Control.js
 
       - name: Conflict-Free Git Commit & Push Strategy
         run: |
@@ -47,7 +47,7 @@ jobs:
           git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile Supper_Quad_Control artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile Super_Quad_Control artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
