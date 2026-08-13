@@ -47,10 +47,9 @@ jobs:
           git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile standalone Traffic_Turbocharger artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile omni-matrix Traffic_Turbocharger artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
             echo "No changes detected. Skipping commit."
           fi
- 
