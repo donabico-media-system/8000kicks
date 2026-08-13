@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  execute-eseb-pipeline:
+  execute-super-affiliate-pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -30,26 +30,24 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Compile and Generate ESEB Living Entities via Python Core
+      - name: Compile Super Affiliate Core Engine via Python
         run: |
-          echo "[INFO] Compiling Super_Affiliate_Core.eseb to generate .ehc and .js files..."
           python Protocols/Super_Affiliate_Core.eseb
 
-      - name: Execute Serverless AI Runner & Traffic Turbocharger with Real Tokens
+      - name: Execute Serverless AI Runner & Super Affiliate Conversion Core
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
         run: |
-          echo "[INFO] Running ESEB Serverless AI REST API Engine with Real Token Authentication..."
           node Protocols/Super_Affiliate_Core.js
 
-      - name: Commit & Sync Living Entities
+      - name: Commit and Push Living Entity Artifacts
         run: |
-          git config --global user.name "donabico-global-media[bot]"
-          git config --global user.email "bot@donabico.com"
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile and sync Super_Affiliate_Core artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile Super_Affiliate_Core artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
