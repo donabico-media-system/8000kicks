@@ -67,8 +67,8 @@ class StandaloneTrafficTurboBroadcaster {
 
   async pingGlobalTrafficServices(siteName, siteUrl) {
     const pingServices = [
-      { host: 'rpc.pingomatic.com', path: '/' },
-      { host: 'ping.feedburner.com', path: '/' }
+      { host: 'rpc.pingomatic.com', port: 80, path: '/' },
+      { host: 'ping.blo.gs', port: 80, path: '/' }
     ];
 
     console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Global Syndication Hubs for: ${siteUrl}`);
@@ -78,11 +78,12 @@ class StandaloneTrafficTurboBroadcaster {
         const xmlPayload = `<?xml version="1.0"?><methodCall><methodName>weblogUpdates.ping</methodName><params><param><value>${siteName}</value></param><param><value>${siteUrl}</value></param></params></methodCall>`;
         const options = {
           hostname: service.host,
-          port: 80,
+          port: service.port,
           path: service.path,
           method: 'POST',
           headers: {
             'Content-Type': 'text/xml',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
             'Content-Length': Buffer.byteLength(xmlPayload)
           },
           timeout: 3000
@@ -110,10 +111,7 @@ class StandaloneTrafficTurboBroadcaster {
 
     const targetUrl = "https://donabico-media-system.github.io/shop/8000kicks.html";
 
-    // 1. Gọi Groq LPU AI tối ưu hóa phễu
     await this.callGroqLPU("Synthesize high-converting affiliate traffic siphoning protocol.");
-
-    // 2. Tự động bắn Pings kéo Traffic ngầm
     await this.pingGlobalTrafficServices("DONABICO Media System Shop", targetUrl);
 
     if (this.tokens.esebClassic) {
