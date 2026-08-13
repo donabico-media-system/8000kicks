@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION (DUAL-TOKEN ULTRA STREAMLINED SYNCHRONIZATION)
+ESEB PROTOCOL CORE SPECIFICATION (OMNI CNAME AUTO-DISCOVERY SYNCHRONIZATION)
 MODULE: Cdn_Index_Signal
 FILE: Protocols/Cdn_Index_Signal.eseb
-STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: CDN EDGE DISPATCH & DUAL-TOKEN REAL AI REST API EXECUTOR
+STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
+FUNCTION: CDN EDGE DISPATCH & DUAL-TOKEN REAL AI REST API INDEXING EXECUTOR
 ===============================================================================
 """
 
@@ -16,7 +16,7 @@ class CdnIndexSignalEngineCore:
     def __init__(self):
         self.module_name = "Cdn_Index_Signal"
         self.stamp = "V-STAMP-24"
-        self.brand = "DONABICO GLOBAL MEDIA SYSTEM"
+        self.brand = "DONABICO MEDIA SYSTEM"
         self.constant_anchor = "¢24"
         self.entropy = 0.00000000000000
         self.pulse_interval = 2500
@@ -27,7 +27,7 @@ class CdnIndexSignalEngineCore:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc (Client-Side Living Entity Runtime) bảo toàn Zero-DOM Surface"""
+        """Tạo sinh tệp .ehc: Căn chỉnh Canonical Domain chuẩn theo môi trường thực tế"""
         ehc_content = f"""/* ==========================================================================
    ESEB DYNAMIC LIVING ENTITY - CDN & GLOBAL AI BROADCASTER
    MODULE: Protocols/{self.module_name}.ehc
@@ -45,17 +45,15 @@ class CdnIndexSignalEngineCore:
   }}
 
   const getContext = () => {{
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
-    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
+    const origin = protocol + '//' + host;
     
     return {{
-      repo: repoName,
       domain: host,
       canonicalUrl: fullUrl,
-      origin: protocol + '//' + host,
+      origin: origin,
       brand: '{self.brand}',
       stamp: '{self.stamp}'
     }};
@@ -74,7 +72,7 @@ class CdnIndexSignalEngineCore:
           "@type": "WebPage",
           "@id": env.canonicalUrl + "#webpage",
           "url": env.canonicalUrl,
-          "name": document.title || env.repo,
+          "name": document.title || env.brand,
           "isPartOf": {{
             "@type": "WebSite",
             "@id": env.origin + "/#website",
@@ -109,7 +107,7 @@ class CdnIndexSignalEngineCore:
 
   let pulseCount = 0;
   const initTransmitter = () => {{
-    console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | REPO: " + env.repo + " | CDN: GITHUB_PAGES", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+    console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | DOMAIN: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
     injectGlobalSignals();
 
     setInterval(() => {{
@@ -121,7 +119,6 @@ class CdnIndexSignalEngineCore:
         entropy: "0.00000000000000",
         cdn_status: "EDGE_ACTIVE",
         active_tokens: 2,
-        q_reward: (3.30 + Math.random() * 0.04).toFixed(2),
         system_state: "PERPETUAL_TRANSMITTING"
       }};
       console.log("%c[ESEB BROADCAST 2.5s #" + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
@@ -141,16 +138,18 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) đã ESCAPE CHUẨN XÁC NGOẶC NHỌN"""
+        """Tạo sinh tệp .js: Runner tự đọc file CNAME phát sóng IndexNow REST API"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & DUAL-TOKEN ULTRA FAST EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & DUAL-TOKEN INDEXNOW EXECUTOR
  MODULE: Protocols/{self.module_name}.js
  STAMP: {self.stamp} | DUAL-TOKEN 4THU MODE | {self.brand}
+ OMNI CNAME AUTO-DISCOVERY ENFORCED
  ===============================================================================
 **/
 
 const https = require('https');
+const fs = require('fs');
 
 class ServerlessDualTokenExecutionRunner {{
   constructor() {{
@@ -158,24 +157,38 @@ class ServerlessDualTokenExecutionRunner {{
     this.brand = "{self.brand}";
     this.anchor = "{self.constant_anchor}";
     
-    // Nạp chính xác đúng 02 Token cốt lõi từ GitHub Secrets
     this.tokens = {{
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || ''
     }};
   }}
 
+  getAutoDiscoveredDomain() {{
+    try {{
+      if (fs.existsSync('CNAME')) {{
+        const cnameDomain = fs.readFileSync('CNAME', 'utf8').trim();
+        if (cnameDomain) return cnameDomain;
+      }}
+    }} catch(e) {{}}
+
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
+    const parts = githubRepo.split('/');
+    const owner = parts[0] || 'donabico-media-system';
+    const repo = parts[1] || '8000kicks';
+    return repo.toLowerCase() === `${{owner.toLowerCase()}}.github.io` ? `${{owner}}.github.io` : `${{owner}}.github.io/${{repo}}`;
+  }}
+
   async callGroqAPI(promptText) {{
     if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {{
-      console.log("[GROQ CORE] Token API_GROQ_TOKEN không tồn tại trong Secrets. Skipping.");
-      return {{ api: 'GROQ LPU API', success: false, status: 204 }};
+      console.log("[GROQ CORE] Token API_GROQ_TOKEN missing in Secrets. Skipping.");
+      return {{ success: false }};
     }}
 
     const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
     const payload = JSON.stringify({{
       model: "llama-3.3-70b-versatile",
       messages: [
-        {{"role": "system", "content": "You are ESEB Dynamic Living Protocol Core V3000-Ω. Process CDN Indexing Signals."}},
+        {{"role": "system", "content": "You are ESEB Dynamic Living Protocol Core V3000-Ω. Process Custom Domain Indexing Signals."}},
         {{"role": "user", "content": promptText}}
       ],
       temperature: 0.1
@@ -191,7 +204,7 @@ class ServerlessDualTokenExecutionRunner {{
         'Authorization': `Bearer ${{cleanToken}}`,
         'Content-Length': Buffer.byteLength(payload)
       }},
-      timeout: 8000
+      timeout: 5000
     }};
 
     return new Promise((resolve) => {{
@@ -200,50 +213,65 @@ class ServerlessDualTokenExecutionRunner {{
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {{
           console.log(`[REAL AI API EXECUTION] GROQ LPU Engine Status: ${{res.statusCode}}`);
-          if (res.statusCode === 200) {{
-            console.log(`[GROQ SUCCESS] Payload: ` + data.substring(0, 120) + "...");
-          }} else {{
-            console.log(`[GROQ FAILED] Status: ${{res.statusCode}} | Body: ` + data.substring(0, 120));
-          }}
-          resolve({{ api: 'GROQ LPU API', success: res.statusCode === 200, status: res.statusCode }});
+          resolve({{ success: res.statusCode === 200 }});
         }});
       }});
+      req.on('timeout', () => {{ req.destroy(); resolve({{ success: false }}); }});
+      req.on('error', () => resolve({{ success: false }}));
+      req.write(payload);
+      req.end();
+    }});
+  }}
 
-      req.on('timeout', () => {{
-        console.error("[GROQ TIMEOUT] Request exceeded 8000ms.");
-        req.destroy();
-        resolve({{ api: 'GROQ LPU API', success: false, status: 408 }});
+  async broadcastIndexNow(domain, urlList) {{
+    const hex32Key = "24242424242424242424242424242424";
+    const payload = JSON.stringify({{
+      host: domain,
+      key: hex32Key,
+      keyLocation: `https://${{domain}}/${{hex32Key}}.txt`,
+      urlList: urlList
+    }});
+
+    const options = {{
+      hostname: 'api.indexnow.org',
+      port: 443,
+      path: '/indexnow',
+      method: 'POST',
+      headers: {{
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }},
+      timeout: 3000
+    }};
+
+    return new Promise((resolve) => {{
+      const req = https.request(options, (res) => {{
+        console.log(`[INDEXNOW BROADCAST] Host: ${{domain}} | Status: ${{res.statusCode}}`);
+        resolve({{ success: res.statusCode === 200 || res.statusCode === 202 }});
       }});
-
-      req.on('error', (err) => {{
-        console.error(`[GROQ ERROR] ${{err.message}}`);
-        resolve({{ api: 'GROQ LPU API', success: false, status: 500 }});
-      }});
-
+      req.on('timeout', () => {{ req.destroy(); resolve({{ success: false }}); }});
+      req.on('error', () => resolve({{ success: false }}));
       req.write(payload);
       req.end();
     }});
   }}
 
   async runRealExecution() {{
+    const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[DUAL-TOKEN RUNNER] Executing Groq LPU & Classic Synchronization`);
+    console.log(`[DUAL-TOKEN RUNNER] Executing IndexNow Broadcast for Domain: ${{targetDomain}}`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
-    const targetPrompt = "Execute ESEB CDN Index Signal matrix synchronization.";
+    await this.callGroqAPI(`Execute ESEB CDN Index Signal matrix synchronization for domain: ${{targetDomain}}`);
+    await this.broadcastIndexNow(targetDomain, [`https://${{targetDomain}}/`]);
 
-    // 1. Thực thi Groq LPU
-    await this.callGroqAPI(targetPrompt);
-
-    // 2. Xác thực ESEB Classic Core
     if (this.tokens.esebClassic) {{
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
-    }} else {{
-      console.log(`[ESEB CLASSIC NOTICE] Secret ESEB_CLASSIC_TOKEN không tồn tại.`);
     }}
 
-    console.log(`[DUAL-TOKEN RUNNER] All Execution Pipelines Completed. Entropy delta = 0.`);
+    console.log(`[DUAL-TOKEN RUNNER] All Indexing Pipelines Completed. Entropy delta = 0.`);
+    process.exit(0);
   }}
 }}
 
