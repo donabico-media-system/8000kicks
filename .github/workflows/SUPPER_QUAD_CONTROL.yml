@@ -3,10 +3,13 @@ name: SUPPER_QUAD_CONTROL
 on:
   push:
     paths:
-      - 'Protocols/*.eseb'
+      - 'Protocols/Supper_Quad_Control.eseb'
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   eseb-supper-quad-execution:
@@ -17,36 +20,40 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Python Environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Compile ESEB Protocol (.eseb -> .ehc + .js)
         run: |
           python Protocols/Supper_Quad_Control.eseb
 
-      - name: Execute Serverless Runner Dual-Token Engine
+      - name: Execute Serverless Runner Multi-Brain Swarm Cluster Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          CEREBRAS_API_TOKEN: ${{ secrets.CEREBRAS_API_TOKEN }}
+          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
+          NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
+          OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Supper_Quad_Control.js
 
       - name: Conflict-Free Git Commit & Push Strategy
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile dual-token supper quad living entities [V-STAMP-24]"
-            git pull --rebase origin main || git rebase --skip
-            git push origin HEAD:main
+            git commit -m "chore(eseb): auto-compile Supper_Quad_Control artifacts [V-STAMP-24]"
+            git pull origin main --rebase || git pull origin master --rebase || true
+            git push origin HEAD:main || git push origin HEAD:master
           else
             echo "No changes detected. Skipping commit."
           fi
