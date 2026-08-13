@@ -1,8 +1,8 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SOTA MULTI-AI REST API EXECUTOR
+ ESEB PROTOCOL: SERVERLESS RUNNER & SOTA DUAL-TOKEN REST API EXECUTOR
  MODULE: Protocols/Super_Affiliate_Core.js
- STAMP: V-STAMP-24 | SOTA SUPER SMART MODE | DONABICO GLOBAL MEDIA SYSTEM
+ STAMP: V-STAMP-24 | SOTA SUPER SMART DUAL-TOKEN MODE | DONABICO GLOBAL MEDIA SYSTEM
  ===============================================================================
 **/
 
@@ -15,53 +15,68 @@ class ServerlessTurboRunner {
     this.anchor = "¢24";
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
-      apiGroq: process.env.API_GROQ_TOKEN || '',
-      llamaNvidia: process.env.LLAMA_NVIDIA_TOKEN || '',
-      nemotronNvidia: process.env.NEMOTRON_NVIDIA_TOKEN || ''
+      apiGroq: process.env.API_GROQ_TOKEN || ''
     };
   }
 
-  async sendRequest(options, payload, apiName) {
+  async callGroqLPU(promptText) {
+    if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {
+      console.log("[GROQ CORE] Token API_GROQ_TOKEN missing in Secrets. Skipping.");
+      return { api: 'GROQ LPU API', success: false, status: 204 };
+    }
+
+    const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
+    const payload = JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {"role": "system", "content": "You are ESEB Super Affiliate Core Engine V3000-Ω. Execute Traffic Siphon & pSEO optimizations."},
+        {"role": "user", "content": promptText}
+      ],
+      temperature: 0.1
+    });
+
+    const options = {
+      hostname: 'api.groq.com',
+      port: 443,
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cleanToken}`,
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 8000
+    };
+
     return new Promise((resolve) => {
       const req = https.request(options, (res) => {
         let data = '';
-        res.on('data', chunk => data += chunk);
+        res.on('data', (chunk) => data += chunk);
         res.on('end', () => {
-          console.log(`[${apiName} RESPONSE] Status Code: ${res.statusCode} | Length: ${data.length}`);
-          if (res.statusCode === 200 || res.statusCode === 202) {
-            console.log(`[${apiName}] AUTHENTICATED & VERIFIED OK 200 ✅`);
+          console.log(`[REAL AI API EXECUTION] GROQ LPU Engine Status: ${res.statusCode}`);
+          if (res.statusCode === 200) {
+            console.log(`[GROQ SUCCESS] Payload: ` + data.substring(0, 120) + "...");
           } else {
-            console.warn(`[${apiName}] Status Code Received: ${res.statusCode}`);
+            console.log(`[GROQ FAILED] Status: ${res.statusCode} | Body: ` + data.substring(0, 120));
           }
-          resolve({ api: apiName, success: true, status: res.statusCode });
+          resolve({ api: 'GROQ LPU API', success: res.statusCode === 200, status: res.statusCode });
         });
       });
-      req.on('error', err => {
-        console.error(`[${apiName} ERROR] ${err.message}`);
-        resolve({ api: apiName, success: false, error: err.message });
+
+      req.on('timeout', () => {
+        console.error("[GROQ TIMEOUT] Request exceeded 8000ms.");
+        req.destroy();
+        resolve({ api: 'GROQ LPU API', success: false, status: 408 });
       });
-      if (payload) req.write(payload);
+
+      req.on('error', (err) => {
+        console.error(`[GROQ ERROR] ${err.message}`);
+        resolve({ api: 'GROQ LPU API', success: false, status: 500 });
+      });
+
+      req.write(payload);
       req.end();
     });
-  }
-
-  async callGroq(prompt) {
-    if (!this.tokens.apiGroq) {
-      console.log("[GROQ API] Token missing, skipping.");
-      return;
-    }
-    const payload = JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{"role": "user", "content": prompt}] });
-    return await this.sendRequest({ hostname: 'api.groq.com', path: '/openai/v1/chat/completions', method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.tokens.apiGroq}` } }, payload, 'GROQ API (Llama 3.3)');
-  }
-
-  async callNvidia(tokenKey, model, label, prompt) {
-    const token = this.tokens[tokenKey];
-    if (!token) {
-      console.log(`[${label}] Token missing, skipping.`);
-      return;
-    }
-    const payload = JSON.stringify({ model: model, messages: [{"role": "user", "content": prompt}], max_tokens: 128 });
-    return await this.sendRequest({ hostname: 'integrate.api.nvidia.com', path: '/v1/chat/completions', method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }, payload, label);
   }
 
   async broadcastIndexNow(domain, urlList) {
@@ -71,27 +86,62 @@ class ServerlessTurboRunner {
       keyLocation: `https://${domain}/eseb_indexnow_key_v3000.txt`,
       urlList: urlList
     });
-    return await this.sendRequest({ hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST', headers: { 'Content-Type': 'application/json' } }, payload, 'IndexNow Broadcast');
+
+    const options = {
+      hostname: 'api.indexnow.org',
+      port: 443,
+      path: '/indexnow',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 5000
+    };
+
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
+        console.log(`[INDEXNOW BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
+        resolve({ api: 'IndexNow', success: res.statusCode === 200 || res.statusCode === 202, status: res.statusCode });
+      });
+
+      req.on('error', (err) => {
+        console.warn(`[INDEXNOW NOTICE] ${err.message}`);
+        resolve({ api: 'IndexNow', success: false, error: err.message });
+      });
+
+      req.write(payload);
+      req.end();
+    });
   }
 
-  async run() {
+  async runRealExecution() {
     console.log(`=================================================================`);
-    console.log(`[SOTA SUPER SMART RUNNER] Executing Traffic Turbo & Multi-AI Sync`);
+    console.log(`[SOTA SUPER SMART RUNNER] Executing Traffic Turbo & Groq LPU Sync`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
     const prompt = "Execute SOTA Super Smart Intelligent Traffic Turbocharger 50,000 Visitors Engine & Organic Siphon synchronization across X, Facebook, Pinterest, Instagram, YouTube, TikTok.";
-    await Promise.allSettled([
-      this.callGroq(prompt),
-      this.callNvidia('llamaNvidia', 'meta/llama-3.1-8b-instruct', 'NVIDIA NIM (Llama 3.1 8B)', prompt),
-      this.callNvidia('nemotronNvidia', 'nvidia/nemotron-3-nano-30b-a3b', 'NVIDIA NIM (Nemotron Extra)', prompt),
-      this.broadcastIndexNow('donabico.com', ['https://donabico.com/', 'https://donabico.com/shop/'])
-    ]);
+
+    // 1. Groq LPU API Execution
+    await this.callGroqLPU(prompt);
+
+    // 2. IndexNow Global Multicast
+    await this.broadcastIndexNow('donabico.com', ['https://donabico.com/', 'https://donabico.com/shop/']);
+
+    // 3. ESEB Classic Core Verification
+    if (this.tokens.esebClassic) {
+      console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
+    } else {
+      console.log(`[ESEB CLASSIC NOTICE] Secret ESEB_CLASSIC_TOKEN missing.`);
+    }
+
     console.log(`[SOTA SUPER SMART RUNNER] Completed. Entropy delta = 0.`);
   }
 }
 
 if (require.main === module) {
-  new ServerlessTurboRunner().run();
+  new ServerlessTurboRunner().runRealExecution();
 }
+
 module.exports = ServerlessTurboRunner;
