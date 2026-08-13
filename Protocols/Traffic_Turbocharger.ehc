@@ -2,7 +2,7 @@
    ESEB DYNAMIC LIVING ENTITY - STANDALONE TRAFFIC TURBOCHARGER (CLIENT SIDE)
    MODULE: Protocols/Traffic_Turbocharger.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   BRAND: DONABICO GLOBAL MEDIA SYSTEM
+   BRAND: DONABICO MEDIA SYSTEM
  =============================================================================== */
 (function() {
   'use strict';
@@ -10,7 +10,7 @@
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const host = window.location.hostname || 'donabico-media-system.github.io';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
 
@@ -19,7 +19,7 @@
       domain: host,
       canonicalUrl: fullUrl,
       origin: protocol + '//' + host,
-      brand: 'DONABICO GLOBAL MEDIA SYSTEM',
+      brand: 'DONABICO MEDIA SYSTEM',
       stamp: 'V-STAMP-24'
     };
   };

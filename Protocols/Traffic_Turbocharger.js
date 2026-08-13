@@ -2,7 +2,7 @@
  ===============================================================================
  ESEB PROTOCOL: AUTOMATIC TRAFFIC TURBOCHARGER & GROQ LPU DUAL-TOKEN RUNNER
  MODULE: Protocols/Traffic_Turbocharger.js
- STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO GLOBAL MEDIA SYSTEM
+ STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO MEDIA SYSTEM
  ===============================================================================
 **/
 
@@ -12,7 +12,7 @@ const http = require('http');
 class StandaloneTrafficTurboBroadcaster {
   constructor() {
     this.stamp = "V-STAMP-24";
-    this.brand = "DONABICO GLOBAL MEDIA SYSTEM";
+    this.brand = "DONABICO MEDIA SYSTEM";
     this.anchor = "¢24";
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
@@ -108,13 +108,13 @@ class StandaloneTrafficTurboBroadcaster {
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
-    const targetUrl = "https://donabico-global-media.github.io/shop/8000kicks.html";
+    const targetUrl = "https://donabico-media-system.github.io/shop/8000kicks.html";
 
     // 1. Gọi Groq LPU AI tối ưu hóa phễu
     await this.callGroqLPU("Synthesize high-converting affiliate traffic siphoning protocol.");
 
     // 2. Tự động bắn Pings kéo Traffic ngầm
-    await this.pingGlobalTrafficServices("DONABICO Global Media Shop", targetUrl);
+    await this.pingGlobalTrafficServices("DONABICO Media System Shop", targetUrl);
 
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
