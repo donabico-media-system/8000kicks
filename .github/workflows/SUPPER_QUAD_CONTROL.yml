@@ -31,10 +31,9 @@ jobs:
         run: |
           python Protocols/Supper_Quad_Control.eseb
 
-      - name: Execute Serverless Runner Tri-Token Swarm
+      - name: Execute Serverless Runner Dual-Token Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Supper_Quad_Control.js
@@ -45,7 +44,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile tri-token supper quad living entities [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile dual-token supper quad living entities [V-STAMP-24]"
             git pull --rebase origin main || git rebase --skip
             git push origin HEAD:main
           else
