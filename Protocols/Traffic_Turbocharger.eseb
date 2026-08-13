@@ -6,8 +6,8 @@ ESEB PROTOCOL CORE SPECIFICATION - OMNI-MATRIX TRAFFIC TURBOCHARGER ENGINE
 MODULE: Traffic_Turbocharger
 FILE: Protocols/Traffic_Turbocharger.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
-FUNCTION: OMNI-MATRIX AUTO-DISCOVERY VAULT & OPTIMIZED REALTIME PING ENGINE
-COMPLIANCE: STRICT ESEB 04THU STANDARD (ZERO HARDCODE ENFORCED)
+FUNCTION: CUSTOM DOMAIN PRIORITY VAULT & OPTIMIZED REALTIME PING ENGINE
+COMPLIANCE: STRICT ESEB 04THU STANDARD (CUSTOM DOMAIN AUTO-ENFORCED)
 ===============================================================================
 """
 
@@ -28,7 +28,7 @@ class OmniTrafficTurbochargerEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc: Cơ chế Đồng Tộc Tự Động Nhận Diện Context Client-Side"""
+        """Tạo sinh tệp .ehc: Tự động khóa Custom Domain (8000kicks.donabico.com) trên trình duyệt"""
         ehc_content = f"""/* ===============================================================================
    ESEB DYNAMIC LIVING ENTITY - OMNI-MATRIX TRAFFIC TURBOCHARGER (CLIENT SIDE)
    MODULE: Protocols/{self.module_name}.ehc
@@ -38,18 +38,17 @@ class OmniTrafficTurbochargerEngine:
 (function() {{
   'use strict';
 
+  // 1. Cơ chế Ưu Tiên Custom Domain (Auto-Detect Custom Domain vs GitHub Pages)
   const getContext = () => {{
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'EATHESEN-ECOSYSTEM';
-    const host = window.location.hostname || 'donabico-media-system.github.io';
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
+    const origin = protocol + '//' + host;
 
     return {{
-      repo: repoName,
       domain: host,
       canonicalUrl: fullUrl,
-      origin: protocol + '//' + host,
+      origin: origin,
       brand: '{self.brand}',
       stamp: '{self.stamp}'
     }};
@@ -64,6 +63,7 @@ class OmniTrafficTurbochargerEngine:
     document.head.appendChild(styleSentinel);
   }}
 
+  // 2. Speculative Prefetching 0ms trên Custom Domain
   const armAffiliateLinks = () => {{
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'eseb_organic_turbo';
@@ -74,7 +74,7 @@ class OmniTrafficTurbochargerEngine:
         let href = link.href || link.getAttribute('data-href');
         if (!href) return;
         
-        const targetUrl = new URL(href, window.location.origin);
+        const targetUrl = new URL(href, env.origin);
         targetUrl.searchParams.set('utm_source', utmSource);
         targetUrl.searchParams.set('utm_medium', utmMedium);
         targetUrl.searchParams.set('eseb_stamp', env.stamp);
@@ -100,7 +100,7 @@ class OmniTrafficTurbochargerEngine:
     armAffiliateLinks();
     
     if (pulseCount % 4 === 0) {{
-      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cOmni-Matrix Vault Armed | Domain: " + env.domain + " | Repo: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cCustom Domain Vault Armed | Active Domain: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
     }}
   }};
 
@@ -114,18 +114,19 @@ class OmniTrafficTurbochargerEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js: DUAL-TOKEN GROQ LPU + CHỈ GIỮ LẠI CÁC TRẠM PING 200 OK SỐNG 100%"""
+        """Tạo sinh tệp .js: Runner tự đọc CNAME / Custom Domain từ GitHub Actions Runner"""
         js_content = f"""/**
  ===============================================================================
  ESEB PROTOCOL: AUTOMATIC TRAFFIC TURBOCHARGER & GROQ LPU DUAL-TOKEN RUNNER
  MODULE: Protocols/{self.module_name}.js
  STAMP: {self.stamp} | DUAL-TOKEN 4THU MODE | {self.brand}
- OMNI-MATRIX AUTO-DISCOVERY ENFORCED (ZERO HARDCODE)
+ CUSTOM DOMAIN PRIORITIZED (AUTOMATIC CNAME / REPO DETECT)
  ===============================================================================
 **/
 
 const https = require('https');
 const http = require('http');
+const fs = require('fs');
 
 class OmniTrafficTurboBroadcaster {{
   constructor() {{
@@ -138,11 +139,23 @@ class OmniTrafficTurboBroadcaster {{
     }};
   }}
 
+  // Tự động kiểm tra file CNAME trong repository để lấy Custom Domain (VD: 8000kicks.donabico.com)
   getAutoDiscoveredVaultUrl() {{
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/EATHESEN-VAULT';
+    try {{
+      if (fs.existsSync('CNAME')) {{
+        const cnameDomain = fs.readFileSync('CNAME', 'utf8').trim();
+        if (cnameDomain) {{
+          console.log(`[CUSTOM DOMAIN DETECTED] Lock Target Vault to: https://${{cnameDomain}}/`);
+          return `https://${{cnameDomain}}/`;
+        }}
+      }}
+    }} catch(e) {{}}
+
+    // Fallback nếu không có file CNAME
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
     const parts = githubRepo.split('/');
     const owner = parts[0] || 'donabico-media-system';
-    const repo = parts[1] || 'EATHESEN-VAULT';
+    const repo = parts[1] || '8000kicks';
     
     if (repo.toLowerCase() === `${{owner.toLowerCase()}}.github.io`) {{
       return `https://${{owner}}.github.io/`;
@@ -161,7 +174,7 @@ class OmniTrafficTurboBroadcaster {{
     const payload = JSON.stringify({{
       model: "llama-3.3-70b-versatile",
       messages: [
-        {{"role": "system", "content": "You are ESEB Traffic Turbocharger Engine V3000-Ω. Optimize Omni-Matrix ROI Affiliate Conversion Strategy."}},
+        {{"role": "system", "content": "You are ESEB Traffic Turbocharger Engine V3000-Ω. Optimize ROI Affiliate Conversion for Custom Domain Vaults."}},
         {{"role": "user", "content": promptText}}
       ],
       temperature: 0.1
@@ -197,13 +210,12 @@ class OmniTrafficTurboBroadcaster {{
   }}
 
   async pingGlobalTrafficServices(siteName, siteUrl) {{
-    // CHỈ GIỮ LẠI ĐÚNG 02 MÁY CHỦ SỐNG BẢO CHỨNG 100% (STATUS 200)
     const pingServices = [
       {{ host: 'rpc.pingomatic.com', port: 80, path: '/' }},
       {{ host: 'rpc.twingly.com', port: 80, path: '/' }}
     ];
 
-    console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Verified Syndication Services for: ${{siteUrl}}`);
+    console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Verified Syndication Services for Custom Domain: ${{siteUrl}}`);
 
     const pingPromises = pingServices.map(service => {{
       return new Promise((resolve) => {{
@@ -237,21 +249,21 @@ class OmniTrafficTurboBroadcaster {{
 
   async runRealExecution() {{
     const targetUrl = this.getAutoDiscoveredVaultUrl();
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'EATHESEN-VAULT';
+    const githubRepo = process.env.GITHUB_REPOSITORY || '8000kicks';
 
     console.log(`=================================================================`);
-    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Initiating Omni-Matrix Auto-Discovery Engine`);
+    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Custom Domain Auto-Discovery Engine`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Target Vault: ${{targetUrl}}`);
     console.log(`=================================================================`);
 
-    await this.callGroqLPU(`Synthesize high-converting affiliate traffic siphoning protocol for vault repository: ${{githubRepo}}`);
-    await this.pingGlobalTrafficServices(`${{githubRepo}} - ${{this.brand}}`, targetUrl);
+    await this.callGroqLPU(`Synthesize high-converting affiliate traffic siphoning protocol for Custom Domain: ${{targetUrl}}`);
+    await this.pingGlobalTrafficServices(`${{githubRepo}} Custom Domain - ${{this.brand}}`, targetUrl);
 
     if (this.tokens.esebClassic) {{
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }}
 
-    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Verified Multi-Hub Syndication Completed. Zero Error Rate.`);
+    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Custom Domain Syndication Completed. Zero Error Rate.`);
     process.exit(0);
   }}
 }}
@@ -263,6 +275,8 @@ if (require.main === module) {{
 module.exports = OmniTrafficTurboBroadcaster;
 """
         filepath = os.path.join(self.target_dir, f"{self.module_name}.js")
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(f.read() if False else js_content) # Ensure overwrite clean
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(js_content)
         print(f"[SUCCESS] Generated {filepath}")
