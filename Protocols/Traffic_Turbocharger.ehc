@@ -7,18 +7,17 @@
 (function() {
   'use strict';
 
+  // 1. Cơ chế Ưu Tiên Custom Domain (Auto-Detect Custom Domain vs GitHub Pages)
   const getContext = () => {
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'EATHESEN-ECOSYSTEM';
-    const host = window.location.hostname || 'donabico-media-system.github.io';
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
+    const origin = protocol + '//' + host;
 
     return {
-      repo: repoName,
       domain: host,
       canonicalUrl: fullUrl,
-      origin: protocol + '//' + host,
+      origin: origin,
       brand: 'DONABICO MEDIA SYSTEM',
       stamp: 'V-STAMP-24'
     };
@@ -33,6 +32,7 @@
     document.head.appendChild(styleSentinel);
   }
 
+  // 2. Speculative Prefetching 0ms trên Custom Domain
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'eseb_organic_turbo';
@@ -43,7 +43,7 @@
         let href = link.href || link.getAttribute('data-href');
         if (!href) return;
         
-        const targetUrl = new URL(href, window.location.origin);
+        const targetUrl = new URL(href, env.origin);
         targetUrl.searchParams.set('utm_source', utmSource);
         targetUrl.searchParams.set('utm_medium', utmMedium);
         targetUrl.searchParams.set('eseb_stamp', env.stamp);
@@ -69,7 +69,7 @@
     armAffiliateLinks();
     
     if (pulseCount % 4 === 0) {
-      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cOmni-Matrix Vault Armed | Domain: " + env.domain + " | Repo: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cCustom Domain Vault Armed | Active Domain: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
     }
   };
 

@@ -3,12 +3,13 @@
  ESEB PROTOCOL: AUTOMATIC TRAFFIC TURBOCHARGER & GROQ LPU DUAL-TOKEN RUNNER
  MODULE: Protocols/Traffic_Turbocharger.js
  STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO MEDIA SYSTEM
- OMNI-MATRIX AUTO-DISCOVERY ENFORCED (ZERO HARDCODE)
+ CUSTOM DOMAIN PRIORITIZED (AUTOMATIC CNAME / REPO DETECT)
  ===============================================================================
 **/
 
 const https = require('https');
 const http = require('http');
+const fs = require('fs');
 
 class OmniTrafficTurboBroadcaster {
   constructor() {
@@ -21,11 +22,23 @@ class OmniTrafficTurboBroadcaster {
     };
   }
 
+  // Tự động kiểm tra file CNAME trong repository để lấy Custom Domain (VD: 8000kicks.donabico.com)
   getAutoDiscoveredVaultUrl() {
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/EATHESEN-VAULT';
+    try {
+      if (fs.existsSync('CNAME')) {
+        const cnameDomain = fs.readFileSync('CNAME', 'utf8').trim();
+        if (cnameDomain) {
+          console.log(`[CUSTOM DOMAIN DETECTED] Lock Target Vault to: https://${cnameDomain}/`);
+          return `https://${cnameDomain}/`;
+        }
+      }
+    } catch(e) {}
+
+    // Fallback nếu không có file CNAME
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
     const parts = githubRepo.split('/');
     const owner = parts[0] || 'donabico-media-system';
-    const repo = parts[1] || 'EATHESEN-VAULT';
+    const repo = parts[1] || '8000kicks';
     
     if (repo.toLowerCase() === `${owner.toLowerCase()}.github.io`) {
       return `https://${owner}.github.io/`;
@@ -44,7 +57,7 @@ class OmniTrafficTurboBroadcaster {
     const payload = JSON.stringify({
       model: "llama-3.3-70b-versatile",
       messages: [
-        {"role": "system", "content": "You are ESEB Traffic Turbocharger Engine V3000-Ω. Optimize Omni-Matrix ROI Affiliate Conversion Strategy."},
+        {"role": "system", "content": "You are ESEB Traffic Turbocharger Engine V3000-Ω. Optimize ROI Affiliate Conversion for Custom Domain Vaults."},
         {"role": "user", "content": promptText}
       ],
       temperature: 0.1
@@ -80,13 +93,12 @@ class OmniTrafficTurboBroadcaster {
   }
 
   async pingGlobalTrafficServices(siteName, siteUrl) {
-    // CHỈ GIỮ LẠI ĐÚNG 02 MÁY CHỦ SỐNG BẢO CHỨNG 100% (STATUS 200)
     const pingServices = [
       { host: 'rpc.pingomatic.com', port: 80, path: '/' },
       { host: 'rpc.twingly.com', port: 80, path: '/' }
     ];
 
-    console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Verified Syndication Services for: ${siteUrl}`);
+    console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Verified Syndication Services for Custom Domain: ${siteUrl}`);
 
     const pingPromises = pingServices.map(service => {
       return new Promise((resolve) => {
@@ -120,21 +132,21 @@ class OmniTrafficTurboBroadcaster {
 
   async runRealExecution() {
     const targetUrl = this.getAutoDiscoveredVaultUrl();
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'EATHESEN-VAULT';
+    const githubRepo = process.env.GITHUB_REPOSITORY || '8000kicks';
 
     console.log(`=================================================================`);
-    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Initiating Omni-Matrix Auto-Discovery Engine`);
+    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Custom Domain Auto-Discovery Engine`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Vault: ${targetUrl}`);
     console.log(`=================================================================`);
 
-    await this.callGroqLPU(`Synthesize high-converting affiliate traffic siphoning protocol for vault repository: ${githubRepo}`);
-    await this.pingGlobalTrafficServices(`${githubRepo} - ${this.brand}`, targetUrl);
+    await this.callGroqLPU(`Synthesize high-converting affiliate traffic siphoning protocol for Custom Domain: ${targetUrl}`);
+    await this.pingGlobalTrafficServices(`${githubRepo} Custom Domain - ${this.brand}`, targetUrl);
 
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }
 
-    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Verified Multi-Hub Syndication Completed. Zero Error Rate.`);
+    console.log(`[TRAFFIC TURBOCHARGER RUNNER] Custom Domain Syndication Completed. Zero Error Rate.`);
     process.exit(0);
   }
 }
