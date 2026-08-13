@@ -5,7 +5,7 @@
 ESEB PROTOCOL CORE SPECIFICATION - STANDALONE TRAFFIC TURBOCHARGER ENGINE
 MODULE: Traffic_Turbocharger
 FILE: Protocols/Traffic_Turbocharger.eseb
-STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
+STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
 FUNCTION: STANDALONE REAL ROI AFFILIATE TURBOCHARGER & RSS PING ENGINE
 ===============================================================================
 """
@@ -16,7 +16,7 @@ class StandaloneTrafficTurbochargerEngine:
     def __init__(self):
         self.module_name = "Traffic_Turbocharger"
         self.stamp = "V-STAMP-24"
-        self.brand = "DONABICO GLOBAL MEDIA SYSTEM"
+        self.brand = "DONABICO MEDIA SYSTEM"
         self.constant_anchor = "¢24"
         self.entropy = 0.00000000000000
         self.pulse_interval = 2500
@@ -40,7 +40,7 @@ class StandaloneTrafficTurbochargerEngine:
   const getContext = () => {{
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const host = window.location.hostname || 'donabico-media-system.github.io';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
 
@@ -228,13 +228,13 @@ class StandaloneTrafficTurboBroadcaster {{
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Anchor: ${{this.anchor}}`);
     console.log(`=================================================================`);
 
-    const targetUrl = "https://donabico-global-media.github.io/shop/8000kicks.html";
+    const targetUrl = "https://donabico-media-system.github.io/shop/8000kicks.html";
 
     // 1. Gọi Groq LPU AI tối ưu hóa phễu
     await this.callGroqLPU("Synthesize high-converting affiliate traffic siphoning protocol.");
 
     // 2. Tự động bắn Pings kéo Traffic ngầm
-    await this.pingGlobalTrafficServices("DONABICO Global Media Shop", targetUrl);
+    await this.pingGlobalTrafficServices("DONABICO Media System Shop", targetUrl);
 
     if (this.tokens.esebClassic) {{
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
