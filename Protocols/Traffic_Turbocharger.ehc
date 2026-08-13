@@ -1,5 +1,5 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - STANDALONE TRAFFIC TURBOCHARGER (CLIENT SIDE)
+   ESEB DYNAMIC LIVING ENTITY - OMNI-MATRIX TRAFFIC TURBOCHARGER (CLIENT SIDE)
    MODULE: Protocols/Traffic_Turbocharger.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: DONABICO MEDIA SYSTEM
@@ -7,9 +7,10 @@
 (function() {
   'use strict';
 
+  // 1. Cơ chế Đồng Tộc Tự Động Nhận Diện Context (Zero Hardcode)
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'EATHESEN-ECOSYSTEM';
     const host = window.location.hostname || 'donabico-media-system.github.io';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
@@ -26,6 +27,7 @@
 
   const env = getContext();
 
+  // 2. Sentinel CLS Shield (Khóa giật khung hình UI)
   if (!document.getElementById('eseb-sentinel-turbo')) {
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-turbo';
@@ -33,12 +35,13 @@
     document.head.appendChild(styleSentinel);
   }
 
+  // 3. Chuyển đổi liên kết siêu tốc & Tải trước (Speculative Prefetching 0ms)
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'eseb_organic_turbo';
     const utmMedium = urlParams.get('utm_medium') || 'traffic_siphon_engine';
 
-    document.querySelectorAll('a[href*="affiliate"], a[href*="shop"], a[href*="out"], .cta-btn, button[data-href]').forEach(link => {
+    document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
       try {
         let href = link.href || link.getAttribute('data-href');
         if (!href) return;
@@ -50,6 +53,7 @@
         
         if (link.tagName === 'A') link.href = targetUrl.toString();
 
+        // Tải trước liên kết mua hàng khi người dùng vừa rê chuột tới (Prefetch 0ms)
         if (!link.dataset.turboArmed) {
           link.dataset.turboArmed = "true";
           link.addEventListener('pointerover', () => {
@@ -63,13 +67,14 @@
     });
   };
 
+  // 4. Nhịp thở Biological Pulse F12 (2.5s)
   let pulseCount = 0;
   const runTurboPulse = () => {
     pulseCount++;
     armAffiliateLinks();
     
     if (pulseCount % 4 === 0) {
-      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cTraffic Siphon Ready | Zero Latency Link Armed", "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+      console.log("%c[ESEB TURBOCHARGER ACTIVE] %cOmni-Matrix Vault Armed | Domain: " + env.domain + " | Repo: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
     }
   };
 
