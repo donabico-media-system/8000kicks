@@ -34,7 +34,7 @@
     document.head.appendChild(styleSentinel);
   }
 
-  // 2. SOTA Traffic Turbocharger & Speculative Prefetch Engine
+  // 2. SOTA Traffic Turbocharger Engine
   const initSuperSmartTrafficTurbocharger = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'donabico_sota_organic_siphon';
@@ -51,7 +51,6 @@
         targetUrl.searchParams.set('sota_mode', 'super_smart_intelligent');
         link.href = targetUrl.toString();
 
-        // Edge Speculative Prefetching on Hover
         if (!link.dataset.prefetchBound) {
           link.dataset.prefetchBound = "true";
           link.addEventListener('pointerover', () => {
@@ -65,7 +64,7 @@
     });
   };
 
-  // 3. Schema JSON-LD & Micro-RDFa Injection (BigTech 2026 Compliance)
+  // 3. Schema JSON-LD Injection
   const injectSotASchemaAndMeta = () => {
     const oldNode = document.getElementById('eseb-sota-schema');
     if (oldNode) oldNode.remove();
