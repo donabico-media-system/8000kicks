@@ -2,7 +2,7 @@
    ESEB DYNAMIC LIVING ENTITY - CDN & GLOBAL AI BROADCASTER
    MODULE: Protocols/Cdn_Index_Signal.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   BRAND: DONABICO GLOBAL MEDIA SYSTEM
+   BRAND: DONABICO MEDIA SYSTEM
    ========================================================================== */
 (function() {
   'use strict';
@@ -15,18 +15,16 @@
   }
 
   const getContext = () => {
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'donabico-global-media';
-    const host = window.location.hostname || 'donabico-global-media.github.io';
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
+    const origin = protocol + '//' + host;
     
     return {
-      repo: repoName,
       domain: host,
       canonicalUrl: fullUrl,
-      origin: protocol + '//' + host,
-      brand: 'DONABICO GLOBAL MEDIA SYSTEM',
+      origin: origin,
+      brand: 'DONABICO MEDIA SYSTEM',
       stamp: 'V-STAMP-24'
     };
   };
@@ -44,7 +42,7 @@
           "@type": "WebPage",
           "@id": env.canonicalUrl + "#webpage",
           "url": env.canonicalUrl,
-          "name": document.title || env.repo,
+          "name": document.title || env.brand,
           "isPartOf": {
             "@type": "WebSite",
             "@id": env.origin + "/#website",
@@ -79,7 +77,7 @@
 
   let pulseCount = 0;
   const initTransmitter = () => {
-    console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | REPO: " + env.repo + " | CDN: GITHUB_PAGES", "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+    console.log("%c[ESEB CDN SIGNAL ENGINE V3000-Ω] %cINITIALIZED | DOMAIN: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
     injectGlobalSignals();
 
     setInterval(() => {
@@ -91,7 +89,6 @@
         entropy: "0.00000000000000",
         cdn_status: "EDGE_ACTIVE",
         active_tokens: 2,
-        q_reward: (3.30 + Math.random() * 0.04).toFixed(2),
         system_state: "PERPETUAL_TRANSMITTING"
       };
       console.log("%c[ESEB BROADCAST 2.5s #" + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
