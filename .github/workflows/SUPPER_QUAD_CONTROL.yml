@@ -34,13 +34,9 @@ jobs:
         run: |
           python Protocols/Supper_Quad_Control.eseb
 
-      - name: Execute Serverless Runner Multi-Brain Swarm Cluster Engine
+      - name: Execute Serverless Dual-Token Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          CEREBRAS_API_TOKEN: ${{ secrets.CEREBRAS_API_TOKEN }}
-          LLAMA_NVIDIA_TOKEN: ${{ secrets.LLAMA_NVIDIA_TOKEN }}
-          NEMOTRON_NVIDIA_TOKEN: ${{ secrets.NEMOTRON_NVIDIA_TOKEN }}
-          OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Supper_Quad_Control.js
