@@ -7,7 +7,6 @@
 (function() {
   'use strict';
 
-  // 1. Cơ chế Đồng Tộc Tự Động Nhận Diện Context (Zero Hardcode)
   const getContext = () => {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : 'EATHESEN-ECOSYSTEM';
@@ -27,7 +26,6 @@
 
   const env = getContext();
 
-  // 2. Sentinel CLS Shield (Khóa giật khung hình UI)
   if (!document.getElementById('eseb-sentinel-turbo')) {
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-turbo';
@@ -35,7 +33,6 @@
     document.head.appendChild(styleSentinel);
   }
 
-  // 3. Chuyển đổi liên kết siêu tốc & Tải trước (Speculative Prefetching 0ms)
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'eseb_organic_turbo';
@@ -53,7 +50,6 @@
         
         if (link.tagName === 'A') link.href = targetUrl.toString();
 
-        // Tải trước liên kết mua hàng khi người dùng vừa rê chuột tới (Prefetch 0ms)
         if (!link.dataset.turboArmed) {
           link.dataset.turboArmed = "true";
           link.addEventListener('pointerover', () => {
@@ -67,7 +63,6 @@
     });
   };
 
-  // 4. Nhịp thở Biological Pulse F12 (2.5s)
   let pulseCount = 0;
   const runTurboPulse = () => {
     pulseCount++;
