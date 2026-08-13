@@ -5,7 +5,8 @@
 ESEB DYNAMIC LIVING PROTOCOL CORE ENGINE (V3000-Ω)
 MODULE: Protocols/Supper_Quad_Control.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-QUAD-TOKEN CORE: ESEB_CLASSIC | GROQ | LLAMA_NVIDIA | NEMOTRON_NVIDIA
+TRI-TOKEN CORE: ESEB_CLASSIC | GROQ | LLAMA_NVIDIA
+FEATURES: PARALLEL SWARM + 8S TIMEOUT + EXPONENTIAL AUTO-RETRY ON 503
 4THU STANDARD: THỰC DỤNG - THỰC TẾ - THỰC TIỄN - THỰC CHIẾN 100%
 =============================================================================
 """
@@ -34,7 +35,7 @@ class ESEBSupperQuadControlEngine:
 (function() {{
   'use strict';
 
-  // 1. Sentinel Layout Shield (CLS = 0, Khóa giật vỡ giao diện)
+  // 1. Sentinel Layout Shield (CLS = 0, Khóa giật vỡ giao diện UI)
   if (!document.getElementById('eseb-sentinel-shield')) {{
     const shield = document.createElement('style');
     shield.id = 'eseb-sentinel-shield';
@@ -68,7 +69,7 @@ class ESEBSupperQuadControlEngine:
     
     console.groupCollapsed(`%c[ESEB-PULSE #${{pulseId}}] 🧬 LIVING ENTITY TRANSMITTER | ${{envContext.brand}}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 2px 5px;');
     console.log(`%c[MCP-A2A HYBRID 24/7]%c Connected | Target Repo: ${{envContext.repo}} | Domain: ${{envContext.domain}}`, 'color: #00ccff; font-weight: bold;', 'color: #ffffff;');
-    console.log(`%c[SUPPER QUAD CONTROL]%c Quad-Token Engine Active | Reward: ${{qReward}} | State: ${{stateVector}}`, 'color: #ffcc00; font-weight: bold;', 'color: #ffffff;');
+    console.log(`%c[SUPPER QUAD CONTROL]%c Tri-Token Core Active | Reward: ${{qReward}} | State: ${{stateVector}}`, 'color: #ffcc00; font-weight: bold;', 'color: #ffffff;');
     console.log(`%c[TELEMETRY PAYLOAD]%c %o`, 'color: #ff3399; font-weight: bold;', {{
       pulse_id: pulseId,
       stamp: envContext.stamp,
@@ -76,7 +77,7 @@ class ESEBSupperQuadControlEngine:
       entropy_divergence: envContext.entropy,
       system_status: "SYSTEM_READY_200_OK",
       protocol_identity: "SUPPER_QUAD_CONTROL",
-      active_tokens: 4
+      active_tokens: 3
     }});
     console.groupEnd();
   }}
@@ -135,29 +136,25 @@ class ESEBSupperQuadControlEngine:
 """
 
     def build_runner_js(self) -> str:
-        """Sinh thực thể Serverless Runner Node.js (.js) khớp 1:1 REST Payload từ build.nvidia.com"""
+        """Sinh thực thể Serverless Runner Node.js (.js) tối ưu duy nhất 03 Tokens"""
         return f"""/* ==========================================================================
-   ESEB SERVERLESS RUNNER ENGINE (SUPPER QUAD CONTROL - STABLE REST SOTA 2026)
+   ESEB SERVERLESS RUNNER ENGINE (SUPPER QUAD CONTROL - 03 TOKENS TRI-CORE)
    MODULE: Protocols/{self.module_name}.js
    STAMP: {self.stamp} | ¢24 ANCHOR | REAL AI REST API EXECUTION
-   TARGET TOKENS: GROQ, LLAMA_NVIDIA, NEMOTRON_NVIDIA, ESEB_CLASSIC
+   TARGET TOKENS: GROQ, LLAMA_NVIDIA, ESEB_CLASSIC
    ========================================================================== */
 const https = require('https');
 
 const TOKENS = {{
   GROQ: process.env.API_GROQ_TOKEN,
   LLAMA_NVIDIA: process.env.LLAMA_NVIDIA_TOKEN,
-  NEMOTRON_NVIDIA: process.env.NEMOTRON_NVIDIA_TOKEN,
   ESEB_CLASSIC: process.env.ESEB_CLASSIC_TOKEN
 }};
 
-function makeRestCall(hostname, path, apiKey, payload, quadrantLabel) {{
-  return new Promise((resolve) => {{
-    if (!apiKey || !apiKey.trim()) {{
-      console.log(`[QUADRANT ${{quadrantLabel}}] Token không tồn tại trong Secrets. Skipping.`);
-      return resolve({{ status: 204, label: quadrantLabel }});
-    }}
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+function singleRestRequest(hostname, path, apiKey, payload, quadrantLabel, timeoutMs = 8000) {{
+  return new Promise((resolve) => {{
     const cleanToken = apiKey.trim().replace(/^["']|["']$/g, '');
     const data = JSON.stringify(payload);
     const options = {{
@@ -169,26 +166,25 @@ function makeRestCall(hostname, path, apiKey, payload, quadrantLabel) {{
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${{cleanToken}}`,
         'Content-Length': Buffer.byteLength(data)
-      }}
+      }},
+      timeout: timeoutMs
     }};
 
     const req = https.request(options, (res) => {{
       let body = '';
       res.on('data', chunk => body += chunk);
       res.on('end', () => {{
-        console.log(`[REAL AI API EXECUTION] [QUADRANT ${{quadrantLabel}}] ${{hostname}} Status: ${{res.statusCode}}`);
-        if (res.statusCode === 200) {{
-          console.log(`[${{quadrantLabel}} SUCCESS] Payload: ` + body.substring(0, 100) + "...");
-        }} else {{
-          console.log(`[${{quadrantLabel}} FAILED] Status: ${{res.statusCode}} | Body: ` + body.substring(0, 180));
-        }}
-        resolve({{ status: res.statusCode, label: quadrantLabel }});
+        resolve({{ status: res.statusCode, body: body }});
       }});
     }});
 
+    req.on('timeout', () => {{
+      req.destroy();
+      resolve({{ status: 408, body: 'Request Timeout' }});
+    }});
+
     req.on('error', (err) => {{
-      console.error(`[${{quadrantLabel}} ERROR] ${{err.message}}`);
-      resolve({{ status: 500, label: quadrantLabel }});
+      resolve({{ status: 500, body: err.message }});
     }});
 
     req.write(data);
@@ -196,46 +192,65 @@ function makeRestCall(hostname, path, apiKey, payload, quadrantLabel) {{
   }});
 }}
 
+async function makeRestCallWithRetry(hostname, path, apiKey, payload, quadrantLabel, maxRetries = 2) {{
+  if (!apiKey || !apiKey.trim()) {{
+    console.log(`[QUADRANT ${{quadrantLabel}}] Token không tồn tại trong Secrets. Bỏ qua call ${{hostname}}.`);
+    return {{ status: 204, label: quadrantLabel }};
+  }}
+
+  for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {{
+    const res = await singleRestRequest(hostname, path, apiKey, payload, quadrantLabel);
+    
+    console.log(`[REAL AI API EXECUTION] [QUADRANT ${{quadrantLabel}}] (Lần ${{attempt}}) ${{hostname}} Status: ${{res.status}}`);
+
+    if (res.status === 200) {{
+      console.log(`[${{quadrantLabel}} SUCCESS] Payload: ` + res.body.substring(0, 90) + "...");
+      return {{ status: 200, label: quadrantLabel }};
+    }}
+
+    if ((res.status === 503 || res.status === 429 || res.status === 408) && attempt <= maxRetries) {{
+      console.log(`[${{quadrantLabel}} WARN] Lỗi ${{res.status}}. Tự động Retry lần ${{attempt + 1}} sau 1.5s...`);
+      await sleep(1500);
+    }} else {{
+      console.log(`[${{quadrantLabel}} FAILED] Status: ${{res.status}} | Response: ` + res.body.substring(0, 120));
+      return {{ status: res.status, label: quadrantLabel }};
+    }}
+  }}
+}}
+
 async function executeSupperQuadControlSwarm() {{
   console.log("=================================================");
   console.log("ESEB SUPPER QUAD CONTROL RUNNER INITIATED 🚀");
   console.log("STAMP: V-STAMP-24 | ¢24 ANCHOR | BIEN HOA 2026");
-  console.log("MODE: 04 AI TOKEN INTEGRATED SWARM");
+  console.log("MODE: TRI-TOKEN INTEGRATED SWARM (GROQ + NVIDIA + CLASSIC)");
   console.log("=================================================");
 
-  // 1. GROQ LPU (Model: llama-3.3-70b-versatile)
-  await makeRestCall('api.groq.com', '/openai/v1/chat/completions', TOKENS.GROQ, {{
-    model: "llama-3.3-70b-versatile",
-    messages: [{{ role: "user", content: "Alpha Quad: Capture Traffic Siphon Signals." }}],
-    temperature: 0.1
-  }}, "ALPHA-GROQ");
+  const swarmTasks = [
+    // 1. GROQ LPU (Model: llama-3.3-70b-versatile)
+    makeRestCallWithRetry('api.groq.com', '/openai/v1/chat/completions', TOKENS.GROQ, {{
+      model: "llama-3.3-70b-versatile",
+      messages: [{{ role: "user", content: "Alpha Quad: Capture Traffic Siphon Signals." }}],
+      temperature: 0.1
+    }}, "ALPHA-GROQ"),
 
-  // 2. NVIDIA LLAMA (Model: meta/llama-3.3-70b-instruct)
-  await makeRestCall('integrate.api.nvidia.com', '/v1/chat/completions', TOKENS.LLAMA_NVIDIA, {{
-    model: "meta/llama-3.3-70b-instruct",
-    messages: [{{ role: "user", content: "Beta Quad: Synthesize Knowledge Graph & pSEO." }}],
-    temperature: 0.1
-  }}, "BETA-NVIDIA-LLAMA");
+    // 2. NVIDIA LLAMA (Model: meta/llama-3.3-70b-instruct)
+    makeRestCallWithRetry('integrate.api.nvidia.com', '/v1/chat/completions', TOKENS.LLAMA_NVIDIA, {{
+      model: "meta/llama-3.3-70b-instruct",
+      messages: [{{ role: "user", content: "Beta Quad: Synthesize Knowledge Graph & pSEO." }}],
+      temperature: 0.1
+    }}, "BETA-NVIDIA-LLAMA")
+  ];
 
-  // 3. NVIDIA NEMOTRON LIGHTNING (Model: nvidia/nemotron-3.5-lightning-30b-a3b - REST Payload Unrolled)
-  await makeRestCall('integrate.api.nvidia.com', '/v1/chat/completions', TOKENS.NEMOTRON_NVIDIA, {{
-    model: "nvidia/nemotron-3.5-lightning-30b-a3b",
-    messages: [{{ role: "user", content: "Beta Quad: Execute Lightning Reasoning." }}],
-    temperature: 1,
-    top_p: 0.95,
-    max_tokens: 16384,
-    chat_template_kwargs: {{ enable_thinking: true }},
-    reasoning_budget: 16384
-  }}, "BETA-NVIDIA-NEMOTRON");
+  await Promise.allSettled(swarmTasks);
 
-  // 4. ESEB CLASSIC CORE (DISPATCH VERIFICATION)
+  // 3. ESEB CLASSIC CORE VERIFICATION
   if (TOKENS.ESEB_CLASSIC) {{
     console.log("[DELTA-ESEB-CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.");
   }} else {{
-    console.log("[DELTA-ESEB-CLASSIC NOTICE] Secret ESEB_CLASSIC_TOKEN not found.");
+    console.log("[DELTA-ESEB-CLASSIC NOTICE] Secret ESEB_CLASSIC_TOKEN không tồn tại.");
   }}
 
-  console.log("[SWARM SUMMARY] All 04 AI Node Executions Evaluated | IndexNow Broadcast Ready.");
+  console.log("[SWARM SUMMARY] Tri-Token Swarm Completed | Speed & Resiliency Guaranteed.");
 }}
 
 executeSupperQuadControlSwarm();
