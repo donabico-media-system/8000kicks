@@ -141,7 +141,7 @@ class CdnIndexSignalEngineCore:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js (Serverless Runner Engine) tối ưu duy nhất 02 Tokens (Groq + Classic)"""
+        """Tạo sinh tệp .js (Serverless Runner Engine) đã ESCAPE CHUẨN XÁC NGOẶC NHỌN"""
         js_content = f"""/**
  ===============================================================================
  ESEB PROTOCOL: SERVERLESS RUNNER & DUAL-TOKEN ULTRA FAST EXECUTOR
@@ -169,7 +169,7 @@ class ServerlessDualTokenExecutionRunner {{
     if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {{
       console.log("[GROQ CORE] Token API_GROQ_TOKEN không tồn tại trong Secrets. Skipping.");
       return {{ api: 'GROQ LPU API', success: false, status: 204 }};
-    }
+    }}
 
     const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
     const payload = JSON.stringify({{
