@@ -56,7 +56,6 @@ class StandaloneTrafficTurbochargerEngine:
 
   const env = getContext();
 
-  // 1. Sentinel CLS Shield (Khóa giật khung hình UI)
   if (!document.getElementById('eseb-sentinel-turbo')) {{
     const styleSentinel = document.createElement('style');
     styleSentinel.id = 'eseb-sentinel-turbo';
@@ -64,7 +63,6 @@ class StandaloneTrafficTurbochargerEngine:
     document.head.appendChild(styleSentinel);
   }}
 
-  // 2. Chuyển đổi liên kết siêu tốc & Tải trước (Speculative Prefetching 0ms)
   const armAffiliateLinks = () => {{
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'eseb_organic_turbo';
@@ -82,7 +80,6 @@ class StandaloneTrafficTurbochargerEngine:
         
         if (link.tagName === 'A') link.href = targetUrl.toString();
 
-        // Tải trước liên kết mua hàng khi người dùng vừa rê chuột tới (Prefetch 0ms)
         if (!link.dataset.turboArmed) {{
           link.dataset.turboArmed = "true";
           link.addEventListener('pointerover', () => {{
@@ -96,7 +93,6 @@ class StandaloneTrafficTurbochargerEngine:
     }});
   }};
 
-  // 3. Nhịp thở Biological Pulse F12 (2.5s)
   let pulseCount = 0;
   const runTurboPulse = () => {{
     pulseCount++;
@@ -117,7 +113,7 @@ class StandaloneTrafficTurbochargerEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js: DUAL-TOKEN GROQ LPU + Optimized Pingback Network"""
+        """Tạo sinh tệp .js: DUAL-TOKEN GROQ LPU + Optimized Pingback Hubs"""
         js_content = f"""/**
  ===============================================================================
  ESEB PROTOCOL: AUTOMATIC TRAFFIC TURBOCHARGER & GROQ LPU DUAL-TOKEN RUNNER
@@ -186,9 +182,10 @@ class StandaloneTrafficTurboBroadcaster {{
   }}
 
   async pingGlobalTrafficServices(siteName, siteUrl) {{
+    // Chọn lọc duy nhất các Pingback Endpoint mở 100% không bị block 403
     const pingServices = [
       {{ host: 'rpc.pingomatic.com', port: 80, path: '/' }},
-      {{ host: 'ping.blo.gs', port: 80, path: '/' }}
+      {{ host: 'rpc.twingly.com', port: 80, path: '/' }}
     ];
 
     console.log(`[TRAFFIC TURBOCHARGER] Auto-Pinging Global Syndication Hubs for: ${{siteUrl}}`);
@@ -203,7 +200,7 @@ class StandaloneTrafficTurboBroadcaster {{
           method: 'POST',
           headers: {{
             'Content-Type': 'text/xml',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
             'Content-Length': Buffer.byteLength(xmlPayload)
           }},
           timeout: 3000
