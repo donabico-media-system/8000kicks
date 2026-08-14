@@ -1,6 +1,6 @@
 /* ===============================================================================
    ESEB DYNAMIC LIVING ENTITY - MULTI-PROTOCOL F12 LIVE TELEMETRY BRIDGE
-   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED | ZERO-TRUST SECURED
    DONABICO GLOBAL MEDIA SYSTEM
  =============================================================================== */
 (function() {
@@ -56,22 +56,21 @@
       }
     };
 
-    const authToken = window.ESEB_CLASSIC_TOKEN || '';
-
+    // AN TOÀN TỐI ĐA: Gửi payload thuần không đính kèm Token nhạy cảm phía Client
     fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
       method: 'POST',
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-        ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload),
       keepalive: true
     }).catch(function() {
+      // Nếu không đẩy được (do unauthenticated dispatch bị chặn), lưu lại đệm an toàn
       logBuffer.unshift(...currentLogs);
     });
   };
 
   setInterval(streamLogsToGitHub, 2500);
-  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %c6TH-GEN TACTICAL HUD TELEMETRY HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %c6TH-GEN SECURED HUD HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
 })();

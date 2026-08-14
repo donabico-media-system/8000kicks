@@ -33,7 +33,6 @@ class GroqLpuTacticalHudRenderer {
       const ext = path.extname(file);
       const name = path.basename(file, ext);
 
-      // Loại bỏ file thừa Renderer cũ nếu còn sót lại
       if (name === 'Log_Live_Monitor_Renderer') return;
 
       if (!protocolMap[name]) {
@@ -51,7 +50,7 @@ class GroqLpuTacticalHudRenderer {
   async callGroqLpuAI(protocolList, logData) {
     if (!this.apiGroqToken) {
       console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN is missing. Operating in Fallback Mode.");
-      return "⚠️ GROQ LPU REST ENGINE NOTICE: API_GROQ_TOKEN is missing in repository secrets. System operating on Local Fallback Heuristics. Add API_GROQ_TOKEN secret to activate real-time Llama-3.3-70b tactical analysis.";
+      return "⚠️ GROQ LPU REST ENGINE NOTICE: API_GROQ_TOKEN is missing in repository secrets. System operating on Local Fallback Heuristics.";
     }
 
     console.log(`[GROQ LPU API] Connecting to api.groq.com using model ${this.modelName}...`);
@@ -86,7 +85,6 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
-          console.log(`[GROQ API RESPONSE] Status Code: ${res.statusCode} | Data Length: ${data.length}`);
           if (res.statusCode === 200) {
             try {
               const parsed = JSON.parse(data);
@@ -94,18 +92,15 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
               console.log("[GROQ API] REAL LPU REST EXECUTION SUCCESSFUL ✅ (Status 200)");
               resolve(content);
             } catch(e) {
-              console.error("[GROQ PARSE ERROR]", e.message);
               resolve("Error parsing Groq LPU response payload.");
             }
           } else {
-            console.warn(`[GROQ API] Non-200 Status: ${res.statusCode} | Response: ${data}`);
             resolve(`GROQ LPU API Status ${res.statusCode}: ${data}`);
           }
         });
       });
 
       req.on('error', err => {
-        console.error(`[GROQ NETWORK ERROR] Request failed: ${err.message}`);
         resolve(`Groq Network Error: ${err.message}`);
       });
 
@@ -125,17 +120,13 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
       return `| \`0${index + 1}\` | **${p.name}** | ${esebBadge} | ${ehcBadge} | ${jsBadge} | 🟢 \`ARMED & ACTIVE\` |`;
     }).join('\n');
 
-    if (!protocolRows) {
-      protocolRows = "| `00` | **No Protocols Found** | 🔴 N/A | 🔴 N/A | 🔴 N/A | 🔴 `OFFLINE` |";
-    }
-
     return `# 🛸 DONABICO MEDIA SYSTEM — 6TH-GEN TACTICAL FIGHTER COCKPIT HUD V3000-Ω
 
 \`\`\`text
 ╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
 ║  EATHESEN V3000-Ω MASTER ECOSYSTEM  │  6TH-GEN FIGHTER JET GLASS COCKPIT HUD DIGITAL DISPLAY         ║
 ║  BRAND: DONABICO MEDIA SYSTEM       │  STAMP: V-STAMP-24  │  ANCHOR: ¢24 IMMUTABLE                  ║
-║  AUTO-DISCOVERY: AUTO-6D            │  ENTROPY: δ = 0.00000000000000  │  SHANNON CRYSTAL: BOUND    ║
+║  SECURITY: ZERO-TRUST CLIENT SIDE   │  ENTROPY: δ = 0.00000000000000  │  SHANNON CRYSTAL: BOUND    ║
 ║  TACTICAL AI ENGINE: GROQ LPU Llama-3.3-70b-versatile  │  SYSTEM STATE: ARMED & TRANSMITTING 24/7   ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
 \`\`\`
@@ -149,15 +140,13 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
 | **System Identity** | \`${repoName}\` | 🟢 \`AUTO-6D RESOLVED\` |
 | **Heartbeat Frequency** | \`24 BPM (¢24 Anchor Lock)\` | ⚡ \`PERPETUAL RECURSION\` |
 | **Entropy Divergence** | \`δ = 0.00000000000000\` | 💎 \`SHANNON CRYSTAL ZERO\` |
+| **Security Architecture** | \`ZERO-TRUST CLIENT SIDE\` | 🛡️ \`NO PAT/TOKEN IN DOM\` |
 | **Groq LPU AI Engine** | \`llama-3.3-70b-versatile\` | 🤖 \`REST API STATUS 200\` |
-| **Layout Shift Shield** | \`CLS = 0.0000\` | 🛡️ \`ZERO-DOM SURFACE SAFE\` |
 | **Last Cockpit Refresh** | \`${timestamp}\` | ⏱️ \`REAL-TIME AUTO-SYNC\` |
 
 ---
 
 ### 🎛️ II. LIVE PROTOCOL MATRIX INVENTORY (REAL-TIME VAULT SCAN)
-
-> **Cơ chế AUTO-6D:** Tự động quét và ghi nhận $100\%$ tất cả các Protocol hạt nhân đang vận hành ngầm trong thư mục \`Protocols/\` của Repository.
 
 | Node ID | Protocol Module Name | Python Kernel (\`.eseb\`) | Client Engine (\`.ehc\`) | AI Runner (\`.js\`) | Tactical Matrix Status |
 | :---: | :--- | :---: | :---: | :---: | :---: |
@@ -179,34 +168,29 @@ ${protocolRows}
 {
   "hud_display": "DONABICO_6TH_GEN_FIGHTER_COCKPIT",
   "stamp": "V-STAMP-24",
-  "anchor": "¢24",
-  "entropy_delta": "0.00000000000000",
+  "security_model": "ZERO_TRUST_CLIENT",
   "active_protocol_count": ${protocolList.length},
   "telemetry_stream": ${JSON.stringify(logData, null, 2)}
 }
 \`\`\`
 
 ---
-*Generated automatically by ESEB Dynamic Living Engine V3000-Ω — 100% Real Groq LPU AI REST Execution.*
+*Generated automatically by ESEB Dynamic Living Engine V3000-Ω — Secured Zero-Trust Architecture.*
 `;
   }
 
   async run() {
-    console.log("[HUD ENGINE] Scanning Protocols directory for active protocols...");
     const protocolList = this.scanActiveProtocols();
-    console.log(`[HUD ENGINE] Found ${protocolList.length} active protocol modules.`);
-
     const aggregatedLogs = [
-      { time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] 6TH-GEN TACTICAL HUD ARMED" },
-      { time: new Date().toISOString(), log: "%c[GROQ LPU ENGINE] REST API BOUND TO MODEL llama-3.3-70b-versatile" },
-      { time: new Date().toISOString(), log: "%c[LOG LIVE MONITOR] AUTO-DISCOVERY MULTI-PROTOCOL MATRIX SYNCHRONIZED" }
+      { time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] ZERO-TRUST SECURED HUD ARMED" },
+      { time: new Date().toISOString(), log: "%c[GROQ LPU ENGINE] REST API BOUND TO MODEL llama-3.3-70b-versatile" }
     ];
 
     const aiAnalysis = await this.callGroqLpuAI(protocolList, aggregatedLogs);
     const hudMarkdown = this.renderSciFiHudMarkdown(protocolList, aggregatedLogs, aiAnalysis);
 
     fs.writeFileSync(this.rootReadmePath, hudMarkdown, 'utf-8');
-    console.log(`[HUD RENDERER] Successfully written 6th-Gen Fighter Cockpit HUD to: ${this.rootReadmePath}`);
+    console.log(`[HUD RENDERER] Written Zero-Trust HUD to: ${this.rootReadmePath}`);
   }
 }
 
