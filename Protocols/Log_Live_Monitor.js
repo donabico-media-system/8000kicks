@@ -113,12 +113,15 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
     const timestamp = new Date().toISOString();
     const repoName = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
 
+    // FIX NGUYÊN NHÂN 2: SỬ DỤNG CHUẨN XUỐNG DÒNG '
+' ĐỂ HÀNG MARKDOWN KHÔNG BỊ DỒN
     let protocolRows = protocolList.map((p, index) => {
       const esebBadge = p.eseb ? '🟢 `.eseb`' : '🔴 N/A';
       const ehcBadge = p.ehc ? '🟢 `.ehc`' : '🔴 N/A';
       const jsBadge = p.js ? '🟢 `.js`' : '🔴 N/A';
       return `| \`0${index + 1}\` | **${p.name}** | ${esebBadge} | ${ehcBadge} | ${jsBadge} | 🟢 \`ARMED & ACTIVE\` |`;
-    }).join('\n');
+    }).join('
+');
 
     return `# 🛸 DONABICO MEDIA SYSTEM — 6TH-GEN TACTICAL FIGHTER COCKPIT HUD V3000-Ω
 
