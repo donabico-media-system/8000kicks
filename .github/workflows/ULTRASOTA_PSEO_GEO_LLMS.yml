@@ -30,31 +30,31 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile ESEB Protocol Core
+      - name: Compile ESEB Dynamic Core (.eseb -> .ehc + .js)
         run: |
           python3 Protocols/Ultrasota_Pseo_Geo_Llms.eseb
 
-      - name: Execute Serverless Dual-Token Engine
+      - name: Execute Serverless Discovery & GEO Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Ultrasota_Pseo_Geo_Llms.js
 
-      - name: Purge Extra Files & Push Sitemap Only (Entropy Delta = 0)
+      - name: Purge Extra Feeds & Commit Dynamic Sitemap (Entropy Delta = 0)
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # TỰ ĐỘNG XÓA SẠCH 04 TỆP KHÔNG CẦN THIẾT NẾU TỒN TẠI
+          # Tự động dọn dẹp các tệp dư thừa cũ nếu còn sót lại
           git rm -f llms.txt llms_full.txt Feed.xml Feed.json || true
           
-          # CHỈ THEO DÕI PROTOCOLS VÀ SITEMAP.XML
+          # Quản lý tập trung Protocols/ và tệp sitemap.xml tự động quét
           git add Protocols/ sitemap.xml
           
           if ! git diff --cached --quiet; then
-            git commit -m "chore(eseb): purge extra feeds & sync sitemap.xml [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-discover repo structure & update dynamic sitemap.xml [V-STAMP-24]"
             git fetch origin main
             git rebase origin/main || git rebase --skip || true
             git push origin HEAD:main
