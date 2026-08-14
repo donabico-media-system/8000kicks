@@ -6,7 +6,6 @@ ESEB PROTOCOL CORE SPECIFICATION - AUTO-ROUTING AI REST API EXECUTOR
 MODULE: Log_Live_Monitor
 FILE: Protocols/Log_Live_Monitor.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: REAL F12 TELEMETRY, MULTI-PROTOCOL AGGREGATOR & GROQ LPU AI API
 ===============================================================================
 """
 
@@ -17,7 +16,7 @@ class LogLiveMonitorEngine:
         self.stamp = "V-STAMP-24"
         self.anchor = "¢24"
         self.entropy = "0.00000000000000"
-        self.brand = "DONABICO GLOBAL MEDIA SYSTEM"
+        self.brand = "DONABICO MEDIA SYSTEM"
 
     def generate_living_ehc(self):
         ehc_content = """/* ===============================================================================
@@ -123,10 +122,12 @@ class GroqLpuTacticalHudRenderer {
     this.brand = "DONABICO MEDIA SYSTEM";
     this.apiGroqToken = process.env.API_GROQ_TOKEN || '';
     this.modelName = "llama-3.3-70b-versatile";
+    // Ép cứng đường dẫn tới README.md ở thư mục GỐC (ROOT) của Repo
+    this.rootReadmePath = path.resolve(process.cwd(), 'README.md');
   }
 
   scanActiveProtocols() {
-    const protocolsDir = path.join(process.cwd(), 'Protocols');
+    const protocolsDir = path.resolve(process.cwd(), 'Protocols');
     if (!fs.existsSync(protocolsDir)) {
       return [];
     }
@@ -152,15 +153,15 @@ class GroqLpuTacticalHudRenderer {
 
   async callGroqLpuAI(protocolList, logData) {
     if (!this.apiGroqToken) {
-      console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN is missing from secrets. Operating in Fallback Diagnostic Mode.");
+      console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN missing. Operating in Fallback Mode.");
       return "⚠️ GROQ LPU REST ENGINE NOTICE: API_GROQ_TOKEN is missing in repository secrets. System operating on Local Fallback Heuristics. Add API_GROQ_TOKEN secret to activate real-time Llama-3.3-70b tactical analysis.";
     }
 
     console.log(`[GROQ LPU API] Connecting to api.groq.com using model ${this.modelName}...`);
 
     const prompt = `You are the Tactical AI Engine for a 6th-Gen Fighter Jet Cockpit HUD controlling the EATHESEN V3000-Ω Master Ecosystem for ${this.brand}. 
-Analyze the current active protocol matrix (${JSON.stringify(protocolList)}) and F12 telemetry logs (${JSON.stringify(logData)}). 
-Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style status assessment with 100% precision. Keep it under 200 words. Zero fluff.`;
+Analyze active protocol matrix (${JSON.stringify(protocolList)}) and F12 telemetry logs (${JSON.stringify(logData)}). 
+Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style status assessment. Keep it under 200 words. Zero fluff.`;
 
     const payload = JSON.stringify({
       model: this.modelName,
@@ -307,8 +308,9 @@ ${protocolRows}
     const aiAnalysis = await this.callGroqLpuAI(protocolList, aggregatedLogs);
     const hudMarkdown = this.renderSciFiHudMarkdown(protocolList, aggregatedLogs, aiAnalysis);
 
-    fs.writeFileSync('README.md', hudMarkdown, 'utf-8');
-    console.log("[HUD RENDERER] Successfully generated 6th-Gen Fighter Cockpit README.md!");
+    // GHI BẮT BUỘC VÀO TỆP README.MD Ở ROOT
+    fs.writeFileSync(this.rootReadmePath, hudMarkdown, 'utf-8');
+    console.log(`[HUD RENDERER] Successfully written 6th-Gen Fighter Cockpit HUD to: ${this.rootReadmePath}`);
   }
 }
 
