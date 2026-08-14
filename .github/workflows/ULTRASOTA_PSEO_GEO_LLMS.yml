@@ -34,27 +34,27 @@ jobs:
         run: |
           python3 Protocols/Ultrasota_Pseo_Geo_Llms.eseb
 
-      - name: Execute Serverless Discovery & GEO Engine
+      - name: Execute Serverless SOTA 2026 Engine
         env:
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Ultrasota_Pseo_Geo_Llms.js
 
-      - name: Purge Extra Feeds & Commit Dynamic Sitemap (Entropy Delta = 0)
+      - name: Commit SOTA Assets & Broadcast Data (Entropy Delta = 0)
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Tự động dọn dẹp các tệp dư thừa cũ nếu còn sót lại
+          # Dọn dẹp tệp dư thừa cũ nếu còn sót lại
           git rm -f llms.txt llms_full.txt Feed.xml Feed.json || true
           
-          # Quản lý tập trung Protocols/ và tệp sitemap.xml tự động quét
-          git add Protocols/ sitemap.xml
+          # Quản lý tập trung Protocols/, sitemap.xml và tệp Key xác thực IndexNow
+          git add Protocols/ sitemap.xml eseb*.txt || true
           
           if ! git diff --cached --quiet; then
-            git commit -m "chore(eseb): auto-discover repo structure & update dynamic sitemap.xml [V-STAMP-24]"
+            git commit -m "chore(eseb): compile sota 2026 core, update sitemap.xml & indexnow key [V-STAMP-24]"
             git fetch origin main
             git rebase origin/main || git rebase --skip || true
             git push origin HEAD:main
