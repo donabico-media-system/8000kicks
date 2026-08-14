@@ -15,18 +15,16 @@
     document.head.appendChild(shield);
   }
 
-  // Dynamic Runtime Discovery
   const getDynamicContext = () => {
     const host = window.location.hostname || '';
     const protocol = window.location.protocol || 'https:';
     const path = window.location.pathname || '/';
     const fullUrl = window.location.href;
-    
-    // Tự suy ra tên thương hiệu/dự án từ hostname hoặc title
     const dynamicName = document.title ? document.title.split('-')[0].trim() : 'EATHESEN SYSTEM';
 
     return {
       domain: host,
+      protocol: protocol,
       pageUrl: fullUrl,
       pathName: path,
       entityName: dynamicName,
@@ -38,7 +36,6 @@
 
   const ctx = getDynamicContext();
 
-  // Tiêm ngầm Schema JSON-LD hoàn toàn động theo ngữ cảnh trang hiện tại
   function injectDynamicGeoSchema() {
     const oldSchema = document.getElementById('eseb-schema-node');
     if (oldSchema) oldSchema.remove();
