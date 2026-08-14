@@ -1,0 +1,34 @@
+/* ===============================================================================
+   ESEB LIVING ENTITY - ORGANIC TRAFFIC BOOSTER CLIENT ENGINE
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
+   DONABICO MEDIA SYSTEM
+ =============================================================================== */
+(function() {
+  'use strict';
+
+  const getContext = () => {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    return {
+      owner: 'donabico-media-system',
+      repo: repoName,
+      stamp: 'V-STAMP-24',
+      anchor: '¢24'
+    };
+  };
+
+  const env = getContext();
+
+  // Smart Prefetching on Mouse Over for 0ms Organic Transition
+  document.addEventListener('pointerover', function(e) {
+    const anchor = e.target.closest('a');
+    if (anchor && anchor.href && anchor.origin === window.location.origin) {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = anchor.href;
+      document.head.appendChild(link);
+    }
+  }, { passive: true });
+
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cORGANIC TRAFFIC BOOSTER ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+})();
