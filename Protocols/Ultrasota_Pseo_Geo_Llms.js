@@ -1,11 +1,11 @@
 /* ==========================================================================
    ESEB SERVERLESS RUNNER ENGINE (ULTRASOTA PSEO GEO LLMS)
    MODULE: Protocols/Ultrasota_Pseo_Geo_Llms.js
-   STAMP: V-STAMP-24 | ¢24 ANCHOR | DUAL-TOKEN REAL AI REST API EXECUTION
-   ACTIVE TOKENS: API_GROQ_TOKEN + ESEB_CLASSIC_TOKEN
+   STAMP: V-STAMP-24 | ¢24 ANCHOR | DYNAMIC FILE DISCOVERY SITEMAP ENGINE
    ========================================================================== */
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 
 class UltrasotaPseoGeoLlmsRunner {
   constructor() {
@@ -18,6 +18,7 @@ class UltrasotaPseoGeoLlmsRunner {
     };
   }
 
+  // Bóc tách Domain động từ CNAME hoặc GITHUB_REPOSITORY
   getAutoDiscoveredDomain() {
     try {
       if (fs.existsSync('CNAME')) {
@@ -26,91 +27,84 @@ class UltrasotaPseoGeoLlmsRunner {
       }
     } catch(e) {}
 
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
-    const parts = githubRepo.split('/');
-    const owner = parts[0] || 'donabico-media-system';
-    const repo = parts[1] || '8000kicks';
-    return repo.toLowerCase() === `${owner.toLowerCase()}.github.io` ? `${owner}.github.io` : `${owner}.github.io/${repo}`;
+    const githubRepo = process.env.GITHUB_REPOSITORY || '';
+    if (githubRepo) {
+      const parts = githubRepo.split('/');
+      const owner = parts[0] || '';
+      const repo = parts[1] || '';
+      if (owner && repo) {
+        return repo.toLowerCase() === `${owner.toLowerCase()}.github.io` ? `${owner}.github.io` : `${owner}.github.io/${repo}`;
+      }
+    }
+    return 'localhost';
   }
 
-  async generateSitemapOnly(targetDomain) {
-    const nowIso = new Date().toISOString();
+  // TỰ ĐỘNG QUÉT CÂY THƯ MỤC ĐỂ PHÁT HIỆN TOÀN BỘ FILE .HTML THỰC TẾ
+  scanHtmlFiles(dirPath = '.', fileList = []) {
+    const files = fs.readdirSync(dirPath);
 
-    // KHỞI TẠO VÀ DUY TRÌ DUY NHẤT SITEMAP.XML TẠI ROOT
+    files.forEach(file => {
+      // Bỏ qua thư mục ẩn và node_modules
+      if (file.startsWith('.') || file === 'node_modules') return;
+
+      const filePath = path.join(dirPath, file);
+      const stat = fs.statSync(filePath);
+
+      if (stat.isDirectory()) {
+        this.scanHtmlFiles(filePath, fileList);
+      } else if (file.endsWith('.html')) {
+        // Chuẩn hóa đường dẫn tương đối
+        let relativePath = filePath.replace(/\\/g, '/');
+        if (relativePath.startsWith('./')) relativePath = relativePath.substring(2);
+        fileList.push(relativePath);
+      }
+    });
+
+    return fileList;
+  }
+
+  async generateDynamicSitemapFromDiscovery(targetDomain) {
+    const nowIso = new Date().toISOString().split('T')[0];
+    const discoveredHtmlFiles = this.scanHtmlFiles('.');
+
+    console.log(`[DISCOVERY ENGINE] Found ${discoveredHtmlFiles.length} HTML files in repository.`);
+
+    let urlNodes = discoveredHtmlFiles.map(filePath => {
+      let cleanPath = filePath;
+      if (cleanPath === 'index.html') {
+        cleanPath = '';
+      }
+      
+      const loc = cleanPath ? `https://${targetDomain}/${cleanPath}` : `https://${targetDomain}/`;
+      const priority = cleanPath === '' ? "1.0" : "0.8";
+
+      return `  <url>\n` +
+             `    <loc>${loc}</loc>\n` +
+             `    <lastmod>${nowIso}</lastmod>\n` +
+             `    <changefreq>daily</changefreq>\n` +
+             `    <priority>${priority}</priority>\n` +
+             `  </url>`;
+    }).join('\n');
+
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n` +
       `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-      `  <url>\n` +
-      `    <loc>https://${targetDomain}/</loc>\n` +
-      `    <lastmod>${nowIso.split('T')[0]}</lastmod>\n` +
-      `    <changefreq>daily</changefreq>\n` +
-      `    <priority>1.0</priority>\n` +
-      `  </url>\n` +
+      `${urlNodes}\n` +
       `</urlset>`;
 
     fs.writeFileSync('sitemap.xml', sitemapContent, 'utf-8');
-    console.log(`[GEO ENGINE] Successfully generated ONLY sitemap.xml for ${targetDomain}`);
-  }
-
-  async callGroqLPU(promptText) {
-    if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {
-      console.log("[GROQ CORE] Token API_GROQ_TOKEN missing in Secrets. Operating in Fallback Mode.");
-      return { success: false };
-    }
-
-    const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
-    const payload = JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        {"role": "system", "content": "You are ESEB Ultrasota Pseo Geo Llms Engine V3000-Ω. Execute Dual-Token Strategic PSEO & GEO Operations."},
-        {"role": "user", "content": promptText}
-      ],
-      temperature: 0.1
-    });
-
-    const options = {
-      hostname: 'api.groq.com',
-      port: 443,
-      path: '/openai/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cleanToken}`,
-        'Content-Length': Buffer.byteLength(payload)
-      },
-      timeout: 5000
-    };
-
-    return new Promise((resolve) => {
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          console.log(`[REAL AI API EXECUTION] GROQ LPU Engine Status: ${res.statusCode}`);
-          resolve({ success: res.statusCode === 200 });
-        });
-      });
-      req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
-      req.on('error', () => resolve({ success: false }));
-      req.write(payload);
-      req.end();
-    });
+    console.log(`[GEO ENGINE] Successfully generated DYNAMIC SITEMAP with ${discoveredHtmlFiles.length} URLs for ${targetDomain}`);
   }
 
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[ULTRASOTA RUNNER] Initiating PSEO & GEO LLMS Swarm Engine (Sitemap Only)`);
-    console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Domain: ${targetDomain}`);
+    console.log(`[ULTRASOTA RUNNER] Executing Dynamic Identity & File Discovery Engine`);
+    console.log(`Target Domain: ${targetDomain} | Stamp: ${this.stamp}`);
     console.log(`=================================================================`);
 
-    await this.generateSitemapOnly(targetDomain);
-    await this.callGroqLPU(`Synthesize ULTRASOTA PSEO GEO LLMS matrix for domain: ${targetDomain}`);
-
-    if (this.tokens.esebClassic) {
-      console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
-    }
-
-    console.log(`[ULTRASOTA RUNNER] Dual-Token PSEO & GEO Execution Completed. Zero Error Rate.`);
+    await this.generateDynamicSitemapFromDiscovery(targetDomain);
+    
+    console.log(`[ULTRASOTA RUNNER] Execution Completed. Dynamic Discovery Sitemap Ready.`);
     process.exit(0);
   }
 }
