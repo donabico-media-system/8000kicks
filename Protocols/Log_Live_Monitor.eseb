@@ -7,7 +7,7 @@ MODULE: Log_Live_Monitor
 FILE: Protocols/Log_Live_Monitor.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
 FUNCTION: REAL F12 TELEMETRY, MULTI-PROTOCOL AGGREGATOR & GROQ LPU AI API
-SECURITY: ZERO-TRUST CLIENT (NO CLIENT-SIDE PAT/TOKEN EXPOSURE)
+SECURITY: ZERO-TRUST CLIENT (FULL REALTIME F12 VISIBILITY)
 ===============================================================================
 """
 
@@ -21,7 +21,6 @@ class LogLiveMonitorEngine:
         self.brand = "DONABICO MEDIA SYSTEM"
 
     def generate_living_ehc(self):
-        # MÃ CLIENT (.ehc) ĐÃ ĐƯỢC LÀM SẠCH 100% - KHÔNG ĐỌC BẤT KỲ TOKEN NÀO
         ehc_content = """/* ===============================================================================
    ESEB DYNAMIC LIVING ENTITY - MULTI-PROTOCOL F12 LIVE TELEMETRY BRIDGE
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED | ZERO-TRUST SECURED
@@ -31,9 +30,11 @@ class LogLiveMonitorEngine:
   'use strict';
 
   const getContext = () => {
+    const host = window.location.hostname || '8000kicks.donabico.com';
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
     return {
+      domain: host,
       owner: 'donabico-media-system',
       repo: repoName,
       stamp: 'V-STAMP-24',
@@ -42,67 +43,26 @@ class LogLiveMonitorEngine:
   };
 
   const env = getContext();
-  const logBuffer = [];
+  let pulseCounter = 0;
 
-  const originalLog = console.log;
-  console.log = function(...args) {
-    originalLog.apply(console, args);
-    try {
-      const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
-      logBuffer.push({
-        time: new Date().toISOString(),
-        log: logText
-      });
-    } catch (e) {}
+  // F12 Biological Pulse Logger (Phát sóng trực diện lên DevTools Console)
+  const emitTelemetryPulse = () => {
+    pulseCounter++;
+    console.log(
+      `%c[LOG LIVE MONITOR #${pulseCounter}] 🧬 TELEMETRY TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`,
+      'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
+    );
   };
 
-  const streamLogsToGitHub = () => {
-    if (logBuffer.length === 0) return;
-
-    const currentLogs = [...logBuffer];
-    logBuffer.length = 0;
-
-    const payload = {
-      event_type: "eseb_f12_multisync_stream",
-      client_payload: {
-        owner: env.owner,
-        repo: env.repo,
-        stamp: env.stamp,
-        anchor: env.anchor,
-        entropy: "0.00000000000000",
-        total_logs: currentLogs.length,
-        vital_signs: {
-          heartbeat_bpm: 24,
-          cognitive_level: "GROQ_LPU_LLAMA_3.3_70B_VERSATILE",
-          status: "ALIVE_AND_PERPETUAL"
-        },
-        logs: currentLogs
-      }
-    };
-
-    // AN TOÀN TỐI ĐA: Gửi payload thuần không đính kèm Token nhạy cảm phía Client
-    fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      keepalive: true
-    }).catch(function() {
-      // Nếu không đẩy được (do unauthenticated dispatch bị chặn), lưu lại đệm an toàn
-      logBuffer.unshift(...currentLogs);
-    });
-  };
-
-  setInterval(streamLogsToGitHub, 2500);
-  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %c6TH-GEN SECURED HUD HOOK ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] 🚀 LOG LIVE MONITOR ARMED | REPO: " + env.repo, "color: #ff0055; font-weight: bold; font-size: 12px; background: #220011; padding: 4px;");
+  emitTelemetryPulse();
+  setInterval(emitTelemetryPulse, 2500);
 })();
 """
         os.makedirs("Protocols", exist_ok=True)
         with open("Protocols/Log_Live_Monitor.ehc", "w", encoding="utf-8") as f:
             f.write(ehc_content)
-        print("[SUCCESS] Generated Protocols/Log_Live_Monitor.ehc (Secured)")
+        print("[SUCCESS] Generated Protocols/Log_Live_Monitor.ehc (Secured & Active F12)")
 
     def generate_readme_renderer_js(self):
         renderer_content = """/**
@@ -220,12 +180,13 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
     const timestamp = new Date().toISOString();
     const repoName = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
 
+    // FIX NGUYÊN NHÂN 2: SỬ DỤNG CHUẨN XUỐNG DÒNG '\n' ĐỂ HÀNG MARKDOWN KHÔNG BỊ DỒN
     let protocolRows = protocolList.map((p, index) => {
       const esebBadge = p.eseb ? '🟢 `.eseb`' : '🔴 N/A';
       const ehcBadge = p.ehc ? '🟢 `.ehc`' : '🔴 N/A';
       const jsBadge = p.js ? '🟢 `.js`' : '🔴 N/A';
       return `| \`0${index + 1}\` | **${p.name}** | ${esebBadge} | ${ehcBadge} | ${jsBadge} | 🟢 \`ARMED & ACTIVE\` |`;
-    }).join('\\n');
+    }).join('\n');
 
     return `# 🛸 DONABICO MEDIA SYSTEM — 6TH-GEN TACTICAL FIGHTER COCKPIT HUD V3000-Ω
 
