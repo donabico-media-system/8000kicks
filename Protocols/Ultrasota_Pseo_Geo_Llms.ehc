@@ -1,11 +1,12 @@
 /* ==========================================================================
-   ESEB LIVING ENTITY CLIENT BUNDLE (ULTRASOTA PSEO GEO LLMS)
+   ESEB LIVING ENTITY CLIENT BUNDLE (ULTRASOTA PSEO GEO LLMS - SOTA 2026)
    MODULE: Protocols/Ultrasota_Pseo_Geo_Llms.ehc
-   STAMP: V-STAMP-24 | ¢24 ANCHOR | DYNAMIC IDENTITY DISCOVERY ACTIVE
+   STAMP: V-STAMP-24 | ¢24 ANCHOR | FULL GEO SCHEMA & AUTO-HEALING ACTIVE
    ========================================================================== */
 (function() {
   'use strict';
 
+  // 1. Sentinel Shield Style Injection
   if (!document.getElementById('eseb-sentinel-shield')) {
     const shield = document.createElement('style');
     shield.id = 'eseb-sentinel-shield';
@@ -15,6 +16,7 @@
     document.head.appendChild(shield);
   }
 
+  // 2. Dynamic Context Discovery
   const getDynamicContext = () => {
     const host = window.location.hostname || '';
     const protocol = window.location.protocol || 'https:';
@@ -36,7 +38,8 @@
 
   const ctx = getDynamicContext();
 
-  function injectDynamicGeoSchema() {
+  // 3. GEO Multi-Layer Schema RAG Chunking Injection (AI Search Ingestion)
+  function injectMultiLayerGeoSchema() {
     const oldSchema = document.getElementById('eseb-schema-node');
     if (oldSchema) oldSchema.remove();
 
@@ -51,6 +54,49 @@
           "name": ctx.entityName,
           "url": ctx.protocol + "//" + ctx.domain
         }
+      },
+      {
+        "@context": "https://schema.org/",
+        "@type": "Organization",
+        "name": "DONABICO MEDIA SYSTEM",
+        "url": ctx.protocol + "//" + ctx.domain,
+        "logo": ctx.protocol + "//" + ctx.domain + "/assets/logo.png"
+      },
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": document.title || "Eco Hemp Waterproof Footwear",
+        "brand": { "@type": "Brand", "name": ctx.entityName },
+        "description": "Premium waterproof sustainable hemp footwear engineered for extreme durability, comfort, and style.",
+        "offers": {
+          "@type": "Offer",
+          "url": ctx.pageUrl,
+          "priceCurrency": "USD",
+          "price": "135.00",
+          "availability": "https://schema.org/InStock"
+        }
+      },
+      {
+        "@context": "https://schema.org/",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Are these hemp shoes completely waterproof?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, built with a proprietary bio-based waterproof membrane that completely seals out water and dirt."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I order and verify authentic products?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Order directly through official affiliate portal links integrated on this verified ecosystem page."
+            }
+          }
+        ]
       }
     ];
 
@@ -62,6 +108,37 @@
     document.head.appendChild(script);
   }
 
-  injectDynamicGeoSchema();
-  console.log(`%c[ESEB DYNAMIC GEO] 🚀 RUNTIME CONTEXT INJECTED | URL: ${ctx.pageUrl}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 4px;');
+  // 4. WebView Parameter Preserver & Auto-Healing Link Engine
+  function initAffiliateShield() {
+    // Lưu giữ URL parameters vào Session Storage để tránh WebView làm mất
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.forEach((val, key) => {
+      sessionStorage.setItem('eseb_param_' + key, val);
+    });
+
+    // Quét toàn bộ nút bấm / liên kết Affiliate trên trang
+    document.addEventListener('click', function(e) {
+      const targetLink = e.target.closest('a');
+      if (!targetLink || !targetLink.href) return;
+
+      try {
+        const linkUrl = new URL(targetLink.href);
+        // Khôi phục các tham số tracking từ Session Storage
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key.startsWith('eseb_param_')) {
+            const paramName = key.replace('eseb_param_', '');
+            if (!linkUrl.searchParams.has(paramName)) {
+              linkUrl.searchParams.set(paramName, sessionStorage.getItem(key));
+            }
+          }
+        }
+        targetLink.href = linkUrl.toString();
+      } catch(err) {}
+    }, true);
+  }
+
+  injectMultiLayerGeoSchema();
+  initAffiliateShield();
+  console.log(`%c[ESEB ULTRA GEO SOTA 2026] 🚀 MULTI-LAYER SCHEMA & LINK SHIELD ACTIVE | ${ctx.stamp}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 4px;');
 })();
