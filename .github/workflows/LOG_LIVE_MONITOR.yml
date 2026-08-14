@@ -28,39 +28,39 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile ESEB Multi-Protocol Protocol
+      - name: Compile ESEB Multi-Protocol Kernel
         run: |
           python3 Protocols/Log_Live_Monitor.eseb
 
-      - name: Execute Real AI REST API Renderer
+      - name: Execute Groq LPU Real AI REST Renderer
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          OPEN_AI_TOKEN: ${{ secrets.OPEN_AI_TOKEN }}
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
         run: |
           node Protocols/Log_Live_Monitor_Renderer.js
 
-      - name: Commit & Sync Multi-Protocol Artifacts
+      - name: Commit & Sync Multi-Protocol HUD Artifacts
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/donabico-media-system/8000kicks.git
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # 1. Fetch và Rebase trước để đồng bộ kho
-          git fetch origin main
+          # 1. Đồng bộ và giải quyết xung đột rebase tự động
+          git fetch origin main || true
           git rebase origin/main || {
-            echo "Rebase conflict detected. Resolving automatically by favoring latest generated artifacts..."
+            echo "Rebase conflict detected. Auto-resolving favor of latest generated artifacts..."
             git checkout --ours README.md Protocols/ || true
             git add README.md Protocols/ || true
             git rebase --continue || git rebase --abort || true
           }
           
-          # 2. Đưa các thay đổi vào khu vực chờ
+          # 2. Thêm file sinh ra vào khu vực chờ
           git add Protocols/ README.md
           
-          # 3. Commit và Push an toàn tuyệt đối
+          # 3. Commit và Push an toàn với Delta Zero Entropy
           if ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-sync multi-protocol real ai api renderer and telemetry artifacts [skip ci]"
+            git commit -m "chore(eseb-hud): auto-sync 6th-gen fighter cockpit telemetry & groq lpu ai report [skip ci]"
             git push origin main
           else
-            echo "No changes to commit. Entropy delta = 0."
+            echo "No changes detected. Entropy delta = 0."
           fi
