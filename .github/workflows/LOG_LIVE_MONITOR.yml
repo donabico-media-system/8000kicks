@@ -3,7 +3,7 @@ name: LOG_LIVE_MONITOR
 on:
   push:
     paths:
-      - 'Protocols/Log_Live_Monitor.eseb'
+      - 'Protocols/**'
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
@@ -30,9 +30,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile ESEB Multi-Protocol Kernel
+      # BƯỚC NÂNG CẤP: TỰ ĐỘNG BIÊN DỊCH TOÀN BỘ CÁC FILE .eseb TRONG THƯ MỤC PROTOCOLS
+      - name: Compile ALL ESEB Multi-Protocol Kernels
         run: |
-          python3 Protocols/Log_Live_Monitor.eseb
+          for f in Protocols/*.eseb; do
+            if [ -f "$f" ]; then
+              echo "Compiling ESEB Kernel: $f"
+              python3 "$f"
+            fi
+          done
 
       - name: Execute Groq LPU Real AI REST Renderer
         env:
@@ -47,19 +53,13 @@ jobs:
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Stage toàn bộ các tệp được cập nhật ở Root và thư mục Protocols/
           git add -A
           
           if git diff --cached --quiet; then
             echo "No changes detected in repository. Entropy delta = 0."
           else
-            git commit -m "chore(eseb-hud): auto-sync 6th-gen fighter cockpit telemetry & groq lpu ai report [skip ci]"
-            
-            # Giải quyết triệt để lỗi non-fast-forward bằng Rebase
+            git commit -m "chore(eseb-hud): auto-sync full trinity protocol matrix [skip ci]"
             git fetch origin main
             git rebase origin/main || git rebase --skip || true
-            
-            # Push an toàn tuyệt đối lên nhánh main
             git push origin HEAD:main
           fi
- 
