@@ -17,7 +17,7 @@ class GroqLpuTacticalHudRenderer {
     this.brand = "DONABICO MEDIA SYSTEM";
     this.apiGroqToken = process.env.API_GROQ_TOKEN || '';
     this.modelName = "llama-3.3-70b-versatile";
-    // Ép cứng đường dẫn tới README.md ở thư mục GỐC (ROOT) của Repo
+    // Đảm bảo ép chuẩn đường dẫn tuyệt đối ghi trực tiếp vào README.md tại thư mục GỐC (ROOT)
     this.rootReadmePath = path.resolve(process.cwd(), 'README.md');
   }
 
@@ -48,7 +48,7 @@ class GroqLpuTacticalHudRenderer {
 
   async callGroqLpuAI(protocolList, logData) {
     if (!this.apiGroqToken) {
-      console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN missing. Operating in Fallback Mode.");
+      console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN is missing. Operating in Fallback Mode.");
       return "⚠️ GROQ LPU REST ENGINE NOTICE: API_GROQ_TOKEN is missing in repository secrets. System operating on Local Fallback Heuristics. Add API_GROQ_TOKEN secret to activate real-time Llama-3.3-70b tactical analysis.";
     }
 
@@ -203,7 +203,6 @@ ${protocolRows}
     const aiAnalysis = await this.callGroqLpuAI(protocolList, aggregatedLogs);
     const hudMarkdown = this.renderSciFiHudMarkdown(protocolList, aggregatedLogs, aiAnalysis);
 
-    // GHI BẮT BUỘC VÀO TỆP README.MD Ở ROOT
     fs.writeFileSync(this.rootReadmePath, hudMarkdown, 'utf-8');
     console.log(`[HUD RENDERER] Successfully written 6th-Gen Fighter Cockpit HUD to: ${this.rootReadmePath}`);
   }
