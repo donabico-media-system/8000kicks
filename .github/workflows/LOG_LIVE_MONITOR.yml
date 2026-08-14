@@ -30,46 +30,39 @@ jobs:
         with:
           python-version: '3.11'
 
-      # CƠ CHẾ CHỐNG TẮC NGHẼN (FAULT-TOLERANT NON-BLOCKING COMPILER)
       - name: Compile ESEB Multi-Protocol Kernels
         run: |
           shopt -s nullglob
           for f in Protocols/*.eseb; do
             if [ -f "$f" ]; then
-              echo "=========================================="
               echo "[ESEB BUILDER] Compiling Kernel: $f"
-              # Thêm || true để nếu có tệp lỗi cú pháp cũng KHÔNG ĐỜI NÀO làm dừng Workflow
-              python3 "$f" || echo "⚠️ [WARNING] Skip error in $f to preserve pipeline integrity."
+              python3 "$f" || echo "⚠️ [WARNING] Skip error in $f"
             fi
           done
 
-      # BẢO ĐẢM CORE RENDERER LUÔN ĐƯỢC CHẠY TẠO HUD
       - name: Execute Groq LPU Real AI REST Renderer
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
         run: |
-          node Protocols/Log_Live_Monitor_Renderer.js || echo "⚠️ [WARNING] Renderer execution warning"
+          node Protocols/Log_Live_Monitor.js || echo "⚠️ [WARNING] Renderer execution warning"
 
-      # ĐỒNG BỘ NGUYÊN KHỐI VÀ PUSH AN TOÀN TUYỆT ĐỐI
       - name: Force Commit & Push HUD Artifacts
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Stage toàn bộ artifact sinh ra
+          # Dọn dẹp tệp dư thừa cũ nếu có
+          git rm -f Protocols/Log_Live_Monitor_Renderer.js || true
+          
           git add -A
           
           if git diff --cached --quiet; then
             echo "No changes detected in repository. Entropy delta = 0."
           else
-            git commit -m "chore(eseb-hud): auto-sync full trinity protocol matrix [skip ci]" || true
-            
-            # Rebase an toàn chống xung đột non-fast-forward
+            git commit -m "chore(eseb-hud): auto-sync clean trinity protocol matrix [skip ci]" || true
             git fetch origin main
             git rebase origin/main || git rebase --skip || true
-            
-            # Push chuẩn xác lên nhánh main
             git push origin HEAD:main || git push origin main --force || true
           fi
