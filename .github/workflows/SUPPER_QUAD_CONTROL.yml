@@ -28,11 +28,11 @@ jobs:
       - name: Setup Python Environment
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Compile ESEB Protocol (.eseb -> .ehc + .js)
         run: |
-          python Protocols/Super_Quad_Control.eseb
+          python3 Protocols/Super_Quad_Control.eseb
 
       - name: Execute Serverless Dual-Token Engine
         env:
@@ -43,13 +43,16 @@ jobs:
 
       - name: Conflict-Free Git Commit & Push Strategy
         run: |
-          git config --global user.name "donabico-media-system"
-          git config --global user.email "bot@donabico.media"
+          git config --global user.name "donabico-media-system[bot]"
+          git config --global user.email "bot@donabico.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
           git add Protocols/
-          if ! git diff --quiet || ! git diff --staged --quiet; then
+          if ! git diff --cached --quiet; then
             git commit -m "chore(eseb): auto-compile Super_Quad_Control artifacts [V-STAMP-24]"
-            git pull origin main --rebase || git pull origin master --rebase || true
-            git push origin HEAD:main || git push origin HEAD:master
+            git fetch origin main
+            git rebase origin/main || git rebase --skip || true
+            git push origin HEAD:main
           else
             echo "No changes detected. Skipping commit."
           fi
