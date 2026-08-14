@@ -1,0 +1,63 @@
+name: ULTRASOTA_PSEO_GEO_LLMS
+
+on:
+  push:
+    paths:
+      - 'Protocols/Ultrasota_Pseo_Geo_Llms.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  eseb-ultrasota-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile ESEB Protocol Core
+        run: |
+          python3 Protocols/Ultrasota_Pseo_Geo_Llms.eseb
+
+      - name: Execute Serverless Dual-Token Engine
+        env:
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+        run: |
+          node Protocols/Ultrasota_Pseo_Geo_Llms.js
+
+      - name: Purge Extra Files & Push Sitemap Only (Entropy Delta = 0)
+        run: |
+          git config --global user.name "donabico-media-system[bot]"
+          git config --global user.email "bot@donabico.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # TỰ ĐỘNG XÓA SẠCH 04 TỆP KHÔNG CẦN THIẾT NẾU TỒN TẠI
+          git rm -f llms.txt llms_full.txt Feed.xml Feed.json || true
+          
+          # CHỈ THEO DÕI PROTOCOLS VÀ SITEMAP.XML
+          git add Protocols/ sitemap.xml
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(eseb): purge extra feeds & sync sitemap.xml [V-STAMP-24]"
+            git fetch origin main
+            git rebase origin/main || git rebase --skip || true
+            git push origin HEAD:main
+          else
+            echo "No changes detected. Entropy delta = 0."
+          fi
