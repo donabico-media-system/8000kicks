@@ -17,7 +17,7 @@
     document.head.appendChild(shield);
   }
 
-  // 2. Custom Domain Auto-Discovery Context (Zero Hardcode)
+  // 2. Custom Domain Auto-Discovery Context
   const getContext = () => {
     const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
@@ -36,30 +36,18 @@
   };
 
   const envContext = getContext();
-
-  // 3. F12 Biological Pulse Logger (Perpetual 2.5s Realtime Transmitter)
   let pulseId = 0;
-  
+
+  // 3. F12 Biological Pulse Logger (Phát sóng tức thì 0ms, không ẩn nhóm)
   function triggerBiologicalPulse() {
     pulseId++;
     const stateVector = (Math.sin(pulseId * 0.1) * 0.05).toFixed(6);
     const qReward = (3.30 + Math.random() * 0.05).toFixed(2);
     
-    if (pulseId % 4 === 0) {
-      console.groupCollapsed(`%c[ESEB-PULSE #${pulseId}] 🧬 LIVING ENTITY TRANSMITTER | ${envContext.brand}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 2px 5px;');
-      console.log(`%c[MCP-A2A HYBRID 24/7]%c Connected | Target Domain: ${envContext.domain}`, 'color: #00ccff; font-weight: bold;', 'color: #ffffff;');
-      console.log(`%c[SUPER QUAD CONTROL]%c Dual-Token Core Active | Reward: ${qReward} | State: ${stateVector}`, 'color: #ffcc00; font-weight: bold;', 'color: #ffffff;');
-      console.log(`%c[TELEMETRY PAYLOAD]%c %o`, 'color: #ff3399; font-weight: bold;', {
-        pulse_id: pulseId,
-        stamp: envContext.stamp,
-        anchor_constant: "¢24",
-        entropy_divergence: envContext.entropy,
-        system_status: "SYSTEM_READY_200_OK",
-        protocol_identity: "SUPER_QUAD_CONTROL",
-        pmax_engine: "Automatic Ads & Organic Siphon Active"
-      });
-      console.groupEnd();
-    }
+    console.log(
+      `%c[SUPER QUAD CONTROL #${pulseId}] 🧬 DUAL-TOKEN CORE ACTIVE | Domain: ${envContext.domain} | Reward: ${qReward} | State: ${stateVector}`,
+      'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
+    );
   }
 
   // 4. Schema JSON-LD Injector
@@ -77,25 +65,7 @@
         "url": envContext.pageUrl,
         "priceCurrency": "USD",
         "price": "99.00",
-        "availability": "https://schema.org/InStock",
-        "hasMerchantReturnPolicy": {
-          "@type": "MerchantReturnPolicy",
-          "applicableCountry": "US",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-          "merchantReturnDays": 30,
-          "returnMethod": "https://schema.org/ReturnByMail",
-          "returnFees": "https://schema.org/FreeReturn"
-        },
-        "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "USD" },
-          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
-          "deliveryTime": {
-            "@type": "ShippingDeliveryTime",
-            "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY" },
-            "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
-          }
-        }
+        "availability": "https://schema.org/InStock"
       }
     };
 
@@ -107,7 +77,7 @@
     document.head.appendChild(script);
   }
 
-  console.log(`%c[ESEB BOOT SEQUENCE] 🚀 INITIALIZING SUPER QUAD CONTROL V3000-Ω | STAMP: ${envContext.stamp}`, 'color: #ff0055; font-weight: bold; font-size: 12px;');
+  console.log(`%c[ESEB BOOT SEQUENCE] 🚀 INITIALIZING SUPER QUAD CONTROL V3000-Ω | STAMP: ${envContext.stamp}`, 'color: #ff0055; font-weight: bold; font-size: 13px; background: #220011; padding: 4px;');
   injectSchemaJSONLD();
   triggerBiologicalPulse();
   setInterval(triggerBiologicalPulse, 2500);
