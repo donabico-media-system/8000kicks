@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js Runtime
         uses: actions/setup-node@v4
@@ -39,28 +41,18 @@ jobs:
         run: |
           node Protocols/Log_Live_Monitor_Renderer.js
 
-      - name: Commit & Sync Multi-Protocol HUD Artifacts
+      - name: Force Commit & Push HUD Artifacts
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # 1. Đồng bộ và giải quyết xung đột rebase tự động
-          git fetch origin main || true
-          git rebase origin/main || {
-            echo "Rebase conflict detected. Auto-resolving favor of latest generated artifacts..."
-            git checkout --ours README.md Protocols/ || true
-            git add README.md Protocols/ || true
-            git rebase --continue || git rebase --abort || true
-          }
+          # Ép buộc Stage toàn bộ các file bị biến đổi ở Root và Protocols
+          git add -A
           
-          # 2. Thêm file sinh ra vào khu vực chờ
-          git add Protocols/ README.md
-          
-          # 3. Commit và Push an toàn với Delta Zero Entropy
-          if ! git diff --staged --quiet; then
-            git commit -m "chore(eseb-hud): auto-sync 6th-gen fighter cockpit telemetry & groq lpu ai report [skip ci]"
-            git push origin main
+          # Kiểm tra và commit ép buộc
+          if git diff --cached --quiet; then
+            echo "No changes detected in repository."
           else
-            echo "No changes detected. Entropy delta = 0."
+            git commit -m "chore(eseb-hud): force auto-sync 6th-gen fighter cockpit telemetry [skip ci]"
+            git push origin HEAD:main
           fi
