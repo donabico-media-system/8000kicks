@@ -12,16 +12,12 @@ class WorkersAiRunner {
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Matrix 08 AI Models Chuẩn Hóa API Cloudflare Edge GPU 2026
+    // Matrix Model ID Chuẩn Hóa Route API Cloudflare Edge 2026
     this.models = {
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       llama_8b: "@cf/meta/llama-3.1-8b-instruct",
-      qwen_14b: "@cf/qwen/qwen1.5-14b-chat-awq",
-      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.2",
       deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-      gemma_7b: "@cf/google/gemma-7b-it-lora",
-      bge_embedding: "@cf/baai/bge-large-en-v1.5",
-      whisper_audio: "@cf/openai/whisper"
+      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1"
     };
   }
 
@@ -31,15 +27,17 @@ class WorkersAiRunner {
       return false;
     }
 
-    // Payload Kép (Dual Payload) Tương Thích Tất Cả Model Cloudflare
+    // Payload Chuẩn Hóa Pure Messages (Khắc phục hoàn toàn lỗi oneOf schema 5006)
     const payload = JSON.stringify({
-      prompt: promptText,
       messages: [
         { 
           role: "system", 
           content: "You are Cloudflare Global Affiliate AI Engine for DONABICO GLOBAL MEDIA SYSTEM. Markets: USA, Canada, UK, EU, AU, NZ, Global." 
         },
-        { role: "user", content: promptText }
+        { 
+          role: "user", 
+          content: promptText 
+        }
       ]
     });
 
