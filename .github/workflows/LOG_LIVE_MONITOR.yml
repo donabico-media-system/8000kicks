@@ -32,37 +32,35 @@ jobs:
 
       - name: Compile ESEB Multi-Protocol Kernels
         run: |
-          shopt -s nullglob
-          for f in Protocols/*.eseb; do
-            if [ -f "$f" ]; then
-              echo "[ESEB BUILDER] Compiling Kernel: $f"
-              python3 "$f" || echo "⚠️ [WARNING] Skip error in $f"
-            fi
-          done
+          python3 Protocols/Log_Live_Monitor.eseb
 
-      - name: Execute Groq LPU Real AI REST Renderer
+      - name: Execute Groq LPU Real AI REST Renderer (Update README.md)
         env:
-          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
         run: |
-          node Protocols/Log_Live_Monitor.js || echo "⚠️ [WARNING] Renderer execution warning"
+          node Protocols/Log_Live_Monitor.js
 
-      - name: Force Commit & Push HUD Artifacts
+      - name: Force Commit & Push HUD Artifacts to README.md
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Dọn dẹp tệp dư thừa cũ nếu có
-          git rm -f Protocols/Log_Live_Monitor_Renderer.js || true
+          # Sử dụng ESEB_CLASSIC_TOKEN để ghi quyền Git Master lên GitHub Repo
+          git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          git add -A
+          git add README.md Protocols/Log_Live_Monitor.* || true
           
-          if git diff --cached --quiet; then
-            echo "No changes detected in repository. Entropy delta = 0."
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(eseb-hud): auto-sync real-time cockpit README.md [skip ci]"
+            
+            for i in {1..3}; do
+              git fetch origin main
+              git rebase origin/main && git push origin HEAD:main && break || {
+                echo "[ESEB GIT WARN] Push lock race. Retrying in 3s... ($i/3)"
+                git rebase --abort || true
+                sleep 3
+              }
+            done
           else
-            git commit -m "chore(eseb-hud): auto-sync clean trinity protocol matrix [skip ci]" || true
-            git fetch origin main
-            git rebase origin/main || git rebase --skip || true
-            git push origin HEAD:main || git push origin main --force || true
+            echo "No changes detected in README.md. Entropy delta = 0."
           fi
