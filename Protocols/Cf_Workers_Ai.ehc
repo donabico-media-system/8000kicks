@@ -3,7 +3,6 @@
    MODULE: Protocols/Cf_Workers_Ai.ehc
    STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
    STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL (DATA-MODULE BINDING)
-   TARGET: USA | CANADA | UK | EU | AUSTRALIA | NEW ZEALAND | GLOBAL
    ========================================================================== */
 (function() {
   'use strict';
