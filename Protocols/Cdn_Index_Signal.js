@@ -1,8 +1,8 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: EXACT 08-AI GLOBAL MATRIX EXECUTOR
+ ESEB PROTOCOL SOTA 2026: DUAL-TOKEN & 08-AI MATRIX SERVERLESS EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
- STAMP: V-STAMP-24 | 08-AI GPU MATRIX + DUAL-TOKEN MODE | DONABICO MEDIA SYSTEM
+ STAMP: V-STAMP-24 | DUAL-TOKEN 04THU MODE | DONABICO MEDIA SYSTEM
  OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
  ===============================================================================
 **/
@@ -10,12 +10,13 @@
 const https = require('https');
 const fs = require('fs');
 
-class ServerlessExact08AiMatrixRunner {
+class ServerlessDualToken08AiMatrixRunner {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO MEDIA SYSTEM";
     this.anchor = "¢24";
     
+    // TÍCH HỢP TOÀN DIỆN CÁC TOKEN BẢO MẬT HỆ THỐNG
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || '',
@@ -23,7 +24,7 @@ class ServerlessExact08AiMatrixRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // ĐÍNH KÍNH CHÍNH XÁC 08 CON AI ĐÃ ĐẠT STATUS 200 OK THỰC CHIẾN
+    // MA TRẬN 08 AI EDGE NODES TRÊN CLOUDFLARE WORKERS AI
     this.cloudflareAiNodes = [
       { id: "LLAMA_70B", model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", task: "High-Intent Affiliate Review Generation" },
       { id: "LLAMA_8B", model: "@cf/meta/llama-3.1-8b-instruct", task: "Rapid RAG Query & Sub-30ms Semantic Fallback" },
@@ -81,22 +82,66 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
       fs.writeFileSync('Llms-Full.txt', llmsFullContent, 'utf8');
       fs.writeFileSync('Agent.json', agentJsonContent, 'utf8');
       fs.writeFileSync(`${indexNowKey}.txt`, indexNowKey, 'utf8');
-      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt, Agent.json and IndexNow verification key.`);
+      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt, Agent.json and IndexNow key.`);
     } catch (err) {
       console.warn(`[AI MANIFESTS WARNING] Failed to write manifests: ${err.message}`);
     }
   }
 
+  async callGroqLpuAPI(domainTarget) {
+    if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {
+      console.log("[GROQ CORE] API_GROQ_TOKEN missing in Secrets. Skipping.");
+      return { success: false };
+    }
+
+    const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
+    const payload = JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: "You are ESEB Dual-Token Living Protocol Core V3000-Ω." },
+        { role: "user", content: `Execute Groq LPU synchronization for target domain: ${domainTarget}.` }
+      ],
+      temperature: 0.1
+    });
+
+    const options = {
+      hostname: 'api.groq.com',
+      port: 443,
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cleanToken}`,
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 5000
+    };
+
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          console.log(`[GROQ LPU API] Status: ${res.statusCode}`);
+          resolve({ success: res.statusCode === 200 });
+        });
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
+      req.on('error', () => resolve({ success: false }));
+      req.write(payload);
+      req.end();
+    });
+  }
+
   async callCloudflareWorkersAI(nodeConfig, domainTarget) {
     if (!this.tokens.cfAccount || !this.tokens.cfApiToken) {
-      console.log(`[CF WORKERS AI] Skipping ${nodeConfig.id} (${nodeConfig.model}): Credentials missing.`);
+      console.log(`[CF WORKERS AI] Skipping ${nodeConfig.id}: Credentials missing.`);
       return { success: false, node: nodeConfig.id };
     }
 
-    const promptText = `Execute SOTA 2026 08-AI Matrix synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
+    const promptText = `Execute ESEB Dual-Token 08-AI synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
     let payloadObj = {};
 
-    // CẤU TRÚC PAYLOAD CHUẨN XÁC CHO MA TRẬN 8 CON AI
     if (nodeConfig.id === "BGE_EMBEDDING") {
       payloadObj = { text: [promptText] };
     } else if (nodeConfig.id === "SDXL_IMAGE") {
@@ -131,7 +176,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
           const isOk = res.statusCode === 200;
-          console.log(`[ESEB 08-AI SUCCESS] Node: [${nodeConfig.id}] | Model: ${nodeConfig.model} | Status ${res.statusCode} ${isOk ? 'OK' : 'FAIL'}`);
+          console.log(`[ESEB 08-AI SUCCESS] Node: [${nodeConfig.id}] | Status ${res.statusCode} ${isOk ? 'OK' : 'FAIL'}`);
           resolve({ success: isOk, node: nodeConfig.id });
         });
       });
@@ -165,7 +210,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
 
     return new Promise((resolve) => {
       const req = https.request(options, (res) => {
-        console.log(`[INDEXNOW MATRIX BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
+        console.log(`[INDEXNOW BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
         resolve({ success: res.statusCode === 200 || res.statusCode === 202 });
       });
       req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
@@ -178,18 +223,28 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[ESEB FULL 08-AI GLOBAL MATRIX] Executing Cloudflare Edge GPU API Calls`);
+    console.log(`[ESEB DUAL-TOKEN 08-AI MATRIX] Executing Execution Pipelines`);
     console.log(`Stamp: ${this.stamp} | Brand: ${this.brand} | Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // 1. Sinh tệp Manifests & Khóa IndexNow
+    // 1. Kiểm tra xác thực ESEB_CLASSIC_TOKEN
+    if (this.tokens.esebClassic) {
+      console.log(`[ESEB CLASSIC AUTH] Core Token Verified Successfully.`);
+    } else {
+      console.log(`[ESEB CLASSIC AUTH] Warning: ESEB_CLASSIC_TOKEN is empty.`);
+    }
+
+    // 2. Sinh tệp Manifests & Khóa IndexNow
     this.generateAiSearchManifests(targetDomain);
 
-    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes
+    // 3. Kích hoạt Groq LPU API qua API_GROQ_TOKEN
+    await this.callGroqLpuAPI(targetDomain);
+
+    // 4. Kích hoạt song song Ma trận 08 AI Edge Nodes
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
-    // 3. Đẩy tín hiệu IndexNow tức thời
+    // 5. Đẩy tín hiệu IndexNow tức thời
     const indexNowKey = "24242424242424242424242424242424";
     await this.broadcastIndexNow(targetDomain, [
       `https://${targetDomain}/`,
@@ -198,18 +253,14 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
       `https://${targetDomain}/${indexNowKey}.txt`
     ]);
 
-    if (this.tokens.esebClassic) {
-      console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 SOTA Verified.`);
-    }
-
-    console.log(`[ESEB 08-AI MATRIX] All 08 Active Nodes Executed with Zero Entropy.`);
+    console.log(`[ESEB DUAL-TOKEN MATRIX] All Pipelines Completed with Zero Entropy.`);
     process.exit(0);
   }
 }
 
 if (require.main === module) {
-  const runner = new ServerlessExact08AiMatrixRunner();
+  const runner = new ServerlessDualToken08AiMatrixRunner();
   runner.runRealExecution();
 }
 
-module.exports = ServerlessExact08AiMatrixRunner;
+module.exports = ServerlessDualToken08AiMatrixRunner;

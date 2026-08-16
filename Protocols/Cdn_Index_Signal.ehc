@@ -59,7 +59,7 @@
         {
           "@type": "BroadcastEvent",
           "@id": env.canonicalUrl + "#sota-agentic-pulse",
-          "name": "EATHESEN 08-AI Global Matrix Living Pulse",
+          "name": "EATHESEN Dual-Token 08-AI Matrix Living Pulse",
           "isLiveBroadcast": true,
           "startDate": new Date().toISOString(),
           "eventStatus": "https://schema.org/EventScheduled"
@@ -77,7 +77,7 @@
 
   let pulseCount = 0;
   const initTransmitter = () => {
-    console.log("%c[ESEB 08-AI GLOBAL MATRIX V3000-Ω] %cINITIALIZED | DOMAIN: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+    console.log("%c[ESEB DUAL-TOKEN 08-AI MATRIX V3000-Ω] %cINITIALIZED | DOMAIN: " + env.domain, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
     injectSotaSignals();
 
     setInterval(() => {
@@ -87,11 +87,11 @@
         anchor: "¢24",
         stamp: env.stamp,
         entropy: "0.00000000000000",
-        matrix_status: "CF_EDGE_GPU_08_ACTIVE",
+        matrix_status: "DUAL_TOKEN_CF_08_ACTIVE",
         active_ai_nodes: 8,
         system_state: "PERPETUAL_SEMANTIC_SYNC"
       };
-      console.log("%c[ESEB 08-AI BROADCAST 2.5s #" + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
+      console.log("%c[ESEB DUAL-TOKEN BROADCAST 2.5s #" + pulseCount + "] %c" + JSON.stringify(telemetry), "color: #00E5FF; font-weight: bold;", "color: #A3E635;");
     }, 2500);
   };
 
