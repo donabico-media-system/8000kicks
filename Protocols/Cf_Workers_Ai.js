@@ -12,13 +12,13 @@ class WorkersAiRunner {
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Đã thay thế Qwen bằng OpenChat để đảm bảo Status 200 OK
+    // Matrix 08 AI Models Chuẩn Hóa REST API Cloudflare Edge GPU 2026
     this.models = {
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       llama_8b: "@cf/meta/llama-3.1-8b-instruct",
       deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
       mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1",
-      openchat_7b: "@cf/openchat/openchat-3.5-0106",
+      llama_3b: "@cf/meta/llama-3.2-3b-instruct",
       gemma_7b: "@cf/google/gemma-7b-it-lora",
       bge_embedding: "@cf/baai/bge-large-en-v1.5",
       sdxl_image: "@cf/bytedance/stable-diffusion-xl-lightning"
@@ -108,7 +108,7 @@ class WorkersAiRunner {
     await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference", "chat");
     await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization", "chat");
     await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for Search Engines", "chat");
-    await this.runAiInference("OPENCHAT_7B", this.models.openchat_7b, "Optimize Multilingual Geo Target Content", "chat");
+    await this.runAiInference("LLAMA_3B", this.models.llama_3b, "Optimize Multilingual Geo Target Content", "chat");
     await this.runAiInference("GEMMA_7B", this.models.gemma_7b, "Execute Auxiliary Context Enrichment", "chat");
     await this.runAiInference("BGE_EMBEDDING", this.models.bge_embedding, "EATHESEN RAG Knowledge Vectorization", "embedding");
     await this.runAiInference("SDXL_IMAGE", this.models.sdxl_image, "Professional Affiliate Shoe Product Banner", "image");
