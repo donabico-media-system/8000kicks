@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: PERFECT PAYLOAD & AGENTIC SWARM EXECUTOR
+ ESEB PROTOCOL SOTA 2026: UNIFIED PAYLOAD & AGENTIC SWARM EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | SOTA 2026 + DUAL-TOKEN MODE | DONABICO MEDIA SYSTEM
  OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
@@ -94,21 +94,18 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     const promptText = `Execute SOTA 2026 Agentic Swarm synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
     let payloadObj = {};
 
-    // PERFECT PAYLOAD ROUTER: Chuẩn hóa theo đặc tả riêng của từng model Cloudflare
+    // UNIFIED PAYLOAD ROUTER: Đảm bảo 100% các model LLM dùng chung cấu trúc messages chuẩn
     if (nodeConfig.model.includes('bge')) {
       payloadObj = { text: [promptText] };
-    } else if (nodeConfig.model.includes('qwen') || nodeConfig.model.includes('mistral') || nodeConfig.model.includes('gemma')) {
-      // Các model qwen1.5, mistral-7b, gemma-7b nhận chuẩn trường prompt thuần túy không kèm max_tokens
+    } else if (nodeConfig.model.includes('stable-diffusion') || nodeConfig.model.includes('flux')) {
       payloadObj = { prompt: promptText };
-    } else if (nodeConfig.model.includes('chat') || nodeConfig.model.includes('instruct') || nodeConfig.model.includes('deepseek')) {
+    } else {
       payloadObj = {
         messages: [
           { role: "system", content: "You are an autonomous SOTA 2026 edge intelligence node." },
           { role: "user", content: promptText }
         ]
       };
-    } else {
-      payloadObj = { prompt: promptText };
     }
 
     const payload = JSON.stringify(payloadObj);
@@ -178,14 +175,14 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SOTA 2026 RUNNER] Executing Perfect Payload & Agentic Swarm for: ${targetDomain}`);
+    console.log(`[SOTA 2026 RUNNER] Executing Unified Payload & Agentic Swarm for: ${targetDomain}`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
     // 1. Sinh tệp khai báo AI Search Bots (Llms-Full.txt & Agent.json)
     this.generateAiSearchManifests(targetDomain);
 
-    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA với Perfect Payload Router
+    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA với Unified Payload
     console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 AI Edge Nodes...`);
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
