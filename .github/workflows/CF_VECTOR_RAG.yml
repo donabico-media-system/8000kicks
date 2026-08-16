@@ -1,0 +1,54 @@
+name: CF_VECTOR_RAG
+
+on:
+  push:
+    paths:
+      - 'Protocols/Cf_Vector_Rag.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cf-vector-rag-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js & Python
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Cf_Vector_Rag Core Protocol
+        run: |
+          python3 Protocols/Cf_Vector_Rag.eseb
+
+      - name: Execute Cloudflare Vector RAG Embedding & Indexing
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          node Protocols/Cf_Vector_Rag.js
+
+      - name: Commit & Push Compiled ESEB Protocol Assets
+        run: |
+          git config --global user.name "donabico-media-system[bot]"
+          git config --global user.email "bot@donabico.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          git add Protocols/Cf_Vector_Rag.* || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(cf-vector-rag): execute 4h vector RAG embedding cycle [V-STAMP-24]"
+            git pull origin main --rebase
+            git push origin HEAD:main
+          fi
