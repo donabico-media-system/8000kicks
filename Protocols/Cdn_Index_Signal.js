@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: UNIFIED PAYLOAD & AGENTIC SWARM EXECUTOR
+ ESEB PROTOCOL SOTA 2026: STABLE 8/8 200-OK EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | SOTA 2026 + DUAL-TOKEN MODE | DONABICO MEDIA SYSTEM
  OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
@@ -23,13 +23,13 @@ class ServerlessSotaExecutionRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // Ma trận 08 AI Edge Nodes SOTA 2026 trên Cloudflare Workers AI
+    // Ma trận 08 AI Edge Nodes SOTA ổn định tuyệt đối trên Cloudflare Workers AI
     this.cloudflareAiNodes = [
-      { id: "n1_qwen", model: "@cf/qwen/qwen1.5-14b-chat", task: "High-Intent Affiliate Review Generation" },
+      { id: "n1_llama8b", model: "@cf/meta/llama-3.1-8b-instruct", task: "High-Intent Affiliate Review Generation" },
       { id: "n2_deepseek", model: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", task: "Agentic Logic Reasoning & GEO-SEO" },
-      { id: "n3_mistral7b", model: "@cf/mistral/mistral-7b-instruct-v0.2", task: "Structured JSON-LD Schema Build" },
+      { id: "n3_mistral7b", model: "@cf/mistral/mistral-7b-instruct-v0.1", task: "Structured JSON-LD Schema Build" },
       { id: "n4_llama3b", model: "@cf/meta/llama-3.2-3b-instruct", task: "Edge Multi-Geo Ultra-Fast Localization" },
-      { id: "n5_gemma7b", model: "@cf/google/gemma-7b-it", task: "E-commerce Technical Context Enrichment" },
+      { id: "n5_gemma2", model: "@cf/google/gemma-2-9b-it", task: "E-commerce Technical Context Enrichment" },
       { id: "n6_gptoss", model: "@cf/openai/gpt-oss-120b", task: "Rapid RAG Query & Sub-30ms Semantic Fallback" },
       { id: "n7_bgem3", model: "@cf/baai/bge-large-en-v1.5", task: "1024-Dim Multi-Lingual Vectorization" },
       { id: "n8_sdxllight", model: "@cf/bytedance/stable-diffusion-xl-lightning", task: "Dynamic Affiliate Visual Banners" }
@@ -94,10 +94,9 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     const promptText = `Execute SOTA 2026 Agentic Swarm synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
     let payloadObj = {};
 
-    // UNIFIED PAYLOAD ROUTER: Đảm bảo 100% các model LLM dùng chung cấu trúc messages chuẩn
     if (nodeConfig.model.includes('bge')) {
       payloadObj = { text: [promptText] };
-    } else if (nodeConfig.model.includes('stable-diffusion') || nodeConfig.model.includes('flux')) {
+    } else if (nodeConfig.model.includes('stable-diffusion')) {
       payloadObj = { prompt: promptText };
     } else {
       payloadObj = {
@@ -175,15 +174,15 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SOTA 2026 RUNNER] Executing Unified Payload & Agentic Swarm for: ${targetDomain}`);
+    console.log(`[SOTA 2026 RUNNER] Executing Stable 8/8 Swarm for: ${targetDomain}`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
     // 1. Sinh tệp khai báo AI Search Bots (Llms-Full.txt & Agent.json)
     this.generateAiSearchManifests(targetDomain);
 
-    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA với Unified Payload
-    console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 AI Edge Nodes...`);
+    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA
+    console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 Stable AI Edge Nodes...`);
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
