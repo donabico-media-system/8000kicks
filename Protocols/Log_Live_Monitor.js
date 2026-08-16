@@ -13,7 +13,6 @@ const path = require('path');
 class GroqLpuTacticalHudRenderer {
   constructor() {
     this.stamp = "V-STAMP-24";
-    this.anchor = "¢24";
     this.brand = "DONABICO MEDIA SYSTEM";
     this.apiGroqToken = process.env.API_GROQ_TOKEN || '';
     this.modelName = "llama-3.3-70b-versatile";
@@ -22,9 +21,7 @@ class GroqLpuTacticalHudRenderer {
 
   scanActiveProtocols() {
     const protocolsDir = path.resolve(process.cwd(), 'Protocols');
-    if (!fs.existsSync(protocolsDir)) {
-      return [];
-    }
+    if (!fs.existsSync(protocolsDir)) return [];
 
     const files = fs.readdirSync(protocolsDir);
     const protocolMap = {};
@@ -32,11 +29,10 @@ class GroqLpuTacticalHudRenderer {
     files.forEach(file => {
       const ext = path.extname(file);
       const name = path.basename(file, ext);
-
       if (name === 'Log_Live_Monitor_Renderer') return;
 
       if (!protocolMap[name]) {
-        protocolMap[name] = { name: name, eseb: false, ehc: false, js: false, status: "ARMED" };
+        protocolMap[name] = { name: name, eseb: false, ehc: false, js: false };
       }
 
       if (ext === '.eseb') protocolMap[name].eseb = true;
@@ -49,23 +45,18 @@ class GroqLpuTacticalHudRenderer {
 
   async callGroqLpuAI(protocolList, logData) {
     if (!this.apiGroqToken) {
-      console.warn("[GROQ AI API] WARNING: API_GROQ_TOKEN is missing. Operating in Fallback Mode.");
-      return "⚠️ GROQ LPU REST ENGINE NOTICE: API_GROQ_TOKEN is missing in repository secrets. System operating on Local Fallback Heuristics.";
+      console.warn("[GROQ AI API] API_GROQ_TOKEN missing. Fallback Mode Active.");
+      return "⚠️ GROQ LPU REST ENGINE NOTICE: System operating on Local Fallback Heuristics (Zero Token).";
     }
 
-    console.log(`[GROQ LPU API] Connecting to api.groq.com using model ${this.modelName}...`);
-
-    const prompt = `You are the Tactical AI Engine for a 6th-Gen Fighter Jet Cockpit HUD controlling the EATHESEN V3000-Ω Master Ecosystem for ${this.brand}. 
-Analyze active protocol matrix (${JSON.stringify(protocolList)}) and F12 telemetry logs (${JSON.stringify(logData)}). 
-Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style status assessment. Keep it under 200 words. Zero fluff.`;
-
+    const prompt = `You are Tactical AI for 6th-Gen Cockpit HUD for ${this.brand}. Analyze protocols (${JSON.stringify(protocolList)}) and logs (${JSON.stringify(logData)}). Provide a tactical assessment under 150 words. Zero fluff.`;
     const payload = JSON.stringify({
       model: this.modelName,
       messages: [
-        {"role": "system", "content": "You are the Supreme Tactical AI Operating Core for DONABICO MEDIA SYSTEM. Deliver ultra-sharp, military-grade 6th-gen fighter HUD telemetry diagnostics."},
+        {"role": "system", "content": "You are Tactical AI Operating Core. Deliver sharp military-grade HUD diagnostics."},
         {"role": "user", "content": prompt}
       ],
-      max_tokens: 384,
+      max_tokens: 256,
       temperature: 0.2
     });
 
@@ -88,22 +79,12 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
           if (res.statusCode === 200) {
             try {
               const parsed = JSON.parse(data);
-              const content = parsed.choices[0].message.content;
-              console.log("[GROQ API] REAL LPU REST EXECUTION SUCCESSFUL ✅ (Status 200)");
-              resolve(content);
-            } catch(e) {
-              resolve("Error parsing Groq LPU response payload.");
-            }
-          } else {
-            resolve(`GROQ LPU API Status ${res.statusCode}: ${data}`);
-          }
+              resolve(parsed.choices[0].message.content);
+            } catch(e) { resolve("Error parsing Groq LPU response."); }
+          } else { resolve(`GROQ Status ${res.statusCode}: ${data}`); }
         });
       });
-
-      req.on('error', err => {
-        resolve(`Groq Network Error: ${err.message}`);
-      });
-
+      req.on('error', err => resolve(`Groq Network Error: ${err.message}`));
       req.write(payload);
       req.end();
     });
@@ -113,15 +94,12 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
     const timestamp = new Date().toISOString();
     const repoName = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
 
-    // FIX NGUYÊN NHÂN 2: SỬ DỤNG CHUẨN XUỐNG DÒNG '
-' ĐỂ HÀNG MARKDOWN KHÔNG BỊ DỒN
     let protocolRows = protocolList.map((p, index) => {
       const esebBadge = p.eseb ? '🟢 `.eseb`' : '🔴 N/A';
       const ehcBadge = p.ehc ? '🟢 `.ehc`' : '🔴 N/A';
       const jsBadge = p.js ? '🟢 `.js`' : '🔴 N/A';
       return `| \`0${index + 1}\` | **${p.name}** | ${esebBadge} | ${ehcBadge} | ${jsBadge} | 🟢 \`ARMED & ACTIVE\` |`;
-    }).join('
-');
+    }).join('\n');
 
     return `# 🛸 DONABICO MEDIA SYSTEM — 6TH-GEN TACTICAL FIGHTER COCKPIT HUD V3000-Ω
 
@@ -141,9 +119,7 @@ Provide a high-density, authoritative, tactical 6th-gen fighter cockpit style st
 | Flight Parameter | Quantum Telemetry Reading | Tactical Operational Standard |
 | :--- | :--- | :---: |
 | **System Identity** | \`${repoName}\` | 🟢 \`AUTO-6D RESOLVED\` |
-| **Heartbeat Frequency** | \`24 BPM (¢24 Anchor Lock)\` | ⚡ \`PERPETUAL RECURSION\` |
 | **Entropy Divergence** | \`δ = 0.00000000000000\` | 💎 \`SHANNON CRYSTAL ZERO\` |
-| **Security Architecture** | \`ZERO-TRUST CLIENT SIDE\` | 🛡️ \`NO PAT/TOKEN IN DOM\` |
 | **Groq LPU AI Engine** | \`llama-3.3-70b-versatile\` | 🤖 \`REST API STATUS 200\` |
 | **Last Cockpit Refresh** | \`${timestamp}\` | ⏱️ \`REAL-TIME AUTO-SYNC\` |
 
@@ -159,7 +135,7 @@ ${protocolRows}
 
 ### 🤖 III. GROQ LPU REAL AI REST DIAGNOSTIC & TACTICAL ANALYSIS
 
-> 📡 **REAL-TIME GROQ LPU AI ANALYSIS (\`llama-3.3-70b-versatile\`):**
+> 📡 **REAL-TIME GROQ LPU AI ANALYSIS (llama-3.3-70b-versatile):**
 > 
 > ${aiAnalysis}
 
@@ -171,7 +147,6 @@ ${protocolRows}
 {
   "hud_display": "DONABICO_6TH_GEN_FIGHTER_COCKPIT",
   "stamp": "V-STAMP-24",
-  "security_model": "ZERO_TRUST_CLIENT",
   "active_protocol_count": ${protocolList.length},
   "telemetry_stream": ${JSON.stringify(logData, null, 2)}
 }
@@ -193,7 +168,7 @@ ${protocolRows}
     const hudMarkdown = this.renderSciFiHudMarkdown(protocolList, aggregatedLogs, aiAnalysis);
 
     fs.writeFileSync(this.rootReadmePath, hudMarkdown, 'utf-8');
-    console.log(`[HUD RENDERER] Written Zero-Trust HUD to: ${this.rootReadmePath}`);
+    console.log(`[HUD RENDERER] Successfully written Zero-Trust HUD to: ${this.rootReadmePath}`);
   }
 }
 

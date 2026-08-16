@@ -5,32 +5,18 @@
  =============================================================================== */
 (function() {
   'use strict';
-
   const getContext = () => {
     const host = window.location.hostname || '8000kicks.donabico.com';
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    return {
-      domain: host,
-      owner: 'donabico-media-system',
-      repo: repoName,
-      stamp: 'V-STAMP-24',
-      anchor: '¢24'
-    };
+    return { domain: host, owner: 'donabico-media-system', repo: repoName, stamp: 'V-STAMP-24', anchor: '¢24' };
   };
-
   const env = getContext();
   let pulseCounter = 0;
-
-  // F12 Biological Pulse Logger (Phát sóng trực diện lên DevTools Console)
   const emitTelemetryPulse = () => {
     pulseCounter++;
-    console.log(
-      `%c[LOG LIVE MONITOR #${pulseCounter}] 🧬 TELEMETRY TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`,
-      'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
-    );
+    console.log(`%c[LOG LIVE MONITOR #${pulseCounter}] 🧬 TELEMETRY TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
   };
-
   console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] 🚀 LOG LIVE MONITOR ARMED | REPO: " + env.repo, "color: #ff0055; font-weight: bold; font-size: 12px; background: #220011; padding: 4px;");
   emitTelemetryPulse();
   setInterval(emitTelemetryPulse, 2500);
