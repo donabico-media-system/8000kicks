@@ -9,9 +9,9 @@ STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL | ZERO ENTROPY EXECUTION
 
 TARGET MARKETS: USA, CANADA, UNITED KINGDOM, EU, AUSTRALIA, NEW ZEALAND & GLOBAL
 CAPABILITIES:
-  1. REST API MULTI-CONNECTOR TO 08 CLOUDFLARE AI MODELS
-  2. DYNAMIC TELEMETRY (.ehc) WITH DATA-MODULE BINDING & SERVERLESS RUNNER (.js)
-  3. REAL TIME GPU INFERENCE ON CLOUDFLARE EDGE (ENTROPY = 0)
+  1. FIX STATUS 410 (DEPRECATED MODEL UPGRADE TO LLAMA 3.1)
+  2. FIX STATUS 400 (DUAL PAYLOAD ADAPTER FOR MESSAGES & PROMPT SCHEMAS)
+  3. AUTOMATICALLY COMPILE IDENTICAL ASSETS (Cf_Workers_Ai.ehc & Cf_Workers_Ai.js)
 =============================================================================
 """
 
@@ -34,7 +34,6 @@ class CfWorkersAiEngine:
    MODULE: Protocols/{self.module_name}.ehc
    STAMP: {self.stamp} | DONABICO GLOBAL MEDIA SYSTEM
    STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL (DATA-MODULE BINDING)
-   TARGET: USA | CANADA | UK | EU | AUSTRALIA | NEW ZEALAND | GLOBAL
    ========================================================================== */
 (function() {{
   'use strict';
@@ -61,14 +60,14 @@ class WorkersAiRunner {{
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Matrix 08 AI Models Tối Ưu Thị Trường Global Affiliate
+    // Matrix 08 AI Models Chuẩn Hóa API Cloudflare Edge GPU 2026
     this.models = {{
-      gemini_flash: "google/gemini-3.7-flash",
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      grok_imagine: "xai/grok-imagine-image-2.0",
-      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.2",
-      llama_8b: "@cf/meta/llama-3-8b-instruct",
+      llama_8b: "@cf/meta/llama-3.1-8b-instruct",
       qwen_14b: "@cf/qwen/qwen1.5-14b-chat-awq",
+      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.2",
+      deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+      gemma_7b: "@cf/google/gemma-7b-it-lora",
       bge_embedding: "@cf/baai/bge-large-en-v1.5",
       whisper_audio: "@cf/openai/whisper"
     }};
@@ -80,11 +79,13 @@ class WorkersAiRunner {{
       return false;
     }}
 
+    // Payload Kép (Dual Payload) Tương Thích Tất Cả Model Cloudflare
     const payload = JSON.stringify({{
+      prompt: promptText,
       messages: [
         {{ 
           role: "system", 
-          content: "You are Cloudflare Global Affiliate AI Engine for DONABICO GLOBAL MEDIA SYSTEM. Markets: USA, Canada, UK, EU, AU, NZ, Global. Zero Entropy compliance." 
+          content: "You are Cloudflare Global Affiliate AI Engine for DONABICO GLOBAL MEDIA SYSTEM. Markets: USA, Canada, UK, EU, AU, NZ, Global." 
         }},
         {{ role: "user", content: promptText }}
       ]
@@ -114,7 +115,7 @@ class WorkersAiRunner {{
               console.log(`[ESEB 08-AI SUCCESS] Node: [${{modelKey}}] | Model: ${{modelId}} | Status 200 OK`);
               resolve(true);
             }} else {{
-              console.log(`[ESEB 08-AI ERROR] Node: [${{modelKey}}] | Status: ${{res.statusCode}}`);
+              console.log(`[ESEB 08-AI ERROR] Node: [${{modelKey}}] | Status: ${{res.statusCode}} | Msg: ${{JSON.stringify(parsed.errors || [])}}`);
               resolve(false);
             }}
           }} catch(e) {{
@@ -136,12 +137,12 @@ class WorkersAiRunner {{
     console.log(`Stamp: ${{this.stamp}} | DONABICO GLOBAL MEDIA SYSTEM`);
     console.log(`=================================================================`);
 
-    await this.runAiInference("GEMINI_FLASH", this.models.gemini_flash, "Generate US/EU GEO-SEO RAG Schema & High-Converting Affiliate Metadata");
     await this.runAiInference("LLAMA_70B", this.models.llama_70b, "Create High-Intent Native English Product Reviews for US, UK, CA, AU, NZ Market");
-    await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for EU & Global Search Engines");
-    await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference");
+    await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference for US/EU Traffic");
+    await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization");
+    await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for EU Search Engines");
 
-    console.log(`[ESEB 08-AI MATRIX] All Nodes Executed with Zero Entropy.`);
+    console.log(`[ESEB 08-AI MATRIX] All Active Nodes Executed with Zero Entropy.`);
     process.exit(0);
   }}
 }}
