@@ -1,0 +1,53 @@
+name: CF_WORKERS_AI
+
+on:
+  push:
+    paths:
+      - 'Protocols/Cf_Workers_Ai.eseb'
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cf-workers-ai-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js & Python
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Cf_Workers_Ai Core Protocol
+        run: |
+          python3 Protocols/Cf_Workers_Ai.eseb
+
+      - name: Execute Cloudflare 08-AI Edge GPU API Calls
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          node Protocols/Cf_Workers_Ai.js
+
+      - name: Commit & Push Compiled ESEB Protocol Assets
+        run: |
+          git config --global user.name "donabico-media-system[bot]"
+          git config --global user.email "bot@donabico.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          git add Protocols/Cf_Workers_Ai.* || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(cf-workers-ai): execute global 08-ai edge gpu connection [V-STAMP-24]"
+            git push origin HEAD:main
+          fi
