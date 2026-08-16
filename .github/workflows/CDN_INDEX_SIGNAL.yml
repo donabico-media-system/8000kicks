@@ -17,17 +17,17 @@ jobs:
       - name: Checkout Repository Matrix
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0[span_1](start_span)[span_1](end_span)
+          fetch-depth: 0
 
       - name: Set up Python Environment Core
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12[span_2](start_span)'[span_2](end_span)
+          python-version: '3.12'
 
       - name: Set up Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20[span_3](start_span)'[span_3](end_span)
+          node-version: '20'
 
       - name: Execute ESEB SOTA 2026 08-AI Matrix Compilation & Execution
         env:
@@ -57,4 +57,4 @@ jobs:
             git push origin HEAD:main || git push origin HEAD:master
           else
             echo "No changes detected. Skipping commit."
-          ]
+          fi
