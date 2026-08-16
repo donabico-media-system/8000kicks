@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: EXACT SMART PAYLOAD & AGENTIC SWARM EXECUTOR
+ ESEB PROTOCOL SOTA 2026: PERFECT PAYLOAD & AGENTIC SWARM EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | SOTA 2026 + DUAL-TOKEN MODE | DONABICO MEDIA SYSTEM
  OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
@@ -94,12 +94,12 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     const promptText = `Execute SOTA 2026 Agentic Swarm synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
     let payloadObj = {};
 
-    // ĐỊNH DẠNG PAYLOAD CHÍNH XÁC THEO TỪNG NHÓM MODEL TRÊN CLOUDFLARE
+    // PERFECT PAYLOAD ROUTER: Chuẩn hóa theo đặc tả riêng của từng model Cloudflare
     if (nodeConfig.model.includes('bge')) {
       payloadObj = { text: [promptText] };
     } else if (nodeConfig.model.includes('qwen') || nodeConfig.model.includes('mistral') || nodeConfig.model.includes('gemma')) {
-      // Các model qwen1.5, mistral-7b cũ yêu cầu truyền trực tiếp chuỗi 'prompt' thay vì mảng 'messages'
-      payloadObj = { prompt: promptText, max_tokens: 256 };
+      // Các model qwen1.5, mistral-7b, gemma-7b nhận chuẩn trường prompt thuần túy không kèm max_tokens
+      payloadObj = { prompt: promptText };
     } else if (nodeConfig.model.includes('chat') || nodeConfig.model.includes('instruct') || nodeConfig.model.includes('deepseek')) {
       payloadObj = {
         messages: [
@@ -178,14 +178,14 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SOTA 2026 RUNNER] Executing Exact Payload & Agentic Swarm for: ${targetDomain}`);
+    console.log(`[SOTA 2026 RUNNER] Executing Perfect Payload & Agentic Swarm for: ${targetDomain}`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
     // 1. Sinh tệp khai báo AI Search Bots (Llms-Full.txt & Agent.json)
     this.generateAiSearchManifests(targetDomain);
 
-    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA với Exact Payload Router
+    // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA với Perfect Payload Router
     console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 AI Edge Nodes...`);
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
