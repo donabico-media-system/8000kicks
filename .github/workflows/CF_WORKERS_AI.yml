@@ -5,7 +5,7 @@ on:
     paths:
       - 'Protocols/Cf_Workers_Ai.eseb'
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */4 * * *'
   workflow_dispatch:
 
 permissions:
@@ -48,7 +48,7 @@ jobs:
           git add Protocols/Cf_Workers_Ai.* || true
           
           if ! git diff --cached --quiet; then
-            git commit -m "chore(cf-workers-ai): execute global 08-ai edge gpu connection [V-STAMP-24]"
+            git commit -m "chore(cf-workers-ai): execute 4h cycle 08-ai edge gpu matrix [V-STAMP-24]"
             git pull origin main --rebase
             git push origin HEAD:main
           fi
