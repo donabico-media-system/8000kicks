@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ESEB SERVERLESS RUNNER (WORKERS FULL 08-AI MATRIX CONNECTOR - SOTA 2026)
+   ESEB SERVERLESS RUNNER (WORKERS 08-AI PERFECT MATRIX - SOTA 2026)
    MODULE: Protocols/Cf_Workers_Ai.js
    STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
    STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL
@@ -12,16 +12,16 @@ class WorkersAiRunner {
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Trọn bộ 08 Mô hình AI tối ưu cho Hệ sinh thái EATHESEN Global
+    // Trọn bộ 08 Mô hình AI chuẩn hóa REST API Cloudflare Workers AI 2026
     this.models = {
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       llama_8b: "@cf/meta/llama-3.1-8b-instruct",
       deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
       mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1",
-      qwen_14b: "@cf/qwen/qwen1.5-14b-chat-awq",
+      qwen_2_5: "@cf/qwen/qwen2.5-7b-instruct",
       gemma_7b: "@cf/google/gemma-7b-it-lora",
       bge_embedding: "@cf/baai/bge-large-en-v1.5",
-      grok_imagine: "xai/grok-imagine-image-2.0"
+      sdxl_image: "@cf/bytedance/stable-diffusion-xl-lightning"
     };
   }
 
@@ -93,15 +93,15 @@ class WorkersAiRunner {
     console.log(`Stamp: ${this.stamp} | DONABICO GLOBAL MEDIA SYSTEM`);
     console.log(`=================================================================`);
 
-    // Thực thi đủ 08 Node AI với định dạng Payload tương thích
+    // Thực thi đủ 08 Node AI hoàn hảo
     await this.runAiInference("LLAMA_70B", this.models.llama_70b, "Create High-Intent Native English Reviews", "chat");
     await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference", "chat");
     await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization", "chat");
     await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for Search Engines", "chat");
-    await this.runAiInference("QWEN_14B", this.models.qwen_14b, "Optimize Multilingual Geo Target Content", "chat");
+    await this.runAiInference("QWEN_2_5", this.models.qwen_2_5, "Optimize Multilingual Geo Target Content", "chat");
     await this.runAiInference("GEMMA_7B", this.models.gemma_7b, "Execute Auxiliary Context Enrichment", "chat");
     await this.runAiInference("BGE_EMBEDDING", this.models.bge_embedding, "EATHESEN RAG Knowledge Vectorization", "embedding");
-    await this.runAiInference("GROK_IMAGINE", this.models.grok_imagine, "Professional Affiliate Shoe Product Banner", "image");
+    await this.runAiInference("SDXL_IMAGE", this.models.sdxl_image, "Professional Affiliate Shoe Product Banner", "image");
 
     console.log(`[ESEB 08-AI MATRIX] All 08 Active Nodes Executed with Zero Entropy.`);
     process.exit(0);
