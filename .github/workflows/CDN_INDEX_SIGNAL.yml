@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  eseb-dynamic-compilation:
+  eseb-sota-compilation:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,24 +29,30 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Execute ESEB Dual-Token Compilation & Execution
+      - name: Execute ESEB SOTA 2026 Compilation & Execution
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          echo "=== STARTING ESEB DUAL-TOKEN COMPILATION ==="
-          python Protocols/Cdn_Index_Signal.eseb
-          echo "=== EXECUTING SERVERLESS AI REST API ==="
+          echo "=== STARTING ESEB SOTA 2026 COMPILATION ==="
+          python3 Protocols/Cdn_Index_Signal.eseb
+          echo "=== EXECUTING SERVERLESS SOTA AI REST API ==="
           node Protocols/Cdn_Index_Signal.js
-          echo "=== DUAL-TOKEN EXECUTION COMPLETE: ENTROPY = 0 ==="
+          echo "=== SOTA EXECUTION COMPLETE: ENTROPY = 0 ==="
 
       - name: Commit and Push Living Entity Artifacts
         run: |
           git config --global user.name "Donabico-Action-Bot"
           git config --global user.email "bot@donabico.global"
-          git add Protocols/
+          
+          git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          git add Protocols/ llms-full.txt agent.json
+          
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "Auto-sync Cdn_Index_Signal Dual-Token Entities [V-STAMP-24]"
+            git commit -m "Auto-sync Cdn_Index_Signal SOTA 2026 Agentic Swarm & Manifests [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
