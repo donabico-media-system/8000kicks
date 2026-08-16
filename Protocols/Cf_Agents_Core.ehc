@@ -1,0 +1,14 @@
+/* ==========================================================================
+   ESEB CLIENT SHIELD (AGENTS CORE TELEMETRY BEACON - SOTA 2026)
+   MODULE: Protocols/Cf_Agents_Core.ehc
+   STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
+   STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL (DATA-MODULE BINDING)
+   ========================================================================== */
+(function() {
+  'use strict';
+  const bridgeScript = document.getElementById('Cf_Agents_Core-Bridge') || 
+                       document.querySelector('script[data-module="Cf_Agents_Core"]');
+  const activeModule = bridgeScript ? bridgeScript.getAttribute('data-module') : 'Cf_Agents_Core';
+  
+  console.log(`%c[ESEB TELEMETRY: ${activeModule}] 🤖 Multi-Task Workflow Engine (Make/Latenode Active) | V-STAMP-24`, 'color: #ff0055; font-weight: bold; background: #22000a; padding: 4px;');
+})();
