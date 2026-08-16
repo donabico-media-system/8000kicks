@@ -1,6 +1,6 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: STABLE 8/8 200-OK EXECUTOR
+ ESEB PROTOCOL SOTA 2026: SERVERLESS RUNNER & SMART PAYLOAD EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | SOTA 2026 + DUAL-TOKEN MODE | DONABICO MEDIA SYSTEM
  OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
@@ -23,7 +23,7 @@ class ServerlessSotaExecutionRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // Ma trận 08 AI Edge Nodes SOTA ổn định tuyệt đối trên Cloudflare Workers AI
+    // Ma trận 08 AI Edge Nodes SOTA 2026 chuẩn xác tuyệt đối trên Cloudflare Workers AI
     this.cloudflareAiNodes = [
       { id: "n1_llama8b", model: "@cf/meta/llama-3.1-8b-instruct", task: "High-Intent Affiliate Review Generation" },
       { id: "n2_deepseek", model: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", task: "Agentic Logic Reasoning & GEO-SEO" },
@@ -94,9 +94,10 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     const promptText = `Execute SOTA 2026 Agentic Swarm synchronization for node ${nodeConfig.id} on domain: ${domainTarget}. Task: ${nodeConfig.task}.`;
     let payloadObj = {};
 
+    // SMART PAYLOAD ROUTER: Định dạng chuẩn xác theo từng loại mô hình Cloudflare
     if (nodeConfig.model.includes('bge')) {
       payloadObj = { text: [promptText] };
-    } else if (nodeConfig.model.includes('stable-diffusion')) {
+    } else if (nodeConfig.model.includes('stable-diffusion') || nodeConfig.model.includes('gemma')) {
       payloadObj = { prompt: promptText };
     } else {
       payloadObj = {
@@ -174,7 +175,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SOTA 2026 RUNNER] Executing Stable 8/8 Swarm for: ${targetDomain}`);
+    console.log(`[SOTA 2026 RUNNER] Executing Complete 8/8 Swarm for: ${targetDomain}`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Anchor: ${this.anchor}`);
     console.log(`=================================================================`);
 
@@ -182,11 +183,11 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     this.generateAiSearchManifests(targetDomain);
 
     // 2. Kích hoạt song song Ma trận 08 AI Edge Nodes SOTA
-    console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 Stable AI Edge Nodes...`);
+    console.log(`[CLOUDFLARE WORKERS AI SOTA] Dispatching 08 AI Edge Nodes...`);
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
-    // 3. Đẩy tín hiệu IndexNow tức thời
+    // 3. Đẩy tín hiệu IndexNow tức thời bao gồm cả 2 tệp Manifest
     await this.broadcastIndexNow(targetDomain, [
       `https://${targetDomain}/`,
       `https://${targetDomain}/Llms-Full.txt`,
