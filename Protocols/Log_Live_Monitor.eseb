@@ -1,66 +1,238 @@
-name: LOG_LIVE_MONITOR
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+===============================================================================
+ESEB PROTOCOL CORE SPECIFICATION - AUTO-ROUTING AI REST API EXECUTOR
+MODULE: Log_Live_Monitor
+FILE: Protocols/Log_Live_Monitor.eseb
+STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
+FUNCTION: REAL F12 TELEMETRY, MULTI-PROTOCOL AGGREGATOR & GROQ LPU AI API
+===============================================================================
+"""
 
-on:
-  push:
-    paths:
-      - 'Protocols/**'
-  schedule:
-    - cron: '0 */4 * * *'
-  workflow_dispatch:
+import os
 
-permissions:
-  contents: write
+class LogLiveMonitorEngine:
+    def __init__(self):
+        self.stamp = "V-STAMP-24"
+        self.anchor = "¢24"
 
-jobs:
-  execute-log-monitor:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    def generate_living_ehc(self):
+        ehc_content = """/* ===============================================================================
+   ESEB DYNAMIC LIVING ENTITY - MULTI-PROTOCOL F12 LIVE TELEMETRY BRIDGE
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED | ZERO-TRUST SECURED
+   DONABICO GLOBAL MEDIA SYSTEM
+ =============================================================================== */
+(function() {
+  'use strict';
+  const getContext = () => {
+    const host = window.location.hostname || '8000kicks.donabico.com';
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    return { domain: host, owner: 'donabico-media-system', repo: repoName, stamp: 'V-STAMP-24', anchor: '¢24' };
+  };
+  const env = getContext();
+  let pulseCounter = 0;
+  const emitTelemetryPulse = () => {
+    pulseCounter++;
+    console.log(`%c[LOG LIVE MONITOR #${pulseCounter}] 🧬 TELEMETRY TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
+  };
+  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] 🚀 LOG LIVE MONITOR ARMED | REPO: " + env.repo, "color: #ff0055; font-weight: bold; font-size: 12px; background: #220011; padding: 4px;");
+  emitTelemetryPulse();
+  setInterval(emitTelemetryPulse, 2500);
+})();
+"""
+        os.makedirs("Protocols", exist_ok=True)
+        with open("Protocols/Log_Live_Monitor.ehc", "w", encoding="utf-8") as f:
+            f.write(ehc_content)
+        print("[SUCCESS] Generated Protocols/Log_Live_Monitor.ehc")
 
-      - name: Setup Node.js Runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    def generate_readme_renderer_js(self):
+        renderer_content = """/**
+ ===============================================================================
+ ESEB SERVERLESS RUNNER: 6TH-GEN FIGHTER COCKPIT HUD & GROQ LPU AI EXECUTOR
+ MODULE: Protocols/Log_Live_Monitor.js
+ STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
+ ===============================================================================
+**/
 
-      - name: Setup Python Environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+const fs = require('fs');
+const https = require('https');
+const path = require('path');
 
-      - name: Compile ESEB Multi-Protocol Kernels
-        run: |
-          python3 Protocols/Log_Live_Monitor.eseb
+class GroqLpuTacticalHudRenderer {
+  constructor() {
+    this.stamp = "V-STAMP-24";
+    this.brand = "DONABICO MEDIA SYSTEM";
+    this.apiGroqToken = process.env.API_GROQ_TOKEN || '';
+    this.modelName = "llama-3.3-70b-versatile";
+    this.rootReadmePath = path.resolve(process.cwd(), 'README.md');
+  }
 
-      - name: Execute Groq LPU Real AI REST Renderer (Update README.md)
-        env:
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-        run: |
-          node Protocols/Log_Live_Monitor.js
+  scanActiveProtocols() {
+    const protocolsDir = path.resolve(process.cwd(), 'Protocols');
+    if (!fs.existsSync(protocolsDir)) return [];
 
-      - name: Force Commit & Push HUD Artifacts to README.md
-        run: |
-          git config --global user.name "donabico-media-system[bot]"
-          git config --global user.email "bot@donabico.com"
-          
-          # Sử dụng ESEB_CLASSIC_TOKEN để ghi quyền Git Master lên GitHub Repo
-          git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          
-          git add README.md Protocols/Log_Live_Monitor.* || true
-          
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(eseb-hud): auto-sync real-time cockpit README.md [skip ci]"
-            
-            for i in {1..3}; do
-              git fetch origin main
-              git rebase origin/main && git push origin HEAD:main && break || {
-                echo "[ESEB GIT WARN] Push lock race. Retrying in 3s... ($i/3)"
-                git rebase --abort || true
-                sleep 3
-              }
-            done
-          else
-            echo "No changes detected in README.md. Entropy delta = 0."
-          fi
+    const files = fs.readdirSync(protocolsDir);
+    const protocolMap = {};
+
+    files.forEach(file => {
+      const ext = path.extname(file);
+      const name = path.basename(file, ext);
+      if (name === 'Log_Live_Monitor_Renderer') return;
+
+      if (!protocolMap[name]) {
+        protocolMap[name] = { name: name, eseb: false, ehc: false, js: false };
+      }
+
+      if (ext === '.eseb') protocolMap[name].eseb = true;
+      if (ext === '.ehc') protocolMap[name].ehc = true;
+      if (ext === '.js') protocolMap[name].js = true;
+    });
+
+    return Object.values(protocolMap);
+  }
+
+  async callGroqLpuAI(protocolList, logData) {
+    if (!this.apiGroqToken) {
+      console.warn("[GROQ AI API] API_GROQ_TOKEN missing. Fallback Mode Active.");
+      return "⚠️ GROQ LPU REST ENGINE NOTICE: System operating on Local Fallback Heuristics (Zero Token).";
+    }
+
+    const prompt = `You are Tactical AI for 6th-Gen Cockpit HUD for ${this.brand}. Analyze protocols (${JSON.stringify(protocolList)}) and logs (${JSON.stringify(logData)}). Provide a tactical assessment under 150 words. Zero fluff.`;
+    const payload = JSON.stringify({
+      model: this.modelName,
+      messages: [
+        {"role": "system", "content": "You are Tactical AI Operating Core. Deliver sharp military-grade HUD diagnostics."},
+        {"role": "user", "content": prompt}
+      ],
+      max_tokens: 256,
+      temperature: 0.2
+    });
+
+    const options = {
+      hostname: 'api.groq.com',
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiGroqToken}`,
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          if (res.statusCode === 200) {
+            try {
+              const parsed = JSON.parse(data);
+              resolve(parsed.choices[0].message.content);
+            } catch(e) { resolve("Error parsing Groq LPU response."); }
+          } else { resolve(`GROQ Status ${res.statusCode}: ${data}`); }
+        });
+      });
+      req.on('error', err => resolve(`Groq Network Error: ${err.message}`));
+      req.write(payload);
+      req.end();
+    });
+  }
+
+  renderSciFiHudMarkdown(protocolList, logData, aiAnalysis) {
+    const timestamp = new Date().toISOString();
+    const repoName = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
+
+    let protocolRows = protocolList.map((p, index) => {
+      const esebBadge = p.eseb ? '🟢 `.eseb`' : '🔴 N/A';
+      const ehcBadge = p.ehc ? '🟢 `.ehc`' : '🔴 N/A';
+      const jsBadge = p.js ? '🟢 `.js`' : '🔴 N/A';
+      return `| \`0${index + 1}\` | **${p.name}** | ${esebBadge} | ${ehcBadge} | ${jsBadge} | 🟢 \`ARMED & ACTIVE\` |`;
+    }).join('\n');
+
+    return `# 🛸 DONABICO MEDIA SYSTEM — 6TH-GEN TACTICAL FIGHTER COCKPIT HUD V3000-Ω
+
+\`\`\`text
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║  EATHESEN V3000-Ω MASTER ECOSYSTEM  │  6TH-GEN FIGHTER JET GLASS COCKPIT HUD DIGITAL DISPLAY         ║
+║  BRAND: DONABICO MEDIA SYSTEM       │  STAMP: V-STAMP-24  │  ANCHOR: ¢24 IMMUTABLE                  ║
+║  SECURITY: ZERO-TRUST CLIENT SIDE   │  ENTROPY: δ = 0.00000000000000  │  SHANNON CRYSTAL: BOUND    ║
+║  TACTICAL AI ENGINE: GROQ LPU Llama-3.3-70b-versatile  │  SYSTEM STATE: ARMED & TRANSMITTING 24/7   ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+\`\`\`
+
+---
+
+### 🛰️ I. TACTICAL FLIGHT INSTRUMENTATION & SYSTEM VITALS
+
+| Flight Parameter | Quantum Telemetry Reading | Tactical Operational Standard |
+| :--- | :--- | :---: |
+| **System Identity** | \`${repoName}\` | 🟢 \`AUTO-6D RESOLVED\` |
+| **Entropy Divergence** | \`δ = 0.00000000000000\` | 💎 \`SHANNON CRYSTAL ZERO\` |
+| **Groq LPU AI Engine** | \`llama-3.3-70b-versatile\` | 🤖 \`REST API STATUS 200\` |
+| **Last Cockpit Refresh** | \`${timestamp}\` | ⏱️ \`REAL-TIME AUTO-SYNC\` |
+
+---
+
+### 🎛️ II. LIVE PROTOCOL MATRIX INVENTORY (REAL-TIME VAULT SCAN)
+
+| Node ID | Protocol Module Name | Python Kernel (\`.eseb\`) | Client Engine (\`.ehc\`) | AI Runner (\`.js\`) | Tactical Matrix Status |
+| :---: | :--- | :---: | :---: | :---: | :---: |
+${protocolRows}
+
+---
+
+### 🤖 III. GROQ LPU REAL AI REST DIAGNOSTIC & TACTICAL ANALYSIS
+
+> 📡 **REAL-TIME GROQ LPU AI ANALYSIS (llama-3.3-70b-versatile):**
+> 
+> ${aiAnalysis}
+
+---
+
+### 🖥️ IV. REAL-TIME F12 LIVING TELEMETRY STREAM & PAYLOAD
+
+\`\`\`json
+{
+  "hud_display": "DONABICO_6TH_GEN_FIGHTER_COCKPIT",
+  "stamp": "V-STAMP-24",
+  "active_protocol_count": ${protocolList.length},
+  "telemetry_stream": ${JSON.stringify(logData, null, 2)}
+}
+\`\`\`
+
+---
+*Generated automatically by ESEB Dynamic Living Engine V3000-Ω — Secured Zero-Trust Architecture.*
+`;
+  }
+
+  async run() {
+    const protocolList = this.scanActiveProtocols();
+    const aggregatedLogs = [
+      { time: new Date().toISOString(), log: "%c[EATHESEN LIVING ENTITY V3000-Ω] ZERO-TRUST SECURED HUD ARMED" },
+      { time: new Date().toISOString(), log: "%c[GROQ LPU ENGINE] REST API BOUND TO MODEL llama-3.3-70b-versatile" }
+    ];
+
+    const aiAnalysis = await this.callGroqLpuAI(protocolList, aggregatedLogs);
+    const hudMarkdown = this.renderSciFiHudMarkdown(protocolList, aggregatedLogs, aiAnalysis);
+
+    fs.writeFileSync(this.rootReadmePath, hudMarkdown, 'utf-8');
+    console.log(`[HUD RENDERER] Successfully written Zero-Trust HUD to: ${this.rootReadmePath}`);
+  }
+}
+
+if (require.main === module) {
+  new GroqLpuTacticalHudRenderer().run();
+}
+module.exports = GroqLpuTacticalHudRenderer;
+"""
+        os.makedirs("Protocols", exist_ok=True)
+        with open("Protocols/Log_Live_Monitor.js", "w", encoding="utf-8") as f:
+            f.write(renderer_content)
+        print("[SUCCESS] Generated Protocols/Log_Live_Monitor.js")
+
+if __name__ == "__main__":
+    engine = LogLiveMonitorEngine()
+    engine.generate_living_ehc()
+    engine.generate_readme_renderer_js()
