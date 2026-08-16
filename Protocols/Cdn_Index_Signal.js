@@ -1,16 +1,16 @@
 /**
  ===============================================================================
- ESEB PROTOCOL SOTA 2026: DUAL-TOKEN & 08-AI MATRIX SERVERLESS EXECUTOR
+ ESEB PROTOCOL SOTA 2026: DUAL-TOKEN & STABLE INDEXNOW SERVERLESS EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | DUAL-TOKEN 04THU MODE | DONABICO MEDIA SYSTEM
- OMNI CNAME AUTO-DISCOVERY & 10S PROPAGATION DELAY ENFORCED
+ OMNI CNAME AUTO-DISCOVERY & STABLE API BROADCAST ENFORCED
  ===============================================================================
 **/
 
 const https = require('https');
 const fs = require('fs');
 
-class ServerlessDualToken08AiMatrixRunner {
+class ServerlessStableIndexNowRunner {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO MEDIA SYSTEM";
@@ -51,7 +51,6 @@ class ServerlessDualToken08AiMatrixRunner {
   }
 
   generateAiSearchManifests(domain) {
-    const indexNowKey = "24242424242424242424242424242424";
     const llmsFullContent = `# Llms-Full.txt Manifest SOTA 2026
 # Brand: DONABICO MEDIA SYSTEM
 # Domain: https://${domain}
@@ -79,8 +78,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     try {
       fs.writeFileSync('Llms-Full.txt', llmsFullContent, 'utf8');
       fs.writeFileSync('Agent.json', agentJsonContent, 'utf8');
-      fs.writeFileSync(`${indexNowKey}.txt`, indexNowKey, 'utf8');
-      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt, Agent.json and IndexNow key.`);
+      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt and Agent.json.`);
     } catch (err) {
       console.warn(`[AI MANIFESTS WARNING] Failed to write manifests: ${err.message}`);
     }
@@ -208,7 +206,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
 
     return new Promise((resolve) => {
       const req = https.request(options, (res) => {
-        console.log(`[INDEXNOW BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
+        console.log(`[INDEXNOW STABLE BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
         resolve({ success: res.statusCode === 200 || res.statusCode === 202 });
       });
       req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
@@ -231,7 +229,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
       console.log(`[ESEB CLASSIC AUTH] Warning: ESEB_CLASSIC_TOKEN is empty.`);
     }
 
-    // 1. Sinh tệp Manifests & Khóa IndexNow
+    // 1. Sinh tệp Manifests ổn định
     this.generateAiSearchManifests(targetDomain);
 
     // 2. Kích hoạt Groq LPU API
@@ -241,11 +239,7 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
-    // 4. CHÈN ĐỘ TRỄ 10 GIÂY ĐỂ CHỜ GITHUB PAGES ĐỒNG BỘ TỆP KHÓA XÁC THỰC RA INTERNET
-    console.log(`[INDEXNOW SYNC] Awaiting 10s propagation delay for verification key...`);
-    await new Promise(resolve => setTimeout(resolve, 10000));
-
-    // 5. Đẩy tín hiệu IndexNow
+    // 4. Phát sóng IndexNow trực tiếp (sử dụng tệp khóa tĩnh đã cấu hình sẵn trên hosting)
     const indexNowKey = "24242424242424242424242424242424";
     await this.broadcastIndexNow(targetDomain, [
       `https://${targetDomain}/`,
@@ -260,8 +254,8 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
 }
 
 if (require.main === module) {
-  const runner = new ServerlessDualToken08AiMatrixRunner();
+  const runner = new ServerlessStableIndexNowRunner();
   runner.runRealExecution();
 }
 
-module.exports = ServerlessDualToken08AiMatrixRunner;
+module.exports = ServerlessStableIndexNowRunner;
