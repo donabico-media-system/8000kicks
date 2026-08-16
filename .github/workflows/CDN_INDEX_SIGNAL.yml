@@ -17,19 +17,19 @@ jobs:
       - name: Checkout Repository Matrix
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0[span_1](start_span)[span_1](end_span)
 
       - name: Set up Python Environment Core
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12[span_2](start_span)'[span_2](end_span)
 
       - name: Set up Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20[span_3](start_span)'[span_3](end_span)
 
-      - name: Execute ESEB SOTA 2026 Compilation & Execution
+      - name: Execute ESEB SOTA 2026 08-AI Matrix Compilation & Execution
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
@@ -38,9 +38,9 @@ jobs:
         run: |
           echo "=== STARTING ESEB SOTA 2026 COMPILATION ==="
           python3 Protocols/Cdn_Index_Signal.eseb
-          echo "=== EXECUTING SERVERLESS SOTA AI REST API ==="
+          echo "=== EXECUTING SERVERLESS 08-AI GPU MATRIX REST API ==="
           node Protocols/Cdn_Index_Signal.js
-          echo "=== SOTA EXECUTION COMPLETE: ENTROPY = 0 ==="
+          echo "=== SOTA 08-AI EXECUTION COMPLETE: ENTROPY = 0 ==="
 
       - name: Commit and Push Living Entity Artifacts
         run: |
@@ -49,12 +49,12 @@ jobs:
           
           git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          git add Protocols/ Llms-Full.txt Agent.json
+          git add Protocols/ Llms-Full.txt Agent.json *.txt
           
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "Auto-sync Cdn_Index_Signal SOTA 2026 Agentic Swarm & Manifests [V-STAMP-24]"
+            git commit -m "Auto-sync Cdn_Index_Signal SOTA 2026 08-AI Matrix & IndexNow Key [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
             echo "No changes detected. Skipping commit."
-          fi
+          ]
