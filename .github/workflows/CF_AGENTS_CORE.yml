@@ -5,11 +5,15 @@ on:
     paths:
       - 'Protocols/Cf_Agents_Core.eseb'
   schedule:
-    - cron: '8 */4 * * *'  # Chạy tự động 04 tiếng 1 lần (Lệch pha 8 phút so với các Protocol khác)
+    - cron: '8 */4 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: git-push-sync
+  cancel-in-progress: false
 
 jobs:
   cf-agents-core-execution:
@@ -17,6 +21,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js & Python
         uses: actions/setup-node@v4
@@ -40,18 +46,25 @@ jobs:
         run: |
           node Protocols/Cf_Agents_Core.js
 
-      - name: Step 3 - Commit & Push Compiled ESEB Protocol Assets
+      - name: Step 3 - Commit & Push Compiled ESEB Protocol Assets (With Lock-Retry)
         run: |
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           
-          # Sử dụng ESEB_CLASSIC_TOKEN để ủy quyền Git Master
           git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
           git add Protocols/Cf_Agents_Core.* || true
           
           if ! git diff --cached --quiet; then
             git commit -m "chore(cf-agents-core): execute 4h DAG workflow engine [V-STAMP-24]"
-            git pull origin main --rebase
-            git push origin HEAD:main
+            
+            # Vòng lặp Retry 3 lần tránh xung đột lock ref giữa các Workflow
+            for i in {1..3}; do
+              git fetch origin main
+              git rebase origin/main && git push origin HEAD:main && break || {
+                echo "[ESEB GIT WARN] Push failed due to lock race. Retrying in 3s... ($i/3)"
+                git rebase --abort || true
+                sleep 3
+              }
+            done
           fi
