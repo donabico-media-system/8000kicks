@@ -45,7 +45,6 @@ jobs:
           git config --global user.name "donabico-media-system[bot]"
           git config --global user.email "bot@donabico.com"
           
-          # Sử dụng ESEB_CLASSIC_TOKEN để ghi quyền Git Master lên GitHub Repo
           git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
           git add README.md Protocols/Log_Live_Monitor.* || true
