@@ -48,7 +48,8 @@ class LogLiveMonitorEngine:
         print("[SUCCESS] Generated Protocols/Log_Live_Monitor.ehc")
 
     def generate_readme_renderer_js(self):
-        renderer_content = """/**
+        # Sử dụng raw string và escape \\n để đảm bảo Node.js nhận diện đúng định dạng chuỗi
+        renderer_content = r"""/**
  ===============================================================================
  ESEB SERVERLESS RUNNER: 6TH-GEN FIGHTER COCKPIT HUD & GROQ LPU AI EXECUTOR
  MODULE: Protocols/Log_Live_Monitor.js
