@@ -10,5 +10,5 @@
                        document.querySelector('script[data-module="Cf_Workers_Ai"]');
   const activeModule = bridgeScript ? bridgeScript.getAttribute('data-module') : 'Cf_Workers_Ai';
   
-  console.log(`%c[ESEB TELEMETRY: ${activeModule}] 🚀 Edge GPU 08-AI Matrix Active | V-STAMP-24`, 'color: #f38020; font-weight: bold; background: #221100; padding: 4px;');
+  console.log(`%c[ESEB TELEMETRY: ${activeModule}] 🚀 Edge GPU 08-AI Full Matrix Active | V-STAMP-24`, 'color: #f38020; font-weight: bold; background: #221100; padding: 4px;');
 })();

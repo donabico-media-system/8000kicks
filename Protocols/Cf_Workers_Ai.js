@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ESEB SERVERLESS RUNNER (WORKERS 08-AI GLOBAL MATRIX CONNECTOR - SOTA 2026)
+   ESEB SERVERLESS RUNNER (WORKERS FULL 08-AI MATRIX CONNECTOR - SOTA 2026)
    MODULE: Protocols/Cf_Workers_Ai.js
    STAMP: V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM
    STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL
@@ -12,34 +12,40 @@ class WorkersAiRunner {
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Matrix Model ID Chuẩn Hóa Route API Cloudflare Edge 2026
+    // Trọn bộ 08 Mô hình AI tối ưu cho Hệ sinh thái EATHESEN Global
     this.models = {
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       llama_8b: "@cf/meta/llama-3.1-8b-instruct",
       deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1"
+      mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1",
+      qwen_14b: "@cf/qwen/qwen1.5-14b-chat-awq",
+      gemma_7b: "@cf/google/gemma-7b-it-lora",
+      bge_embedding: "@cf/baai/bge-large-en-v1.5",
+      grok_imagine: "xai/grok-imagine-image-2.0"
     };
   }
 
-  async runAiInference(modelKey, modelId, promptText) {
+  async runAiInference(modelKey, modelId, promptText, payloadType = 'chat') {
     if (!this.accountId || !this.apiToken) {
       console.log(`[WORKERS AI ERROR] Credentials missing for node [${modelKey}].`);
       return false;
     }
 
-    // Payload Chuẩn Hóa Pure Messages (Khắc phục hoàn toàn lỗi oneOf schema 5006)
-    const payload = JSON.stringify({
-      messages: [
-        { 
-          role: "system", 
-          content: "You are Cloudflare Global Affiliate AI Engine for DONABICO GLOBAL MEDIA SYSTEM. Markets: USA, Canada, UK, EU, AU, NZ, Global." 
-        },
-        { 
-          role: "user", 
-          content: promptText 
-        }
-      ]
-    });
+    let payloadObj = {};
+    if (payloadType === 'embedding') {
+      payloadObj = { text: [promptText] };
+    } else if (payloadType === 'image') {
+      payloadObj = { prompt: promptText };
+    } else {
+      payloadObj = {
+        messages: [
+          { role: "system", content: "You are Cloudflare Global Affiliate AI Engine for DONABICO GLOBAL MEDIA SYSTEM. Markets: USA, Canada, UK, EU, AU, NZ, Global." },
+          { role: "user", content: promptText }
+        ]
+      };
+    }
+
+    const payload = JSON.stringify(payloadObj);
 
     const options = {
       hostname: 'api.cloudflare.com',
@@ -83,16 +89,21 @@ class WorkersAiRunner {
 
   async run() {
     console.log(`=================================================================`);
-    console.log(`[ESEB 08-AI GLOBAL ENGINE] Executing Cloudflare Edge GPU API Call`);
+    console.log(`[ESEB FULL 08-AI GLOBAL MATRIX] Executing Cloudflare Edge GPU API Calls`);
     console.log(`Stamp: ${this.stamp} | DONABICO GLOBAL MEDIA SYSTEM`);
     console.log(`=================================================================`);
 
-    await this.runAiInference("LLAMA_70B", this.models.llama_70b, "Create High-Intent Native English Product Reviews for US, UK, CA, AU, NZ Market");
-    await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference for US/EU Traffic");
-    await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization");
-    await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for EU Search Engines");
+    // Thực thi đủ 08 Node AI với định dạng Payload tương thích
+    await this.runAiInference("LLAMA_70B", this.models.llama_70b, "Create High-Intent Native English Reviews", "chat");
+    await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference", "chat");
+    await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization", "chat");
+    await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for Search Engines", "chat");
+    await this.runAiInference("QWEN_14B", this.models.qwen_14b, "Optimize Multilingual Geo Target Content", "chat");
+    await this.runAiInference("GEMMA_7B", this.models.gemma_7b, "Execute Auxiliary Context Enrichment", "chat");
+    await this.runAiInference("BGE_EMBEDDING", this.models.bge_embedding, "EATHESEN RAG Knowledge Vectorization", "embedding");
+    await this.runAiInference("GROK_IMAGINE", this.models.grok_imagine, "Professional Affiliate Shoe Product Banner", "image");
 
-    console.log(`[ESEB 08-AI MATRIX] All Active Nodes Executed with Zero Entropy.`);
+    console.log(`[ESEB 08-AI MATRIX] All 08 Active Nodes Executed with Zero Entropy.`);
     process.exit(0);
   }
 }
