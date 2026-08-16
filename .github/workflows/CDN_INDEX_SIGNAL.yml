@@ -49,7 +49,7 @@ jobs:
           
           git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          git add Protocols/ llms-full.txt agent.json
+          git add Protocols/ Llms-Full.txt Agent.json
           
           if ! git diff --quiet || ! git diff --staged --quiet; then
             git commit -m "Auto-sync Cdn_Index_Signal SOTA 2026 Agentic Swarm & Manifests [V-STAMP-24]"
