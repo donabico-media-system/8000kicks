@@ -12,13 +12,13 @@ class WorkersAiRunner {
     this.accountId = process.env.CF_ACCOUNT_ID || '';
     this.apiToken = process.env.CF_API_TOKEN || '';
     
-    // Trọn bộ 08 Mô hình AI chuẩn hóa REST API Cloudflare Workers AI 2026
+    // Matrix 08 AI Models Chuẩn Hóa REST API Cloudflare Edge 2026
     this.models = {
       llama_70b: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       llama_8b: "@cf/meta/llama-3.1-8b-instruct",
       deepseek: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
       mistral_7b: "@cf/mistral/mistral-7b-instruct-v0.1",
-      qwen_2_5: "@cf/qwen/qwen2.5-7b-instruct",
+      qwen_7b: "@cf/qwen/qwen1.5-7b-chat",
       gemma_7b: "@cf/google/gemma-7b-it-lora",
       bge_embedding: "@cf/baai/bge-large-en-v1.5",
       sdxl_image: "@cf/bytedance/stable-diffusion-xl-lightning"
@@ -65,17 +65,28 @@ class WorkersAiRunner {
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
-          try {
-            const parsed = JSON.parse(data);
-            if (res.statusCode === 200 && parsed.success) {
-              console.log(`[ESEB 08-AI SUCCESS] Node: [${modelKey}] | Model: ${modelId} | Status 200 OK`);
+          if (res.statusCode === 200) {
+            const contentType = res.headers['content-type'] || '';
+            if (payloadType === 'image' || contentType.includes('image')) {
+              console.log(`[ESEB 08-AI SUCCESS] Node: [${modelKey}] | Model: ${modelId} | Status 200 OK (Binary Image Stream)`);
               resolve(true);
-            } else {
-              console.log(`[ESEB 08-AI ERROR] Node: [${modelKey}] | Status: ${res.statusCode} | Msg: ${JSON.stringify(parsed.errors || [])}`);
+              return;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.success) {
+                console.log(`[ESEB 08-AI SUCCESS] Node: [${modelKey}] | Model: ${modelId} | Status 200 OK`);
+                resolve(true);
+              } else {
+                console.log(`[ESEB 08-AI ERROR] Node: [${modelKey}] | Status: ${res.statusCode} | Msg: ${JSON.stringify(parsed.errors || [])}`);
+                resolve(false);
+              }
+            } catch(e) {
+              console.log(`[ESEB PARSE ERROR] Node: [${modelKey}] | Status: ${res.statusCode}`);
               resolve(false);
             }
-          } catch(e) {
-            console.log(`[ESEB PARSE ERROR] Node: [${modelKey}] | Status: ${res.statusCode}`);
+          } else {
+            console.log(`[ESEB 08-AI ERROR] Node: [${modelKey}] | Status: ${res.statusCode}`);
             resolve(false);
           }
         });
@@ -93,12 +104,11 @@ class WorkersAiRunner {
     console.log(`Stamp: ${this.stamp} | DONABICO GLOBAL MEDIA SYSTEM`);
     console.log(`=================================================================`);
 
-    // Thực thi đủ 08 Node AI hoàn hảo
     await this.runAiInference("LLAMA_70B", this.models.llama_70b, "Create High-Intent Native English Reviews", "chat");
     await this.runAiInference("LLAMA_8B", this.models.llama_8b, "Execute Rapid RAG Fallback Inference", "chat");
     await this.runAiInference("DEEPSEEK", this.models.deepseek, "Perform Deep Logic Reasoning & GEO-SEO Optimization", "chat");
     await this.runAiInference("MISTRAL_7B", this.models.mistral_7b, "Format JSON-LD Schemas for Search Engines", "chat");
-    await this.runAiInference("QWEN_2_5", this.models.qwen_2_5, "Optimize Multilingual Geo Target Content", "chat");
+    await this.runAiInference("QWEN_7B", this.models.qwen_7b, "Optimize Multilingual Geo Target Content", "chat");
     await this.runAiInference("GEMMA_7B", this.models.gemma_7b, "Execute Auxiliary Context Enrichment", "chat");
     await this.runAiInference("BGE_EMBEDDING", this.models.bge_embedding, "EATHESEN RAG Knowledge Vectorization", "embedding");
     await this.runAiInference("SDXL_IMAGE", this.models.sdxl_image, "Professional Affiliate Shoe Product Banner", "image");
