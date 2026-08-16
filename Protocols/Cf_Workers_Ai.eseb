@@ -7,9 +7,9 @@ MODULE: Protocols/Cf_Workers_Ai.eseb
 STAMP: V-STAMP-24 | 08-AI PERFECT GPU MATRIX | DONABICO GLOBAL MEDIA SYSTEM
 STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL | ZERO ENTROPY EXECUTION
 
-CAPABILITIES:
-  1. FIX QWEN 2.5 URI ROUTE (@cf/qwen/qwen1.5-7b-chat)
-  2. HANDSHAKE BINARY STREAM RESPONSES FOR SDXL IMAGE GENERATION (NO PARSE ERROR)
+FIX:
+  1. ESCAPED ALL JAVASCRIPT BRACES FOR PYTHON F-STRING COMPLIANCE (SYNTAXERROR FIX)
+  2. PARSE BINARY IMAGE & TEXT JSON SAFELY FOR ALL 08 AI NODES
   3. AUTOMATICALLY COMPILE IDENTICAL ASSETS (Cf_Workers_Ai.ehc & Cf_Workers_Ai.js)
 =============================================================================
 """
@@ -114,7 +114,6 @@ class WorkersAiRunner {{
         res.on('end', () => {{
           if (res.statusCode === 200) {{
             const contentType = res.headers['content-type'] || '';
-            // Xử lý riêng cho luồng binary ảnh (Image Generation Stream)
             if (payloadType === 'image' || contentType.includes('image')) {{
               console.log(`[ESEB 08-AI SUCCESS] Node: [${{modelKey}}] | Model: ${{modelId}} | Status 200 OK (Binary Image Stream)`);
               resolve(true);
@@ -171,3 +170,21 @@ if (require.main === module) {{
 }}
 
 module.exports = WorkersAiRunner;
+"""
+
+    def compile(self):
+        self.ensure_directory()
+        
+        ehc_file = os.path.join(self.target_dir, f"{self.module_name}.ehc")
+        with open(ehc_file, "w", encoding="utf-8") as f:
+            f.write(self.build_client_ehc())
+        print(f"[ESEB 04THU AUTO-6D] Compiled Client Shield -> {ehc_file}")
+
+        js_file = os.path.join(self.target_dir, f"{self.module_name}.js")
+        with open(js_file, "w", encoding="utf-8") as f:
+            f.write(self.build_runner_js())
+        print(f"[ESEB 04THU AUTO-6D] Compiled Serverless Runner -> {js_file}")
+
+if __name__ == "__main__":
+    engine = CfWorkersAiEngine()
+    engine.compile()
