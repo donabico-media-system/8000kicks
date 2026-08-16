@@ -3,7 +3,7 @@
  ESEB PROTOCOL SOTA 2026: DUAL-TOKEN & 08-AI MATRIX SERVERLESS EXECUTOR
  MODULE: Protocols/Cdn_Index_Signal.js
  STAMP: V-STAMP-24 | DUAL-TOKEN 04THU MODE | DONABICO MEDIA SYSTEM
- OMNI CNAME AUTO-DISCOVERY & AI MANIFESTS ENFORCED
+ OMNI CNAME AUTO-DISCOVERY & 10S PROPAGATION DELAY ENFORCED
  ===============================================================================
 **/
 
@@ -16,7 +16,6 @@ class ServerlessDualToken08AiMatrixRunner {
     this.brand = "DONABICO MEDIA SYSTEM";
     this.anchor = "¢24";
     
-    // TÍCH HỢP TOÀN DIỆN CÁC TOKEN BẢO MẬT HỆ THỐNG
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       apiGroq: process.env.API_GROQ_TOKEN || '',
@@ -24,7 +23,6 @@ class ServerlessDualToken08AiMatrixRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // MA TRẬN 08 AI EDGE NODES TRÊN CLOUDFLARE WORKERS AI
     this.cloudflareAiNodes = [
       { id: "LLAMA_70B", model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", task: "High-Intent Affiliate Review Generation" },
       { id: "LLAMA_8B", model: "@cf/meta/llama-3.1-8b-instruct", task: "Rapid RAG Query & Sub-30ms Semantic Fallback" },
@@ -227,24 +225,27 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     console.log(`Stamp: ${this.stamp} | Brand: ${this.brand} | Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // 1. Kiểm tra xác thực ESEB_CLASSIC_TOKEN
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC AUTH] Core Token Verified Successfully.`);
     } else {
       console.log(`[ESEB CLASSIC AUTH] Warning: ESEB_CLASSIC_TOKEN is empty.`);
     }
 
-    // 2. Sinh tệp Manifests & Khóa IndexNow
+    // 1. Sinh tệp Manifests & Khóa IndexNow
     this.generateAiSearchManifests(targetDomain);
 
-    // 3. Kích hoạt Groq LPU API qua API_GROQ_TOKEN
+    // 2. Kích hoạt Groq LPU API
     await this.callGroqLpuAPI(targetDomain);
 
-    // 4. Kích hoạt song song Ma trận 08 AI Edge Nodes
+    // 3. Kích hoạt song song Ma trận 08 AI Edge Nodes
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
-    // 5. Đẩy tín hiệu IndexNow tức thời
+    // 4. CHÈN ĐỘ TRỄ 10 GIÂY ĐỂ CHỜ GITHUB PAGES ĐỒNG BỘ TỆP KHÓA XÁC THỰC RA INTERNET
+    console.log(`[INDEXNOW SYNC] Awaiting 10s propagation delay for verification key...`);
+    await new Promise(resolve => setTimeout(resolve, 10000));
+
+    // 5. Đẩy tín hiệu IndexNow
     const indexNowKey = "24242424242424242424242424242424";
     await this.broadcastIndexNow(targetDomain, [
       `https://${targetDomain}/`,
