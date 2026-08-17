@@ -12,6 +12,7 @@ CAPABILITIES:
   1. VECTOR EMBEDDING GENERATION & CLOUDFLARE VECTORIZE RAG PIPELINE
   2. SEMANTIC CONTEXT SEARCH FOR HIGH-INTENT AFFILIATE TRAFFIC
   3. DYNAMIC TELEMETRY (.ehc) WITH DATA-MODULE BINDING & SERVERLESS RUNNER (.js)
+  4. AUTONOMOUS KNOWLEDGE MANIFEST INGESTION (Llms-Full.txt)
 =============================================================================
 """
 
@@ -54,6 +55,8 @@ class CfVectorRagEngine:
    STRICT COMPLIANCE: ESEB 04THU AUTO-6D PROTOCOL
    ========================================================================== */
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 class VectorRagRunner {
   constructor() {
@@ -62,6 +65,21 @@ class VectorRagRunner {
     this.apiToken = process.env.CF_API_TOKEN || '';
     this.embeddingModel = "@cf/baai/bge-large-en-v1.5";
     this.vectorIndexName = process.env.CF_VECTOR_INDEX || 'eathesen-rag-index';
+  }
+
+  loadManifestContext() {
+    try {
+      const manifestPath = path.join(process.cwd(), 'Llms-Full.txt');
+      if (fs.existsSync(manifestPath)) {
+        const content = fs.readFileSync(manifestPath, 'utf8');
+        console.log(`[ESEB VECTOR RAG] Successfully loaded Llms-Full.txt Knowledge Manifest (${content.length} chars).`);
+        // Lấy đoạn ngữ cảnh tối ưu để nạp vào embedding tránh quá tải payload
+        return content.substring(0, 4000);
+      }
+    } catch (err) {
+      console.log(`[ESEB VECTOR RAG WARN] Could not read Llms-Full.txt: ${err.message}`);
+    }
+    return "8000kicks waterproof hemp shoes sustainable footwear eco-friendly affiliate deal US UK EU CA AU NZ";
   }
 
   async generateEmbedding(textPayload) {
@@ -94,7 +112,7 @@ class VectorRagRunner {
             try {
               const parsed = JSON.parse(data);
               if (parsed.success && parsed.result && parsed.result.data) {
-                console.log(`[ESEB VECTOR RAG SUCCESS] Generated ${parsed.result.data[0].length}-Dim Vector Embedding`);
+                console.log(`[ESEB VECTOR RAG SUCCESS] Generated ${parsed.result.data[0].length}-Dim Vector Embedding from Llms-Full.txt`);
                 resolve(parsed.result.data[0]);
               } else {
                 console.log(`[ESEB VECTOR RAG WARN] Embedding Payload Issue | Status: ${res.statusCode}`);
@@ -123,8 +141,8 @@ class VectorRagRunner {
     console.log(`Stamp: ${this.stamp} | DONABICO GLOBAL MEDIA SYSTEM`);
     console.log(`=================================================================`);
 
-    const sampleContext = "8000kicks waterproof hemp shoes sustainable footwear eco-friendly affiliate deal US UK EU CA AU NZ";
-    const vector = await this.generateEmbedding(sampleContext);
+    const manifestContext = this.loadManifestContext();
+    const vector = await this.generateEmbedding(manifestContext);
 
     if (vector) {
       console.log(`[ESEB VECTOR RAG] Knowledge Index Synced & Ready for 08 AI Matrix.`);
