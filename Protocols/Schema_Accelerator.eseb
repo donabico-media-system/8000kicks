@@ -1,5 +1,5 @@
 /* =====================================================================
-   ESEB PROTOCOL: Schema_Accelerator (Dynamic Living Entity)
+   ESEB PROTOCOL: Schema_Accelerator (Dynamic Living Entity Source)
    FILE: Protocols/Schema_Accelerator.eseb
    STAMP: V-STAMP-24 | TARGET: donabico.com | DELTA: δ = 0.0000
    ================================================================     */
@@ -15,7 +15,7 @@
         stamp: 'V-STAMP-24'
     };
 
-    // 2. Khối CSS Sentinel ngầm bảo vệ UI chống lệch khung hình
+    // 2. Khối CSS Sentinel ngầm bảo vệ UI chống lệch khung hình (Zero-DOM Surface Mutation)
     if (!document.getElementById('ehc-sentinel-schema')) {
         const styleSentinel = document.createElement('style');
         styleSentinel.id = 'ehc-sentinel-schema';
@@ -69,7 +69,7 @@
                         "@type": "Person",
                         "name": "Verified EATHESEN Buyer"
                     },
-                    "datePublished": new Date().toISOString().split('T')[0],
+                    "datePublished": "2026-01-01",
                     "reviewBody": "Extremely comfortable, genuinely 100% waterproof, and incredibly lightweight."
                 }
             };
