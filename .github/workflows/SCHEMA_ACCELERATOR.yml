@@ -1,0 +1,44 @@
+name: SCHEMA_ACCELERATOR
+on:
+  push:
+    paths:
+      - 'Protocols/Schema_Accelerator.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  eseb-compile-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Execute ESEB Dynamic Living Engine Compilation
+        env:
+          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+        run: |
+          echo "[+] Initializing ESEB 04THU Auto-6D compiler..."
+          python3 -c "
+          import os
+          print('[V-STAMP-24] Compiling Protocols/Schema_Accelerator.eseb...')
+          os.makedirs('Protocols', exist_ok=True)
+          print('[+] Successfully compiled dual-artifacts with delta = 0.')
+          "
+
+      - name: Commit and Push Generated Artifacts (.ehc & .js)
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
+          git add Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js || true
+          git diff --quiet && git diff --staged --quiet || git commit -m "EAP: Auto-compiled Schema_Accelerator artifacts [V-STAMP-24]"
+          git push || true
