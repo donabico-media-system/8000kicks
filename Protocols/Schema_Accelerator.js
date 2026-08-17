@@ -13,7 +13,7 @@ async function executeGroqLPUQuery() {
     }
 
     const data = JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "llama-3.1-70b-versatile",
         messages: [{ role: "user", content: "EATHESEN Matrix V3000-Ω: Ping AI LPU Gateway" }]
     });
 
