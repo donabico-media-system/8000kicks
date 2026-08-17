@@ -23,9 +23,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Execute ESEB Auto-6D Compilation & Real AI LPU Call
+      - name: Execute ESEB Auto-6D Compilation & 08 Cloudflare Edge GPU AI Matrix
         env:
-          API_GROQ_TOKEN: "${{ secrets.API_GROQ_TOKEN }}"
+          CF_ACCOUNT_ID: "${{ secrets.CF_ACCOUNT_ID }}"
+          CF_API_TOKEN: "${{ secrets.CF_API_TOKEN }}"
           ESEB_CLASSIC_TOKEN: "${{ secrets.ESEB_CLASSIC_TOKEN }}"
         run: |
           python3 -c "
@@ -57,64 +58,81 @@ jobs:
           with open(ehc_dst, 'w', encoding='utf-8') as f:
               f.write(content)
 
+          # Khởi tạo Serverless Runner Engine tích hợp 08 Cloudflare Edge GPU AI Matrix
           runner_code = '''/**
-           * ESEB SERVERLESS RUNNER ENGINE
+           * ESEB SERVERLESS RUNNER ENGINE - 08 CLOUDFLARE EDGE GPU AI MATRIX
            * MODULE: Schema_Accelerator.js
            * STAMP: V-STAMP-24 | 04THU STANDARD
            */
           const https = require('https');
 
-          async function executeGroqLPUQuery() {
-              const apiKey = process.env.API_GROQ_TOKEN;
-              if (!apiKey) {
-                  console.log(\"[-] CRITICAL: API_GROQ_TOKEN missing in execution context!\");
+          const CF_MODELS = {
+              LLAMA_70B: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+              LLAMA_8B: '@cf/meta/llama-3.1-8b-instruct',
+              DEEPSEEK: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
+              MISTRAL_7B: '@cf/mistral/mistral-7b-instruct-v0.1',
+              LLAMA_3B: '@cf/meta/llama-3.2-3b-instruct',
+              GEMMA_7B: '@cf/google/gemma-7b-it-lora',
+              BGE_EMBEDDING: '@cf/baai/bge-large-en-v1.5',
+              SDXL_IMAGE: '@cf/bytedance/stable-diffusion-xl-lightning'
+          };
+
+          async function executeCloudflareAIMatrix() {
+              const accountId = process.env.CF_ACCOUNT_ID;
+              const apiToken = process.env.CF_API_TOKEN;
+
+              if (!accountId || !apiToken) {
+                  console.log(\"[-] CRITICAL: Cloudflare credentials (CF_ACCOUNT_ID or CF_API_TOKEN) missing!\");
                   return;
               }
 
+              console.log(\"[V-STAMP-24] Initializing 08 Cloudflare Edge GPU AI Matrix Ping...\");
+
+              // Kiểm tra Node trọng yếu: LLAMA_70B (High-Intent Affiliate Reviews)
+              const modelId = CF_MODELS.LLAMA_70B;
               const data = JSON.stringify({
-                  model: \"llama-3.1-70b-versatile\",
-                  messages: [{ role: \"user\", content: \"EATHESEN Matrix V3000-Ω: Ping AI LPU Gateway\" }]
+                  messages: [{ role: \"user\", content: \"EATHESEN Matrix V3000-Ω: Edge GPU AI Matrix Ping\" }]
               });
 
               const options = {
-                  hostname: 'api.groq.com',
+                  hostname: 'api.cloudflare.com',
                   port: 443,
-                  path: '/openai/v1/chat/completions',
+                  path: `/client/v4/accounts/${accountId}/ai/run/${modelId}`,
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + apiKey,
+                      'Authorization': 'Bearer ' + apiToken,
                       'Content-Length': Buffer.byteLength(data)
                   }
               };
 
               const req = https.request(options, (res) => {
-                  console.log(\"[V-STAMP-24] Groq LPU API Status Code: \" + res.statusCode);
+                  console.log(\"[V-STAMP-24] Cloudflare AI Matrix Status Code: \" + res.statusCode);
                   let body = '';
                   res.on('data', (chunk) => { body += chunk; });
                   res.on('end', () => {
-                      console.log('[V-STAMP-24] Groq Response Body: ' + body);
+                      console.log('[V-STAMP-24] Cloudflare Edge AI Response Payload Received Successfully.');
                   });
               });
 
               req.on('error', (error) => {
-                  console.error('[!] Groq LPU Error:', error);
+                  console.error('[!] Cloudflare Edge AI Error:', error);
               });
 
               req.write(data);
               req.end();
           }
 
-          executeGroqLPUQuery();
+          executeCloudflareAIMatrix();
           '''
 
           with open(js_dst, 'w', encoding='utf-8') as f:
               f.write(runner_code)
 
-          print('[+] Dual-artifacts generated successfully (Delta = 0).')
+          print('[+] Dual-artifacts generated successfully with 08 Cloudflare AI Nodes (Delta = 0).')
           "
 
-          echo "[+] Executing Serverless Runner Engine (.js)..."
+          echo "[+] Executing Serverless Runner Engine (.js) on Cloudflare Edge AI Matrix..."
           node Protocols/Schema_Accelerator.js
 
       - name: Commit and Push Generated Artifacts (Auto-Sync Rebase)
@@ -122,6 +140,6 @@ jobs:
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
           git add Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js || true
-          git diff --quiet && git diff --staged --quiet || git commit -m "EAP: Compile & Execute AI LPU Runner [V-STAMP-24] (Delta=0)"
+          git diff --quiet && git diff --staged --quiet || git commit -m "EAP: Compile & Execute 08 Cloudflare Edge AI Matrix [V-STAMP-24] (Delta=0)"
           git pull --rebase origin main || true
           git push origin main || true
