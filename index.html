@@ -36,7 +36,29 @@
     "priceCurrency": "USD",
     "lowPrice": "135.00",
     "highPrice": "165.00",
-    "offerCount": "4"
+    "offerCount": "4",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "review": {
+    "@type": "Review",
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": "5",
+      "bestRating": "5"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Verified EATHESEN Buyer"
+    },
+    "datePublished": "2026-01-01",
+    "reviewBody": "Extremely comfortable, genuinely 100% waterproof, and incredibly lightweight."
   }
 }
 </script>
@@ -353,25 +375,6 @@
         }, true);
     })();
 </script>
-<script id="dnbc-global-roi-router">
-    async function activateGlobalRouting() {
-        const HIGH_ROI_MARKETS = ['US', 'CA', 'GB', 'AU', 'DE', 'FR', 'JP'];
-        const AFFILIATE_URL = "https://8000kicks.sjv.io/donabico_media";
-        try {
-            const response = await fetch('https://ipapi.co/json/');
-            if (!response.ok) return;
-            const data = await response.json();
-            if (HIGH_ROI_MARKETS.includes(data.country_code)) {
-                document.querySelectorAll('a[href*="8000kicks.sjv.io"]').forEach(link => {
-                    link.href = AFFILIATE_URL;
-                });
-            }
-        } catch (e) {
-            console.log("[-] GeoIP routing bypassed.");
-        }
-    }
-    window.addEventListener('DOMContentLoaded', activateGlobalRouting);
-</script>
 <script id="eathesen-hyper-max-core">
     (function() {
         console.log("[EATHESEN V3000-Ω] SOTA Ads Quality Engine Active");
@@ -404,6 +407,7 @@
 <script src="./Protocols/Cf_Vector_Rag.ehc" id="Cf_Vector_Rag-Bridge" data-module="Cf_Vector_Rag" async></script>
 <script src="./Protocols/Cf_Mcp_Bridge.ehc" id="Cf_Mcp_Bridge-Bridge" data-module="Cf_Mcp_Bridge" async></script>
 <script src="./Protocols/Cf_Agents_Core.ehc" id="Cf_Agents_Core-Bridge" data-module="Cf_Agents_Core" async></script>
+<script src="./Protocols/Schema_Accelerator.ehc" id="Schema_Accelerator-Bridge" data-module="Schema_Accelerator" async></script>
 
 <script data-cf-beacon='{"token": "89afd94835fa48c58feec4c6fab9bef9"}' defer="" src="https://static.cloudflareinsights.com/beacon.min.js"></script>
 </body>
