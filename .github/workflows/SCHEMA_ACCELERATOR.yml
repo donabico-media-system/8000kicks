@@ -23,14 +23,15 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Execute ESEB Auto-6D Compilation & 08 Cloudflare Edge GPU AI Matrix
+      - name: Execute ESEB Auto-6D Compilation & 08 Cloudflare Edge AI Matrix
         env:
           CF_ACCOUNT_ID: "${{ secrets.CF_ACCOUNT_ID }}"
           CF_API_TOKEN: "${{ secrets.CF_API_TOKEN }}"
           ESEB_CLASSIC_TOKEN: "${{ secrets.ESEB_CLASSIC_TOKEN }}"
         run: |
-          python3 -c "
+          python3 - << 'EOF'
           import os
+          import json
 
           target_domain = 'donabico.com'
           if os.path.exists('CNAME'):
@@ -39,7 +40,7 @@ jobs:
                   if cval:
                       target_domain = cval
 
-          print(f'[V-STAMP-24] Target Domain Locked: {target_domain}')
+          print(f"[V-STAMP-24] Target Domain Locked: {target_domain}")
 
           eseb_src = 'Protocols/Schema_Accelerator.eseb'
           ehc_dst = 'Protocols/Schema_Accelerator.ehc'
@@ -49,17 +50,13 @@ jobs:
               with open(eseb_src, 'r', encoding='utf-8') as f:
                   content = f.read()
           else:
-              content = f\"\"\"/* ESEB DYNAMIC LIVING ENTITY: Schema_Accelerator */
-          (function() {{
-              'use strict';
-              console.log('[V-STAMP-24] Active on {target_domain} (Delta = 0)');
-          }})();\"\"\"
+              content = f"/* ESEB DYNAMIC LIVING ENTITY: Schema_Accelerator */\n(function() {{\n    'use strict';\n    console.log('[V-STAMP-24] Active on {target_domain} (Delta = 0)');\n}})();"
 
           with open(ehc_dst, 'w', encoding='utf-8') as f:
               f.write(content)
 
-          # Khởi tạo Serverless Runner Engine tích hợp 08 Cloudflare Edge GPU AI Matrix
-          runner_code = '''/**
+          # Ghi tệp .js Serverless Runner an toàn tuyệt đối không dùng cú pháp phức tạp gây lỗi bash
+          runner_script = """/**
            * ESEB SERVERLESS RUNNER ENGINE - 08 CLOUDFLARE EDGE GPU AI MATRIX
            * MODULE: Schema_Accelerator.js
            * STAMP: V-STAMP-24 | 04THU STANDARD
@@ -82,16 +79,14 @@ jobs:
               const apiToken = process.env.CF_API_TOKEN;
 
               if (!accountId || !apiToken) {
-                  console.log(\"[-] CRITICAL: Cloudflare credentials (CF_ACCOUNT_ID or CF_API_TOKEN) missing!\");
+                  console.log("[-] CRITICAL: Cloudflare credentials missing!");
                   return;
               }
 
-              console.log(\"[V-STAMP-24] Initializing 08 Cloudflare Edge GPU AI Matrix Ping...\");
-
-              // Kiểm tra Node trọng yếu: LLAMA_70B (High-Intent Affiliate Reviews)
+              console.log("[V-STAMP-24] Initializing 08 Cloudflare Edge GPU AI Matrix Ping...");
               const modelId = CF_MODELS.LLAMA_70B;
               const data = JSON.stringify({
-                  messages: [{ role: \"user\", content: \"EATHESEN Matrix V3000-Ω: Edge GPU AI Matrix Ping\" }]
+                  messages: [{ role: "user", content: "EATHESEN Matrix V3000-Ω: Edge GPU AI Matrix Ping" }]
               });
 
               const options = {
@@ -107,7 +102,7 @@ jobs:
               };
 
               const req = https.request(options, (res) => {
-                  console.log(\"[V-STAMP-24] Cloudflare AI Matrix Status Code: \" + res.statusCode);
+                  console.log("[V-STAMP-24] Cloudflare AI Matrix Status Code: " + res.statusCode);
                   let body = '';
                   res.on('data', (chunk) => { body += chunk; });
                   res.on('end', () => {
@@ -124,13 +119,13 @@ jobs:
           }
 
           executeCloudflareAIMatrix();
-          '''
+          """
 
           with open(js_dst, 'w', encoding='utf-8') as f:
-              f.write(runner_code)
+              f.write(runner_script)
 
-          print('[+] Dual-artifacts generated successfully with 08 Cloudflare AI Nodes (Delta = 0).')
-          "
+          print("[+] Dual-artifacts generated successfully with 08 Cloudflare AI Nodes (Delta = 0).")
+          EOF
 
           echo "[+] Executing Serverless Runner Engine (.js) on Cloudflare Edge AI Matrix..."
           node Protocols/Schema_Accelerator.js
