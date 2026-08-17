@@ -27,9 +27,14 @@
   "@context": "https://schema.org/",
   "@type": "Product",
   "name": "8000Kicks Waterproof Hemp Shoes",
-  "image": "https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014",
-  "description": "Discover 8000Kicks, the world's first 100% waterproof industrial hemp shoes.",
-  "brand": { "@type": "Brand", "name": "8000Kicks" },
+  "image": [
+    "https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg?v=1740734014",
+    "https://www.8000kicks.com/cdn/shop/files/8000Kicks_175_375x250_crop_center.jpg?v=1775578744",
+    "https://www.8000kicks.com/cdn/shop/files/2_1_d81eb5e1-203c-45f5-901c-37fe65180d34_375x250_crop_center.jpg?v=1775550311",
+    "https://www.8000kicks.com/cdn/shop/files/8000Kicks_183_2_375x250_crop_center.jpg?v=1775585254"
+  ],
+  "description": "Discover 8000Kicks, the world's first 100% waterproof industrial hemp shoes engineered with natural hemp fibers and sustainable Bloom foam insoles.",
+  "brand": { "@type": "Brand", "name": "DONABICO MEDIA SYSTEM" },
   "offers": {
     "@type": "AggregateOffer",
     "url": "https://8000kicks.donabico.com/",
@@ -38,31 +43,9 @@
     "highPrice": "165.00",
     "offerCount": "4",
     "availability": "https://schema.org/InStock"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "1250",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "review": {
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5",
-      "bestRating": "5"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Verified EATHESEN Buyer"
-    },
-    "datePublished": "2026-01-01",
-    "reviewBody": "Extremely comfortable, genuinely 100% waterproof, and incredibly lightweight."
   }
 }
 </script>
-
 <style>
         :root { --siphon-red: #FF3B30; --sota-green: #00FF66; }
         html, body, p, div, span, a, h1, h2, h3, h4, h5, h6, table, td, th { font-family: 'Times New Roman', Times, serif !important; }
@@ -375,6 +358,25 @@
         }, true);
     })();
 </script>
+<script id="dnbc-global-roi-router">
+    async function activateGlobalRouting() {
+        const HIGH_ROI_MARKETS = ['US', 'CA', 'GB', 'AU', 'DE', 'FR', 'JP'];
+        const AFFILIATE_URL = "https://8000kicks.sjv.io/donabico_media";
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            if (!response.ok) return;
+            const data = await response.json();
+            if (HIGH_ROI_MARKETS.includes(data.country_code)) {
+                document.querySelectorAll('a[href*="8000kicks.sjv.io"]').forEach(link => {
+                    link.href = AFFILIATE_URL;
+                });
+            }
+        } catch (e) {
+            console.log("[-] GeoIP routing bypassed.");
+        }
+    }
+    window.addEventListener('DOMContentLoaded', activateGlobalRouting);
+</script>
 <script id="eathesen-hyper-max-core">
     (function() {
         console.log("[EATHESEN V3000-Ω] SOTA Ads Quality Engine Active");
@@ -394,8 +396,6 @@
 <script src="./Protocols/Super_Quad_Control.ehc" id="Super_Quad_Control-Bridge" data-module="Super_Quad_Control" async></script>
 <script src="./Protocols/Traffic_Turbocharger.ehc" id="Traffic_Turbocharger-Bridge" data-module="Traffic_Turbocharger" async></script>
 <script src="./Protocols/Ultrasota_Pseo_Geo_Llms.ehc" id="Ultrasota_Pseo_Geo_Llms-Bridge" data-module="Ultrasota_Pseo_Geo_Llms" async></script>
-<script src="./Protocols/Schema_Accelerator.ehc" id="Schema_Accelerator-Bridge" data-module="Schema_Accelerator" async></script>
-
 
 <!-- ==========================================================================
      ESEB 04THU AUTO-6D PROTOCOL SHIELD (CLOUDFLARE SOTA 2026)
