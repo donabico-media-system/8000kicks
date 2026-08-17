@@ -57,58 +57,57 @@ jobs:
           with open(ehc_dst, 'w', encoding='utf-8') as f:
               f.write(content)
 
-          # Mã nguồn Serverless Runner tích hợp gọi Groq LPU API thực tế 100%
-          runner_code = f\"\"\"/**
+          # Sử dụng cú pháp thuần túy để tránh mọi xung đột nội suy YAML của GitHub Actions
+          runner_code = '''/**
            * ESEB SERVERLESS RUNNER ENGINE
            * MODULE: Schema_Accelerator.js
-           * DOMAIN: https://{target_domain}/
            * STAMP: V-STAMP-24 | 04THU STANDARD
            */
           const https = require('https');
 
-          async function executeGroqLPUQuery() {{
+          async function executeGroqLPUQuery() {
               const apiKey = process.env.API_GROQ_TOKEN;
-              if (!apiKey) {{
-                  console.log("[-] CRITICAL: API_GROQ_TOKEN missing in execution context!");
+              if (!apiKey) {
+                  console.log(\"[-] CRITICAL: API_GROQ_TOKEN missing in execution context!\");
                   return;
-              }}
+              }
 
-              const data = JSON.stringify({{
-                  model: "llama-3.3-70b-versatile",
-                  messages: [{{ role: "user", content: "EATHESEN Matrix V3000-Ω: Ping AI LPU Gateway for {target_domain}" }}]
-              }});
+              const data = JSON.stringify({
+                  model: \"llama-3.3-70b-versatile\",
+                  messages: [{ role: \"user\", content: \"EATHESEN Matrix V3000-Ω: Ping AI LPU Gateway\" }]
+              });
 
-              const options = {{
+              const options = {
                   hostname: 'api.groq.com',
                   port: 443,
                   path: '/openai/v1/chat/completions',
                   method: 'POST',
-                  headers: {{
+                  headers: {
                       'Content-Type': 'application/json',
                       'Authorization': 'Bearer ' + apiKey,
                       'Content-Length': data.length
-                  }}
-              }};
+                  }
+              };
 
-              const req = https.request(options, (res) => {{
-                  console.log(`[V-STAMP-24] Groq LPU API Status Code: ${{res.statusCode}}`);
+              const req = https.request(options, (res) => {
+                  console.log(\"[V-STAMP-24] Groq LPU API Status Code: \" + res.statusCode);
                   let body = '';
-                  res.on('data', (chunk) => {{ body += chunk; }});
-                  res.on('end', () => {{
+                  res.on('data', (chunk) => { body += chunk; });
+                  res.on('end', () => {
                       console.log('[V-STAMP-24] AI Response Payload Received Successfully.');
-                  }});
-              }});
+                  });
+              });
 
-              req.on('error', (error) => {{
+              req.on('error', (error) => {
                   console.error('[!] Groq LPU Error:', error);
-              }});
+              });
 
               req.write(data);
               req.end();
-          }}
+          }
 
           executeGroqLPUQuery();
-          \"\"\"
+          '''
 
           with open(js_dst, 'w', encoding='utf-8') as f:
               f.write(runner_code)
@@ -116,7 +115,6 @@ jobs:
           print('[+] Dual-artifacts generated successfully (Delta = 0).')
           "
 
-          # Chạy ngay lập tức tệp .js vừa tạo để kích hoạt 2 con AI (Groq LPU) trên Action Runner
           echo "[+] Executing Serverless Runner Engine (.js)..."
           node Protocols/Schema_Accelerator.js
 
