@@ -74,10 +74,11 @@ jobs:
           print('[+] Dual-artifacts generated successfully (Delta = 0).')
           "
 
-      - name: Commit and Push Generated Artifacts
+      - name: Commit and Push Generated Artifacts (Auto-Sync Rebase)
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
           git add Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js || true
           git diff --quiet && git diff --staged --quiet || git commit -m "EAP: Compile Schema_Accelerator artifacts [V-STAMP-24] (Delta=0)"
-          git push || true
+          git pull --rebase origin main || true
+          git push origin main || true
