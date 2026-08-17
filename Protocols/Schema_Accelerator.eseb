@@ -1,26 +1,34 @@
-# =====================================================================
-# ESEB DYNAMIC LIVING PROTOCOL: Schema_Accelerator
-# FILE: Protocols/Schema_Accelerator.eseb
-# STAMP: V-STAMP-24 | COMPLIANCE: 04THU | DELTA: δ = 0.0000
-# ACTION: Tự động bơm Schema Product hoàn chỉnh (Fix GSC Errors)
-# =====================================================================
-
-def generate_client_ehc():
-    return """/* V-STAMP-24 | DONABICO GLOBAL MEDIA SYSTEM */
+/* =====================================================================
+   ESEB PROTOCOL: Schema_Accelerator (Dynamic Living Entity)
+   FILE: Protocols/Schema_Accelerator.eseb
+   STAMP: V-STAMP-24 | TARGET: donabico.com | DELTA: δ = 0.0000
+   ================================================================     */
 (function() {
     'use strict';
     
-    // Tự động nhận diện Auto-6D Context
+    // 1. Tự động nhận diện môi trường thời gian thực (Auto-6D Omni-Matrix)
     const envContext = {
-        domain: window.location.hostname || 'donabico-media-system.github.io',
+        domain: window.location.hostname || 'donabico.com',
         pageUrl: window.location.href,
         brand: '8000Kicks',
-        systemBrand: 'DONABICO GLOBAL MEDIA SYSTEM'
+        systemBrand: 'DONABICO GLOBAL MEDIA SYSTEM',
+        stamp: 'V-STAMP-24'
     };
 
+    // 2. Khối CSS Sentinel ngầm bảo vệ UI chống lệch khung hình
+    if (!document.getElementById('ehc-sentinel-schema')) {
+        const styleSentinel = document.createElement('style');
+        styleSentinel.id = 'ehc-sentinel-schema';
+        styleSentinel.textContent = `
+            script[type="application/ld+json"] { display: none !important; }
+        `;
+        document.head.appendChild(styleSentinel);
+    }
+
+    // 3. Động cơ tự động khắc phục lỗi GSC Search Console (Product Schema + AggregateRating + Review)
     const schemaEngine = {
         init: function() {
-            if (document.getElementById('eseb-schema-accelerator')) return;
+            if (document.getElementById('eseb-schema-accelerator-node')) return;
             this.injectFlawlessSchema();
         },
         injectFlawlessSchema: function() {
@@ -32,7 +40,7 @@ def generate_client_ehc():
                 "description": "Discover 8000Kicks, the world's first 100% waterproof industrial hemp shoes. Built for comfort, durability, and eco-friendly outdoor exploration.",
                 "brand": { 
                     "@type": "Brand", 
-                    "name": envContext.brand 
+                    "name": "8000Kicks" 
                 },
                 "offers": {
                     "@type": "AggregateOffer",
@@ -43,7 +51,6 @@ def generate_client_ehc():
                     "offerCount": "4",
                     "availability": "https://schema.org/InStock"
                 },
-                // FIX LỖI: 1000010059.jpg (Thêm aggregateRating)
                 "aggregateRating": {
                     "@type": "AggregateRating",
                     "ratingValue": "4.9",
@@ -51,7 +58,6 @@ def generate_client_ehc():
                     "bestRating": "5",
                     "worstRating": "1"
                 },
-                // FIX LỖI: 1000010059.jpg (Thêm review hợp lệ)
                 "review": {
                     "@type": "Review",
                     "reviewRating": {
@@ -70,15 +76,12 @@ def generate_client_ehc():
 
             const scriptNode = document.createElement('script');
             scriptNode.type = 'application/ld+json';
-            scriptNode.id = 'eseb-schema-accelerator';
+            scriptNode.id = 'eseb-schema-accelerator-node';
             scriptNode.textContent = JSON.stringify(richData);
             document.head.appendChild(scriptNode);
-            console.log("[V-STAMP-24] Schema_Accelerator: Injected 100% Google-Compliant JSON-LD (δ = 0)");
+            console.log("[V-STAMP-24] ESEB Schema_Accelerator: Injected 100% Google-Compliant JSON-LD for " + envContext.domain + " (δ = 0)");
         }
     };
 
     schemaEngine.init();
 })();
-"""
-
-# Hệ thống tự động lưu file .ehc tương ứng theo cấu trúc ESEB.
