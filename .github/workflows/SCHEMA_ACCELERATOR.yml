@@ -1,4 +1,5 @@
 name: SCHEMA_ACCELERATOR
+
 on:
   push:
     paths:
@@ -22,15 +23,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Execute ESEB Dynamic Living Engine Compilation (Auto-6D Custom Domain: donabico.com)
+      - name: Execute ESEB Dynamic Living Engine Compilation (Auto-6D Domain: donabico.com)
         env:
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
-          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          API_GROQ_TOKEN: "${{ secrets.API_GROQ_TOKEN }}"
+          ESEB_CLASSIC_TOKEN: "${{ secrets.ESEB_CLASSIC_TOKEN }}"
         run: |
           python3 - << 'EOF'
           import os
 
-          # 1. Tự động nhận diện Domain chuẩn AUTO-6D (Ưu tiên tệp CNAME nếu có, mặc định donabico.com)
           target_domain = "donabico.com"
           if os.path.exists("CNAME"):
               with open("CNAME", "r", encoding="utf-8") as cf:
@@ -47,7 +47,6 @@ jobs:
           ehc_path = 'Protocols/Schema_Accelerator.ehc'
           js_path = 'Protocols/Schema_Accelerator.js'
 
-          # Đọc tệp .eseb gốc hoặc nạp khuôn mẫu thực chiến
           if os.path.exists(eseb_path) and os.path.getsize(eseb_path) > 0:
               with open(eseb_path, 'r', encoding='utf-8') as f:
                   eseb_content = f.read()
@@ -58,12 +57,10 @@ jobs:
               console.log("[V-STAMP-24] Schema_Accelerator Active on Domain: {target_domain} (Delta = 0)");
           }})();"""
 
-          # 2. Tạo sinh tệp .ehc (Client-Side Living Entity với Domain donabico.com)
           with open(ehc_path, 'w', encoding='utf-8') as f:
               f.write(eseb_content)
           print(f"[+] Generated Client Artifact: {ehc_path}")
 
-          # 3. Tạo sinh tệp .js (Serverless Runner Engine - Bảo mật Token & Đồng bộ donabico.com)
           serverless_runner_code = f"""/**
            * ESEB SERVERLESS RUNNER ENGINE
            * MODULE: Schema_Accelerator.js
