@@ -25,7 +25,7 @@ async function executeGroqLPUQuery() {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + apiKey,
-            'Content-Length': data.length
+            'Content-Length': Buffer.byteLength(data)
         }
     };
 
@@ -34,7 +34,7 @@ async function executeGroqLPUQuery() {
         let body = '';
         res.on('data', (chunk) => { body += chunk; });
         res.on('end', () => {
-            console.log('[V-STAMP-24] AI Response Payload Received Successfully.');
+            console.log('[V-STAMP-24] Groq Response Body: ' + body);
         });
     });
 
