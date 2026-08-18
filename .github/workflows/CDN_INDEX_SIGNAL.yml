@@ -1,9 +1,14 @@
+# .github/workflows/CDN_INDEX_SIGNAL.yml
+# ESEB DYNAMIC LIVING ENGINE V3000-Ω — DUAL-TOKEN 08-AI MATRIX WORKFLOW
+# BRAND: DONABICO MEDIA SYSTEM | STAMP: V-STAMP-24 | ANCHOR: ¢24 | 04THU 100%
+
 name: CDN_INDEX_SIGNAL
 
 on:
   push:
     paths:
       - 'Protocols/Cdn_Index_Signal.eseb'
+      - '.github/workflows/CDN_INDEX_SIGNAL.yml'
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
@@ -22,39 +27,38 @@ jobs:
       - name: Set up Python Environment Core
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Set up Node.js Environment
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Execute ESEB SOTA 2026 Dual-Token & 08-AI Matrix Compilation & Execution
+      - name: Execute ESEB SOTA Dual-Token & 08-AI Matrix Compilation & Execution
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          echo "=== STARTING ESEB SOTA 2026 COMPILATION ==="
+          echo "=== STARTING ESEB SOTA COMPILATION ==="
           python3 Protocols/Cdn_Index_Signal.eseb
           echo "=== EXECUTING SERVERLESS DUAL-TOKEN 08-AI GPU MATRIX REST API ==="
           node Protocols/Cdn_Index_Signal.js
           echo "=== SOTA DUAL-TOKEN EXECUTION COMPLETE: ENTROPY = 0 ==="
 
-      - name: Commit and Push Living Entity Artifacts
+      - name: Commit and Push Living Entity Artifacts & IndexNow Keys
         run: |
-          git config --global user.name "Donabico-Action-Bot"
-          git config --global user.email "bot@donabico.global"
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
           
           git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          git add Protocols/ Llms-Full.txt Agent.json *.txt
+          git add Protocols/ CNAME Llms-Full.txt Agent.json *.txt || true
           
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "Auto-sync Cdn_Index_Signal Dual-Token 08-AI Matrix & IndexNow Key [V-STAMP-24]"
-            git pull origin main --rebase || git pull origin master --rebase || true
-            git push origin HEAD:main || git push origin HEAD:master
+            git commit -m "build(cdn-signal): auto-sync dual-token 08-ai matrix & indexnow key [V-STAMP-24]"
+            git pull origin main --rebase || true
+            git push origin HEAD:main
           else
-            echo "No changes detected. Skipping commit."
+            echo "No changes detected in repository. Entropy delta = 0."
           fi
