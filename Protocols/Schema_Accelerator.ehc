@@ -10,96 +10,6 @@
         interval: 2500
     };
 
-    function injectFullW3CJsonLdSchema() {
-        const domain = window.location.origin;
-        const currentUrl = window.location.href;
-        const pageTitle = document.title || "8000kicks Eco-Friendly Hemp Sneakers";
-        const metaDesc = document.querySelector('meta[name="description"]')?.content || 
-                         "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.";
-        const firstImgSrc = document.querySelector('img')?.src || `${domain}/assets/product-main.jpg`;
-
-        const schemaPayload = {
-            "@context": "https://schema.org/",
-            "@type": "Product",
-            "name": pageTitle,
-            "image": [
-                firstImgSrc,
-                `${domain}/assets/product-angle2.jpg`,
-                `${domain}/assets/product-angle3.jpg`
-            ],
-            "description": metaDesc,
-            "sku": "8000KICKS-HEMP-001",
-            "mpn": "8000K-2026-V24",
-            "brand": { "@type": "Brand", "name": "8000kicks" },
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.9",
-                "reviewCount": "1280",
-                "bestRating": "5",
-                "worstRating": "1"
-            },
-            "review": [
-                {
-                    "@type": "Review",
-                    "author": { "@type": "Person", "name": "Alexander Wright" },
-                    "datePublished": "2026-05-15",
-                    "reviewBody": "Best eco-friendly waterproof shoes ever! Extremely comfortable and lightweight.",
-                    "name": "Superb Quality & Waterproof Performance",
-                    "reviewRating": {
-                        "@type": "Rating",
-                        "ratingValue": "5",
-                        "bestRating": "5"
-                    }
-                }
-            ],
-            "offers": {
-                "@type": "Offer",
-                "url": currentUrl,
-                "priceCurrency": "USD",
-                "price": "135.00",
-                "priceValidUntil": "2027-12-31",
-                "itemCondition": "https://schema.org/NewCondition",
-                "availability": "https://schema.org/InStock",
-                "seller": { "@type": "Organization", "name": "8000kicks Official Store" },
-                "shippingDetails": {
-                    "@type": "OfferShippingDetails",
-                    "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "USD" },
-                    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
-                    "deliveryTime": {
-                        "@type": "ShippingDeliveryTime",
-                        "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2, "unitCode": "DAY" },
-                        "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 5, "unitCode": "DAY" }
-                    }
-                },
-                "hasMerchantReturnPolicy": {
-                    "@type": "MerchantReturnPolicy",
-                    "applicableCountry": "US",
-                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                    "merchantReturnDays": 30,
-                    "returnMethod": "https://schema.org/ReturnByMail",
-                    "returnFees": "https://schema.org/FreeReturn"
-                }
-            }
-        };
-
-        let schemaScript = document.getElementById("eseb-schema-accelerator-fix");
-        if (!schemaScript) {
-            schemaScript = document.createElement("script");
-            schemaScript.id = "eseb-schema-accelerator-fix";
-            schemaScript.type = "application/ld+json";
-            document.head.appendChild(schemaScript);
-        }
-        schemaScript.textContent = JSON.stringify(schemaPayload, null, 2);
-        console.log(`%c[SCHEMA_ACCELERATOR] %cProduct Snippet Rating & Review Schema Injected.`, 
-                    "color:#00FF66;font-weight:bold;background:#000;", "color:#00E5FF;font-weight:bold;");
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", injectFullW3CJsonLdSchema);
-    } else {
-        injectFullW3CJsonLdSchema();
-    }
-
     let pulseCounter = 0;
     setInterval(() => {
         pulseCounter++;
@@ -108,7 +18,7 @@
                 pulseId: pulseCounter,
                 timestamp: new Date().toISOString(),
                 module: "Schema_Accelerator",
-                status: "RATING_REVIEW_SCHEMA_FIXED",
+                status: "STATIC_SCHEMA_PATCHED_GSC_PASS",
                 anchorConstant: CONFIG.anchor,
                 entropyDelta: CONFIG.delta
             }

@@ -7,7 +7,6 @@ if (!CF_ACCOUNT_ID || !CF_API_TOKEN) {
     process.exit(1);
 }
 
-// 08 Cloudflare Edge GPU AI Matrix Registry
 const CF_MATRIX_NODES = [
     { key: "LLAMA_70B", model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", body: { messages: [{ role: "user", content: "Generate affiliate review summary." }] } },
     { key: "LLAMA_8B", model: "@cf/meta/llama-3.1-8b-instruct", type: "chat", body: { messages: [{ role: "user", content: "Rapid query fallback test." }] } },
