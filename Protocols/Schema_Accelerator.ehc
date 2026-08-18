@@ -1,4 +1,4 @@
-/* ESEB LIVING ENTITY CLIENT RUNTIME - FIX SCHEMA GSC */
+/* ESEB LIVING ENTITY CLIENT RUNTIME - FULL 8-EDGE AI MATRIX ACTIVE */
 (function SchemaAcceleratorEngine() {
     'use strict';
 
@@ -13,11 +13,9 @@
     function injectFullW3CJsonLdSchema() {
         const domain = window.location.origin;
         const currentUrl = window.location.href;
-        
         const pageTitle = document.title || "8000kicks Eco-Friendly Hemp Sneakers";
         const metaDesc = document.querySelector('meta[name="description"]')?.content || 
                          "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.";
-        
         const firstImgSrc = document.querySelector('img')?.src || `${domain}/assets/product-main.jpg`;
 
         const schemaPayload = {
@@ -32,10 +30,7 @@
             "description": metaDesc,
             "sku": "8000KICKS-HEMP-001",
             "mpn": "8000K-2026-V24",
-            "brand": {
-                "@type": "Brand",
-                "name": "8000kicks"
-            },
+            "brand": { "@type": "Brand", "name": "8000kicks" },
             "offers": {
                 "@type": "Offer",
                 "url": currentUrl,
@@ -44,35 +39,15 @@
                 "priceValidUntil": "2027-12-31",
                 "itemCondition": "https://schema.org/NewCondition",
                 "availability": "https://schema.org/InStock",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "8000kicks Official Store"
-                },
+                "seller": { "@type": "Organization", "name": "8000kicks Official Store" },
                 "shippingDetails": {
                     "@type": "OfferShippingDetails",
-                    "shippingRate": {
-                        "@type": "MonetaryAmount",
-                        "value": "0.00",
-                        "currency": "USD"
-                    },
-                    "shippingDestination": {
-                        "@type": "DefinedRegion",
-                        "addressCountry": "US"
-                    },
+                    "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "USD" },
+                    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
                     "deliveryTime": {
                         "@type": "ShippingDeliveryTime",
-                        "handlingTime": {
-                            "@type": "QuantitativeValue",
-                            "minValue": 1,
-                            "maxValue": 2,
-                            "unitCode": "DAY"
-                        },
-                        "transitTime": {
-                            "@type": "QuantitativeValue",
-                            "minValue": 3,
-                            "maxValue": 5,
-                            "unitCode": "DAY"
-                        }
+                        "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2, "unitCode": "DAY" },
+                        "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 5, "unitCode": "DAY" }
                     }
                 },
                 "hasMerchantReturnPolicy": {
@@ -112,7 +87,7 @@
                 pulseId: pulseCounter,
                 timestamp: new Date().toISOString(),
                 module: "Schema_Accelerator",
-                status: "CLOUDFLARE_EDGE_AI_ACTIVE",
+                status: "FULL_08_CLOUDFLARE_EDGE_AI_MATRIX_ACTIVE",
                 anchorConstant: CONFIG.anchor,
                 entropyDelta: CONFIG.delta
             }
