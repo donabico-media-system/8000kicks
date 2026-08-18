@@ -34,9 +34,11 @@ jobs:
         run: |
           python3 Protocols/Log_Live_Monitor.eseb
 
-      - name: Execute Groq LPU Real AI REST Renderer (Update README.md)
+      - name: Execute Full 08 Cloudflare Edge AI Matrix Renderer (Update README.md)
         env:
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: |
           node Protocols/Log_Live_Monitor.js
 
@@ -50,7 +52,7 @@ jobs:
           git add README.md Protocols/Log_Live_Monitor.* || true
           
           if ! git diff --cached --quiet; then
-            git commit -m "chore(eseb-hud): auto-sync real-time cockpit README.md [skip ci]"
+            git commit -m "chore(eseb-hud): auto-sync 08 cloudflare ai matrix HUD to README.md [skip ci]"
             
             for i in {1..3}; do
               git fetch origin main
