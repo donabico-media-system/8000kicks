@@ -5,9 +5,3 @@
 
 [System Overview]
 EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligence and conversion engine operating with zero entropy (delta = 0).
-
-[Core Capabilities]
-- Sub-50ms Semantic Edge Personalization
-- Multi-Geo Dynamic Localization
-- Real-time Structured JSON-LD Schema Generation
-- Automated Sustainable E-commerce Catalog Sync (8000Kicks Partnership)

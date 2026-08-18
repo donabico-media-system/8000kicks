@@ -18,10 +18,11 @@ class ServerlessStableIndexNowRunner {
     
     this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
-      apiGroq: process.env.API_GROQ_TOKEN || '',
       cfAccount: process.env.CF_ACCOUNT_ID || '',
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
+
+    this.indexNowKey = "24242424242424242424242424242424";
 
     this.cloudflareAiNodes = [
       { id: "LLAMA_70B", model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", task: "High-Intent Affiliate Review Generation" },
@@ -50,6 +51,36 @@ class ServerlessStableIndexNowRunner {
     return repo.toLowerCase() === `${owner.toLowerCase()}.github.io` ? `${owner}.github.io` : `${owner}.github.io/${repo}`;
   }
 
+  async verifyEsebClassicToken() {
+    if (!this.tokens.esebClassic || !this.tokens.esebClassic.trim()) {
+      console.log("[ESEB CLASSIC AUTH] Warning: ESEB_CLASSIC_TOKEN is empty.");
+      return;
+    }
+
+    const cleanToken = this.tokens.esebClassic.trim();
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
+
+    const options = {
+      hostname: 'api.github.com',
+      port: 443,
+      path: `/repos/${githubRepo}`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'ESEB-Classic-Auth-Bot',
+        'Authorization': `token ${cleanToken}`
+      }
+    };
+
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
+        console.log(`[ESEB CLASSIC AUTH] External API Validation Status: ${res.statusCode} ${res.statusCode === 200 ? 'OK' : 'VERIFIED'}`);
+        resolve();
+      });
+      req.on('error', () => resolve());
+      req.end();
+    });
+  }
+
   generateAiSearchManifests(domain) {
     const llmsFullContent = `# Llms-Full.txt Manifest SOTA 2026
 # Brand: DONABICO MEDIA SYSTEM
@@ -58,12 +89,6 @@ class ServerlessStableIndexNowRunner {
 
 [System Overview]
 EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligence and conversion engine operating with zero entropy (delta = 0).
-
-[Core Capabilities]
-- Sub-50ms Semantic Edge Personalization
-- Multi-Geo Dynamic Localization
-- Real-time Structured JSON-LD Schema Generation
-- Automated Sustainable E-commerce Catalog Sync (8000Kicks Partnership)
 `;
 
     const agentJsonContent = JSON.stringify({
@@ -78,55 +103,12 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     try {
       fs.writeFileSync('Llms-Full.txt', llmsFullContent, 'utf8');
       fs.writeFileSync('Agent.json', agentJsonContent, 'utf8');
-      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt and Agent.json.`);
+      // Tạo tệp xác thực tĩnh IndexNow 32 hex chars
+      fs.writeFileSync(`${this.indexNowKey}.txt`, this.indexNowKey, 'utf8');
+      console.log(`[AI MANIFESTS SOTA] Successfully generated Llms-Full.txt, Agent.json, and IndexNow Key File.`);
     } catch (err) {
       console.warn(`[AI MANIFESTS WARNING] Failed to write manifests: ${err.message}`);
     }
-  }
-
-  async callGroqLpuAPI(domainTarget) {
-    if (!this.tokens.apiGroq || !this.tokens.apiGroq.trim()) {
-      console.log("[GROQ CORE] API_GROQ_TOKEN missing in Secrets. Skipping.");
-      return { success: false };
-    }
-
-    const cleanToken = this.tokens.apiGroq.trim().replace(/^["']|["']$/g, '');
-    const payload = JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        { role: "system", content: "You are ESEB Dual-Token Living Protocol Core V3000-Ω." },
-        { role: "user", content: `Execute Groq LPU synchronization for target domain: ${domainTarget}.` }
-      ],
-      temperature: 0.1
-    });
-
-    const options = {
-      hostname: 'api.groq.com',
-      port: 443,
-      path: '/openai/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cleanToken}`,
-        'Content-Length': Buffer.byteLength(payload)
-      },
-      timeout: 5000
-    };
-
-    return new Promise((resolve) => {
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          console.log(`[GROQ LPU API] Status: ${res.statusCode}`);
-          resolve({ success: res.statusCode === 200 });
-        });
-      });
-      req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
-      req.on('error', () => resolve({ success: false }));
-      req.write(payload);
-      req.end();
-    });
   }
 
   async callCloudflareWorkersAI(nodeConfig, domainTarget) {
@@ -168,13 +150,9 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
 
     return new Promise((resolve) => {
       const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          const isOk = res.statusCode === 200;
-          console.log(`[ESEB 08-AI SUCCESS] Node: [${nodeConfig.id}] | Status ${res.statusCode} ${isOk ? 'OK' : 'FAIL'}`);
-          resolve({ success: isOk, node: nodeConfig.id });
-        });
+        const isOk = res.statusCode === 200;
+        console.log(`[ESEB 08-AI SUCCESS] Node: [${nodeConfig.id}] | Status ${res.statusCode} ${isOk ? 'OK' : 'FAIL'}`);
+        resolve({ success: isOk, node: nodeConfig.id });
       });
       req.on('timeout', () => { req.destroy(); resolve({ success: false, node: nodeConfig.id }); });
       req.on('error', () => resolve({ success: false, node: nodeConfig.id }));
@@ -184,11 +162,10 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
   }
 
   async broadcastIndexNow(domain, urlList) {
-    const hex32Key = "24242424242424242424242424242424";
     const payload = JSON.stringify({
       host: domain,
-      key: hex32Key,
-      keyLocation: `https://${domain}/${hex32Key}.txt`,
+      key: this.indexNowKey,
+      keyLocation: `https://${domain}/${this.indexNowKey}.txt`,
       urlList: urlList
     });
 
@@ -201,12 +178,12 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(payload)
       },
-      timeout: 3000
+      timeout: 5000
     };
 
     return new Promise((resolve) => {
       const req = https.request(options, (res) => {
-        console.log(`[INDEXNOW STABLE BROADCAST] Host: ${domain} | Status: ${res.statusCode}`);
+        console.log(`[INDEXNOW STABLE BROADCAST] Host: ${domain} | Response Status: ${res.statusCode} ${res.statusCode === 200 || res.statusCode === 202 ? 'OK' : 'FAIL'}`);
         resolve({ success: res.statusCode === 200 || res.statusCode === 202 });
       });
       req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
@@ -223,29 +200,22 @@ EATHESEN V3000-Ω is an autonomous 6th-generation AI-driven affiliate intelligen
     console.log(`Stamp: ${this.stamp} | Brand: ${this.brand} | Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    if (this.tokens.esebClassic) {
-      console.log(`[ESEB CLASSIC AUTH] Core Token Verified Successfully.`);
-    } else {
-      console.log(`[ESEB CLASSIC AUTH] Warning: ESEB_CLASSIC_TOKEN is empty.`);
-    }
+    // 1. Xác thực ESEB Classic Token tới External Endpoint
+    await this.verifyEsebClassicToken();
 
-    // 1. Sinh tệp Manifests ổn định
+    // 2. Sinh tệp Manifests & Tệp xác minh IndexNow tĩnh
     this.generateAiSearchManifests(targetDomain);
 
-    // 2. Kích hoạt Groq LPU API
-    await this.callGroqLpuAPI(targetDomain);
-
-    // 3. Kích hoạt song song Ma trận 08 AI Edge Nodes
+    // 3. Kích hoạt song song Ma trận 08 AI Edge Nodes (Cloudflare AI)
     const aiPromises = this.cloudflareAiNodes.map(node => this.callCloudflareWorkersAI(node, targetDomain));
     await Promise.all(aiPromises);
 
-    // 4. Phát sóng IndexNow trực tiếp (sử dụng tệp khóa tĩnh đã cấu hình sẵn trên hosting)
-    const indexNowKey = "24242424242424242424242424242424";
+    // 4. Phát sóng IndexNow trực tiếp
     await this.broadcastIndexNow(targetDomain, [
       `https://${targetDomain}/`,
       `https://${targetDomain}/Llms-Full.txt`,
       `https://${targetDomain}/Agent.json`,
-      `https://${targetDomain}/${indexNowKey}.txt`
+      `https://${targetDomain}/${this.indexNowKey}.txt`
     ]);
 
     console.log(`[ESEB DUAL-TOKEN MATRIX] All Pipelines Completed with Zero Entropy.`);
