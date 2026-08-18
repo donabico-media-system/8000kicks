@@ -1,7 +1,3 @@
-# .github/workflows/SCHEMA_ACCELERATOR.yml
-# ESEB DYNAMIC LIVING ENGINE V3000-Ω — ZERO-LOAD AUTOMATION WORKFLOW
-# BRAND: DONABICO MEDIA SYSTEM | STAMP: V-STAMP-24 | ANCHOR: ¢24 | 04THU 100%
-
 name: SCHEMA_ACCELERATOR
 
 on:
@@ -32,7 +28,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Execute ESEB Packager (.eseb -> .ehc + .js)
+      - name: Execute ESEB Packager (.eseb -> patch index.html + .ehc + .js)
         run: python Protocols/Schema_Accelerator.eseb
 
       - name: Execute Full 08-Node Cloudflare Edge AI Matrix (.js)
@@ -42,13 +38,13 @@ jobs:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
         run: node Protocols/Schema_Accelerator.js
 
-      - name: Commit and Push Dual Trinity Artifacts
+      - name: Commit and Push Dual Trinity Artifacts & Patched Index
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js
+          git add index.html Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "build(schema): execute full 08-node cloudflare edge ai matrix [V-STAMP-24]"
+            git commit -m "build(schema): patch static index.html and execute 08 cloudflare ai nodes [V-STAMP-24]"
             git pull --rebase origin main
             git push origin main
           fi
