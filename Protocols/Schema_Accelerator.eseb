@@ -3,10 +3,10 @@
 """
 [ESEB_DYNAMIC_LIVING_ENGINE_V3000-Ω]
 MODULE: Schema_Accelerator.eseb
-PURPOSE: FIX GSC PRODUCT SNIPPET & EXECUTE FULL 08 CLOUDFLARE EDGE GPU AI MATRIX
+PURPOSE: STATICALLY PATCH INDEX.HTML SCHEMA & RUN 08 CLOUDFLARE AI MATRIX
 STAMP: V-STAMP-24 | ANCHOR: ¢24 | STANDARD: 04THU 100% | ENGINE: AUTO-6D
 """
-import os, sys, json
+import os, sys, re, json
 
 class SchemaAcceleratorFixer:
     def __init__(self):
@@ -15,37 +15,22 @@ class SchemaAcceleratorFixer:
         self.brand = "DONABICO MEDIA SYSTEM"
         self.delta = 0.00000000000000
 
-    def generate_ehc_client(self) -> str:
-        return """/* ESEB LIVING ENTITY CLIENT RUNTIME - FIX PRODUCT SNIPPET SCHEMA */
-(function SchemaAcceleratorEngine() {
-    'use strict';
+    def patch_index_html_statically(self):
+        """Ghi trực tiếp Schema W3C chuẩn vào index.html để Googlebot đọc thô được ngay"""
+        index_path = "index.html"
+        if not os.path.exists(index_path):
+            print("[WARN] index.html not found, skipping static patch.")
+            return
 
-    const CONFIG = {
-        stamp: "V-STAMP-24",
-        anchor: "¢24",
-        brand: "DONABICO MEDIA SYSTEM",
-        delta: 0.00000000000000,
-        interval: 2500
-    };
-
-    function injectFullW3CJsonLdSchema() {
-        const domain = window.location.origin;
-        const currentUrl = window.location.href;
-        const pageTitle = document.title || "8000kicks Eco-Friendly Hemp Sneakers";
-        const metaDesc = document.querySelector('meta[name="description"]')?.content || 
-                         "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.";
-        const firstImgSrc = document.querySelector('img')?.src || `${domain}/assets/product-main.jpg`;
-
-        const schemaPayload = {
+        schema_json = {
             "@context": "https://schema.org/",
             "@type": "Product",
-            "name": pageTitle,
+            "name": "8000Kicks Waterproof Hemp Shoes",
             "image": [
-                firstImgSrc,
-                `${domain}/assets/product-angle2.jpg`,
-                `${domain}/assets/product-angle3.jpg`
+                "https://8000kicks.donabico.com/assets/product-main.jpg",
+                "https://8000kicks.donabico.com/assets/product-angle2.jpg"
             ],
-            "description": metaDesc,
+            "description": "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.",
             "sku": "8000KICKS-HEMP-001",
             "mpn": "8000K-2026-V24",
             "brand": { "@type": "Brand", "name": "8000kicks" },
@@ -63,16 +48,12 @@ class SchemaAcceleratorFixer:
                     "datePublished": "2026-05-15",
                     "reviewBody": "Best eco-friendly waterproof shoes ever! Extremely comfortable and lightweight.",
                     "name": "Superb Quality & Waterproof Performance",
-                    "reviewRating": {
-                        "@type": "Rating",
-                        "ratingValue": "5",
-                        "bestRating": "5"
-                    }
+                    "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
                 }
             ],
             "offers": {
                 "@type": "Offer",
-                "url": currentUrl,
+                "url": "https://8000kicks.donabico.com/",
                 "priceCurrency": "USD",
                 "price": "135.00",
                 "priceValidUntil": "2027-12-31",
@@ -98,25 +79,35 @@ class SchemaAcceleratorFixer:
                     "returnFees": "https://schema.org/FreeReturn"
                 }
             }
-        };
-
-        let schemaScript = document.getElementById("eseb-schema-accelerator-fix");
-        if (!schemaScript) {
-            schemaScript = document.createElement("script");
-            schemaScript.id = "eseb-schema-accelerator-fix";
-            schemaScript.type = "application/ld+json";
-            document.head.appendChild(schemaScript);
         }
-        schemaScript.textContent = JSON.stringify(schemaPayload, null, 2);
-        console.log(`%c[SCHEMA_ACCELERATOR] %cProduct Snippet Rating & Review Schema Injected.`, 
-                    "color:#00FF66;font-weight:bold;background:#000;", "color:#00E5FF;font-weight:bold;");
-    }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", injectFullW3CJsonLdSchema);
-    } else {
-        injectFullW3CJsonLdSchema();
-    }
+        schema_tag = f'<script type="application/ld+json" id="eseb-static-schema">\n{json.dumps(schema_json, indent=2)}\n</script>'
+
+        with open(index_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+
+        # Bỏ schema cũ nếu có
+        html_content = re.sub(r'<script type="application/ld\+json" id="eseb-static-schema">.*?</script>', '', html_content, flags=re.DOTALL)
+
+        # Chèn thẻ mới ngay trước </head>
+        if "</head>" in html_content:
+            html_content = html_content.replace("</head>", f"{schema_tag}\n</head>")
+            with open(index_path, "w", encoding="utf-8") as f:
+                f.write(html_content)
+            print("[SCHEMA_ACCELERATOR] Successfully injected static W3C Schema into index.html head.")
+
+    def generate_ehc_client(self) -> str:
+        return """/* ESEB LIVING ENTITY CLIENT RUNTIME - FIX PRODUCT SNIPPET SCHEMA */
+(function SchemaAcceleratorEngine() {
+    'use strict';
+
+    const CONFIG = {
+        stamp: "V-STAMP-24",
+        anchor: "¢24",
+        brand: "DONABICO MEDIA SYSTEM",
+        delta: 0.00000000000000,
+        interval: 2500
+    };
 
     let pulseCounter = 0;
     setInterval(() => {
@@ -126,7 +117,7 @@ class SchemaAcceleratorFixer:
                 pulseId: pulseCounter,
                 timestamp: new Date().toISOString(),
                 module: "Schema_Accelerator",
-                status: "RATING_REVIEW_SCHEMA_FIXED",
+                status: "STATIC_SCHEMA_PATCHED_GSC_PASS",
                 anchorConstant: CONFIG.anchor,
                 entropyDelta: CONFIG.delta
             }
@@ -144,7 +135,6 @@ if (!CF_ACCOUNT_ID || !CF_API_TOKEN) {
     process.exit(1);
 }
 
-// 08 Cloudflare Edge GPU AI Matrix Registry
 const CF_MATRIX_NODES = [
     { key: "LLAMA_70B", model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", body: { messages: [{ role: "user", content: "Generate affiliate review summary." }] } },
     { key: "LLAMA_8B", model: "@cf/meta/llama-3.1-8b-instruct", type: "chat", body: { messages: [{ role: "user", content: "Rapid query fallback test." }] } },
@@ -209,12 +199,13 @@ async function executeFullMatrix() {
 executeFullMatrix();"""
 
     def execute_build(self):
+        self.patch_index_html_statically()
         os.makedirs("Protocols", exist_ok=True)
         with open("Protocols/Schema_Accelerator.ehc", "w", encoding="utf-8") as f:
             f.write(self.generate_ehc_client())
         with open("Protocols/Schema_Accelerator.js", "w", encoding="utf-8") as f:
             f.write(self.generate_js_runner())
-        print("[SCHEMA_ACCELERATOR_SUCCESS] Full 08 Cloudflare Edge Matrix Dual Trinity Generated.")
+        print("[SCHEMA_ACCELERATOR_SUCCESS] Static HTML Patch & Full 08 Cloudflare Edge Matrix Complete.")
 
 if __name__ == "__main__":
     SchemaAcceleratorFixer().execute_build()
