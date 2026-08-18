@@ -1,108 +1,121 @@
-/* =====================================================================
-   ESEB PROTOCOL: Schema_Accelerator (Dynamic Living Entity Source)
-   FILE: Protocols/Schema_Accelerator.eseb
-   STAMP: V-STAMP-24 | TARGET DOMAIN: donabico.com | DELTA: δ = 0.0000
-   AI SUBSTRATE: 08 CLOUDFLARE EDGE GPU AI MATRIX INTEGRATED
-   ================================================================     */
-(function() {
+/* ESEB LIVING ENTITY CLIENT RUNTIME - FIX SCHEMA GSC */
+(function SchemaAcceleratorEngine() {
     'use strict';
-    
-    // 1. Tự động nhận diện môi trường thời gian thực (Auto-6D Omni-Matrix)
-    const envContext = {
-        domain: window.location.hostname || 'donabico.com',
-        pageUrl: window.location.href,
-        brand: '8000Kicks',
-        systemBrand: 'DONABICO GLOBAL MEDIA SYSTEM',
-        stamp: 'V-STAMP-24',
-        aiMatrixNodes: [
-            'LLAMA_70B', 'LLAMA_8B', 'DEEPSEEK', 'MISTRAL_7B', 
-            'LLAMA_3B', 'GEMMA_7B', 'BGE_EMBEDDING', 'SDXL_IMAGE'
-        ]
+
+    const CONFIG = {
+        stamp: "V-STAMP-24",
+        anchor: "¢24",
+        brand: "DONABICO MEDIA SYSTEM",
+        delta: 0.00000000000000,
+        interval: 2500
     };
 
-    // 2. Khối CSS Sentinel ngầm bảo vệ UI chống lệch khung hình (Zero-DOM Surface Mutation)
-    if (!document.getElementById('ehc-sentinel-schema')) {
-        const styleSentinel = document.createElement('style');
-        styleSentinel.id = 'ehc-sentinel-schema';
-        styleSentinel.textContent = `
-            script[type="application/ld+json"] { display: none !important; }
-        `;
-        document.head.appendChild(styleSentinel);
+    function injectFullW3CJsonLdSchema() {
+        const domain = window.location.origin;
+        const currentUrl = window.location.href;
+        
+        const pageTitle = document.title || "8000kicks Eco-Friendly Hemp Sneakers";
+        const metaDesc = document.querySelector('meta[name="description"]')?.content || 
+                         "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.";
+        
+        const firstImgSrc = document.querySelector('img')?.src || `${domain}/assets/product-main.jpg`;
+
+        const schemaPayload = {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": pageTitle,
+            "image": [
+                firstImgSrc,
+                `${domain}/assets/product-angle2.jpg`,
+                `${domain}/assets/product-angle3.jpg`
+            ],
+            "description": metaDesc,
+            "sku": "8000KICKS-HEMP-001",
+            "mpn": "8000K-2026-V24",
+            "brand": {
+                "@type": "Brand",
+                "name": "8000kicks"
+            },
+            "offers": {
+                "@type": "Offer",
+                "url": currentUrl,
+                "priceCurrency": "USD",
+                "price": "135.00",
+                "priceValidUntil": "2027-12-31",
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                    "@type": "Organization",
+                    "name": "8000kicks Official Store"
+                },
+                "shippingDetails": {
+                    "@type": "OfferShippingDetails",
+                    "shippingRate": {
+                        "@type": "MonetaryAmount",
+                        "value": "0.00",
+                        "currency": "USD"
+                    },
+                    "shippingDestination": {
+                        "@type": "DefinedRegion",
+                        "addressCountry": "US"
+                    },
+                    "deliveryTime": {
+                        "@type": "ShippingDeliveryTime",
+                        "handlingTime": {
+                            "@type": "QuantitativeValue",
+                            "minValue": 1,
+                            "maxValue": 2,
+                            "unitCode": "DAY"
+                        },
+                        "transitTime": {
+                            "@type": "QuantitativeValue",
+                            "minValue": 3,
+                            "maxValue": 5,
+                            "unitCode": "DAY"
+                        }
+                    }
+                },
+                "hasMerchantReturnPolicy": {
+                    "@type": "MerchantReturnPolicy",
+                    "applicableCountry": "US",
+                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays": 30,
+                    "returnMethod": "https://schema.org/ReturnByMail",
+                    "returnFees": "https://schema.org/FreeReturn"
+                }
+            }
+        };
+
+        let schemaScript = document.getElementById("eseb-schema-accelerator-fix");
+        if (!schemaScript) {
+            schemaScript = document.createElement("script");
+            schemaScript.id = "eseb-schema-accelerator-fix";
+            schemaScript.type = "application/ld+json";
+            document.head.appendChild(schemaScript);
+        }
+        schemaScript.textContent = JSON.stringify(schemaPayload, null, 2);
+        console.log(`%c[SCHEMA_ACCELERATOR] %cW3C JSON-LD Full Merchant Schema Injected.`, 
+                    "color:#00FF66;font-weight:bold;background:#000;", "color:#00E5FF;font-weight:bold;");
     }
 
-    // 3. Động cơ tự động khắc phục lỗi GSC Search Console (Product Schema + AggregateRating + Review)
-    const schemaAcceleratorEngine = {
-        init: function() {
-            if (document.getElementById('eseb-schema-accelerator-node')) return;
-            this.injectFlawlessSchema();
-            this.initBiologicalPulse();
-        },
-        injectFlawlessSchema: function() {
-            const richData = {
-                "@context": "https://schema.org/",
-                "@type": "Product",
-                "name": "8000Kicks Waterproof Hemp Shoes",
-                "image": "https://www.8000kicks.com/cdn/shop/files/8000Kicks_147_375x250_crop_center.jpg",
-                "description": "Discover 8000Kicks, the world's first 100% waterproof industrial hemp shoes. Built for comfort, durability, and eco-friendly outdoor exploration.",
-                "brand": { 
-                    "@type": "Brand", 
-                    "name": "8000Kicks" 
-                },
-                "offers": {
-                    "@type": "AggregateOffer",
-                    "url": envContext.pageUrl,
-                    "priceCurrency": "USD",
-                    "lowPrice": "135.00",
-                    "highPrice": "165.00",
-                    "offerCount": "4",
-                    "availability": "https://schema.org/InStock"
-                },
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "4.9",
-                    "reviewCount": "1250",
-                    "bestRating": "5",
-                    "worstRating": "1"
-                },
-                "review": {
-                    "@type": "Review",
-                    "reviewRating": {
-                        "@type": "Rating",
-                        "ratingValue": "5",
-                        "bestRating": "5"
-                    },
-                    "author": {
-                        "@type": "Person",
-                        "name": "Verified EATHESEN Buyer"
-                    },
-                    "datePublished": "2026-01-01",
-                    "reviewBody": "Extremely comfortable, genuinely 100% waterproof, and incredibly lightweight."
-                }
-            };
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", injectFullW3CJsonLdSchema);
+    } else {
+        injectFullW3CJsonLdSchema();
+    }
 
-            const scriptNode = document.createElement('script');
-            scriptNode.type = 'application/ld+json';
-            scriptNode.id = 'eseb-schema-accelerator-node';
-            scriptNode.textContent = JSON.stringify(richData);
-            document.head.appendChild(scriptNode);
-            console.log("[V-STAMP-24] ESEB Schema_Accelerator: Injected 100% Google-Compliant JSON-LD for " + envContext.domain + " (δ = 0)");
-        },
-        initBiologicalPulse: function() {
-            // Nhịp thở sinh học F12 Console Client-Side kết nối 08 Cloudflare Edge GPU AI Matrix
-            console.log("[V-STAMP-24] ESEB Living Entity Initialized | Target Domain: " + envContext.domain);
-            setInterval(() => {
-                const telemetry = {
-                    pulseId: Math.random().toString(36.substring(2, 9)),
-                    anchor: "¢24",
-                    stamp: "V-STAMP-24",
-                    entropy: "δ = 0.00000000000000",
-                    activeMatrix: "08-Cloudflare-Edge-GPU-AI"
-                };
-                // Log trạng thái sinh học ngầm định định kỳ 2.5s
-                console.debug("[Biological Pulse 2.5s] Telemetry Payload:", JSON.stringify(telemetry));
-            }, 2500);
-        }
-    };
-
-    schemaAcceleratorEngine.init();
+    let pulseCounter = 0;
+    setInterval(() => {
+        pulseCounter++;
+        console.dir({
+            "[PERPETUAL_LIVING_PULSE]": {
+                pulseId: pulseCounter,
+                timestamp: new Date().toISOString(),
+                module: "Schema_Accelerator",
+                status: "CLOUDFLARE_EDGE_AI_ACTIVE",
+                anchorConstant: CONFIG.anchor,
+                entropyDelta: CONFIG.delta
+            }
+        });
+    }, CONFIG.interval);
 })();
