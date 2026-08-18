@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python Environment
         uses: actions/setup-python@v5
@@ -33,7 +35,7 @@ jobs:
       - name: Execute ESEB Packager (.eseb -> .ehc + .js)
         run: python Protocols/Schema_Accelerator.eseb
 
-      - name: Execute Serverless Runner API (.js via Cloudflare Edge Workers AI)
+      - name: Execute Full 08-Node Cloudflare Edge AI Matrix (.js)
         env:
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
@@ -45,4 +47,8 @@ jobs:
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
           git add Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js
-          git diff --quiet && git diff --staged --quiet || (git commit -m "build(schema): update cloudflare 8-edge gpu ai matrix [V-STAMP-24]" && git push)
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "build(schema): execute full 08-node cloudflare edge ai matrix [V-STAMP-24]"
+            git pull --rebase origin main
+            git push origin main
+          fi
