@@ -1,7 +1,3 @@
-# .github/workflows/CDN_INDEX_SIGNAL.yml
-# ESEB DYNAMIC LIVING ENGINE V3000-Ω — DUAL-TOKEN 08-AI MATRIX WORKFLOW
-# BRAND: DONABICO MEDIA SYSTEM | STAMP: V-STAMP-24 | ANCHOR: ¢24 | 04THU 100%
-
 name: CDN_INDEX_SIGNAL
 
 on:
@@ -13,11 +9,12 @@ on:
     - cron: '0 */4 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   eseb-sota-compilation:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout Repository Matrix
         uses: actions/checkout@v4
