@@ -15,9 +15,9 @@
   let pulseCounter = 0;
   const emitTelemetryPulse = () => {
     pulseCounter++;
-    console.log(`%c[LOG LIVE MONITOR #${pulseCounter}] 🧬 TELEMETRY TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
+    console.log(`%c[POWER BI LAB TELEMETRY #${pulseCounter}] 📊 TRANSMITTER ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
   };
-  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] 🚀 LOG LIVE MONITOR ARMED | REPO: " + env.repo, "color: #ff0055; font-weight: bold; font-size: 12px; background: #220011; padding: 4px;");
+  console.log("%c[POWER BI LAB ANALYTICS V3000-Ω] 🚀 TELEMETRY ENGINE ARMED | REPO: " + env.repo, "color: #00e5ff; font-weight: bold; font-size: 12px; background: #001122; padding: 4px;");
   emitTelemetryPulse();
   setInterval(emitTelemetryPulse, 2500);
 })();
