@@ -9,6 +9,9 @@ on:
     - cron: '0 */4 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-execute:
     runs-on: ubuntu-latest
@@ -42,9 +45,15 @@ jobs:
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add index.html Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js
-          if ! git diff --quiet || ! git diff --staged --quiet; then
+          
+          git remote set-url origin https://x-access-token:${{ secrets.ESEB_CLASSIC_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          git add index.html Protocols/Schema_Accelerator.eseb Protocols/Schema_Accelerator.ehc Protocols/Schema_Accelerator.js || true
+          
+          if ! git diff --cached --quiet; then
             git commit -m "build(schema): patch static index.html and execute 08 cloudflare ai nodes [V-STAMP-24]"
-            git pull --rebase origin main
-            git push origin main
+            git pull --rebase origin main || true
+            git push origin HEAD:main
+          else
+            echo "No changes detected in repository. Entropy delta = 0."
           fi
