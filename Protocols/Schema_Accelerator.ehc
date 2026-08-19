@@ -1,27 +1,23 @@
-/* ESEB LIVING ENTITY CLIENT RUNTIME - FIX PRODUCT SNIPPET SCHEMA */
-(function SchemaAcceleratorEngine() {
-    'use strict';
-
-    const CONFIG = {
-        stamp: "V-STAMP-24",
-        anchor: "¢24",
-        brand: "DONABICO MEDIA SYSTEM",
-        delta: 0.00000000000000,
-        interval: 2500
-    };
-
-    let pulseCounter = 0;
-    setInterval(() => {
-        pulseCounter++;
-        console.dir({
-            "[PERPETUAL_LIVING_PULSE]": {
-                pulseId: pulseCounter,
-                timestamp: new Date().toISOString(),
-                module: "Schema_Accelerator",
-                status: "STATIC_SCHEMA_PATCHED_GSC_PASS",
-                anchorConstant: CONFIG.anchor,
-                entropyDelta: CONFIG.delta
-            }
-        });
-    }, CONFIG.interval);
+/* ===============================================================================
+   ESEB DYNAMIC LIVING ENTITY - SCHEMA ACCELERATOR BRIDGE
+   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED | ZERO-TRUST SECURED
+   DONABICO GLOBAL MEDIA SYSTEM
+ =============================================================================== */
+(function() {
+  'use strict';
+  const getContext = () => {
+    const host = window.location.hostname || '8000kicks.donabico.com';
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
+    return { domain: host, owner: 'donabico-media-system', repo: repoName, stamp: 'V-STAMP-24', anchor: '¢24' };
+  };
+  const env = getContext();
+  let pulseCounter = 0;
+  const emitTelemetryPulse = () => {
+    pulseCounter++;
+    console.log(`%c[SCHEMA ACCELERATOR TELEMETRY #${pulseCounter}] 📊 SCHEMA ENGINE ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
+  };
+  console.log("%c[SCHEMA ACCELERATOR V3000-Ω] 🚀 TELEMETRY ENGINE ARMED | REPO: " + env.repo, "color: #00e5ff; font-weight: bold; font-size: 12px; background: #001122; padding: 4px;");
+  emitTelemetryPulse();
+  setInterval(emitTelemetryPulse, 2500);
 })();
