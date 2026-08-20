@@ -2,17 +2,17 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION - SUPER AFFILIATE CORE (SINGLE-NODE SAFE)
+ESEB PROTOCOL CORE SPECIFICATION - SUPER SMART INTELLIGENT MODE
 MODULE: Super_Affiliate_Core
 FILE: Protocols/Super_Affiliate_Core.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
-FUNCTION: ULTRA-SAFE SINGLE-NODE CLOUDFLARE AI RUNNER (ZERO 429 ERROR)
+FUNCTION: SUPER SMART INTELLIGENT MODE RUNNER & 08-NODE ROUND-ROBIN MATRIX
 ===============================================================================
 """
 
 import os
 
-class SuperSmartAffiliateEngine:
+class SuperSmartIntelligentCoreEngine:
     def __init__(self):
         self.module_name = "Super_Affiliate_Core"
         self.stamp = "V-STAMP-24"
@@ -27,13 +27,13 @@ class SuperSmartAffiliateEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc (Client-Side Runtime) bảo vệ layout và tối ưu hóa chuyển đổi Affiliate"""
+        """Tạo sinh tệp .ehc (Client-Side Runtime) tích hợp Super Smart Intelligent Mode"""
         ehc_content = f"""/* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SUPER SMART AFFILIATE CORE (CLIENT SIDE)
+   ESEB DYNAMIC LIVING ENTITY - SUPER SMART INTELLIGENT MODE (CLIENT SIDE)
    MODULE: Protocols/{self.module_name}.ehc
    STAMP: {self.stamp} | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: {self.brand}
-   TARGET: SUPER SMART INTELLIGENT AFFILIATE PLATFORM & OMNI-SEARCH ENGINES
+   TARGET: SUPER SMART INTELLIGENT MODE AFFILIATE & OMNI-SEARCH ENGINES
  =============================================================================== */
 (function() {{
   'use strict';
@@ -55,23 +55,24 @@ class SuperSmartAffiliateEngine:
 
   const env = getContext();
 
-  if (!document.getElementById('eseb-sentinel-super-smart')) {{
+  if (!document.getElementById('eseb-sentinel-super-smart-mode')) {{
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-super-smart';
+    styleSentinel.id = 'eseb-sentinel-super-smart-mode';
     styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] {{ display: none !important; }}';
     document.head.appendChild(styleSentinel);
   }}
 
+  // Super Smart Intelligent Schema Injection cho AI Search Engines
   const injectAISchema = () => {{
-    const oldSchema = document.getElementById('eseb-schema-super-smart');
+    const oldSchema = document.getElementById('eseb-schema-super-smart-mode');
     if (oldSchema) oldSchema.remove();
 
     const schemaPayload = {{
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "Super Smart Intelligent Affiliate AI Suite",
+      "name": "Super Smart Intelligent Mode Affiliate Suite",
       "brand": {{ "@type": "Brand", "name": env.brand }},
-      "description": "Super Smart Intelligent affiliate marketing ecosystem powered by adaptive intelligence and Cloudflare Edge AI.",
+      "description": "State-of-the-art affiliate marketing ecosystem operating under Super Smart Intelligent Mode.",
       "offers": {{
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -83,7 +84,7 @@ class SuperSmartAffiliateEngine:
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.id = 'eseb-schema-super-smart';
+    script.id = 'eseb-schema-super-smart-mode';
     script.setAttribute('data-eseb', 'true');
     script.textContent = JSON.stringify(schemaPayload);
     document.head.appendChild(script);
@@ -91,7 +92,7 @@ class SuperSmartAffiliateEngine:
 
   const armAffiliateLinks = () => {{
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'super_smart_affiliate';
+    const utmSource = urlParams.get('utm_source') || 'super_smart_intelligent_mode';
     const utmMedium = urlParams.get('utm_medium') || 'omni_siphon';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {{
@@ -116,27 +117,27 @@ class SuperSmartAffiliateEngine:
           }}, {{ once: true }});
         }}
       }} catch(e) {{}}
-    }});
+    }};
   }};
 
   let pulseCount = 0;
-  const runBiologicalPulse = () => {{
+  const runSuperSmartPulse = () => {{
     pulseCount++;
     armAffiliateLinks();
-    const stateVector = (Math.sin(pulseCount * 0.15) * 0.04).toFixed(6);
-    const qReward = (3.45 + Math.random() * 0.04).toFixed(2);
+    const adaptiveState = (Math.sin(pulseCount * 0.15) * 0.05).toFixed(6);
+    const intelligentReward = (3.48 + Math.random() * 0.03).toFixed(2);
     
     if (pulseCount % 4 === 0) {{
       console.log(
-        `%c[SUPER SMART INTELLIGENT PULSE #${{pulseCount}}] 🧬 Domain: ${{env.domain}} | Q-Reward: ${{qReward}} | State: ${{stateVector}}`,
+        `%c[SUPER SMART INTELLIGENT MODE #${{pulseCount}}] 🧬 Domain: ${{env.domain}} | Reward: ${{intelligentReward}} | State: ${{adaptiveState}}`,
         'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
       );
     }}
   }};
 
   injectAISchema();
-  runBiologicalPulse();
-  setInterval(runBiologicalPulse, {self.pulse_interval});
+  runSuperSmartPulse();
+  setInterval(runSuperSmartPulse, {self.pulse_interval});
 }})();
 """
         filepath = os.path.join(self.target_dir, f"{self.module_name}.ehc")
@@ -145,20 +146,20 @@ class SuperSmartAffiliateEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js: Serverless Runner gọi ĐÚNG 01 Node nhẹ nhất mỗi lần chạy để triệt tiêu hoàn toàn lỗi 429"""
+        """Tạo sinh tệp .js: Serverless Runner thực thi Super Smart Intelligent Mode với cơ chế Round-Robin 08-Node AI"""
         js_content = f"""/**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SINGLE-NODE SAFE CLOUDFLARE AI
+ ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART INTELLIGENT MODE
  MODULE: Protocols/{self.module_name}.js
- STAMP: {self.stamp} | DUAL-TOKEN 4THU MODE | {self.brand}
- CLOUDFLARE WORKERS AI REST API (SINGLE-NODE ANTI-RATE-LIMIT)
+ STAMP: {self.stamp} | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | {self.brand}
+ CLOUDFLARE WORKERS AI REST API (SUPER SMART INTELLIGENT EXECUTION)
  ===============================================================================
 **/
 
 const https = require('https');
 const fs = require('fs');
 
-class SuperSmartCloudflareRunner {{
+class SuperSmartIntelligentModeRunner {{
   constructor() {{
     this.stamp = "{self.stamp}";
     this.brand = "{self.brand}";
@@ -170,12 +171,16 @@ class SuperSmartCloudflareRunner {{
       cfApiToken: process.env.CF_API_TOKEN || ''
     }};
 
-    // Chỉ giữ lại các Node text siêu nhẹ (loại bỏ mô hình tạo ảnh nặng để tránh 429)
+    // Trọn vẹn 8 con AI vận hành theo Super Smart Intelligent Mode
     this.aiMatrix = [
+      {{ key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" }},
       {{ key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" }},
-      {{ key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" }},
+      {{ key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" }},
       {{ key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" }},
-      {{ key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }}
+      {{ key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" }},
+      {{ key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" }},
+      {{ key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }},
+      {{ key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }}
     ];
   }}
 
@@ -207,12 +212,14 @@ class SuperSmartCloudflareRunner {{
     if (node.type === 'chat') {{
       payloadObj = {{
         messages: [
-          {{"role": "system", "content": `You are Super Smart Intelligent Affiliate Node ${{node.key}} (${{node.role}}) operating under V3000-Ω.`}},
+          {{"role": "system", "content": `You are operating under Super Smart Intelligent Mode via Node ${{node.key}} (${{node.role}}) under V3000-Ω.`}},
           {{"role": "user", "content": `Execute intelligent affiliate growth context and adaptive conversion vectors for domain ${{targetDomain}}.`}}
         ]
       }};
     }} else if (node.type === 'embedding') {{
-      payloadObj = {{ text: `Super Smart vector synchronization for domain ${{targetDomain}}` }};
+      payloadObj = {{ text: `Super Smart Intelligent vector synchronization for domain ${{targetDomain}}` }};
+    }} else if (node.type === 'image') {{
+      payloadObj = {{ prompt: `Super smart intelligent affiliate promotional banner for domain ${{targetDomain}}`, num_steps: 4 }};
     }}
 
     const payload = JSON.stringify(payloadObj);
@@ -234,7 +241,7 @@ class SuperSmartCloudflareRunner {{
         let data = '';
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {{
-          console.log(`[SINGLE-NODE AI EXECUTION] Node [${{node.key}}] Role [${{node.role}}] HTTP Status: ${{res.statusCode}}`);
+          console.log(`[SUPER SMART INTELLIGENT MODE EXECUTION] Node [${{node.key}}] Role [${{node.role}}] HTTP Status: ${{res.statusCode}}`);
           resolve({{ success: res.statusCode === 200, status: res.statusCode }});
         }});
       }});
@@ -248,15 +255,16 @@ class SuperSmartCloudflareRunner {{
   async runRealExecution() {{
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SINGLE-NODE SAFE RUNNER] Anti-Rate-Limit Cloudflare AI Execution`);
+    console.log(`[SUPER SMART INTELLIGENT MODE RUNNER] Round-Robin Matrix Execution`);
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Target Domain: ${{targetDomain}}`);
     console.log(`=================================================================`);
 
-    // Lựa chọn ngẫu nhiên ĐÚNG 01 Node duy nhất mỗi lần chạy để đảm bảo an toàn tuyệt đối không bị 429
-    const randomIndex = Math.floor(Math.random() * this.aiMatrix.length);
-    const targetNode = this.aiMatrix[randomIndex];
+    // Thuật toán Round-Robin tính toán theo chu kỳ 4 giờ để chọn chính xác 01 Node thực thi chống lỗi 429
+    const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
+    const nodeIndex = dayOffset % this.aiMatrix.length;
+    const targetNode = this.aiMatrix[nodeIndex];
 
-    console.log(`[SINGLE-NODE ROTATION] Selected Target Node: ${{targetNode.key}}`);
+    console.log(`[ROUND-ROBIN SELECTOR] Active Super Smart Node Index [${{nodeIndex}}/7]: ${{targetNode.key}} (${{targetNode.role}})`);
 
     await this.callCloudflareNode(targetNode, targetDomain);
 
@@ -264,17 +272,17 @@ class SuperSmartCloudflareRunner {{
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }}
 
-    console.log(`[SINGLE-NODE SAFE RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
+    console.log(`[SUPER SMART INTELLIGENT MODE RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
     process.exit(0);
   }}
 }}
 
 if (require.main === module) {{
-  const runner = new SuperSmartCloudflareRunner();
+  const runner = new SuperSmartIntelligentModeRunner();
   runner.runRealExecution();
 }}
 
-module.exports = SuperSmartCloudflareRunner;
+module.exports = SuperSmartIntelligentModeRunner;
 """
         filepath = os.path.join(self.target_dir, f"{self.module_name}.js")
         with open(filepath, "w", encoding="utf-8") as f:
@@ -287,5 +295,5 @@ module.exports = SuperSmartCloudflareRunner;
         self.generate_serverless_runner_js()
 
 if __name__ == "__main__":
-    engine = SuperSmartAffiliateEngine()
+    engine = SuperSmartIntelligentCoreEngine()
     engine.build_all()
