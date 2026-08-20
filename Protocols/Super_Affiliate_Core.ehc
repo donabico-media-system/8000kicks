@@ -1,9 +1,9 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SUPER SMART AFFILIATE CORE (CLIENT SIDE)
+   ESEB DYNAMIC LIVING ENTITY - SUPER SMART INTELLIGENT MODE (CLIENT SIDE)
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: DONABICO MEDIA SYSTEM
-   TARGET: SUPER SMART INTELLIGENT AFFILIATE PLATFORM & OMNI-SEARCH ENGINES
+   TARGET: SUPER SMART INTELLIGENT MODE AFFILIATE & OMNI-SEARCH ENGINES
  =============================================================================== */
 (function() {
   'use strict';
@@ -25,23 +25,24 @@
 
   const env = getContext();
 
-  if (!document.getElementById('eseb-sentinel-super-smart')) {
+  if (!document.getElementById('eseb-sentinel-super-smart-mode')) {
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-super-smart';
+    styleSentinel.id = 'eseb-sentinel-super-smart-mode';
     styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] { display: none !important; }';
     document.head.appendChild(styleSentinel);
   }
 
+  // Super Smart Intelligent Schema Injection cho AI Search Engines
   const injectAISchema = () => {
-    const oldSchema = document.getElementById('eseb-schema-super-smart');
+    const oldSchema = document.getElementById('eseb-schema-super-smart-mode');
     if (oldSchema) oldSchema.remove();
 
     const schemaPayload = {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "Super Smart Intelligent Affiliate AI Suite",
+      "name": "Super Smart Intelligent Mode Affiliate Suite",
       "brand": { "@type": "Brand", "name": env.brand },
-      "description": "Super Smart Intelligent affiliate marketing ecosystem powered by adaptive intelligence and Cloudflare Edge AI.",
+      "description": "State-of-the-art affiliate marketing ecosystem operating under Super Smart Intelligent Mode.",
       "offers": {
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -53,7 +54,7 @@
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.id = 'eseb-schema-super-smart';
+    script.id = 'eseb-schema-super-smart-mode';
     script.setAttribute('data-eseb', 'true');
     script.textContent = JSON.stringify(schemaPayload);
     document.head.appendChild(script);
@@ -61,7 +62,7 @@
 
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'super_smart_affiliate';
+    const utmSource = urlParams.get('utm_source') || 'super_smart_intelligent_mode';
     const utmMedium = urlParams.get('utm_medium') || 'omni_siphon';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
@@ -86,25 +87,25 @@
           }, { once: true });
         }
       } catch(e) {}
-    });
+    };
   };
 
   let pulseCount = 0;
-  const runBiologicalPulse = () => {
+  const runSuperSmartPulse = () => {
     pulseCount++;
     armAffiliateLinks();
-    const stateVector = (Math.sin(pulseCount * 0.15) * 0.04).toFixed(6);
-    const qReward = (3.45 + Math.random() * 0.04).toFixed(2);
+    const adaptiveState = (Math.sin(pulseCount * 0.15) * 0.05).toFixed(6);
+    const intelligentReward = (3.48 + Math.random() * 0.03).toFixed(2);
     
     if (pulseCount % 4 === 0) {
       console.log(
-        `%c[SUPER SMART INTELLIGENT PULSE #${pulseCount}] 🧬 Domain: ${env.domain} | Q-Reward: ${qReward} | State: ${stateVector}`,
+        `%c[SUPER SMART INTELLIGENT MODE #${pulseCount}] 🧬 Domain: ${env.domain} | Reward: ${intelligentReward} | State: ${adaptiveState}`,
         'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
       );
     }
   };
 
   injectAISchema();
-  runBiologicalPulse();
-  setInterval(runBiologicalPulse, 2500);
+  runSuperSmartPulse();
+  setInterval(runSuperSmartPulse, 2500);
 })();

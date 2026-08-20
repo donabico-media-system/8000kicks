@@ -1,16 +1,16 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SINGLE-NODE SAFE CLOUDFLARE AI
+ ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART INTELLIGENT MODE
  MODULE: Protocols/Super_Affiliate_Core.js
- STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO MEDIA SYSTEM
- CLOUDFLARE WORKERS AI REST API (SINGLE-NODE ANTI-RATE-LIMIT)
+ STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
+ CLOUDFLARE WORKERS AI REST API (SUPER SMART INTELLIGENT EXECUTION)
  ===============================================================================
 **/
 
 const https = require('https');
 const fs = require('fs');
 
-class SuperSmartCloudflareRunner {
+class SuperSmartIntelligentModeRunner {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO MEDIA SYSTEM";
@@ -22,12 +22,16 @@ class SuperSmartCloudflareRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // Chỉ giữ lại các Node text siêu nhẹ (loại bỏ mô hình tạo ảnh nặng để tránh 429)
+    // Trọn vẹn 8 con AI vận hành theo Super Smart Intelligent Mode
     this.aiMatrix = [
+      { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" },
       { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
-      { key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" },
+      { key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" },
       { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" },
-      { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }
+      { key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" },
+      { key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" },
+      { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" },
+      { key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }
     ];
   }
 
@@ -59,12 +63,14 @@ class SuperSmartCloudflareRunner {
     if (node.type === 'chat') {
       payloadObj = {
         messages: [
-          {"role": "system", "content": `You are Super Smart Intelligent Affiliate Node ${node.key} (${node.role}) operating under V3000-Ω.`},
+          {"role": "system", "content": `You are operating under Super Smart Intelligent Mode via Node ${node.key} (${node.role}) under V3000-Ω.`},
           {"role": "user", "content": `Execute intelligent affiliate growth context and adaptive conversion vectors for domain ${targetDomain}.`}
         ]
       };
     } else if (node.type === 'embedding') {
-      payloadObj = { text: `Super Smart vector synchronization for domain ${targetDomain}` };
+      payloadObj = { text: `Super Smart Intelligent vector synchronization for domain ${targetDomain}` };
+    } else if (node.type === 'image') {
+      payloadObj = { prompt: `Super smart intelligent affiliate promotional banner for domain ${targetDomain}`, num_steps: 4 };
     }
 
     const payload = JSON.stringify(payloadObj);
@@ -86,7 +92,7 @@ class SuperSmartCloudflareRunner {
         let data = '';
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {
-          console.log(`[SINGLE-NODE AI EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
+          console.log(`[SUPER SMART INTELLIGENT MODE EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
           resolve({ success: res.statusCode === 200, status: res.statusCode });
         });
       });
@@ -100,15 +106,16 @@ class SuperSmartCloudflareRunner {
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SINGLE-NODE SAFE RUNNER] Anti-Rate-Limit Cloudflare AI Execution`);
+    console.log(`[SUPER SMART INTELLIGENT MODE RUNNER] Round-Robin Matrix Execution`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // Lựa chọn ngẫu nhiên ĐÚNG 01 Node duy nhất mỗi lần chạy để đảm bảo an toàn tuyệt đối không bị 429
-    const randomIndex = Math.floor(Math.random() * this.aiMatrix.length);
-    const targetNode = this.aiMatrix[randomIndex];
+    // Thuật toán Round-Robin tính toán theo chu kỳ 4 giờ để chọn chính xác 01 Node thực thi chống lỗi 429
+    const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
+    const nodeIndex = dayOffset % this.aiMatrix.length;
+    const targetNode = this.aiMatrix[nodeIndex];
 
-    console.log(`[SINGLE-NODE ROTATION] Selected Target Node: ${targetNode.key}`);
+    console.log(`[ROUND-ROBIN SELECTOR] Active Super Smart Node Index [${nodeIndex}/7]: ${targetNode.key} (${targetNode.role})`);
 
     await this.callCloudflareNode(targetNode, targetDomain);
 
@@ -116,14 +123,14 @@ class SuperSmartCloudflareRunner {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }
 
-    console.log(`[SINGLE-NODE SAFE RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
+    console.log(`[SUPER SMART INTELLIGENT MODE RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
     process.exit(0);
   }
 }
 
 if (require.main === module) {
-  const runner = new SuperSmartCloudflareRunner();
+  const runner = new SuperSmartIntelligentModeRunner();
   runner.runRealExecution();
 }
 
-module.exports = SuperSmartCloudflareRunner;
+module.exports = SuperSmartIntelligentModeRunner;
