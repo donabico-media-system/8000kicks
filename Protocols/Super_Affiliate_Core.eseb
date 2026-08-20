@@ -185,7 +185,7 @@ class SupremeSOTACloudflareRunner {{
         const cnameDomain = fs.readFileSync('CNAME', 'utf8').trim();
         if (cnameDomain) return cnameDomain;
       }}
-    }} catch(e) {}
+    }} catch(e) {{}}
 
     const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
     const parts = githubRepo.split('/');
