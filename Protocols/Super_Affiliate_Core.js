@@ -1,16 +1,16 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & CLOUDFLARE 08-NODE SOTA AI MATRIX
+ ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART INTELLIGENT AI MATRIX
  MODULE: Protocols/Super_Affiliate_Core.js
  STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO MEDIA SYSTEM
- CLOUDFLARE WORKERS AI REST API EXECUTION (HTTP 200 VERIFIED)
+ CLOUDFLARE WORKERS AI REST API (SUPER SMART INTELLIGENT ROTATION)
  ===============================================================================
 **/
 
 const https = require('https');
 const fs = require('fs');
 
-class SupremeSOTACloudflareRunner {
+class SuperSmartCloudflareRunner {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO MEDIA SYSTEM";
@@ -22,16 +22,15 @@ class SupremeSOTACloudflareRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // [STRICT] 08 Cloudflare Edge AI Nodes Only - Zero External Dependencies
     this.aiMatrix = [
-      { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "High-Intent Affiliate Reviews" },
-      { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Fast Query" },
-      { key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Reasoning & GEO-SEO Optimization" },
-      { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Data" },
+      { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Affiliate Reviews & Q-Learning" },
+      { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
+      { key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" },
+      { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" },
       { key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" },
-      { key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & E-commerce" },
+      { key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" },
       { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" },
-      { key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Banners & Visual Posters" }
+      { key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }
     ];
   }
 
@@ -63,14 +62,14 @@ class SupremeSOTACloudflareRunner {
     if (node.type === 'chat') {
       payloadObj = {
         messages: [
-          {"role": "system", "content": `You are ESEB Super Affiliate Core Node ${node.key} (${node.role}) operating under V3000-Ω.`},
-          {"role": "user", "content": `Generate organic search growth context and affiliate conversion vectors for domain ${targetDomain}.`}
+          {"role": "system", "content": `You are Super Smart Intelligent Affiliate Node ${node.key} (${node.role}) operating under V3000-Ω.`},
+          {"role": "user", "content": `Execute intelligent affiliate growth context and adaptive conversion vectors for domain ${targetDomain}.`}
         ]
       };
     } else if (node.type === 'embedding') {
-      payloadObj = { text: `Organic vector synchronization for domain ${targetDomain}` };
+      payloadObj = { text: `Super Smart vector synchronization for domain ${targetDomain}` };
     } else if (node.type === 'image') {
-      payloadObj = { prompt: `Affiliate promotional banner for domain ${targetDomain}`, num_steps: 4 };
+      payloadObj = { prompt: `Super smart affiliate promotional banner for domain ${targetDomain}`, num_steps: 4 };
     }
 
     const payload = JSON.stringify(payloadObj);
@@ -92,7 +91,7 @@ class SupremeSOTACloudflareRunner {
         let data = '';
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {
-          console.log(`[CF AI API EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
+          console.log(`[SUPER SMART AI EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
           resolve({ success: res.statusCode === 200, status: res.statusCode });
         });
       });
@@ -106,26 +105,33 @@ class SupremeSOTACloudflareRunner {
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SUPREME SOTA RUNNER] Initiating Cloudflare 08-Node AI Matrix`);
+    console.log(`[SUPER SMART INTELLIGENT RUNNER] Safe Rotational AI Execution`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    for (const node of this.aiMatrix) {
+    // Smart Rotation: Chọn an toàn 2 Node thông minh trong mảng để không chạm ngưỡng 429
+    const shuffled = [...this.aiMatrix].sort(() => 0.5 - Math.random());
+    const selectedNodes = shuffled.slice(0, 2); 
+
+    console.log(`[SUPER SMART ROTATION] Active Intelligent Batch: ${selectedNodes.map(n => n.key).join(', ')}`);
+
+    for (const node of selectedNodes) {
       await this.callCloudflareNode(node, targetDomain);
+      await new Promise(resolve => setTimeout(resolve, 3000));
     }
 
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }
 
-    console.log(`[SUPREME SOTA RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
+    console.log(`[SUPER SMART INTELLIGENT RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
     process.exit(0);
   }
 }
 
 if (require.main === module) {
-  const runner = new SupremeSOTACloudflareRunner();
+  const runner = new SuperSmartCloudflareRunner();
   runner.runRealExecution();
 }
 
-module.exports = SupremeSOTACloudflareRunner;
+module.exports = SuperSmartCloudflareRunner;

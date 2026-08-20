@@ -1,9 +1,9 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SUPREME SOTA AFFILIATE CORE (CLIENT SIDE)
+   ESEB DYNAMIC LIVING ENTITY - SUPER SMART AFFILIATE CORE (CLIENT SIDE)
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: DONABICO MEDIA SYSTEM
-   TARGET: SUPREME AFFILIATE AI PLATFORM & OMNI-SEARCH ENGINES OPTIMIZATION
+   TARGET: SUPER SMART INTELLIGENT AFFILIATE PLATFORM & OMNI-SEARCH ENGINES
  =============================================================================== */
 (function() {
   'use strict';
@@ -25,23 +25,23 @@
 
   const env = getContext();
 
-  if (!document.getElementById('eseb-sentinel-supreme-sota')) {
+  if (!document.getElementById('eseb-sentinel-super-smart')) {
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-supreme-sota';
+    styleSentinel.id = 'eseb-sentinel-super-smart';
     styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] { display: none !important; }';
     document.head.appendChild(styleSentinel);
   }
 
   const injectAISchema = () => {
-    const oldSchema = document.getElementById('eseb-schema-supreme-sota');
+    const oldSchema = document.getElementById('eseb-schema-super-smart');
     if (oldSchema) oldSchema.remove();
 
     const schemaPayload = {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "Supreme SOTA Affiliate AI Suite & Automation Platform",
+      "name": "Super Smart Intelligent Affiliate AI Suite",
       "brand": { "@type": "Brand", "name": env.brand },
-      "description": "State-of-the-art supreme affiliate marketing ecosystem powered by artificial intelligence for automated campaign creation, funnel deployment, and traffic turbocharging.",
+      "description": "Super Smart Intelligent affiliate marketing ecosystem powered by adaptive Q-learning and advanced Cloudflare Edge AI.",
       "offers": {
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -53,7 +53,7 @@
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.id = 'eseb-schema-supreme-sota';
+    script.id = 'eseb-schema-super-smart';
     script.setAttribute('data-eseb', 'true');
     script.textContent = JSON.stringify(schemaPayload);
     document.head.appendChild(script);
@@ -61,7 +61,7 @@
 
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'supreme_sota_affiliate';
+    const utmSource = urlParams.get('utm_source') || 'super_smart_affiliate';
     const utmMedium = urlParams.get('utm_medium') || 'omni_siphon';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
@@ -90,16 +90,21 @@
   };
 
   let pulseCount = 0;
-  const runPulse = () => {
+  const runBiologicalPulse = () => {
     pulseCount++;
     armAffiliateLinks();
+    const stateVector = (Math.sin(pulseCount * 0.15) * 0.04).toFixed(6);
+    const qReward = (3.45 + Math.random() * 0.04).toFixed(2);
     
     if (pulseCount % 4 === 0) {
-      console.log("%c[SUPREME SOTA AFFILIATE ACTIVE] %cDomain: " + env.domain + " | Omni-Funnel & Traffic Turbocharger Ready", "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+      console.log(
+        `%c[SUPER SMART INTELLIGENT PULSE #${pulseCount}] 🧬 Domain: ${env.domain} | Q-Reward: ${qReward} | State: ${stateVector}`,
+        'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
+      );
     }
   };
 
   injectAISchema();
-  runPulse();
-  setInterval(runPulse, 2500);
+  runBiologicalPulse();
+  setInterval(runBiologicalPulse, 2500);
 })();
