@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-ESEB PROTOCOL CORE SPECIFICATION - SCHEMA ACCELERATOR & POWER BI LAB RENDERER
+ESEB PROTOCOL CORE SPECIFICATION - MERCHANT LISTINGS SCHEMA ACCELERATOR
 MODULE: Schema_Accelerator
 FILE: Protocols/Schema_Accelerator.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-FUNCTION: FIX GSC PRODUCT SCHEMA, PATCH INDEX.HTML & RUN 08 CF AI MATRIX
+FUNCTION: FIX MERCHANT LISTINGS SCHEMA (VALIDFROM, SHIPPING, RETURN, DESC)
 ===============================================================================
 """
 
@@ -19,7 +19,7 @@ class SchemaAcceleratorEngine:
         self.brand = "DONABICO GLOBAL MEDIA SYSTEM"
 
     def patch_index_html_statically(self):
-        """Ghi trực tiếp Schema W3C chuẩn vào index.html để Googlebot đọc thô được ngay"""
+        """Tiêm trực tiếp Schema Merchant Listings W3C chứa validFrom vào index.html"""
         index_path = "index.html"
         if not os.path.exists(index_path):
             print("[WARN] index.html not found, skipping static patch.")
@@ -33,7 +33,7 @@ class SchemaAcceleratorEngine:
                 "https://8000kicks.donabico.com/assets/product-main.jpg",
                 "https://8000kicks.donabico.com/assets/product-angle2.jpg"
             ],
-            "description": "The World's First Waterproof Hemp Shoes. Eco-Friendly, Durable and Premium Comfort.",
+            "description": "The World's First 100% Waterproof Industrial Hemp Shoes. Engineered with natural hemp fibers, sustainable Bloom algae insoles, and dynamic rubber soles.",
             "sku": "8000KICKS-HEMP-001",
             "mpn": "8000K-2026-V24",
             "brand": { "@type": "Brand", "name": "8000kicks" },
@@ -59,7 +59,8 @@ class SchemaAcceleratorEngine:
                 "url": "https://8000kicks.donabico.com/",
                 "priceCurrency": "USD",
                 "price": "135.00",
-                "priceValidUntil": "2027-12-31",
+                "validFrom": "2026-01-01T00:00:00+00:00",
+                "priceValidUntil": "2027-12-31T23:59:59+00:00",
                 "itemCondition": "https://schema.org/NewCondition",
                 "availability": "https://schema.org/InStock",
                 "seller": { "@type": "Organization", "name": "8000kicks Official Store" },
@@ -95,11 +96,11 @@ class SchemaAcceleratorEngine:
             html_content = html_content.replace("</head>", f"{schema_tag}\n</head>")
             with open(index_path, "w", encoding="utf-8") as f:
                 f.write(html_content)
-            print("[SCHEMA_ACCELERATOR] Successfully injected static W3C Schema into index.html head.")
+            print("[SCHEMA_ACCELERATOR] Merchant Listings validFrom injected into index.html.")
 
     def generate_living_ehc(self):
         ehc_content = """/* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SCHEMA ACCELERATOR BRIDGE
+   ESEB DYNAMIC LIVING ENTITY - MERCHANT LISTINGS SCHEMA ACCELERATOR
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED | ZERO-TRUST SECURED
    DONABICO GLOBAL MEDIA SYSTEM
  =============================================================================== */
@@ -115,9 +116,9 @@ class SchemaAcceleratorEngine:
   let pulseCounter = 0;
   const emitTelemetryPulse = () => {
     pulseCounter++;
-    console.log(`%c[SCHEMA ACCELERATOR TELEMETRY #${pulseCounter}] 📊 SCHEMA ENGINE ACTIVE | Domain: ${env.domain} | Repo: ${env.repo}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
+    console.log(`%c[SCHEMA ACCELERATOR TELEMETRY #${pulseCounter}] 📊 MERCHANT LISTINGS VALIDFROM ACTIVE | Domain: ${env.domain}`, 'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px;');
   };
-  console.log("%c[SCHEMA ACCELERATOR V3000-Ω] 🚀 TELEMETRY ENGINE ARMED | REPO: " + env.repo, "color: #00e5ff; font-weight: bold; font-size: 12px; background: #001122; padding: 4px;");
+  console.log("%c[SCHEMA ACCELERATOR V3000-Ω] 🚀 MERCHANT LISTINGS FIXED | REPO: " + env.repo, "color: #00e5ff; font-weight: bold; font-size: 12px; background: #001122; padding: 4px;");
   emitTelemetryPulse();
   setInterval(emitTelemetryPulse, 2500);
 })();
