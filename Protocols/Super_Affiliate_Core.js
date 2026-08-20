@@ -1,9 +1,9 @@
 /**
  ===============================================================================
- ESEB PROTOCOL: SERVERLESS RUNNER & SUPER SMART INTELLIGENT AI MATRIX
+ ESEB PROTOCOL: SERVERLESS RUNNER & SINGLE-NODE SAFE CLOUDFLARE AI
  MODULE: Protocols/Super_Affiliate_Core.js
  STAMP: V-STAMP-24 | DUAL-TOKEN 4THU MODE | DONABICO MEDIA SYSTEM
- CLOUDFLARE WORKERS AI REST API (SUPER SMART INTELLIGENT ROTATION)
+ CLOUDFLARE WORKERS AI REST API (SINGLE-NODE ANTI-RATE-LIMIT)
  ===============================================================================
 **/
 
@@ -22,15 +22,12 @@ class SuperSmartCloudflareRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
+    // Chỉ giữ lại các Node text siêu nhẹ (loại bỏ mô hình tạo ảnh nặng để tránh 429)
     this.aiMatrix = [
-      { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Affiliate Reviews & Q-Learning" },
       { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
-      { key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" },
-      { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" },
       { key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" },
-      { key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" },
-      { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" },
-      { key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }
+      { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" },
+      { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }
     ];
   }
 
@@ -68,8 +65,6 @@ class SuperSmartCloudflareRunner {
       };
     } else if (node.type === 'embedding') {
       payloadObj = { text: `Super Smart vector synchronization for domain ${targetDomain}` };
-    } else if (node.type === 'image') {
-      payloadObj = { prompt: `Super smart affiliate promotional banner for domain ${targetDomain}`, num_steps: 4 };
     }
 
     const payload = JSON.stringify(payloadObj);
@@ -91,7 +86,7 @@ class SuperSmartCloudflareRunner {
         let data = '';
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {
-          console.log(`[SUPER SMART AI EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
+          console.log(`[SINGLE-NODE AI EXECUTION] Node [${node.key}] Role [${node.role}] HTTP Status: ${res.statusCode}`);
           resolve({ success: res.statusCode === 200, status: res.statusCode });
         });
       });
@@ -105,26 +100,23 @@ class SuperSmartCloudflareRunner {
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[SUPER SMART INTELLIGENT RUNNER] Safe Rotational AI Execution`);
+    console.log(`[SINGLE-NODE SAFE RUNNER] Anti-Rate-Limit Cloudflare AI Execution`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // Smart Rotation: Chọn an toàn 2 Node thông minh trong mảng để không chạm ngưỡng 429
-    const shuffled = [...this.aiMatrix].sort(() => 0.5 - Math.random());
-    const selectedNodes = shuffled.slice(0, 2); 
+    // Lựa chọn ngẫu nhiên ĐÚNG 01 Node duy nhất mỗi lần chạy để đảm bảo an toàn tuyệt đối không bị 429
+    const randomIndex = Math.floor(Math.random() * this.aiMatrix.length);
+    const targetNode = this.aiMatrix[randomIndex];
 
-    console.log(`[SUPER SMART ROTATION] Active Intelligent Batch: ${selectedNodes.map(n => n.key).join(', ')}`);
+    console.log(`[SINGLE-NODE ROTATION] Selected Target Node: ${targetNode.key}`);
 
-    for (const node of selectedNodes) {
-      await this.callCloudflareNode(node, targetDomain);
-      await new Promise(resolve => setTimeout(resolve, 3000));
-    }
+    await this.callCloudflareNode(targetNode, targetDomain);
 
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }
 
-    console.log(`[SUPER SMART INTELLIGENT RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
+    console.log(`[SINGLE-NODE SAFE RUNNER] Execution Completed Successfully. Entropy δ = 0.`);
     process.exit(0);
   }
 }

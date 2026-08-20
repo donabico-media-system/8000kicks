@@ -41,7 +41,7 @@
       "@type": "Product",
       "name": "Super Smart Intelligent Affiliate AI Suite",
       "brand": { "@type": "Brand", "name": env.brand },
-      "description": "Super Smart Intelligent affiliate marketing ecosystem powered by adaptive Q-learning and advanced Cloudflare Edge AI.",
+      "description": "Super Smart Intelligent affiliate marketing ecosystem powered by adaptive intelligence and Cloudflare Edge AI.",
       "offers": {
         "@type": "Offer",
         "url": env.canonicalUrl,
