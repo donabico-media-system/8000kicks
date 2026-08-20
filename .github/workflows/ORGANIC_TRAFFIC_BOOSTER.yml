@@ -1,0 +1,63 @@
+name: ORGANIC_TRAFFIC_BOOSTER
+
+on:
+  push:
+    paths:
+      - 'Protocols/*.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  eseb-auto-6d-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11 Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile .eseb Core into .ehc and .js
+        run: |
+          python Protocols/Organic_Traffic_Booster.eseb
+
+      - name: Execute Serverless Runner 08 Cloudflare AI GPUs
+        env:
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          node Protocols/Organic_Traffic_Booster.js
+
+      - name: IndexNow Dynamic Broadcast Signal
+        run: |
+          node -e "
+          const fs = require('fs');
+          const https = require('https');
+          const repo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/core';
+          const host = fs.existsSync('CNAME') ? fs.readFileSync('CNAME', 'utf8').trim() : \`\${repo.split('/')[0]}.github.io\`;
+          const payload = JSON.stringify({
+            host: host,
+            key: process.env.INDEXNOW_KEY || 'eseb24vstamp24key00000000000000',
+            keyLocation: \`https://\${host}/eseb24vstamp24key00000000000000.txt\`,
+            urlList: [\`https://\${host}/index.html\`]
+          });
+          const req = https.request({
+            hostname: 'api.indexnow.org',
+            path: '/indexnow',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
+          }, res => console.log('[INDEXNOW AUTO-6D]: Broadcast Status:', res.statusCode));
+          req.write(payload); req.end();
+          "
+
+      - name: Commit and Sync Living Entity Artifacts
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
+          git add index.html Protocols/*.ehc Protocols/*.js
+          git diff-index --quiet HEAD || git commit -m "auto(eseb): AUTO-6D sync 08 ai matrix [V-STAMP-24]"
+          git push
