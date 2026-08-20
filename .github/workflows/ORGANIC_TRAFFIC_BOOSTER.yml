@@ -38,7 +38,7 @@ jobs:
           const fs = require('fs');
           const https = require('https');
           const repo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/core';
-          const host = fs.existsSync('CNAME') ? fs.readFileSync('CNAME', 'utf8').trim() : \`\${repo.split('/')[0]}.github.io\`;
+          const host = fs.existsSync('CNAME') ? fs.readFileSync('CNAME', 'utf8').trim() : 'donabico.com';
           const payload = JSON.stringify({
             host: host,
             key: process.env.INDEXNOW_KEY || 'eseb24vstamp24key00000000000000',
@@ -80,5 +80,8 @@ jobs:
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
           git add index.html Protocols/*.ehc Protocols/*.js
-          git diff-index --quiet HEAD || git commit -m "auto(eseb): fix econnreset socket exit [V-STAMP-24]"
-          git push
+          git diff-index --quiet HEAD || ( \
+            git commit -m "auto(eseb): .eseb sync artifacts for donabico.com [V-STAMP-24]" && \
+            git pull --rebase origin main && \
+            git push origin main \
+          )
