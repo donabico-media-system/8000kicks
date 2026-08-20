@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  execute-super-affiliate-pipeline:
+  execute-supreme-sota-pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -30,14 +30,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Compile Super Affiliate Core Engine via Python
+      - name: Compile Supreme SOTA Affiliate Core Engine via Python
         run: |
           python Protocols/Super_Affiliate_Core.eseb
 
-      - name: Execute Serverless AI Runner & Super Affiliate Conversion Core
+      - name: Execute Cloudflare 08-Node AI Matrix & Supreme Conversion Core
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
-          API_GROQ_TOKEN: ${{ secrets.API_GROQ_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
           node Protocols/Super_Affiliate_Core.js
 
@@ -47,7 +48,7 @@ jobs:
           git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile Super_Affiliate_Core artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile Supreme SOTA Super_Affiliate_Core artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main || git push origin HEAD:master
           else
