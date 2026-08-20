@@ -27,7 +27,7 @@ class SupremeSOTAAffiliateEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc (Client-Side Runtime) tích hợp Supreme AI Affiliate Funnels & W3C Merchant Schema"""
+        """Tạo sinh tệp .ehc (Client-Side Runtime) bảo vệ layout và tối ưu hóa chuyển đổi Affiliate"""
         ehc_content = f"""/* ===============================================================================
    ESEB DYNAMIC LIVING ENTITY - SUPREME SOTA AFFILIATE CORE (CLIENT SIDE)
    MODULE: Protocols/{self.module_name}.ehc
@@ -62,7 +62,6 @@ class SupremeSOTAAffiliateEngine:
     document.head.appendChild(styleSentinel);
   }}
 
-  // Tự động tiêm W3C Merchant Schema chuẩn SOTA Supreme Affiliate Suite phục vụ AI Search Engines
   const injectAISchema = () => {{
     const oldSchema = document.getElementById('eseb-schema-supreme-sota');
     if (oldSchema) oldSchema.remove();
@@ -141,7 +140,7 @@ class SupremeSOTAAffiliateEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js: Serverless Runner tích hợp ma trận 08 Cloudflare Edge GPU AI (Supreme SOTA Edition)"""
+        """Tạo sinh tệp .js: Serverless Runner khóa cứng độc quyền 08 Node Cloudflare Edge GPU AI"""
         js_content = f"""/**
  ===============================================================================
  ESEB PROTOCOL: SERVERLESS RUNNER & CLOUDFLARE 08-NODE SOTA AI MATRIX
@@ -166,16 +165,16 @@ class SupremeSOTACloudflareRunner {{
       cfApiToken: process.env.CF_API_TOKEN || ''
     }};
 
-    // 08 Cloudflare Edge GPU AI Matrix Specifications (Supreme SOTA Edition)
+    // [STRICT] 08 Cloudflare Edge AI Nodes Only - Zero External Dependencies
     this.aiMatrix = [
-      {{ key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Supreme SOTA Affiliate Review & Funnel Optimization" }},
-      {{ key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Keyword Sourcing" }},
-      {{ key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" }},
-      {{ key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Merchant Schema Master" }},
+      {{ key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "High-Intent Affiliate Reviews" }},
+      {{ key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Fast Query" }},
+      {{ key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Reasoning & GEO-SEO Optimization" }},
+      {{ key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Data" }},
       {{ key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" }},
-      {{ key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & E-commerce Conversion" }},
+      {{ key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & E-commerce" }},
       {{ key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }},
-      {{ key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Supreme SOTA Affiliate Promotional Banners & Visual Posters" }}
+      {{ key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Banners & Visual Posters" }}
     ];
   }}
 
@@ -207,14 +206,14 @@ class SupremeSOTACloudflareRunner {{
     if (node.type === 'chat') {{
       payloadObj = {{
         messages: [
-          {{"role": "system", "content": `You are Supreme SOTA Affiliate AI Node ${{node.key}} (${{node.role}}) operating under V3000-Ω.`}},
-          {{"role": "user", "content": `Execute automated funnel deployment, high-converting keyword research, and traffic turbocharging for domain ${{targetDomain}}.`}}
+          {{"role": "system", "content": `You are ESEB Super Affiliate Core Node ${{node.key}} (${{node.role}}) operating under V3000-Ω.`}},
+          {{"role": "user", "content": `Generate organic search growth context and affiliate conversion vectors for domain ${{targetDomain}}.`}}
         ]
       }};
     }} else if (node.type === 'embedding') {{
-      payloadObj = {{ text: `Supreme SOTA Affiliate vector synchronization for domain ${{targetDomain}}` }};
+      payloadObj = {{ text: `Organic vector synchronization for domain ${{targetDomain}}` }};
     }} else if (node.type === 'image') {{
-      payloadObj = {{ prompt: `Supreme SOTA affiliate promotional banner and high-converting visual poster for domain ${{targetDomain}}`, num_steps: 4 }};
+      payloadObj = {{ prompt: `Affiliate promotional banner for domain ${{targetDomain}}`, num_steps: 4 }};
     }}
 
     const payload = JSON.stringify(payloadObj);
