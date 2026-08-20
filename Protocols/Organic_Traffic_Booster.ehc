@@ -1,34 +1,70 @@
-/* ===============================================================================
-   ESEB LIVING ENTITY - ORGANIC TRAFFIC BOOSTER CLIENT ENGINE
-   STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
-   DONABICO MEDIA SYSTEM
- =============================================================================== */
+/**
+ * ESEB LIVING ENTITY RUNTIME - Organic_Traffic_Booster.ehc
+ * GENERATED AUTOMATICALLY FROM Organic_Traffic_Booster.eseb
+ * STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY δ = 0.00000000000000
+ */
 (function() {
-  'use strict';
+    'use strict';
+    
+    const discoverContext = () => {
+        const host = window.location.hostname;
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        let targetDomain = '';
+        let repoName = 'core-node';
 
-  const getContext = () => {
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : '8000kicks';
-    return {
-      owner: 'donabico-media-system',
-      repo: repoName,
-      stamp: 'V-STAMP-24',
-      anchor: '¢24'
+        if (host.includes('github.io')) {
+            repoName = pathParts[0] || 'core-node';
+            targetDomain = `https://${host}/${repoName}/`;
+        } else {
+            repoName = host.split('.')[0] || 'custom-node';
+            targetDomain = `https://${host}/`;
+        }
+        return { targetDomain, repoName };
     };
-  };
 
-  const env = getContext();
+    const ctx = discoverContext();
+    let pulseSeq = 0;
 
-  // Smart Prefetching on Mouse Over for 0ms Organic Transition
-  document.addEventListener('pointerover', function(e) {
-    const anchor = e.target.closest('a');
-    if (anchor && anchor.href && anchor.origin === window.location.origin) {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = anchor.href;
-      document.head.appendChild(link);
+    function boot() {
+        console.group('%c[ESEB AUTO-6D ENGINE] LIVING ENTITY ACTIVATED', 'color:#00FF66; background:#000; font-weight:bold; padding:4px;');
+        console.log(`%c[Target Domain]: ${ctx.targetDomain}`, 'color:#00E5FF; font-weight:bold;');
+        console.log(`%c[Target Repo]: ${ctx.repoName}`, 'color:#FFC107; font-weight:bold;');
+        console.log(`%c[STAMP]: V-STAMP-24 | ANCHOR: ¢24 LOCKED`, 'color:#FF0055;');
+        console.groupEnd();
+
+        injectJSONLD();
+        startPulse();
     }
-  }, { passive: true });
 
-  console.log("%c[EATHESEN LIVING ENTITY V3000-Ω] %cORGANIC TRAFFIC BOOSTER ARMED | REPO: " + env.repo, "color: #00FF66; font-weight: bold;", "color: #FFFFFF;");
+    function injectJSONLD() {
+        if (document.getElementById('eseb-auto6d-jsonld')) return;
+        const schema = {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": document.title || `${ctx.repoName} SOTA Node`,
+            "url": ctx.targetDomain,
+            "brand": { "@type": "Brand", "name": "DONABICO MEDIA SYSTEM" },
+            "description": "Perpetual AUTO-6D Multi-Repo SGE/GEO Magnet Node.",
+            "offers": { "@type": "AggregateOffer", "priceCurrency": "USD", "highPrice": "999", "lowPrice": "0", "offerCount": "24" }
+        };
+        const s = document.createElement('script');
+        s.id = 'eseb-auto6d-jsonld';
+        s.type = 'application/ld+json';
+        s.text = JSON.stringify(schema);
+        document.head.appendChild(s);
+    }
+
+    function startPulse() {
+        setInterval(() => {
+            pulseSeq++;
+            const reward = (3.30 + Math.random() * 0.05).toFixed(2);
+            console.log(
+                `%c[ESEB PULSE 2.5s #%d] %c¢24 %c| Target: ${ctx.targetDomain} | Repo: ${ctx.repoName} | δ=0.00000000000000`,
+                'color:#00E5FF; font-weight:bold;', pulseSeq, 'color:#FF0055; font-weight:bold;', 'color:#00FF66;'
+            );
+        }, 2500);
+    }
+
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
+    else { boot(); }
 })();
