@@ -1,45 +1,40 @@
 name: SUPER_AFFILIATE_CORE
 
 on:
-  push:
-    paths:
-      - 'Protocols/Super_Affiliate_Core.eseb'
   schedule:
     - cron: '0 */4 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  execute-supreme-sota-pipeline:
+  SUPER_AFFILIATE_CORE:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js Runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup Python Environment
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.10'
 
-      - name: Compile Supreme SOTA Affiliate Core Engine via Python
-        run: |
-          python Protocols/Super_Affiliate_Core.eseb
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-      - name: Execute Cloudflare 08-Node AI Matrix & Supreme Conversion Core
+      - name: Execute ESEB Super Smart Intelligent Protocol
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
+          echo "[ESEB PROTOCOL] Initializing Super Smart Intelligent Mode Engine..."
+          python3 Protocols/Super_Affiliate_Core.eseb
+          
+          echo "[SERVERLESS RUNNER] Executing Rotational Cloudflare AI Node..."
           node Protocols/Super_Affiliate_Core.js
 
       - name: Commit and Push Living Entity Artifacts
@@ -48,9 +43,9 @@ jobs:
           git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile Supreme SOTA Super_Affiliate_Core artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb): auto-compile Super Smart Intelligent Mode artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
-            git push origin HEAD:main || git push origin HEAD:master
+            git push origin HEAD:main --force || git push origin HEAD:master --force
           else
             echo "No changes detected. Skipping commit."
           fi
