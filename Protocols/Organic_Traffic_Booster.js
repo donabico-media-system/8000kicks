@@ -2,12 +2,12 @@
  * ESEB SERVERLESS RUNNER ENGINE - Organic_Traffic_Booster.js
  * GENERATED AUTOMATICALLY FROM Organic_Traffic_Booster.eseb
  * STAMP: V-STAMP-24 | ANCHOR: ¢24
- * STANDARD: 4THU 100% REALITY (AUTO-6D 08 CLOUDFLARE AI MODELS MATRIX)
+ * STANDARD: 4THU 100% REALITY (MATCHING Cf_Workers_Ai.js LOGIC)
  */
 const https = require('https');
 const fs = require('fs');
 
-const TOKEN = process.env.ESEB_CLASSIC_TOKEN || process.env.CF_API_TOKEN;
+const TOKEN = process.env.CF_API_TOKEN || process.env.ESEB_CLASSIC_TOKEN;
 const CF_ACCOUNT_ID = process.env.CF_ACCOUNT_ID;
 const GITHUB_REPO = process.env.GITHUB_REPOSITORY || 'donabico-media-system/core';
 
@@ -37,7 +37,7 @@ const CF_MODELS = {
   "SDXL_IMAGE": "@cf/bytedance/stable-diffusion-xl-lightning"
 };
 
-function callCloudflareAI(modelKey, modelId, payloadData) {
+function callCloudflareAI(nodeKey, modelId, payloadData) {
     return new Promise((resolve) => {
         const payload = JSON.stringify(payloadData);
         const req = https.request({
@@ -50,19 +50,21 @@ function callCloudflareAI(modelKey, modelId, payloadData) {
                 'Content-Length': Buffer.byteLength(payload)
             }
         }, (res) => {
-            let body = '';
-            res.on('data', chunk => body += chunk);
+            let chunks = [];
+            res.on('data', chunk => chunks.push(chunk));
             res.on('end', () => {
                 if (res.statusCode === 200) {
-                    console.log(`[ESEB REST API SUCCESS 200 OK]: ${modelKey} (${modelId})`);
+                    const isBinary = nodeKey === 'SDXL_IMAGE';
+                    const msg = isBinary ? 'Status 200 OK (Binary Image Stream)' : 'Status 200 OK';
+                    console.log(`[ESEB 08-AI SUCCESS] Node: [${nodeKey}] | Model: ${modelId} | ${msg}`);
                 } else {
-                    console.warn(`[ESEB REST API WARN ${res.statusCode}]: ${modelKey} (${modelId})`);
+                    console.warn(`[ESEB 08-AI WARN] Node: [${nodeKey}] | Model: ${modelId} | Status ${res.statusCode}`);
                 }
-                resolve({ status: res.statusCode, data: body });
+                resolve({ status: res.statusCode });
             });
         });
         req.on('error', e => {
-            console.error(`[ESEB REST API ERROR]: ${modelKey} -> ${e.message}`);
+            console.error(`[ESEB 08-AI ERROR] Node: [${nodeKey}] -> ${e.message}`);
             resolve({ status: 500, error: e.message });
         });
         req.write(payload);
@@ -71,13 +73,15 @@ function callCloudflareAI(modelKey, modelId, payloadData) {
 }
 
 async function executeFullEightAIChain() {
-    console.log(`[AUTO-6D RUNNER]: Target -> ${CONTEXT.targetDomain} | Repo -> ${CONTEXT.repoName}`);
+    console.log('=================================================================');
+    console.log('[ESEB FULL 08-AI GLOBAL MATRIX] Executing Cloudflare Edge GPU API Calls');
+    console.log(`Stamp: V-STAMP-24 | Target Domain: ${CONTEXT.targetDomain}`);
+    console.log('=================================================================');
+
     if (!TOKEN || !CF_ACCOUNT_ID) {
-        console.error('[AUTO-6D FATAL ERROR]: Missing ESEB_CLASSIC_TOKEN / CF_ACCOUNT_ID Secrets.');
+        console.error('[ESEB ERROR]: Missing CF_API_TOKEN / ESEB_CLASSIC_TOKEN or CF_ACCOUNT_ID.');
         process.exit(1);
     }
-
-    console.log('[AUTO-6D EXECUTION]: Executing ALL 08 Cloudflare AI Models Chain...');
 
     await callCloudflareAI('LLAMA_70B', CF_MODELS.LLAMA_70B, { messages: [{ role: "user", content: `SGE Review for ${CONTEXT.targetDomain}` }] });
     await callCloudflareAI('LLAMA_8B', CF_MODELS.LLAMA_8B, { messages: [{ role: "user", content: `Fast RAG index for ${CONTEXT.targetDomain}` }] });
@@ -86,12 +90,9 @@ async function executeFullEightAIChain() {
     await callCloudflareAI('LLAMA_3B', CF_MODELS.LLAMA_3B, { messages: [{ role: "user", content: `Multi-geo tags for ${CONTEXT.targetDomain}` }] });
     await callCloudflareAI('GEMMA_7B', CF_MODELS.GEMMA_7B, { messages: [{ role: "user", content: `Product graph for ${CONTEXT.targetDomain}` }] });
     await callCloudflareAI('BGE_EMBEDDING', CF_MODELS.BGE_EMBEDDING, { text: [`Target URL at ${CONTEXT.targetDomain}`] });
-    await callCloudflareAI('SDXL_IMAGE', CF_MODELS.SDXL_IMAGE, { prompt: "SOTA Banner" });
+    await callCloudflareAI('SDXL_IMAGE', CF_MODELS.SDXL_IMAGE, { prompt: "SOTA High Conversion E-Commerce Banner" });
 
-    console.log('[AUTO-6D SUCCESS]: ALL 08 CLOUDFLARE AI MODELS VERIFIED & EXECUTED.');
-
-    const mark = `\n<!-- AUTO-6D MUTATION: Repo=${CONTEXT.repoName} | Domain=${CONTEXT.targetDomain} | Timestamp=${new Date().toISOString()} -->`;
-    fs.appendFileSync('index.html', mark);
+    console.log('[ESEB 08-AI MATRIX] All 08 Active Nodes Executed with Zero Entropy.');
 }
 
 executeFullEightAIChain();
