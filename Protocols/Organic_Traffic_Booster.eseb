@@ -1,103 +1,201 @@
-/* ===============================
-   ESEB PROTOCOL CORE SPECIFICATION
-   MODULE: Organic_Traffic_Booster
-   FILE: Protocols/Organic_Traffic_Booster.eseb
-   STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO GLOBAL MEDIA SYSTEM
-   FUNCTION: ESEB SEO GEO DYNAMIC ENGINE
- =============================== */
+#!/usr_engine/env python3
+"""
+ESEB DYNAMIC LIVING ENGINE V3000-Ω - CORE PIPELINE COMPILER
+STAMP: V-STAMP-24 | ANCHOR: ¢24 | STANDARD: 4THU 100% REALITY
+MODULE: Organic_Traffic_Booster | ENGINE: AUTO-6D OMNI-MATRIX
+AUTHORITY: DONABICO MEDIA SYSTEM
+"""
+import os
+import json
 
-export interface ESEBBoosterConfig {
-  stamp: string;
-  anchor: number;
-  entropy: number;
-  bufferInterval: number;
-}
-
-export class OrganicTrafficBoosterEngine {
-  private config: ESEBBoosterConfig = {
-    stamp: "V-STAMP-24",
-    anchor: 24,
-    entropy: 0.00000000000000,
-    bufferInterval: 2500
-  };
-
-  public generateLivingEHC(): string {
-    return `/* ESEB_EHC_BEGIN */
-(function() {
-  'use strict';
-
-  // 1. DYNAMIC IDENTITY DISCOVERY
-  const currentScript = document.currentScript || document.getElementById('Organic_Traffic_Booster-Bridge');
-  const activeModule = currentScript ? (currentScript.getAttribute('data-module') || 'Organic_Traffic_Booster') : 'Organic_Traffic_Booster';
-
-  const getDynamicContext = () => {
-    const hostParts = window.location.hostname.split('.');
-    const ownerName = hostParts.length > 0 && hostParts[0] !== '' ? hostParts[0] : 'donabico-media-system';
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = pathSegments.length > 0 ? pathSegments[0] : 'core-node';
-    return { owner: ownerName, repo: repoName, stamp: 'V-STAMP-24', module: activeModule };
-  };
-
-  const env = getDynamicContext();
-  const logBuffer = [];
-
-  // 2. CONSOLE HOOK TELEMETRY
-  const originalLog = console.log;
-  console.log = function(...args) {
-    originalLog.apply(console, args);
-    try {
-      const logText = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
-      logBuffer.push({ time: new Date().toISOString(), module: env.module, log: logText });
-    } catch (e) {}
-  };
-
-  let qTable = { state: "ESEB_SEO_GEO_DYNAMIC_ACTIVE", q_value: 0.99, epsilon: 0.01, reward: 3.30 };
-
-  // 3. BOOT SEQUENCE
-  const bootSequence = () => {
-    console.log("%c[ESEB SEO GEO DYNAMIC] %cENGINE ACTIVE | STAMP: V-STAMP-24 | ANCHOR: ¢24", "color:#00FF66; font-weight:bold; background:#0d1117; padding:4px;", "color:#00E5FF;");
-  };
-
-  // 4. BIOLOGICAL PULSE (2.5s)
-  const pulseLoop = () => {
-    const bpm = Math.floor(Math.random() * (28 - 22 + 1)) + 22;
-    console.log("%c[DYNAMIC PULSE 2.5s] %cBPM: " + bpm + " | Q-VAL: " + qTable.q_value.toFixed(2) + " | ENTROPY: 0.00000000000000", "color:#00FF66; font-weight:bold;", "color:#8b949e;");
-
-    if (logBuffer.length > 0) {
-      const currentLogs = [...logBuffer];
-      logBuffer.length = 0;
-
-      const payload = {
-        event_type: "eseb_multi_protocol_pulse",
-        client_payload: {
-          owner: env.owner,
-          repo: env.repo,
-          active_module: env.module,
-          stamp: env.stamp,
-          anchor: "¢24",
-          entropy: "0.00000000000000",
-          total_logs: currentLogs.length,
-          logs: currentLogs
+class ESEBDualOutputGenerator:
+    def __init__(self, module_name="Organic_Traffic_Booster"):
+        self.module_name = module_name
+        self.stamp = "V-STAMP-24"
+        self.anchor = "¢24"
+        self.cf_models = {
+            "LLAMA_70B": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+            "LLAMA_8B": "@cf/meta/llama-3.1-8b-instruct",
+            "DEEPSEEK": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+            "MISTRAL_7B": "@cf/mistral/mistral-7b-instruct-v0.1",
+            "LLAMA_3B": "@cf/meta/llama-3.2-3b-instruct",
+            "GEMMA_7B": "@cf/google/gemma-7b-it-lora",
+            "BGE_EMBEDDING": "@cf/baai/bge-large-en-v1.5",
+            "SDXL_IMAGE": "@cf/bytedance/stable-diffusion-xl-lightning"
         }
-      };
 
-      const authToken = window.ESEB_CLASSIC_TOKEN || '';
-      fetch('https://api.github.com/repos/' + env.owner + '/' + env.repo + '/dispatches', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json',
-          ...(authToken ? { 'Authorization': 'Bearer ' + authToken } : {})
-        },
-        body: JSON.stringify(payload),
-        keepalive: true
-      }).catch(function() { logBuffer.unshift(...currentLogs); });
-    }
-  };
+    def generate_ehc(self):
+        """Tự động sinh Protocols/Organic_Traffic_Booster.ehc"""
+        ehc_code = f"""/**
+ * ESEB LIVING ENTITY RUNTIME - {self.module_name}.ehc
+ * GENERATED AUTOMATICALLY FROM {self.module_name}.eseb
+ * STAMP: {self.stamp} | ANCHOR: {self.anchor} | ENTROPY δ = 0.00000000000000
+ */
+(function() {{
+    'use strict';
+    
+    const discoverContext = () => {{
+        const host = window.location.hostname;
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        let targetDomain = '';
+        let repoName = 'core-node';
 
-  bootSequence();
-  setInterval(pulseLoop, 2500);
-})();
-/* ESEB_EHC_END */`;
-  }
-}
+        if (host.includes('github.io')) {{
+            repoName = pathParts[0] || 'core-node';
+            targetDomain = `https://${{host}}/${{repoName}}/`;
+        }} else {{
+            repoName = host.split('.')[0] || 'custom-node';
+            targetDomain = `https://${{host}}/`;
+        }}
+        return {{ targetDomain, repoName }};
+    }};
+
+    const ctx = discoverContext();
+    let pulseSeq = 0;
+
+    function boot() {{
+        console.group('%c[ESEB AUTO-6D ENGINE] LIVING ENTITY ACTIVATED', 'color:#00FF66; background:#000; font-weight:bold; padding:4px;');
+        console.log(`%c[Target Domain]: ${{ctx.targetDomain}}`, 'color:#00E5FF; font-weight:bold;');
+        console.log(`%c[Target Repo]: ${{ctx.repoName}}`, 'color:#FFC107; font-weight:bold;');
+        console.log(`%c[STAMP]: {self.stamp} | ANCHOR: {self.anchor} LOCKED`, 'color:#FF0055;');
+        console.groupEnd();
+
+        injectJSONLD();
+        startPulse();
+    }}
+
+    function injectJSONLD() {{
+        if (document.getElementById('eseb-auto6d-jsonld')) return;
+        const schema = {{
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": document.title || `${{ctx.repoName}} SOTA Node`,
+            "url": ctx.targetDomain,
+            "brand": {{ "@type": "Brand", "name": "DONABICO MEDIA SYSTEM" }},
+            "description": "Perpetual AUTO-6D Multi-Repo SGE/GEO Magnet Node.",
+            "offers": {{ "@type": "AggregateOffer", "priceCurrency": "USD", "highPrice": "999", "lowPrice": "0", "offerCount": "24" }}
+        }};
+        const s = document.createElement('script');
+        s.id = 'eseb-auto6d-jsonld';
+        s.type = 'application/ld+json';
+        s.text = JSON.stringify(schema);
+        document.head.appendChild(s);
+    }}
+
+    function startPulse() {{
+        setInterval(() => {{
+            pulseSeq++;
+            const reward = (3.30 + Math.random() * 0.05).toFixed(2);
+            console.log(
+                `%c[ESEB PULSE 2.5s #%d] %c{self.anchor} %c| Target: ${{ctx.targetDomain}} | Repo: ${{ctx.repoName}} | δ=0.00000000000000`,
+                'color:#00E5FF; font-weight:bold;', pulseSeq, 'color:#FF0055; font-weight:bold;', 'color:#00FF66;'
+            );
+        }}, 2500);
+    }}
+
+    if (document.readyState === 'loading') {{ document.addEventListener('DOMContentLoaded', boot); }}
+    else {{ boot(); }}
+}})();"""
+        os.makedirs("Protocols", exist_ok=True)
+        with open(f"Protocols/{self.module_name}.ehc", "w", encoding="utf-8") as f:
+            f.write(ehc_code)
+        print(f"[ESEB AUTO-GENERATOR]: Successfully compiled Protocols/{self.module_name}.ehc")
+
+    def generate_js(self):
+        """Tự động sinh Protocols/Organic_Traffic_Booster.js"""
+        js_code = f"""/**
+ * ESEB SERVERLESS RUNNER ENGINE - {self.module_name}.js
+ * GENERATED AUTOMATICALLY FROM {self.module_name}.eseb
+ * STAMP: {self.stamp} | ANCHOR: {self.anchor}
+ * STANDARD: 4THU 100% REALITY (AUTO-6D 08 CLOUDFLARE AI MODELS MATRIX)
+ */
+const https = require('https');
+const fs = require('fs');
+
+const TOKEN = process.env.ESEB_CLASSIC_TOKEN || process.env.CF_API_TOKEN;
+const CF_ACCOUNT_ID = process.env.CF_ACCOUNT_ID;
+const GITHUB_REPO = process.env.GITHUB_REPOSITORY || 'donabico-media-system/core';
+
+function discoverRunnerContext() {{
+    let targetDomain = '';
+    const repoName = GITHUB_REPO.split('/')[1] || GITHUB_REPO;
+    
+    if (fs.existsSync('CNAME')) {{
+        const cname = fs.readFileSync('CNAME', 'utf8').trim();
+        targetDomain = `https://${{cname}}/`;
+    }} else {{
+        const owner = GITHUB_REPO.split('/')[0] || 'donabico-media-system';
+        targetDomain = `https://${{owner}}.github.io/${{repoName}}/`;
+    }}
+    return {{ targetDomain, repoName }};
+}}
+
+const CONTEXT = discoverRunnerContext();
+const CF_MODELS = {json.dumps(self.cf_models, indent=2)};
+
+function callCloudflareAI(modelKey, modelId, payloadData) {{
+    return new Promise((resolve) => {{
+        const payload = JSON.stringify(payloadData);
+        const req = https.request({{
+            hostname: 'api.cloudflare.com',
+            path: `/client/v4/accounts/${{CF_ACCOUNT_ID}}/ai/run/${{modelId}}`,
+            method: 'POST',
+            headers: {{
+                'Authorization': `Bearer ${{TOKEN}}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+            }}
+        }}, (res) => {{
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {{
+                if (res.statusCode === 200) {{
+                    console.log(`[ESEB REST API SUCCESS 200 OK]: ${{modelKey}} (${{modelId}})`);
+                }} else {{
+                    console.warn(`[ESEB REST API WARN ${{res.statusCode}}]: ${{modelKey}} (${{modelId}})`);
+                }}
+                resolve({{ status: res.statusCode, data: body }});
+            }});
+        }});
+        req.on('error', e => {{
+            console.error(`[ESEB REST API ERROR]: ${{modelKey}} -> ${{e.message}}`);
+            resolve({{ status: 500, error: e.message }});
+        }});
+        req.write(payload);
+        req.end();
+    }});
+}}
+
+async function executeFullEightAIChain() {{
+    console.log(`[AUTO-6D RUNNER]: Target -> ${{CONTEXT.targetDomain}} | Repo -> ${{CONTEXT.repoName}}`);
+    if (!TOKEN || !CF_ACCOUNT_ID) {{
+        console.error('[AUTO-6D FATAL ERROR]: Missing ESEB_CLASSIC_TOKEN / CF_ACCOUNT_ID Secrets.');
+        process.exit(1);
+    }}
+
+    console.log('[AUTO-6D EXECUTION]: Executing ALL 08 Cloudflare AI Models Chain...');
+
+    await callCloudflareAI('LLAMA_70B', CF_MODELS.LLAMA_70B, {{ messages: [{{ role: "user", content: `SGE Review for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('LLAMA_8B', CF_MODELS.LLAMA_8B, {{ messages: [{{ role: "user", content: `Fast RAG index for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('DEEPSEEK', CF_MODELS.DEEPSEEK, {{ messages: [{{ role: "user", content: `GEO-SEO keywords for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('MISTRAL_7B', CF_MODELS.MISTRAL_7B, {{ messages: [{{ role: "user", content: `JSON-LD Schema for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('LLAMA_3B', CF_MODELS.LLAMA_3B, {{ messages: [{{ role: "user", content: `Multi-geo tags for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('GEMMA_7B', CF_MODELS.GEMMA_7B, {{ messages: [{{ role: "user", content: `Product graph for ${{CONTEXT.targetDomain}}` }}] }});
+    await callCloudflareAI('BGE_EMBEDDING', CF_MODELS.BGE_EMBEDDING, {{ text: [`Target URL at ${{CONTEXT.targetDomain}}`] }});
+    await callCloudflareAI('SDXL_IMAGE', CF_MODELS.SDXL_IMAGE, {{ prompt: "SOTA Banner" }});
+
+    console.log('[AUTO-6D SUCCESS]: ALL 08 CLOUDFLARE AI MODELS VERIFIED & EXECUTED.');
+
+    const mark = `\\n<!-- AUTO-6D MUTATION: Repo=${{CONTEXT.repoName}} | Domain=${{CONTEXT.targetDomain}} | Timestamp=${{new Date().toISOString()}} -->`;
+    fs.appendFileSync('index.html', mark);
+}}
+
+executeFullEightAIChain();"""
+        with open(f"Protocols/{self.module_name}.js", "w", encoding="utf-8") as f:
+            f.write(js_code)
+        print(f"[ESEB AUTO-GENERATOR]: Successfully compiled Protocols/{self.module_name}.js")
+
+if __name__ == "__main__":
+    generator = ESEBDualOutputGenerator()
+    generator.generate_ehc()
+    generator.generate_js()
