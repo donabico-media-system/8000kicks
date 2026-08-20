@@ -1,8 +1,9 @@
 /* ===============================================================================
-   ESEB DYNAMIC LIVING ENTITY - SUPER AFFILIATE CORE (CLIENT SIDE)
+   ESEB DYNAMIC LIVING ENTITY - SUPREME SOTA AFFILIATE CORE (CLIENT SIDE)
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: DONABICO MEDIA SYSTEM
+   TARGET: SUPREME AFFILIATE AI PLATFORM & OMNI-SEARCH ENGINES OPTIMIZATION
  =============================================================================== */
 (function() {
   'use strict';
@@ -24,16 +25,44 @@
 
   const env = getContext();
 
-  if (!document.getElementById('eseb-sentinel-super-aff')) {
+  if (!document.getElementById('eseb-sentinel-supreme-sota')) {
     const styleSentinel = document.createElement('style');
-    styleSentinel.id = 'eseb-sentinel-super-aff';
+    styleSentinel.id = 'eseb-sentinel-supreme-sota';
     styleSentinel.textContent = 'script[type="application/ld+json"][data-eseb="true"] { display: none !important; }';
     document.head.appendChild(styleSentinel);
   }
 
+  // Tự động tiêm W3C Merchant Schema chuẩn SOTA Supreme Affiliate Suite phục vụ AI Search Engines
+  const injectAISchema = () => {
+    const oldSchema = document.getElementById('eseb-schema-supreme-sota');
+    if (oldSchema) oldSchema.remove();
+
+    const schemaPayload = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Supreme SOTA Affiliate AI Suite & Automation Platform",
+      "brand": { "@type": "Brand", "name": env.brand },
+      "description": "State-of-the-art supreme affiliate marketing ecosystem powered by artificial intelligence for automated campaign creation, funnel deployment, and traffic turbocharging.",
+      "offers": {
+        "@type": "Offer",
+        "url": env.canonicalUrl,
+        "priceCurrency": "USD",
+        "price": "29.00",
+        "availability": "https://schema.org/InStock"
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'eseb-schema-supreme-sota';
+    script.setAttribute('data-eseb', 'true');
+    script.textContent = JSON.stringify(schemaPayload);
+    document.head.appendChild(script);
+  };
+
   const armAffiliateLinks = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || 'super_affiliate_core';
+    const utmSource = urlParams.get('utm_source') || 'supreme_sota_affiliate';
     const utmMedium = urlParams.get('utm_medium') || 'omni_siphon';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
@@ -67,10 +96,11 @@
     armAffiliateLinks();
     
     if (pulseCount % 4 === 0) {
-      console.log("%c[SUPER AFFILIATE CORE ACTIVE] %cDomain: " + env.domain + " | Link Prefetch Ready", "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
+      console.log("%c[SUPREME SOTA AFFILIATE ACTIVE] %cDomain: " + env.domain + " | Omni-Funnel & Traffic Turbocharger Ready", "color: #00FF66; font-weight: bold;", "color: #00E5FF;");
     }
   };
 
+  injectAISchema();
   runPulse();
   setInterval(runPulse, 2500);
 })();
