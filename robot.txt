@@ -32,8 +32,5 @@ Allow: /
 User-agent: *
 Allow: /
 
-User-agent: GPTBot
-Allow: /
-
 # Khai báo đường dẫn Sitemap chính thức
 Sitemap: https://8000kicks.donabico.com/sitemap.xml
