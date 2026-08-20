@@ -24,11 +24,11 @@ jobs:
         run: |
           python Protocols/Organic_Traffic_Booster.eseb
 
-      - name: Execute Generated Serverless Runner (.js)
+      - name: Execute Serverless Runner (.js)
         env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
           node Protocols/Organic_Traffic_Booster.js
 
@@ -38,12 +38,8 @@ jobs:
           const fs = require('fs');
           const https = require('https');
           const repo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/core';
+          const host = fs.existsSync('CNAME') ? fs.readFileSync('CNAME', 'utf8').trim() : \`\${repo.split('/')[0]}.github.io\`;
           
-          // AUTO-6D Dynamic Discovery: Không hardcode bất kỳ domain nào
-          const host = fs.existsSync('CNAME') 
-            ? fs.readFileSync('CNAME', 'utf8').trim() 
-            : \`\${repo.split('/')[0]}.github.io\`;
-
           const payload = JSON.stringify({
             host: host,
             key: process.env.INDEXNOW_KEY || 'eseb24vstamp24key00000000000000',
@@ -51,7 +47,7 @@ jobs:
             urlList: [\`https://\${host}/index.html\`]
           });
 
-          const options = {
+          const req = https.request({
             hostname: 'api.indexnow.org',
             path: '/indexnow',
             method: 'POST',
@@ -60,22 +56,13 @@ jobs:
               'Content-Length': Buffer.byteLength(payload),
               'Connection': 'close'
             }
-          };
-
-          const req = https.request(options, (res) => {
-            console.log('[INDEXNOW AUTO-6D]: Broadcast Host:', host, '| Status:', res.statusCode);
+          }, (res) => {
+            console.log('[INDEXNOW AUTO-6D]: Host:', host, '| Status:', res.statusCode);
             res.on('data', () => {});
-            res.on('end', () => {
-              req.destroy();
-              process.exit(0);
-            });
+            res.on('end', () => { req.destroy(); process.exit(0); });
           });
 
-          req.on('error', (err) => {
-            console.log('[INDEXNOW BYPASS]: Connection closed cleanly.');
-            process.exit(0);
-          });
-
+          req.on('error', () => process.exit(0));
           req.write(payload);
           req.end();
           "
@@ -84,9 +71,12 @@ jobs:
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add index.html Protocols/*.ehc Protocols/*.js
+          
+          git fetch origin main
+          git reset --soft origin/main
+          
+          git add Protocols/*.ehc Protocols/*.js
           git diff-index --quiet HEAD || ( \
-            git commit -m "auto(eseb): AUTO-6D sync artifacts for dynamic domain [V-STAMP-24]" && \
-            git pull --rebase origin main && \
+            git commit -m "auto(eseb): sync auto-generated .ehc and .js artifacts [V-STAMP-24]" && \
             git push origin main \
           )
