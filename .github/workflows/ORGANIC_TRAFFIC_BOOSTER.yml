@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  eseb-auto-6d-runner:
+  eseb-auto-dual-compiler:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
@@ -20,11 +20,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile .eseb Core into .ehc and .js
+      # BƯỚC CỐT LÕI: .eseb tự động tạo sinh ra .ehc và .js
+      - name: Auto-Compile .eseb into Dual Artifacts (.ehc & .js)
         run: |
           python Protocols/Organic_Traffic_Booster.eseb
 
-      - name: Execute Serverless Runner 08 Cloudflare AI GPUs
+      # BƯỚC THỰC THI RUNNER .JS VỪA ĐƯỢC SINH RA
+      - name: Execute Generated Serverless Runner (.js)
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -54,10 +56,11 @@ jobs:
           req.write(payload); req.end();
           "
 
-      - name: Commit and Sync Living Entity Artifacts
+      # ĐÓNG GÓI & ĐẨY HAI TỆP TỰ ĐỘNG SINH NÀY LÊN REPO
+      - name: Commit and Push Auto-Generated Artifacts (.ehc & .js)
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
           git add index.html Protocols/*.ehc Protocols/*.js
-          git diff-index --quiet HEAD || git commit -m "auto(eseb): AUTO-6D sync 08 ai matrix [V-STAMP-24]"
+          git diff-index --quiet HEAD || git commit -m "auto(eseb): .eseb generated .ehc and .js artifacts [V-STAMP-24]"
           git push
