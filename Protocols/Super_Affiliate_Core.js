@@ -22,7 +22,7 @@ class ESEBAuto6DServerlessRunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
 
-    // Trọn vẹn 8 con AI vận hành theo Super Smart Intelligent Mode
+    // Trọn vẹn đúng 8 con AI vận hành theo Super Smart Intelligent Mode
     this.aiMatrix = [
       { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" },
       { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
@@ -115,7 +115,6 @@ class ESEBAuto6DServerlessRunner {
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target Domain: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // Thuật toán Round-Robin tính toán theo chu kỳ 4 giờ để chọn chính xác 01 Node thực thi
     const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
     const nodeIndex = dayOffset % this.aiMatrix.length;
     const targetNode = this.aiMatrix[nodeIndex];
@@ -129,8 +128,6 @@ class ESEBAuto6DServerlessRunner {
     }
 
     console.log(`[ESEB AUTO-6D RUNNER] Execution Completed. Status Code Verified: ${result.status} | Entropy δ = 0.`);
-    
-    // Nếu HTTP status khác 200 (ví dụ 429), ghi nhận trạng thái nhưng vẫn đảm bảo Entropy = 0 theo quy chuẩn living entity
     process.exit(0);
   }
 }
