@@ -147,7 +147,7 @@ class ESEBAutonomousSOTAEngine:
 """
 
     def build_runner_js(self) -> str:
-        """Sinh thực thể Serverless Runner Node.js (.js) gọi Cloudflare AI và bơm vào Landing Page"""
+        """Sinh thực thể Serverless Runner Node.js (.js) hoàn chỉnh, không lỗi cú pháp"""
         return f"""/* ==========================================================================
    ESEB SERVERLESS RUNNER ENGINE (AUTONOMOUS SOTA CONVERSION EDITION)
    MODULE: Protocols/{self.module_name}.js
@@ -253,7 +253,7 @@ class AutonomousSOTARunner {{
             console.log(`[SOTA WARNING] ⚠️ NODE [${{node.key}}] HTTP Status: ${{res.statusCode}} (Using fallback conversion vector)`);
           }}
           resolve({{ success: isSuccess, status: res.statusCode, content: generatedText }});
-        }};
+        }});
       }});
       req.on('timeout', () => {{ req.destroy(); resolve({{ success: false, status: 408, content: "Timeout fallback content." }}); }});
       req.on('error', () => resolve({{ success: false, status: 500, content: "Error fallback content." }}));
