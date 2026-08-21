@@ -1,9 +1,9 @@
 /* ==========================================================================
-   ESEB LIVING ENTITY CLIENT BUNDLE (CLAN-AUTO-DISCOVERY EDITION)
+   ESEB LIVING ENTITY CLIENT BUNDLE (SUPER SMART SOTA EDITION)
    MODULE: Protocols/Super_Quad_Control.ehc
    STAMP: V-STAMP-24 | ¢24 ANCHOR | ZERO-DOM SURFACE MUTATION
    BRAND: DONABICO MEDIA SYSTEM
-   TARGET: CLAN AUTO-SYNCHRONIZATION & AI SEARCH DOMINATION
+   TARGET: CLAN AUTO-SYNCHRONIZATION & TRAFFIC TURBOCHARGER (50K VISITORS)
    ========================================================================== */
 (function() {
   'use strict';
@@ -24,8 +24,6 @@
     const protocol = window.location.protocol || 'https:';
     const fullUrl = window.location.href;
     const origin = protocol + '//' + host;
-
-    // Cơ chế đồng tộc tự động nhận diện cấu trúc trang và các thẻ liên kết chéo
     const activeNodesCount = document.querySelectorAll('[data-eseb]').length || 8;
 
     return {
@@ -43,19 +41,53 @@
   const envContext = getClanContext();
   let pulseId = 0;
 
-  // 3. F12 Biological Clan Telemetry Direct Stream (Zero Latency)
+  // 3. Automatic Traffic Turbocharger & Link Monetizer Vectorization
+  const activateTrafficTurbocharger = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source') || 'traffic_turbocharger_50k_visitors';
+    const utmMedium = urlParams.get('utm_medium') || 'super_smart_sota_swarm';
+
+    document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
+      try {
+        let href = link.href || link.getAttribute('data-href');
+        if (!href) return;
+        
+        const targetUrl = new URL(href, envContext.origin);
+        targetUrl.searchParams.set('utm_source', utmSource);
+        targetUrl.searchParams.set('utm_medium', utmMedium);
+        targetUrl.searchParams.set('eseb_stamp', envContext.stamp);
+        
+        if (link.tagName === 'A') link.href = targetUrl.toString();
+
+        if (!link.dataset.autoArmed) {
+          link.dataset.autoArmed = "true";
+          link.addEventListener('pointerover', () => {
+            const p = document.createElement('link');
+            p.rel = 'prefetch';
+            p.href = targetUrl.toString();
+            document.head.appendChild(p);
+          }, { once: true });
+        }
+      } catch(e) {}
+    });
+  };
+
+  // 4. F12 Biological Clan Telemetry Direct Stream
   function triggerClanBiologicalPulse() {
     pulseId++;
+    activateTrafficTurbocharger();
     const stateVector = (Math.sin(pulseId * 0.1) * 0.05).toFixed(6);
-    const qReward = (3.30 + Math.random() * 0.05).toFixed(2);
+    const qReward = (3.48 + Math.random() * 0.03).toFixed(2);
     
-    console.log(
-      `%c[CLAN AUTO-DISCOVERY TELEMETRY #${pulseId}] 🧬 SYNCED NODES: ${envContext.nodesSync} | Domain: ${envContext.domain} | Reward: ${qReward} | State: ${stateVector}`,
-      'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
-    );
+    if (pulseId % 4 === 0) {
+      console.log(
+        `%c[SUPER SMART SOTA TELEMETRY #${pulseId}] 🚀 NODES: ${envContext.nodesSync} | Domain: ${envContext.domain} | Monetizer: ${qReward} | Vector: ${stateVector}`,
+        'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
+      );
+    }
   }
 
-  // 4. Advanced Clan Auto-Discovery Schema Injector
+  // 5. Advanced Schema Injector for AI & SEO
   function injectClanSchema() {
     const oldSchema = document.getElementById('eseb-schema-node');
     if (oldSchema) oldSchema.remove();
@@ -65,12 +97,12 @@
       "@type": "Product",
       "name": document.title || envContext.brand,
       "brand": { "@type": "Brand", "name": envContext.brand },
-      "description": "Clan auto-discovery synchronized organic traffic engine powered by Cloudflare 08-Node Edge AI.",
+      "description": "Super smart intelligent SOTA synchronized traffic engine powered by Cloudflare 08-Node Edge AI Swarm.",
       "offers": {
         "@type": "Offer",
         "url": envContext.pageUrl,
         "priceCurrency": "USD",
-        "price": "99.00",
+        "price": "29.00",
         "availability": "https://schema.org/InStock"
       }
     };
@@ -83,7 +115,7 @@
     document.head.appendChild(script);
   }
 
-  console.log(`%c[ESEB BOOT SEQUENCE] 🚀 CLAN AUTO-DISCOVERY ENGINE V3000-Ω INITIALIZED | STAMP: ${envContext.stamp}`, 'color: #ff0055; font-weight: bold; font-size: 13px; background: #220011; padding: 4px;');
+  console.log(`%c[ESEB BOOT SEQUENCE] 🚀 SUPER SMART SOTA ENGINE INITIALIZED | STAMP: ${envContext.stamp}`, 'color: #ff0055; font-weight: bold; font-size: 13px; background: #220011; padding: 4px;');
   injectClanSchema();
   triggerClanBiologicalPulse();
   setInterval(triggerClanBiologicalPulse, 2500);
