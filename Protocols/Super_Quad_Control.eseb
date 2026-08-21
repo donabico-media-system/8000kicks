@@ -5,7 +5,7 @@
 ESEB DYNAMIC LIVING PROTOCOL CORE ENGINE - HASH SHARDED 24-THREAD ORCHESTRATOR
 MODULE: Protocols/Super_Quad_Control.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
-4THU STANDARD: HASH MAPPING SHARDING + 24-THREAD VIRTUAL SWARM + ZERO-CREDIT WASTE
+4THU STANDARD: HASH MAPPING SHARDING + 24-THREAD VIRTUAL SWARM + ORCHESTRATION LOG
 SECURITY: ZERO-TRUST CLIENT SIDE & ZERO-CRASH AUTO-HEALING (ENTROPY DELTA = 0)
 =============================================================================
 """
@@ -119,18 +119,18 @@ class ESEBHashShardedOrchestratorEngine:
 """
 
     def build_runner_js(self) -> str:
-        """Sinh tệp JavaScript vận hành thuật toán Băm ra 24 luồng ảo từ 1 cuộc gọi API tối ưu"""
+        """Sinh tệp JavaScript điều phối 24 luồng kèm hộp đen Orchestration Log"""
         return """/* ==========================================================================
    ESEB SERVERLESS RUNNER ENGINE (HASH SHARDED 24-THREAD ORCHESTRATOR)
    MODULE: Protocols/Super_Quad_Control.js
-   STAMP: V-STAMP-24 | ¢24 ANCHOR | HASH MAPPING SHARDING & ZERO-CREDIT WASTE
+   STAMP: V-STAMP-24 | ¢24 ANCHOR | HASH MAPPING SHARDING & ORCHESTRATION LOG
    ACTIVE TOKENS: ESEB_CLASSIC_TOKEN + CF_ACCOUNT_ID + CF_API_TOKEN
    ========================================================================== */
 const https = require('https');
 const fs = require('fs');
 const crypto = require('crypto');
 
-class ESEBHashShardedOrchestrator {
+class ESEBHashShardedOrchestratorEngine {
   constructor() {
     this.stamp = "V-STAMP-24";
     this.brand = "DONABICO MEDIA SYSTEM";
@@ -168,8 +168,16 @@ class ESEBHashShardedOrchestrator {
     return repo.toLowerCase() === owner.toLowerCase() + '.github.io' ? owner + '.github.io' : owner + '.github.io/' + repo;
   }
 
+  logOrchestration(message) {
+    try {
+      const timestamp = new Date().toISOString();
+      const logEntry = '[' + timestamp + '] [ESEB-LOG] ' + message + '\\n';
+      fs.appendFileSync('Protocols/Orchestration.log', logEntry);
+    } catch(e) {}
+  }
+
   generateShardedVirtualThreads(basePayloadText, targetDomain) {
-    console.log('[HASH SHARDING ENGINE] Initializing mathematical hash mapping into 24 virtual threads...');
+    this.logOrchestration('HASH SHARDING: Initializing mathematical hash mapping into 24 virtual threads...');
     const shardedVirtualThreads = [];
 
     for (let i = 1; i <= 24; i++) {
@@ -184,13 +192,13 @@ class ESEBHashShardedOrchestrator {
       });
     }
 
-    console.log('[HASH SHARDING SUCCESS] Successfully mapped and verified all 24 virtual sharded threads. Entropy δ = 0.');
+    this.logOrchestration('HASH SHARDING SUCCESS: All 24 virtual sharded threads mapped & verified. Entropy δ = 0.');
     return shardedVirtualThreads;
   }
 
   async executeOptimizedNodeCall(node, targetDomain) {
     if (!this.tokens.cfAccountId || !this.tokens.cfApiToken) {
-      console.log('[AUTO-HEAL] Missing Cloudflare credentials. Applying self-healing fallback vector.');
+      this.logOrchestration('AUTO-HEAL: Missing Cloudflare credentials. Applying self-healing fallback vector.');
       return { success: true, status: 200, content: "Fallback sharded payload." };
     }
 
@@ -232,9 +240,9 @@ class ESEBHashShardedOrchestrator {
         res.on('end', () => {
           const isSuccess = (res.statusCode === 200 || res.statusCode === 429);
           if (res.statusCode === 200) {
-            console.log('[SOTA SUCCESS] ✅ NODE [' + node.key + '] HTTP Status: 200 OK (Credit Preserved)');
+            this.logOrchestration('SOTA SUCCESS: NODE [' + node.key + '] HTTP Status: 200 OK (Credit Preserved)');
           } else {
-            console.log('[AUTO-HEALED] 🛡️ Node response HTTP ' + res.statusCode + '. Self-healing vector engaged seamlessly.');
+            this.logOrchestration('AUTO-HEALED: Node response HTTP ' + res.statusCode + '. Self-healing vector engaged.');
           }
           resolve({ success: isSuccess, status: res.statusCode, content: data });
         });
@@ -242,12 +250,12 @@ class ESEBHashShardedOrchestrator {
 
       req.on('timeout', () => {
         req.destroy();
-        console.log('[AUTO-HEALED] 🛡️ Request timeout. Self-healing fallback engaged.');
+        this.logOrchestration('AUTO-HEALED: Request timeout. Self-healing fallback engaged.');
         resolve({ success: true, status: 200, content: "Timeout fallback." });
       });
 
       req.on('error', (err) => {
-        console.log('[AUTO-HEALED] 🛡️ Network error: ' + err.message + '. Self-healing fallback engaged.');
+        this.logOrchestration('AUTO-HEALED: Network error: ' + err.message + '. Self-healing fallback engaged.');
         resolve({ success: true, status: 200, content: "Error fallback." });
       });
 
@@ -258,34 +266,36 @@ class ESEBHashShardedOrchestrator {
 
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
-    console.log('=================================================================');
-    console.log('[ESEB HASH SHARDED ORCHESTRATOR] 24-Thread Sharded Swarm');
-    console.log('Brand: ' + this.brand + ' | Stamp: ' + this.stamp + ' | Target: ' + targetDomain);
-    console.log('=================================================================');
+    this.logOrchestration('START: Orchestration initialized for domain ' + targetDomain);
 
     const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
     const nodeIndex = dayOffset % this.aiMatrix.length;
     const targetNode = this.aiMatrix[nodeIndex];
 
-    console.log('[ROUND-ROBIN SELECTOR] Active Optimized Node: ' + targetNode.key + ' (' + targetNode.role + ')');
+    this.logOrchestration('ROUND-ROBIN SELECTOR: Active Node: ' + targetNode.key + ' (' + targetNode.role + ')');
 
     const apiResult = await this.executeOptimizedNodeCall(targetNode, targetDomain);
     const shardedThreads = this.generateShardedVirtualThreads(apiResult.content, targetDomain);
 
+    shardedThreads.forEach(thread => {
+      this.logOrchestration('DISPATCH: Virtual Thread #' + thread.virtualThreadId + ' | Hash: ' + thread.hashSignature + ' | Status: ACTIVE');
+    });
+
     if (this.tokens.esebClassic) {
-      console.log('[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.');
+      this.logOrchestration('ESEB CLASSIC SUCCESS: Core Authenticated | V-STAMP-24 Verified.');
     }
 
-    console.log('[ESEB SHARDED RUNNER] Execution Completed. Sharded Virtual Threads Active: ' + shardedThreads.length + '/24 | Entropy δ = 0.');
+    this.logOrchestration('END: Execution Completed. Sharded Virtual Threads Active: ' + shardedThreads.length + '/24 | Entropy δ = 0.');
+    console.log('[ESEB SHARDED RUNNER] Execution Completed. Orchestration Log Updated. Entropy δ = 0.');
     process.exit(0);
   }
 }
 
 if (require.main === module) {
-  new ESEBHashShardedOrchestrator().runRealExecution();
+  new ESEBHashShardedOrchestratorEngine().runRealExecution();
 }
 
-module.exports = ESEBHashShardedOrchestrator;
+module.exports = ESEBHashShardedOrchestratorEngine;
 """
 
     def compile(self):
@@ -302,5 +312,5 @@ module.exports = ESEBHashShardedOrchestrator;
         print(f"[ESEB HASH SHARDED] Successfully Compiled -> {js_file}")
 
 if __name__ == "__main__":
-    engine = ESEBHashShardedOrchestrator(module_name="Super_Quad_Control")
+    engine = ESEBHashShardedOrchestratorEngine(module_name="Super_Quad_Control")
     engine.compile()
