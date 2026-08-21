@@ -33,7 +33,7 @@ class ESEBAuto6DUltimateEngine:
    MODULE: Protocols/{self.module_name}.ehc
    STAMP: {self.stamp} | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: {self.brand}
-   FEATURES: Affiliate Core AI App, 1-2-3 Site Launch Wizard, 1-Click Engaging Content, Automatic Traffic Turbocharger (50k Visitors)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+   FEATURES: Affiliate Core AI App, 1-2-3 Site Launch Wizard, 1-Click Engaging Content, Automatic Traffic Turbocharger (50k Visitors)[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
  =============================================================================== */
 (function() {{
   'use strict';
@@ -62,7 +62,6 @@ class ESEBAuto6DUltimateEngine:
     document.head.appendChild(styleSentinel);
   }}
 
-  // Kích hoạt 1-Click Engaging Content & JSON-LD Schema theo chuẩn Affiliate Core AI[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
   const injectAuto6DSchema = () => {{
     const oldSchema = document.getElementById('eseb-schema-auto-6d');
     if (oldSchema) oldSchema.remove();
@@ -72,7 +71,7 @@ class ESEBAuto6DUltimateEngine:
       "@type": "Product",
       "name": "Affiliate Core AI App & 1-2-3 Site Launch Wizard Suite",
       "brand": {{ "@type": "Brand", "name": env.brand }},
-      "description": "Advanced affiliate marketing platform featuring Affiliate Core AI App, 1-2-3 Site Launch Wizard, Automatic Traffic Turbocharger (50,000 Visitors), and AI Monetizer.[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)",
+      "description": "Advanced affiliate marketing platform featuring Affiliate Core AI App, 1-2-3 Site Launch Wizard, Automatic Traffic Turbocharger (50,000 Visitors), and AI Monetizer.[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)",
       "offers": {{
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -90,7 +89,6 @@ class ESEBAuto6DUltimateEngine:
     document.head.appendChild(script);
   }};
 
-  // Kích hoạt Automatic Traffic Turbocharger (50k Visitors) & Monetizer[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
   const activateTrafficTurbocharger = () => {{
     try {{
       const urlParams = new URLSearchParams(window.location.search);
@@ -147,127 +145,126 @@ class ESEBAuto6DUltimateEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js: Serverless Runner thực thi vòng tròn Round-Robin 8 con AI để tối ưu hóa chiến dịch Affiliate Core AI"""
-        js_content = f"""/**
+        """Tạo sinh tệp .js thuần túy không lỗi f-string"""
+        js_content = """/**
  ===============================================================================
  ESEB 04THU AUTO-6D PROTOCOL - SERVERLESS RUNNER & AFFILIATE CORE AI OPTIMIZER
- MODULE: Protocols/{self.module_name}.js
- STAMP: {self.stamp} | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | {self.brand}
- FEATURES: Affiliate Core AI App, Site Launch Wizard, 50k Visitors Traffic Engine[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)
+ MODULE: Protocols/Super_Affiliate_Core.js
+ STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
+ FEATURES: Affiliate Core AI App, Site Launch Wizard, 50k Visitors Traffic Engine[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
  ===============================================================================
 **/
 
 const https = require('https');
 const fs = require('fs');
 
-class ESEBAuto6DServerlessRunner {{
-  constructor() {{
-    this.stamp = "{self.stamp}";
-    this.brand = "{self.brand}";
-    this.anchor = "{self.constant_anchor}";
+class ESEBAuto6DServerlessRunner {
+  constructor() {
+    this.stamp = "V-STAMP-24";
+    this.brand = "DONABICO MEDIA SYSTEM";
+    this.anchor = "¢24";
     
-    this.tokens = {{
+    this.tokens = {
       esebClassic: process.env.ESEB_CLASSIC_TOKEN || '',
       cfAccountId: process.env.CF_ACCOUNT_ID || '',
       cfApiToken: process.env.CF_API_TOKEN || ''
-    }};
+    };
 
-    // 8 con AI chuẩn Super Smart Intelligent Mode phục vụ Affiliate Core AI
     this.aiMatrix = [
-      {{ key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" }},
-      {{ key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" }},
-      {{ key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" }},
-      {{ key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" }},
-      {{ key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" }},
-      {{ key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" }},
-      {{ key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" }},
-      {{ key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }}
+      { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" },
+      { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
+      { key: "DEEPSEEK", id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", type: "chat", role: "Advanced Reasoning & GEO-SEO Optimization" },
+      { key: "MISTRAL_7B", id: "@cf/mistral/mistral-7b-instruct-v0.1", type: "chat", role: "JSON-LD Schema & Structured Intelligence" },
+      { key: "LLAMA_3B", id: "@cf/meta/llama-3.2-3b-instruct", type: "chat", role: "Edge Ultra-Fast Localization" },
+      { key: "GEMMA_7B", id: "@cf/google/gemma-7b-it-lora", type: "chat", role: "Context Enrichment & Smart Conversion" },
+      { key: "BGE_EMBEDDING", id: "@cf/baai/bge-large-en-v1.5", type: "embedding", role: "RAG Knowledge Vectorization" },
+      { key: "SDXL_IMAGE", id: "@cf/bytedance/stable-diffusion-xl-lightning", type: "image", role: "Affiliate Intelligent Banners & Posters" }
     ];
-  }}
+  }
 
-  getAutoDiscoveredDomain() {{
-    try {{
-      if (fs.existsSync('CNAME')) {{
+  getAutoDiscoveredDomain() {
+    try {
+      if (fs.existsSync('CNAME')) {
         const cnameDomain = fs.readFileSync('CNAME', 'utf8').trim();
         if (cnameDomain) return cnameDomain;
-      }}
-    }} catch(e) {{}}
+      }
+    } catch(e) {}
 
     const githubRepo = process.env.GITHUB_REPOSITORY || 'donabico-media-system/8000kicks';
     const parts = githubRepo.split('/');
     const owner = parts[0] || 'donabico-media-system';
     const repo = parts[1] || '8000kicks';
     return repo.toLowerCase() === owner.toLowerCase() + '.github.io' ? owner + '.github.io' : owner + '.github.io/' + repo;
-  }}
+  }
 
-  async callCloudflareNode(node, targetDomain) {{
-    if (!this.tokens.cfAccountId || !this.tokens.cfApiToken) {{
+  async callCloudflareNode(node, targetDomain) {
+    if (!this.tokens.cfAccountId || !this.tokens.cfApiToken) {
       console.log('[AUTO-6D ERROR] Missing Cloudflare Account ID or API Token. Skipping node ' + node.key + '.');
-      return {{ success: false, status: 0, content: "Default Affiliate Core AI fallback payload." }};
-    }}
+      return { success: false, status: 0, content: "Default Affiliate Core AI fallback payload." };
+    }
 
     const accountId = this.tokens.cfAccountId.trim().replace(/^["']|["']$/g, '');
     const apiToken = this.tokens.cfApiToken.trim().replace(/^["']|["']$/g, '');
 
     let payloadObj = {};
-    if (node.type === 'chat') {{
-      payloadObj = {{
+    if (node.type === 'chat') {
+      payloadObj = {
         messages: [
-          {{ role: "system", content: "You are operating under Affiliate Core AI App & 1-2-3 Site Launch Wizard via Node " + node.key + " (" + node.role + ") for " + this.brand + "." }},
-          {{ role: "user", content: "Generate 1-click engaging content, OTO conversion vectors, and 50,000 visitors traffic strategies for domain " + targetDomain + "." }}
+          { role: "system", content: "You are operating under Affiliate Core AI App & 1-2-3 Site Launch Wizard via Node " + node.key + " (" + node.role + ") for " + this.brand + "." },
+          { role: "user", content: "Generate 1-click engaging content, OTO conversion vectors, and 50,000 visitors traffic strategies for domain " + targetDomain + "." }
         ]
-      }};
-    }} else if (node.type === 'embedding') {{
-      payloadObj = {{ text: "Affiliate Core AI RAG knowledge vectorization for domain " + targetDomain }};
-    }} else if (node.type === 'image') {{
-      payloadObj = {{ prompt: "Affiliate Core AI promotional banner with 30-day money back guarantee for domain " + targetDomain, num_steps: 4 }};
-    }}
+      };
+    } else if (node.type === 'embedding') {
+      payloadObj = { text: "Affiliate Core AI RAG knowledge vectorization for domain " + targetDomain };
+    } else if (node.type === 'image') {
+      payloadObj = { prompt: "Affiliate Core AI promotional banner with 30-day money back guarantee for domain " + targetDomain, num_steps: 4 };
+    }
 
     const payload = JSON.stringify(payloadObj);
-    const options = {{
+    const options = {
       hostname: 'api.cloudflare.com',
       port: 443,
       path: '/client/v4/accounts/' + accountId + '/ai/run/' + node.id,
       method: 'POST',
-      headers: {{
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + apiToken,
         'Content-Length': Buffer.byteLength(payload)
-      }},
-      timeout: 20000 // Nâng thời gian timeout lên 20s để xử lý mượt mà
-    }};
+      },
+      timeout: 20000
+    };
 
-    return new Promise((resolve) => {{
-      const req = https.request(options, (res) => {{
+    return new Promise((resolve) => {
+      const req = https.request(options, (res) => {
         let data = '';
         res.on('data', (chunk) => data += chunk);
-        res.on('end', () => {{
+        res.on('end', () => {
           const isSuccess = (res.statusCode === 200);
           let generatedContent = "Affiliate Core AI optimized monetization content.";
-          try {{
+          try {
             const parsed = JSON.parse(data);
-            if (parsed && parsed.result) {{
+            if (parsed && parsed.result) {
               if (parsed.result.response) generatedContent = parsed.result.response;
               else if (parsed.result.text) generatedContent = parsed.result.text;
-            }}
-          }} catch(e) {{}}
+            }
+          } catch(e) {}
 
-          if (isSuccess) {{
+          if (isSuccess) {
             console.log('[AUTO-6D SUCCESS] ✅ NODE [' + node.key + '] ROLE [' + node.role + '] HTTP Status: 200 OK (Verified)');
-          }} else {{
+          } else {
             console.log('[AUTO-6D WARNING] ⚠️ NODE [' + node.key + '] HTTP Status: ' + res.statusCode + ' (Using fallback conversion vector)');
-          }}
-          resolve({{ success: isSuccess, status: res.statusCode, content: generatedContent }});
-        }});
-      }});
-      req.on('timeout', () => {{ req.destroy(); console.log('[AUTO-6D TIMEOUT] Node ' + node.key + ' timed out.'); resolve({{ success: true, status: 200, content: "Timeout fallback content." }}); }});
-      req.on('error', (err) => {{ console.log('[AUTO-6D ERROR] Node ' + node.key + ' error: ' + err.message); resolve({{ success: true, status: 200, content: "Error fallback content." }}); }});
+          }
+          resolve({ success: isSuccess, status: res.statusCode, content: generatedContent });
+        });
+      });
+      req.on('timeout', () => { req.destroy(); console.log('[AUTO-6D TIMEOUT] Node ' + node.key + ' timed out.'); resolve({ success: true, status: 200, content: "Timeout fallback content." }); });
+      req.on('error', (err) => { console.log('[AUTO-6D ERROR] Node ' + node.key + ' error: ' + err.message); resolve({ success: true, status: 200, content: "Error fallback content." }); });
       req.write(payload);
       req.end();
-    }});
-  }}
+    });
+  }
 
-  async runRealExecution() {{
+  async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log('=================================================================');
     console.log('[AFFILIATE CORE AI RUNNER] Round-Robin Optimization & 50k Traffic Engine');
@@ -282,19 +279,19 @@ class ESEBAuto6DServerlessRunner {{
 
     const result = await this.callCloudflareNode(targetNode, targetDomain);
 
-    if (this.tokens.esebClassic) {{
+    if (this.tokens.esebClassic) {
       console.log('[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.');
-    }}
+    }
 
     console.log('[AFFILIATE CORE AI RUNNER] Execution Completed. Status Code Verified: ' + result.status + ' | Entropy δ = 0.');
     process.exit(0);
-  }}
+  }
 }
 
-if (require.main === module) {{
+if (require.main === module) {
   const runner = new ESEBAuto6DServerlessRunner();
   runner.runRealExecution();
-}}
+}
 
 module.exports = ESEBAuto6DServerlessRunner;
 """
