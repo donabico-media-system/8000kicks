@@ -27,7 +27,6 @@ class ESEBAutonomousSOTAEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def build_client_ehc(self) -> str:
-        """Sinh thực thể sống Client-Side ES2026+ (.ehc) tích hợp Traffic Turbocharger & Monetizer thực chiến"""
         return f"""/* ==========================================================================
    ESEB LIVING ENTITY CLIENT BUNDLE (AUTONOMOUS SOTA EDITION)
    MODULE: Protocols/{self.module_name}.ehc
@@ -112,42 +111,14 @@ class ESEBAutonomousSOTAEngine:
     }}
   }}
 
-  function injectClanSchema() {{
-    const oldSchema = document.getElementById('eseb-schema-node');
-    if (oldSchema) oldSchema.remove();
-
-    const schemaPayload = {{
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": document.title || "Super Smart Affiliate Core AI Suite",
-      "brand": {{ "@type": "Brand", "name": envContext.brand }},
-      "description": "Advanced affiliate marketing platform featuring automated traffic turbocharger and AI monetization vectors.",
-      "offers": {{
-        "@type": "Offer",
-        "url": envContext.pageUrl,
-        "priceCurrency": "USD",
-        "price": "29.00",
-        "availability": "https://schema.org/InStock"
-      }}
-    }};
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.id = 'eseb-schema-node';
-    script.setAttribute('data-eseb', 'true');
-    script.textContent = JSON.stringify(schemaPayload);
-    document.head.appendChild(script);
-  }}
-
   console.log(`%c[ESEB BOOT SEQUENCE] 🚀 AUTONOMOUS SOTA ENGINE INITIALIZED | STAMP: ${{envContext.stamp}}`, 'color: #ff0055; font-weight: bold; font-size: 13px; background: #220011; padding: 4px;');
-  injectClanSchema();
   triggerClanBiologicalPulse();
   setInterval(triggerClanBiologicalPulse, {self.pulse_interval});
 }})();
 """
 
     def build_runner_js(self) -> str:
-        """Sinh thực thể Serverless Runner Node.js (.js) hoàn chỉnh, không lỗi cú pháp"""
+        """Sinh tệp JavaScript hoàn toàn độc lập, chuẩn hóa cú pháp 100% không lỗi lồng ngoặc"""
         return f"""/* ==========================================================================
    ESEB SERVERLESS RUNNER ENGINE (AUTONOMOUS SOTA CONVERSION EDITION)
    MODULE: Protocols/{self.module_name}.js
@@ -208,8 +179,8 @@ class AutonomousSOTARunner {{
     if (node.type === 'chat') {{
       payloadObj = {{
         messages: [
-          {{"role": "system", "content": `You are an expert affiliate copywriter operating under Super Smart Intelligent Mode via Node ${{node.key}} (${{node.role}}) for ${{this.brand}}.`}},
-          {{"role": "user", "content": `Write a high-converting HTML snippet review for affiliate landing page on domain ${{targetDomain}} highlighting 1-Click engaging content and traffic turbocharger.`}}
+          {{ role: "system", content: `You are an expert affiliate copywriter operating under Super Smart Intelligent Mode via Node ${{node.key}} (${{node.role}}) for ${{this.brand}}.` }},
+          {{ role: "user", content: `Write a high-converting HTML snippet review for affiliate landing page on domain ${{targetDomain}} highlighting 1-Click engaging content.` }}
         ]
       }};
     }} else if (node.type === 'embedding') {{
@@ -235,7 +206,9 @@ class AutonomousSOTARunner {{
     return new Promise((resolve) => {{
       const req = https.request(options, (res) => {{
         let data = '';
-        res.on('data', chunk => data += chunk);
+        res.on('data', (chunk) => {{
+          data += chunk;
+        }});
         res.on('end', () => {{
           const isSuccess = (res.statusCode === 200);
           let generatedText = "Automated high-converting affiliate review content.";
@@ -255,8 +228,16 @@ class AutonomousSOTARunner {{
           resolve({{ success: isSuccess, status: res.statusCode, content: generatedText }});
         }});
       }});
-      req.on('timeout', () => {{ req.destroy(); resolve({{ success: false, status: 408, content: "Timeout fallback content." }}); }});
-      req.on('error', () => resolve({{ success: false, status: 500, content: "Error fallback content." }}));
+
+      req.on('timeout', () => {{
+        req.destroy();
+        resolve({{ success: false, status: 408, content: "Timeout fallback content." }});
+      }});
+
+      req.on('error', () => {{
+        resolve({{ success: false, status: 500, content: "Error fallback content." }});
+      }});
+
       req.write(payload);
       req.end();
     }});
@@ -266,7 +247,7 @@ class AutonomousSOTARunner {{
     const targetFiles = ['8000kicks.html', 'index.html', 'shop/8000kicks.html'];
     let injectedCount = 0;
 
-    targetFiles.forEach(filePath => {{
+    targetFiles.forEach((filePath) => {{
       try {{
         if (fs.existsSync(filePath)) {{
           let htmlContent = fs.readFileSync(filePath, 'utf8');
@@ -286,7 +267,7 @@ class AutonomousSOTARunner {{
       }} catch(e) {{
         console.log(`[CONTENT INJECTOR ERROR] Failed to inject into ${{filePath}}: ${{e.message}}`);
       }}
-    }};
+    }});
 
     return injectedCount;
   }}
