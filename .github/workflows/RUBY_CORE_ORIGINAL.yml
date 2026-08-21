@@ -1,0 +1,48 @@
+name: RUBY_CORE_ORIGINAL
+
+on:
+  push:
+    paths:
+      - 'Protocols/Ruby_Core_Original.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  ESEB_DUAL_PIPELINE_EXECUTION:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python Engine
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Set up Node.js Runner
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Execute ESEB Python Core (.eseb -> .ehc & .js)
+        run: |
+          python3 Protocols/Ruby_Core_Original.eseb
+          node Protocols/Ruby_Core_Original.js
+        env:
+          ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Commit ESEB Dual Artifacts
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico.media"
+          git add Protocols/
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "chore(ruby-core): eseb mcp super-nova dual-pipeline sync verified [V-STAMP-24]"
+            git push origin HEAD:main || git push origin HEAD:master || true
+          fi
