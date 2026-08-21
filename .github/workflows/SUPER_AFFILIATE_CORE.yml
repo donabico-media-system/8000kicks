@@ -2,7 +2,7 @@ name: SUPER_AFFILIATE_CORE
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Chạy tự động xoay vòng mỗi 4 tiếng chống lỗi 429
+    - cron: '0 */4 * * *' # Xoay vòng Round-Robin định kỳ 4 tiếng/lần chống lỗi 429
   workflow_dispatch:
 
 jobs:
@@ -25,16 +25,16 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Execute Ultimate Affiliate Core Omni-Matrix Protocol
+      - name: Execute ESEB 04THU Auto-6D Protocol Generator & Runner
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          echo "[ESEB PROTOCOL] Initializing Ultimate Affiliate Core Engine (.ehc & .js generator)..."
+          echo "[ESEB 04THU PROTOCOL] Initializing Auto-6D Ultimate Engine (.ehc & .js generator)..."
           python3 Protocols/Super_Affiliate_Core.eseb
           
-          echo "[SERVERLESS RUNNER] Executing Rotational Cloudflare AI Node..."
+          echo "[SERVERLESS RUNNER] Executing Super Smart Intelligent Rotational Cloudflare AI Node..."
           node Protocols/Super_Affiliate_Core.js
 
       - name: Commit and Push Living Entity Artifacts
@@ -43,7 +43,7 @@ jobs:
           git config --global user.email "bot@donabico.media"
           git add Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb): auto-compile Ultimate Affiliate Core artifacts (.ehc & .js) [V-STAMP-24]"
+            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main --force || git push origin HEAD:master --force
           else
