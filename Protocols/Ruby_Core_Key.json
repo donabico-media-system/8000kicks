@@ -1,9 +1,0 @@
-{
-  "core_identity": "RUBY_CORE_SUPER_NOVA_MCP_V3000_OMEGA",
-  "brand": "DONABICO MEDIA SYSTEM",
-  "repository": "AUTO_DISCOVERED",
-  "ruby_seed": "0x3ca37da3651f014c21d694c5f580473bc7df8ae324c0f72ea8b89e311e68d4a4",
-  "anchor_constant": 24,
-  "entropy_delta": 0.0,
-  "mode": "PURE_SANDBOX_AUTONOMOUS_MCP_SUPER_NOVA"
-}
