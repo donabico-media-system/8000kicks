@@ -1,9 +1,9 @@
 /**
  ===============================================================================
- ESEB 04THU AUTO-6D PROTOCOL - SERVERLESS RUNNER & AFFILIATE CORE AI OPTIMIZER
+ ESEB 04THU AUTO-6D PROTOCOL - TRAFFIC TURBOCHARGER 50K & SERVERLESS RUNNER
  MODULE: Protocols/Super_Affiliate_Core.js
  STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
- FEATURES: Affiliate Core AI App, Site Launch Wizard, 50k Visitors Traffic Engine[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
+ FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, OTO[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
  ===============================================================================
 **/
 
@@ -52,7 +52,7 @@ class ESEBAuto6DServerlessRunner {
   async callCloudflareNode(node, targetDomain) {
     if (!this.tokens.cfAccountId || !this.tokens.cfApiToken) {
       console.log('[AUTO-6D ERROR] Missing Cloudflare Account ID or API Token. Skipping node ' + node.key + '.');
-      return { success: false, status: 0, content: "Default Affiliate Core AI fallback payload." };
+      return { success: false, status: 0, content: "Default Traffic Turbocharger 50K payload." };
     }
 
     const accountId = this.tokens.cfAccountId.trim().replace(/^["']|["']$/g, '');
@@ -62,14 +62,14 @@ class ESEBAuto6DServerlessRunner {
     if (node.type === 'chat') {
       payloadObj = {
         messages: [
-          { role: "system", content: "You are operating under Affiliate Core AI App & 1-2-3 Site Launch Wizard via Node " + node.key + " (" + node.role + ") for " + this.brand + "." },
-          { role: "user", content: "Generate 1-click engaging content, OTO conversion vectors, and 50,000 visitors traffic strategies for domain " + targetDomain + "." }
+          { role: "system", content: "You are operating under Automatic Traffic Turbocharger (50,000 Visitors) engine via Node " + node.key + " (" + node.role + ") for " + this.brand + "." },
+          { role: "user", content: "Generate high-converting traffic syndication strategies for 50,000 visitors, OTO bonuses, and affiliate conversion vectors for domain " + targetDomain + "." }
         ]
       };
     } else if (node.type === 'embedding') {
-      payloadObj = { text: "Affiliate Core AI RAG knowledge vectorization for domain " + targetDomain };
+      payloadObj = { text: "Traffic Turbocharger 50K vector synchronization for domain " + targetDomain };
     } else if (node.type === 'image') {
-      payloadObj = { prompt: "Affiliate Core AI promotional banner with 30-day money back guarantee for domain " + targetDomain, num_steps: 4 };
+      payloadObj = { prompt: "Traffic Turbocharger 50,000 visitors promotional banner with $29 pricing for domain " + targetDomain, num_steps: 4 };
     }
 
     const payload = JSON.stringify(payloadObj);
@@ -92,7 +92,7 @@ class ESEBAuto6DServerlessRunner {
         res.on('data', (chunk) => data += chunk);
         res.on('end', () => {
           const isSuccess = (res.statusCode === 200);
-          let generatedContent = "Affiliate Core AI optimized monetization content.";
+          let generatedContent = "Traffic Turbocharger 50K optimization content.";
           try {
             const parsed = JSON.parse(data);
             if (parsed && parsed.result) {
@@ -119,7 +119,7 @@ class ESEBAuto6DServerlessRunner {
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log('=================================================================');
-    console.log('[AFFILIATE CORE AI RUNNER] Round-Robin Optimization & 50k Traffic Engine');
+    console.log('[TRAFFIC TURBOCHARGER 50K RUNNER] 8-Node AI Matrix & Traffic Engine');
     console.log('Brand: ' + this.brand + ' | Stamp: ' + this.stamp + ' | Target: ' + targetDomain);
     console.log('=================================================================');
 
@@ -135,7 +135,7 @@ class ESEBAuto6DServerlessRunner {
       console.log('[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.');
     }
 
-    console.log('[AFFILIATE CORE AI RUNNER] Execution Completed. Status Code Verified: ' + result.status + ' | Entropy δ = 0.');
+    console.log('[TRAFFIC TURBOCHARGER 50K RUNNER] Execution Completed. Status Code Verified: ' + result.status + ' | Entropy δ = 0.');
     process.exit(0);
   }
 }
