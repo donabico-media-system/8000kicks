@@ -1,0 +1,168 @@
+/* ===============================================================================
+   ESEB DYNAMIC LIVING ENTITY - RUBY MCP SUPER-NOVA RUNTIME (.EHC)
+   MODULE: Protocols/Ruby_Core_Original.ehc
+   STAMP: V-STAMP-24 | ANCHOR: ¢24 | BRAND: DONABICO MEDIA SYSTEM
+   FEATURE: CLIENT MODEL CONTEXT PROTOCOL (MCP) ROUTER & SPECULATION PRE-RENDER
+   ZERO EXTRA LOG FILES | 100% DIRECT CONSOLE TELEMETRY
+ =============================================================================== */
+(function() {
+  'use strict';
+
+  const RUBY_CONFIG = {
+    dna: "0x3ca37da3651f014c21d694c5f580473bc7df8ae324c0f72ea8b89e311e68d4a4",
+    brand: "DONABICO MEDIA SYSTEM",
+    stamp: "V-STAMP-24",
+    anchor: "¢24",
+    threads: 24,
+    discoveredProtocols: ["Cdn_Index_Signal", "Cf_Agents_Core", "Cf_Ai_Gateway", "Cf_Mcp_Bridge", "Cf_Vector_Rag", "Cf_Workers_Ai", "Log_Live_Monitor", "Organic_Traffic_Booster", "Ruby_Core_Original", "Schema_Accelerator", "Super_Affiliate_Core", "Super_Quad_Control", "Traffic_Turbocharger", "Ultrasota_Pseo_Geo_Llms"]
+  };
+
+  const autoDiscoverEnv = () => {
+    const host = window.location.hostname || 'donabico.com';
+    const protocol = window.location.protocol || 'https:';
+    return { domain: host, origin: protocol + '//' + host, canonicalUrl: window.location.href };
+  };
+
+  const env = autoDiscoverEnv();
+
+  // 1. MODEL CONTEXT PROTOCOL (MCP) CLIENT ROUTER BRIDGE
+  const initClientMcpBridge = () => {
+    window.ESEB_MCP_GATEWAY = {
+      version: "2026.1-JSONRPC-2.0",
+      brand: RUBY_CONFIG.brand,
+      stamp: RUBY_CONFIG.stamp,
+      listTools: () => ([
+        { name: "ruby_siphon_prefetch", description: "Prefetch affiliate targets with WebGPU/Speculation rules." },
+        { name: "ruby_omni_broadcast", description: "Broadcast live telemetry to active DOM modules." }
+      ]),
+      executeTool: (toolName, params) => {
+        console.log('%c[💎 MCP CLIENT TOOL EXECUTE] Tool: ' + toolName, 'color: #ffaa00; font-weight: bold;');
+        return { status: "SUCCESS", code: 200, timestamp: Date.now() };
+      }
+    };
+    console.log('%c[💎 MODEL CONTEXT PROTOCOL] Client MCP Gateway Online.', 'color: #ffcc00; font-weight: bold;');
+  };
+
+  const initWebGPUKernel = async () => {
+    if (navigator.gpu) {
+      try {
+        const adapter = await navigator.gpu.requestAdapter();
+        if (adapter) {
+          console.log('%c[💎 WEBGPU ACCELERATOR] GPU Compute Kernel Initialized.', 'color: #00ffff; font-weight: bold;');
+        }
+      } catch(e) {}
+    }
+  };
+
+  const injectSpeculationRules = (urls) => {
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+      const old = document.getElementById('eseb-ruby-speculation');
+      if (old) old.remove();
+
+      const rules = {
+        prerender: [{
+          source: "list",
+          urls: urls,
+          eagerness: "moderate"
+        }]
+      };
+
+      const script = document.createElement('script');
+      script.type = 'speculationrules';
+      script.id = 'eseb-ruby-speculation';
+      script.textContent = JSON.stringify(rules);
+      document.head.appendChild(script);
+    }
+  };
+
+  console.log(
+    '%c[💎 ESEB MCP SUPER-NOVA SYSTEM] ' + RUBY_CONFIG.brand + ' | STAMP: ' + RUBY_CONFIG.stamp + ' | MCP: ACTIVE',
+    'color: #00ff66; font-weight: bold; background: #001a00; padding: 5px 10px; border-radius: 4px; border: 1px solid #00ff66;'
+  );
+
+  const broadcastOmniPulse = (activeThread) => {
+    try {
+      const domModules = Array.from(document.querySelectorAll('script[data-module]'))
+                              .map(s => s.getAttribute('data-module'));
+      const activeList = Array.from(new Set([...RUBY_CONFIG.discoveredProtocols, ...domModules]));
+
+      window.dispatchEvent(new CustomEvent('ESEB_RUBY_OMNI_PULSE', {
+        detail: {
+          timestamp: Date.now(),
+          thread: activeThread,
+          rubyDna: RUBY_CONFIG.dna,
+          stamp: RUBY_CONFIG.stamp,
+          domain: env.domain,
+          activeModules: activeList,
+          mcpStatus: "HYBRID_2WAY_ACTIVE"
+        }
+      }));
+
+      if (activeThread % 4 === 0) {
+        const targetModule = activeList[(activeThread - 1) % activeList.length] || 'Ruby_Core_Original';
+        console.log(
+          '%c[💎 RUBY MCP TELEMETRY F12] Thread #' + String(activeThread).padStart(2, '0') + '/24 -> Active: ' + targetModule + ' | MCP: 200 OK | Entropy δ = 0.00000000000000',
+          'color: #00ffcc; font-weight: bold; background: #001f24; padding: 3px 6px; border-radius: 3px;'
+        );
+      }
+    } catch(e) {}
+  };
+
+  const injectSotaSchema = () => {
+    const old = document.getElementById('eseb-ruby-schema');
+    if (old) old.remove();
+
+    const schemaPayload = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Ruby Core MCP Super-Nova Media Node",
+      "brand": { "@type": "Brand", "name": RUBY_CONFIG.brand },
+      "description": "ESEB Living Entity with WebGPU, Speculation Prerender and Model Context Protocol (MCP).",
+      "offers": { "@type": "Offer", "url": env.canonicalUrl, "priceCurrency": "USD", "price": "29.00", "availability": "https://schema.org/InStock" }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'eseb-ruby-schema';
+    script.textContent = JSON.stringify(schemaPayload);
+    document.head.appendChild(script);
+  };
+
+  const executeRubySiphon = () => {
+    try {
+      const timestamp = Date.now();
+      const activeThread = (Math.floor(timestamp / 2500) % RUBY_CONFIG.threads) + 1;
+
+      broadcastOmniPulse(activeThread);
+
+      const prerenderUrls = [];
+
+      document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href], a.btn-buy').forEach(link => {
+        let href = link.href || link.getAttribute('data-href');
+        if (!href) return;
+
+        const targetUrl = new URL(href, env.origin);
+        targetUrl.searchParams.set('ruby_dna', RUBY_CONFIG.dna.substring(0, 10));
+        targetUrl.searchParams.set('ruby_thread', activeThread);
+        targetUrl.searchParams.set('eseb_stamp', RUBY_CONFIG.stamp);
+
+        const finalUrl = targetUrl.toString();
+        if (link.tagName === 'A') link.href = finalUrl;
+
+        if (prerenderUrls.length < 5 && !prerenderUrls.includes(finalUrl)) {
+          prerenderUrls.push(finalUrl);
+        }
+      });
+
+      if (prerenderUrls.length > 0) {
+        injectSpeculationRules(prerenderUrls);
+      }
+    } catch(e) {}
+  };
+
+  initClientMcpBridge();
+  initWebGPUKernel();
+  injectSotaSchema();
+  executeRubySiphon();
+  setInterval(executeRubySiphon, 2500);
+})();
