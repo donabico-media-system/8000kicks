@@ -38,7 +38,6 @@ class ESEBAutonomousSOTAEngine:
 (function() {{
   'use strict';
 
-  // 1. Strict Sentinel Layout Shield (CLS = 0)
   if (!document.getElementById('eseb-sentinel-shield')) {{
     const shield = document.createElement('style');
     shield.id = 'eseb-sentinel-shield';
@@ -49,7 +48,6 @@ class ESEBAutonomousSOTAEngine:
     document.head.appendChild(shield);
   }}
 
-  // 2. Real-time Domain & Context Sync
   const getClanContext = () => {{
     const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
@@ -70,7 +68,6 @@ class ESEBAutonomousSOTAEngine:
   const envContext = getClanContext();
   let pulseId = 0;
 
-  // 3. Automatic Traffic Turbocharger & Link Monetizer Vectorization (50k Visitors Target)
   const activateTrafficTurbocharger = () => {{
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'traffic_turbocharger_50k_visitors';
@@ -101,7 +98,6 @@ class ESEBAutonomousSOTAEngine:
     }};
   }};
 
-  // 4. F12 Biological Telemetry Direct Stream
   function triggerClanBiologicalPulse() {{
     pulseId++;
     activateTrafficTurbocharger();
@@ -116,7 +112,6 @@ class ESEBAutonomousSOTAEngine:
     }}
   }}
 
-  // 5. Advanced Schema Injector for SEO & AI Discovery
   function injectClanSchema() {{
     const oldSchema = document.getElementById('eseb-schema-node');
     if (oldSchema) oldSchema.remove();
@@ -152,7 +147,7 @@ class ESEBAutonomousSOTAEngine:
 """
 
     def build_runner_js(self) -> str:
-        """Sinh thực thể Serverless Runner Node.js (.js) gọi Cloudflare AI, nhận kết quả thực tế và bơm vào Landing Page"""
+        """Sinh thực thể Serverless Runner Node.js (.js) gọi Cloudflare AI và bơm vào Landing Page"""
         return f"""/* ==========================================================================
    ESEB SERVERLESS RUNNER ENGINE (AUTONOMOUS SOTA CONVERSION EDITION)
    MODULE: Protocols/{self.module_name}.js
@@ -173,7 +168,6 @@ class AutonomousSOTARunner {{
       cfApiToken: process.env.CF_API_TOKEN || ''
     }};
     
-    // Ma trận 08 Node AI hoạt động theo chu kỳ Round-Robin 4 giờ chống lỗi 429
     this.aiMatrix = [
       {{ key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" }},
       {{ key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" }},
@@ -259,7 +253,7 @@ class AutonomousSOTARunner {{
             console.log(`[SOTA WARNING] ⚠️ NODE [${{node.key}}] HTTP Status: ${{res.statusCode}} (Using fallback conversion vector)`);
           }}
           resolve({{ success: isSuccess, status: res.statusCode, content: generatedText }});
-        }});
+        }};
       }});
       req.on('timeout', () => {{ req.destroy(); resolve({{ success: false, status: 408, content: "Timeout fallback content." }}); }});
       req.on('error', () => resolve({{ success: false, status: 500, content: "Error fallback content." }}));
@@ -277,7 +271,7 @@ class AutonomousSOTARunner {{
         if (fs.existsSync(filePath)) {{
           let htmlContent = fs.readFileSync(filePath, 'utf8');
           const injectionMarker = '<!-- [ESEB-SOTA-INJECTOR] -->';
-          const injectionSnippet = `<div class="eseb-injected-review">\\n  <h3>💡 SOTA AI Verified Review & Optimization</h3>\\n  <p>${{aiContent.substring(0, 350).replace(/[<>]/g, '')}}...</p>\\n  <small>Powered by ${{this.brand}} | Stamp: ${{this.stamp}}</small>\\n</div>`;
+          const injectionSnippet = `<div class=\"eseb-injected-review\">\\n  <h3>💡 SOTA AI Verified Review & Optimization</h3>\\n  <p>${{aiContent.substring(0, 350).replace(/[<>]/g, '')}}...</p>\\n  <small>Powered by ${{this.brand}} | Stamp: ${{this.stamp}}</small>\\n</div>`;
 
           if (htmlContent.includes(injectionMarker)) {{
             htmlContent = htmlContent.replace(injectionMarker, `${{injectionMarker}}\\n${{injectionSnippet}}`);
@@ -291,8 +285,8 @@ class AutonomousSOTARunner {{
         }}
       }} catch(e) {{
         console.log(`[CONTENT INJECTOR ERROR] Failed to inject into ${{filePath}}: ${{e.message}}`);
-      }
-    }});
+      }}
+    }};
 
     return injectedCount;
   }}
@@ -304,7 +298,6 @@ class AutonomousSOTARunner {{
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Target: ${{targetDomain}}`);
     console.log(`=================================================================`);
 
-    // Thuật toán Round-Robin theo chu kỳ 4 giờ chọn 1 Node thực thi chống lỗi 429
     const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
     const nodeIndex = dayOffset % this.aiMatrix.length;
     const targetNode = this.aiMatrix[nodeIndex];
@@ -312,8 +305,6 @@ class AutonomousSOTARunner {{
     console.log(`[ROUND-ROBIN SELECTOR] Active SOTA Node Index [${{nodeIndex}}/7]: ${{targetNode.key}} (${{targetNode.role}})`);
 
     const result = await this.executeSOTANodeCall(targetNode, targetDomain);
-    
-    // Thực hiện bơm nội dung thực chiến vào Landing Page
     const injectedFiles = this.injectContentIntoLandingPages(result.content);
 
     if (this.tokens.esebClassic) {{
