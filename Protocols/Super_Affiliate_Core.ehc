@@ -3,7 +3,7 @@
    MODULE: Protocols/Super_Affiliate_Core.ehc
    STAMP: V-STAMP-24 | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: DONABICO MEDIA SYSTEM
-   FEATURES: Affiliate Core AI App, 1-2-3 Site Launch Wizard, Traffic Turbocharger (50k Visitors)[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
+   FEATURES: Affiliate Core AI App, 1-2-3 Site Launch Wizard, 1-Click Engaging Content, Automatic Traffic Turbocharger (50k Visitors)[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
  =============================================================================== */
 (function() {
   'use strict';
@@ -39,9 +39,9 @@
     const schemaPayload = {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "Super Smart Intelligent Affiliate Core AI Suite & Traffic Turbocharger",
+      "name": "Affiliate Core AI App & 1-2-3 Site Launch Wizard Suite",
       "brand": { "@type": "Brand", "name": env.brand },
-      "description": "Advanced affiliate marketing platform featuring 1-2-3 Site Launch Wizard, Automatic Traffic Turbocharger (50,000 Visitors), and AI Monetizer.",[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+      "description": "Advanced affiliate marketing platform featuring Affiliate Core AI App, 1-2-3 Site Launch Wizard, Automatic Traffic Turbocharger (50,000 Visitors), and AI Monetizer.[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)",
       "offers": {
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -63,7 +63,7 @@
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const utmSource = urlParams.get('utm_source') || 'traffic_turbocharger_50k_visitors';
-      const utmMedium = urlParams.get('utm_medium') || 'omni_siphon_auto_6d';
+      const utmMedium = urlParams.get('utm_medium') || 'affiliate_core_ai_monetizer';
 
       document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
         let href = link.href || link.getAttribute('data-href');
@@ -98,7 +98,7 @@
     
     if (pulseCount % 4 === 0) {
       console.log(
-        '%c[AUTO-6D TRAFFIC TURBOCHARGER ACTIVE #' + pulseCount + '] 🚀 Domain: ' + env.domain + ' | Score: ' + monetizationScore + ' | Vector: ' + trafficVector,
+        '%c[AFFILIATE CORE AI PULSE #' + pulseCount + '] 🚀 Domain: ' + env.domain + ' | Score: ' + monetizationScore + ' | Vector: ' + trafficVector,
         'color: #00ff66; font-weight: bold; background: #001100; padding: 3px 6px; border-radius: 3px;'
       );
     }
