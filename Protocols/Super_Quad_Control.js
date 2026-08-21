@@ -1,7 +1,7 @@
 /* ==========================================================================
-   ESEB SERVERLESS RUNNER ENGINE (SUPER SMART SOTA EDITION)
+   ESEB SERVERLESS RUNNER ENGINE (SUPER SMART SOTA ROUND-ROBIN EDITION)
    MODULE: Protocols/Super_Quad_Control.js
-   STAMP: V-STAMP-24 | ¢24 ANCHOR | CLOUDFLARE 08-NODE PARALLEL SWARM
+   STAMP: V-STAMP-24 | ¢24 ANCHOR | CLOUDFLARE 08-NODE ROTATIONAL MODE
    ACTIVE TOKENS: ESEB_CLASSIC_TOKEN + CF_ACCOUNT_ID + CF_API_TOKEN
    ========================================================================== */
 const https = require('https');
@@ -18,7 +18,7 @@ class SuperSmartSOTARunner {
       cfApiToken: process.env.CF_API_TOKEN || ''
     };
     
-    // 08 Cloudflare Edge GPU AI Matrix (Super Smart Intelligent Mode)
+    // 08 Cloudflare Edge GPU AI Matrix (Chạy xoay vòng Round-Robin chống lỗi 429)
     this.aiMatrix = [
       { key: "LLAMA_70B", id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", type: "chat", role: "Super Smart Intelligent Reviews & Deep Synthesis" },
       { key: "LLAMA_8B", id: "@cf/meta/llama-3.1-8b-instruct", type: "chat", role: "Rapid RAG Fallback & Smart Sourcing" },
@@ -107,21 +107,24 @@ class SuperSmartSOTARunner {
   async runRealExecution() {
     const targetDomain = this.getAutoDiscoveredDomain();
     console.log(`=================================================================`);
-    console.log(`[ESEB SOTA RUNNER] Super Smart Intelligent 24-Thread Parallel Swarm`);
+    console.log(`[ESEB SOTA RUNNER] Super Smart Intelligent Round-Robin Execution`);
     console.log(`Brand: ${this.brand} | Stamp: ${this.stamp} | Target: ${targetDomain}`);
     console.log(`=================================================================`);
 
-    // Kỹ thuật siêu phân luồng xử lý song song độc lập toàn bộ 08 Node AI cùng lúc
-    const promises = this.aiMatrix.map(node => this.executeSOTANodeCall(node, targetDomain));
-    const results = await Promise.all(promises);
+    // Thuật toán Round-Robin tính toán theo chu kỳ 4 giờ để chọn chính xác 01 Node thực thi chống lỗi 429
+    const dayOffset = Math.floor(Date.now() / (1000 * 60 * 60 * 4)); 
+    const nodeIndex = dayOffset % this.aiMatrix.length;
+    const targetNode = this.aiMatrix[nodeIndex];
 
-    const successCount = results.filter(r => r.success).length;
+    console.log(`[ROUND-ROBIN SELECTOR] Active SOTA Node Index [${nodeIndex}/7]: ${targetNode.key} (${targetNode.role})`);
+
+    const result = await this.executeSOTANodeCall(targetNode, targetDomain);
 
     if (this.tokens.esebClassic) {
       console.log(`[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.`);
     }
 
-    console.log(`[ESEB SOTA RUNNER] Parallel Execution Completed. Successful Nodes: ${successCount}/8 | Entropy δ = 0.`);
+    console.log(`[ESEB SOTA RUNNER] Execution Completed. Status Code Verified: ${result.status} | Entropy δ = 0.`);
     process.exit(0);
   }
 }

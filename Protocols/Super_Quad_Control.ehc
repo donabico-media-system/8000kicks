@@ -8,7 +8,6 @@
 (function() {
   'use strict';
 
-  // 1. Strict Sentinel Layout Shield (CLS = 0)
   if (!document.getElementById('eseb-sentinel-shield')) {
     const shield = document.createElement('style');
     shield.id = 'eseb-sentinel-shield';
@@ -18,7 +17,6 @@
     document.head.appendChild(shield);
   }
 
-  // 2. Real-time Clan Auto-Discovery Domain & Context Sync
   const getClanContext = () => {
     const host = window.location.hostname || '8000kicks.donabico.com';
     const protocol = window.location.protocol || 'https:';
@@ -41,11 +39,10 @@
   const envContext = getClanContext();
   let pulseId = 0;
 
-  // 3. Automatic Traffic Turbocharger & Link Monetizer Vectorization
   const activateTrafficTurbocharger = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'traffic_turbocharger_50k_visitors';
-    const utmMedium = urlParams.get('utm_medium') || 'super_smart_sota_swarm';
+    const utmMedium = urlParams.get('utm_medium') || 'super_smart_sota_roundrobin';
 
     document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href]').forEach(link => {
       try {
@@ -69,10 +66,9 @@
           }, { once: true });
         }
       } catch(e) {}
-    });
+    };
   };
 
-  // 4. F12 Biological Clan Telemetry Direct Stream
   function triggerClanBiologicalPulse() {
     pulseId++;
     activateTrafficTurbocharger();
@@ -87,7 +83,6 @@
     }
   }
 
-  // 5. Advanced Schema Injector for AI & SEO
   function injectClanSchema() {
     const oldSchema = document.getElementById('eseb-schema-node');
     if (oldSchema) oldSchema.remove();
@@ -97,7 +92,7 @@
       "@type": "Product",
       "name": document.title || envContext.brand,
       "brand": { "@type": "Brand", "name": envContext.brand },
-      "description": "Super smart intelligent SOTA synchronized traffic engine powered by Cloudflare 08-Node Edge AI Swarm.",
+      "description": "Super smart intelligent SOTA synchronized traffic engine powered by Cloudflare 08-Node Edge AI Round-Robin.",
       "offers": {
         "@type": "Offer",
         "url": envContext.pageUrl,
