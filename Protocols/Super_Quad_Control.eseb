@@ -99,7 +99,7 @@ class ESEBSuperSmartSOTAEngine:
           }}, {{ once: true }});
         }}
       }} catch(e) {{}}
-    }};
+    }});
   }};
 
   // 4. F12 Biological Clan Telemetry Direct Stream
@@ -251,7 +251,7 @@ class SuperSmartSOTARunner {{
             console.log(`[SOTA WARNING] ⚠️ NODE [${{node.key}}] HTTP Status: ${{res.statusCode}}`);
           }}
           resolve({{ success: isSuccess, status: res.statusCode }});
-        }};
+        }});
       }});
       req.on('timeout', () => {{ req.destroy(); resolve({{ success: false, status: 408 }}); }});
       req.on('error', () => resolve({{ success: false, status: 500 }}));
@@ -267,7 +267,7 @@ class SuperSmartSOTARunner {{
     console.log(`Brand: ${{this.brand}} | Stamp: ${{this.stamp}} | Target: ${{targetDomain}}`);
     console.log(`=================================================================`);
 
-    // Kỹ thuật siêu phân luồng xử lý song song độc lập toàn bộ 08 Node AI cùng lúc (24 luồng mô phỏng tương đương)
+    // Kỹ thuật siêu phân luồng xử lý song song độc lập toàn bộ 08 Node AI cùng lúc
     const promises = this.aiMatrix.map(node => this.executeSOTANodeCall(node, targetDomain));
     const results = await Promise.all(promises);
 
