@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  eseb-sota-roundrobin-execution:
+  eseb-autonomous-sota-execution:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -30,11 +30,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile Super Smart SOTA Protocol (.eseb -> .ehc + .js)
+      - name: Compile Autonomous SOTA Protocol (.eseb -> .ehc + .js)
         run: |
           python3 Protocols/Super_Quad_Control.eseb
 
-      - name: Execute Cloudflare Round-Robin AI Node
+      - name: Execute Cloudflare AI Content Injection & Traffic Engine
         env:
           ESEB_CLASSIC_TOKEN: ${{ secrets.ESEB_CLASSIC_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -48,9 +48,9 @@ jobs:
           git config --global user.email "bot@donabico.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          git add Protocols/
+          git add Protocols/ *.html shop/*.html 2>/dev/null || true
           if ! git diff --cached --quiet; then
-            git commit -m "chore(eseb-sota): round-robin single node artifact compile [V-STAMP-24]"
+            git commit -m "chore(eseb-sota): autonomous ai review injection and traffic turbocharger artifacts [V-STAMP-24]"
             git fetch origin main --prune
             git rebase origin/main || git rebase --abort || true
             git push origin HEAD:main --force-with-lease
