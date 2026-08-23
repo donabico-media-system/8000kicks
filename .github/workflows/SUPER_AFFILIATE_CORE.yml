@@ -41,12 +41,7 @@ jobs:
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add -f sitemap.xml Protocols/
-          if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts & sitemap.xml [V-STAMP-24]"
-            git pull origin main --rebase || git pull origin master --rebase || true
-            git push origin HEAD:main --force || git push origin HEAD:master --force
-          else
-            echo "No changes detected. Skipping commit."
-          fi
- 
+          git add -f sitemap.xml Protocols/Super_Affiliate_Core.ehc Protocols/Super_Affiliate_Core.js
+          git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || echo "Forcing Push..."
+          git pull origin main --rebase || git pull origin master --rebase || true
+          git push origin HEAD:main --force || git push origin HEAD:master --force
