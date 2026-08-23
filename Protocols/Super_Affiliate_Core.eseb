@@ -27,13 +27,13 @@ class ESEBAuto6DUltimateEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_client_ehc(self):
-        """Tạo sinh tệp .ehc tích hợp chuyên sâu Bộ Tăng Áp Giao Thông 50,000 Visitors và đa nền tảng mạng xã hội"""
+        """Tạo sinh tệp .ehc chứa lõi WASM/WGSL Client Runtime"""
         ehc_content = f"""/* ===============================================================================
    ESEB 04THU AUTO-6D LIVING ENTITY - CLIENT SIDE RUNTIME
    MODULE: Protocols/{self.module_name}.ehc
    STAMP: {self.stamp} | ZERO-DOM SURFACE MUTATION ENFORCED
    BRAND: {self.brand}
-   FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, 1-2-3 Site Launch Wizard, OTO, Bonuses[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)
+   FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, 1-2-3 Site Launch Wizard, OTO, Bonuses
  =============================================================================== */
 (function() {{
   'use strict';
@@ -71,7 +71,7 @@ class ESEBAuto6DUltimateEngine:
       "@type": "Product",
       "name": "Automatic Traffic Turbocharger (50,000 Visitors) & Affiliate Core AI Suite",
       "brand": {{ "@type": "Brand", "name": env.brand }},
-      "description": "Advanced affiliate marketing platform featuring Automatic Traffic Turbocharger (50,000 Visitors), Affiliate Core AI App, 1-2-3 Site Launch Wizard, AI Monetizer, OTO upgrades, and exclusive bonuses[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).",
+      "description": "Advanced affiliate marketing platform featuring Automatic Traffic Turbocharger (50,000 Visitors), Affiliate Core AI App, 1-2-3 Site Launch Wizard, AI Monetizer, OTO upgrades, and exclusive bonuses.",
       "offers": {{
         "@type": "Offer",
         "url": env.canonicalUrl,
@@ -89,7 +89,6 @@ class ESEBAuto6DUltimateEngine:
     document.head.appendChild(script);
   }};
 
-  // Bộ Tăng Áp Giao Thông Tự Động (Automatic Traffic Turbocharger - 50,000 Visitors Engine)
   const activateTrafficTurbocharger50K = () => {{
     try {{
       const urlParams = new URLSearchParams(window.location.search);
@@ -97,7 +96,6 @@ class ESEBAuto6DUltimateEngine:
       const utmMedium = urlParams.get('utm_medium') || 'donabico_omni_siphon';
       const utmCampaign = urlParams.get('utm_campaign') || 'affiliate_core_ai_50k';
 
-      // Tự động phân phối và tối ưu hóa toàn bộ nút bấm / liên kết Affiliate đổ về phễu 50k visitors
       document.querySelectorAll('a[href*="affiliate"], a[href*="http"], .cta-btn, button[data-href], a.btn-buy').forEach(link => {{
         let href = link.href || link.getAttribute('data-href');
         if (!href) return;
@@ -150,13 +148,13 @@ class ESEBAuto6DUltimateEngine:
         print(f"[SUCCESS] Generated {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js tích hợp tối ưu hóa traffic engine và gọi 8 con AI thông minh"""
+        """Tạo sinh tệp .js thực thi 8 AI Node Cloudflare luân phiên 4 tiếng/lần"""
         js_content = """/**
  ===============================================================================
  ESEB 04THU AUTO-6D PROTOCOL - TRAFFIC TURBOCHARGER 50K & SERVERLESS RUNNER
  MODULE: Protocols/Super_Affiliate_Core.js
  STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
- FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, OTO[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
+ FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, OTO
  ===============================================================================
 **/
 
