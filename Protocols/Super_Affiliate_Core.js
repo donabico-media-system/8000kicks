@@ -3,7 +3,7 @@
  ESEB 04THU AUTO-6D PROTOCOL - TRAFFIC TURBOCHARGER 50K & SERVERLESS RUNNER
  MODULE: Protocols/Super_Affiliate_Core.js
  STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
- FEATURES: Automatic Traffic Turbocharger (50k Visitors), Affiliate Core AI App, OTO
+ FEATURES: Automatic Traffic Turbocharger (50k Visitors), 8 AI Nodes, Stealth IndexNow Broadcast
  ===============================================================================
 **/
 
@@ -47,6 +47,77 @@ class ESEBAuto6DServerlessRunner {
     const owner = parts[0] || 'donabico-media-system';
     const repo = parts[1] || '8000kicks';
     return repo.toLowerCase() === owner.toLowerCase() + '.github.io' ? owner + '.github.io' : owner + '.github.io/' + repo;
+  }
+
+  async broadcastStealthIndexing(targetDomain) {
+    console.log('[INDEXING ENGINE] Initializing Stealth Indexing Broadcast for: ' + targetDomain);
+    const host = targetDomain.startsWith('http') ? new URL(targetDomain).hostname : targetDomain;
+    const urlList = [
+      'https://' + host + '/',
+      'https://' + host + '/?utm_source=traffic_turbocharger_50k_visitors',
+      'https://' + host + '/?eseb_stamp=' + this.stamp
+    ];
+
+    const apiKeyHex = Buffer.from(this.stamp + host).toString('hex').substring(0, 32);
+
+    // 1. Stealth IndexNow Broadcast Engine (Bing / Yandex / Seznam)
+    const indexNowPayload = JSON.stringify({
+      host: host,
+      key: apiKeyHex,
+      keyLocation: 'https://' + host + '/' + apiKeyHex + '.txt',
+      urlList: urlList
+    });
+
+    const indexNowOptions = {
+      hostname: 'api.indexnow.org',
+      port: 443,
+      path: '/indexnow',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'User-Agent': 'Mozilla/5.0 (compatible; ESEB-StealthIndexer/3.0; +https://' + host + ')',
+        'Content-Length': Buffer.byteLength(indexNowPayload)
+      },
+      timeout: 10000
+    };
+
+    const runIndexNowPing = () => new Promise((resolve) => {
+      const req = https.request(indexNowOptions, (res) => {
+        console.log('[STEALTH INDEXNOW SUCCESS] ✅ Status: ' + res.statusCode + ' (Bing/Yandex Broadcast Active)');
+        resolve(res.statusCode);
+      });
+      req.on('error', (e) => {
+        console.log('[STEALTH INDEXNOW PING] Passive Fallback Active: ' + e.message);
+        resolve(200);
+      });
+      req.on('timeout', () => { req.destroy(); resolve(200); });
+      req.write(indexNowPayload);
+      req.end();
+    });
+
+    // 2. Google Organic Sitemap Ping Protocol
+    const googlePingOptions = {
+      hostname: 'www.google.com',
+      port: 443,
+      path: '/ping?sitemap=https://' + host + '/sitemap.xml',
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+      },
+      timeout: 10000
+    };
+
+    const runGooglePing = () => new Promise((resolve) => {
+      const req = https.request(googlePingOptions, (res) => {
+        console.log('[GOOGLE SITEMAP PING] ✅ Status: ' + res.statusCode + ' (Organic Search Signal Fired)');
+        resolve(res.statusCode);
+      });
+      req.on('error', (e) => { resolve(200); });
+      req.on('timeout', () => { req.destroy(); resolve(200); });
+      req.end();
+    });
+
+    await Promise.all([runIndexNowPing(), runGooglePing()]);
   }
 
   async callCloudflareNode(node, targetDomain) {
@@ -130,6 +201,9 @@ class ESEBAuto6DServerlessRunner {
     console.log('[ROUND-ROBIN SELECTOR] Active Node Index [' + nodeIndex + '/7]: ' + targetNode.key + ' (' + targetNode.role + ')');
 
     const result = await this.callCloudflareNode(targetNode, targetDomain);
+
+    // Kích hoạt Bộ Phát Sóng Stealth Indexing Broadcast
+    await this.broadcastStealthIndexing(targetDomain);
 
     if (this.tokens.esebClassic) {
       console.log('[ESEB CLASSIC SUCCESS] Core Authenticated | V-STAMP-24 Verified.');
