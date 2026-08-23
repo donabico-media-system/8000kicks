@@ -2,8 +2,7 @@
  ===============================================================================
  ESEB 04THU AUTO-6D PROTOCOL - TRAFFIC TURBOCHARGER 50K & SERVERLESS RUNNER
  MODULE: Protocols/Super_Affiliate_Core.js
- STAMP: V-STAMP-24 | BUILD: 2026-08-23 14:07:52 UTC | 4-HOUR ROTATIONAL MODE
- BRAND: DONABICO MEDIA SYSTEM
+ STAMP: V-STAMP-24 | 4-HOUR ROUND-ROBIN ROTATIONAL MODE | DONABICO MEDIA SYSTEM
  FEATURES: Automatic Traffic Turbocharger (50k Visitors), 8 AI Nodes, Stealth IndexNow Broadcast
  ===============================================================================
 **/
