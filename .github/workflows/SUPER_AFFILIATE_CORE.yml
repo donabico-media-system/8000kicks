@@ -2,7 +2,7 @@ name: SUPER_AFFILIATE_CORE
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Xoay vòng Round-Robin định kỳ 4 tiếng/lần chống lỗi 429[span_0](start_span)[span_0](end_span)
+    - cron: '0 */4 * * *' # Xoay vòng Round-Robin 8 AI Node định kỳ 4 tiếng/lần
   workflow_dispatch:
 
 jobs:
