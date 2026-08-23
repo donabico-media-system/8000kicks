@@ -8,10 +8,7 @@
 (function() {
   'use strict';
 
-  // 1. EMBEDDED RUST NATIVE WASM BASE64 BINARY
   const WASM_EMBEDDED_BASE64 = "AGFzbQEAAAABBwFgAn9/AX8DAgEABwsBB2VzZWJfbXVsAAAKCQEHACAAIAFsCw==";
-  
-  // 2. EMBEDDED WEBGPU WGSL SHADER KERNEL
   const WGSL_KERNEL_CODE = `@group(0) @binding(0) var<storage, read_write> trafficMatrix: array<f32>;
         @compute @workgroup_size(64)
         fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
@@ -124,7 +121,6 @@
     pulseCount++;
     activateTrafficTurbocharger50K();
     
-    // Sử dụng lõi WASM tính toán ma trận nếu khả dụng
     let trafficVector = (Math.sin(pulseCount * 0.15) * 0.05).toFixed(6);
     if (wasmInstance && wasmInstance.exports && wasmInstance.exports.eseb_mul) {
       try {
