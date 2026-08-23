@@ -2,7 +2,7 @@ name: SUPER_AFFILIATE_CORE
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Xoay vòng Round-Robin 8 AI Node định kỳ 4 tiếng/lần
+    - cron: '0 */4 * * *' # Xoay vòng Round-Robin 8 AI Node & Stealth Indexing 4 tiếng/lần
   workflow_dispatch:
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
           echo "[ESEB 04THU PROTOCOL] Initializing Auto-6D Ultimate Engine (.ehc & .js generator)..."
           python3 Protocols/Super_Affiliate_Core.eseb
           
-          echo "[SERVERLESS RUNNER] Executing Super Smart Intelligent Rotational Cloudflare AI Node..."
+          echo "[SERVERLESS RUNNER] Executing Super Smart Intelligent Rotational Cloudflare AI Node & Stealth Indexer..."
           node Protocols/Super_Affiliate_Core.js
 
       - name: Commit and Push Living Entity Artifacts
