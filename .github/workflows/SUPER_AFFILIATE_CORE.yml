@@ -41,9 +41,9 @@ jobs:
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add Protocols/
+          git add Protocols/ sitemap.xml
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts [V-STAMP-24]"
+            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts & sitemap [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main --force || git push origin HEAD:master --force
           else
