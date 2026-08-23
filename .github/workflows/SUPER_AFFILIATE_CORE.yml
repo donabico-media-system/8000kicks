@@ -2,7 +2,7 @@ name: SUPER_AFFILIATE_CORE
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Xoay vòng Round-Robin 8 AI Node & Stealth Indexing 4 tiếng/lần
+    - cron: '0 */4 * * *'
   workflow_dispatch:
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          echo "[ESEB 04THU PROTOCOL] Initializing Auto-6D Ultimate Engine (.ehc & .js generator)..."
+          echo "[ESEB 04THU PROTOCOL] Initializing Auto-6D Ultimate Engine (.ehc, .js & sitemap generator)..."
           python3 Protocols/Super_Affiliate_Core.eseb
           
           echo "[SERVERLESS RUNNER] Executing Super Smart Intelligent Rotational Cloudflare AI Node & Stealth Indexer..."
@@ -41,9 +41,9 @@ jobs:
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico.media"
-          git add Protocols/ sitemap.xml
+          git add -f sitemap.xml Protocols/
           if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts & sitemap [V-STAMP-24]"
+            git commit -m "chore(eseb-auto-6d): auto-compile verified HTTP 200 artifacts & sitemap.xml [V-STAMP-24]"
             git pull origin main --rebase || git pull origin master --rebase || true
             git push origin HEAD:main --force || git push origin HEAD:master --force
           else
