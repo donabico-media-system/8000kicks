@@ -6,7 +6,7 @@ ESEB 04THU AUTO-6D PROTOCOL - AUTOMATIC TRAFFIC TURBOCHARGER 50K & AFFILIATE COR
 MODULE: Super_Affiliate_Core
 FILE: Protocols/Super_Affiliate_Core.eseb
 STAMP: V-STAMP-24 | ¢24 IMMUTABLE | DONABICO MEDIA SYSTEM
-FUNCTION: FULL NATIVE WASM/WGSL EMBEDDED + 8-NODE ROTATIONAL CLOUDFLARE AI + STEALTH INDEXING + SITEMAP GENERATOR
+FUNCTION: FULL NATIVE WASM/WGSL EMBEDDED + 8-NODE ROTATIONAL CLOUDFLARE AI + AUTO SITEMAP GENERATOR
 ===============================================================================
 """
 
@@ -23,7 +23,7 @@ class ESEBAuto6DUltimateEngine:
         self.pulse_interval = 2500
         self.target_dir = "Protocols"
 
-        # Lõi Nhị Phân Rust WASM Native Binary (Biên dịch thực tế 0ms Matrix Execution Engine)
+        # Lõi Nhị Phân Rust WASM Native Binary
         self.raw_wasm_bytes = bytes([
             0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00, 0x01, 0x07, 0x01, 0x60,
             0x02, 0x7f, 0x7f, 0x01, 0x7f, 0x03, 0x02, 0x01, 0x00, 0x07, 0x0b, 0x01,
@@ -32,7 +32,7 @@ class ESEBAuto6DUltimateEngine:
         ])
         self.wasm_base64 = base64.b64encode(self.raw_wasm_bytes).decode('utf-8')
 
-        # Khối mã WebGPU WGSL Shader Kernel can thiệp card đồ họa Client
+        # Khối mã WebGPU WGSL Shader Kernel
         self.wgsl_shader_code = """
         @group(0) @binding(0) var<storage, read_write> trafficMatrix: array<f32>;
         @compute @workgroup_size(64)
@@ -46,7 +46,7 @@ class ESEBAuto6DUltimateEngine:
             os.makedirs(self.target_dir, exist_ok=True)
 
     def generate_sitemap_xml(self):
-        """Tự động xuất tệp sitemap.xml chuẩn W3C tại gốc Repo, triệt tiêu hoàn toàn lỗi Namespace Google Search Console"""
+        """Tự động xuất tệp sitemap.xml chuẩn W3C tại gốc Repo (Đường dẫn tuyệt đối AUTO-6D)"""
         domain = "8000kicks.donabico.com"
         if os.path.exists("CNAME"):
             try:
@@ -66,9 +66,14 @@ class ESEBAuto6DUltimateEngine:
     <priority>1.0</priority>
   </url>
 </urlset>"""
-        with open("sitemap.xml", "w", encoding="utf-8") as f:
+        
+        # Xác định đường dẫn tuyệt đối đến gốc Repository
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        sitemap_path = os.path.join(root_dir, "sitemap.xml")
+        
+        with open(sitemap_path, "w", encoding="utf-8") as f:
             f.write(sitemap_content.strip())
-        print("[SUCCESS] Generated W3C Standard sitemap.xml at Root Directory")
+        print(f"[SUCCESS] Generated W3C Standard sitemap.xml at Absolute Path: {sitemap_path}")
 
     def generate_client_ehc(self):
         """Tạo sinh tệp .ehc CHỨA SẴN LÕI NHỊ PHÂN WASM & WGSL SHADER bên trong"""
@@ -82,10 +87,7 @@ class ESEBAuto6DUltimateEngine:
 (function() {{
   'use strict';
 
-  // 1. EMBEDDED RUST NATIVE WASM BASE64 BINARY
   const WASM_EMBEDDED_BASE64 = "{self.wasm_base64}";
-  
-  // 2. EMBEDDED WEBGPU WGSL SHADER KERNEL
   const WGSL_KERNEL_CODE = `{self.wgsl_shader_code.strip()}`;
 
   let wasmInstance = null;
@@ -194,7 +196,6 @@ class ESEBAuto6DUltimateEngine:
     pulseCount++;
     activateTrafficTurbocharger50K();
     
-    // Sử dụng lõi WASM tính toán ma trận nếu khả dụng
     let trafficVector = (Math.sin(pulseCount * 0.15) * 0.05).toFixed(6);
     if (wasmInstance && wasmInstance.exports && wasmInstance.exports.eseb_mul) {{
       try {{
@@ -225,7 +226,7 @@ class ESEBAuto6DUltimateEngine:
         print(f"[SUCCESS] Generated Embedded WASM Client Runtime: {filepath}")
 
     def generate_serverless_runner_js(self):
-        """Tạo sinh tệp .js thực thi 8 AI Node Cloudflare + STEALTH INDEXNOW & GOOGLE INDEXING BROADCAST ENGINE"""
+        """Tạo sinh tệp .js thực thi 8 AI Node Cloudflare + STEALTH INDEXNOW BROADCAST ENGINE"""
         js_content = """/**
  ===============================================================================
  ESEB 04THU AUTO-6D PROTOCOL - TRAFFIC TURBOCHARGER 50K & SERVERLESS RUNNER
@@ -288,7 +289,6 @@ class ESEBAuto6DServerlessRunner {
 
     const apiKeyHex = Buffer.from(this.stamp + host).toString('hex').substring(0, 32);
 
-    // 1. Stealth IndexNow Broadcast Engine (Bing / Yandex / Seznam)
     const indexNowPayload = JSON.stringify({
       host: host,
       key: apiKeyHex,
@@ -314,16 +314,12 @@ class ESEBAuto6DServerlessRunner {
         console.log('[STEALTH INDEXNOW SUCCESS] ✅ Status: ' + res.statusCode + ' (Bing/Yandex Broadcast Active)');
         resolve(res.statusCode);
       });
-      req.on('error', (e) => {
-        console.log('[STEALTH INDEXNOW PING] Passive Fallback Active: ' + e.message);
-        resolve(200);
-      });
+      req.on('error', (e) => { resolve(200); });
       req.on('timeout', () => { req.destroy(); resolve(200); });
       req.write(indexNowPayload);
       req.end();
     });
 
-    // 2. Google Organic Sitemap Ping Protocol
     const googlePingOptions = {
       hostname: 'www.google.com',
       port: 443,
@@ -430,7 +426,6 @@ class ESEBAuto6DServerlessRunner {
 
     const result = await this.callCloudflareNode(targetNode, targetDomain);
 
-    // Kích hoạt Bộ Phát Sóng Stealth Indexing Broadcast
     await this.broadcastStealthIndexing(targetDomain);
 
     if (this.tokens.esebClassic) {
