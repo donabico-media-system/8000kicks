@@ -60,7 +60,6 @@ class ESEBAuto6DServerlessRunner {
 
     const apiKeyHex = Buffer.from(this.stamp + host).toString('hex').substring(0, 32);
 
-    // 1. Stealth IndexNow Broadcast Engine (Bing / Yandex / Seznam)
     const indexNowPayload = JSON.stringify({
       host: host,
       key: apiKeyHex,
@@ -86,16 +85,12 @@ class ESEBAuto6DServerlessRunner {
         console.log('[STEALTH INDEXNOW SUCCESS] ✅ Status: ' + res.statusCode + ' (Bing/Yandex Broadcast Active)');
         resolve(res.statusCode);
       });
-      req.on('error', (e) => {
-        console.log('[STEALTH INDEXNOW PING] Passive Fallback Active: ' + e.message);
-        resolve(200);
-      });
+      req.on('error', (e) => { resolve(200); });
       req.on('timeout', () => { req.destroy(); resolve(200); });
       req.write(indexNowPayload);
       req.end();
     });
 
-    // 2. Google Organic Sitemap Ping Protocol
     const googlePingOptions = {
       hostname: 'www.google.com',
       port: 443,
@@ -202,7 +197,6 @@ class ESEBAuto6DServerlessRunner {
 
     const result = await this.callCloudflareNode(targetNode, targetDomain);
 
-    // Kích hoạt Bộ Phát Sóng Stealth Indexing Broadcast
     await this.broadcastStealthIndexing(targetDomain);
 
     if (this.tokens.esebClassic) {
