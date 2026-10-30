@@ -1,0 +1,20 @@
+# EATHESEN V3000-Ω MATRIX | ROBOTS CONFIGURATION
+# BRAND: DONABICO MEDIA SYSTEM
+
+User-agent: *
+Allow: /
+
+# Allow AI Crawlers for Maximum Knowledge Graph Indexing
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://donabico.com/path-00001/sitemap.xml
